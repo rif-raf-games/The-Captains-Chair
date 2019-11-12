@@ -38,6 +38,11 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     public void OnFlowPlayerPaused(IFlowObject aObject)
     {
         StaticStuff.PrintFlowPaused("************** OnFlowPlayerPaused() START *************");
+        if(aObject == null)
+        {
+            Debug.LogWarning("We have a null iFlowObject in OnFlowPlayerPaused(), so we're at a dangling end point somewhere that needs to get sorted out.");
+            return;
+        }
         StaticStuff.PrintFlowPaused("OnFlowPlayerPaused() IFlowObject Type: " + aObject.GetType() + ", with TechnicalName: " + ((ArticyObject)aObject).TechnicalName);
 
         CurPauseObject = aObject;
