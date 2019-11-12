@@ -1,9 +1,16 @@
-﻿using System.Collections;
+﻿using Articy.The_Captain_s_Chair;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class TheCaptainsChair : MonoBehaviour
 {
+    public Door CaptainsDoor;
+
+    public void OpenCaptainsDoor()
+    {
+        CaptainsDoor.Open();
+    }
     // Start is called before the first frame update
     void Start()
     {
