@@ -13,8 +13,7 @@ public class CutSceneUI : MonoBehaviour
 
     public void StartCutScene(Cut_Scene cutScene)
     {
-        this.gameObject.SetActive(true);
-        Debug.Log("PLAYER: " + (Player == null));
+        this.gameObject.SetActive(true);        
         Player.ToggleMovementBlocked(true);
         DescriptionText.text = cutScene.Text;        
     }

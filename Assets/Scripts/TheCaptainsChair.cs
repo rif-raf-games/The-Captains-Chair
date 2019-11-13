@@ -6,7 +6,7 @@ using UnityEngine;
 public class TheCaptainsChair : MonoBehaviour
 {
     public Door CaptainsDoor;
-
+    
     public void OpenCaptainsDoor()
     {
         CaptainsDoor.Open();

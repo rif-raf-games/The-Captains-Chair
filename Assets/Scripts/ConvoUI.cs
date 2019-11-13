@@ -18,26 +18,7 @@ public class ConvoUI : MonoBehaviour
         Debug.Log("going to set up a dialogue fragment with speaker: " + dialogueFrag.Speaker + " with text: " + dialogueFrag.Text);
         Debug.Log("this dialogue fragment has: " + dialogueOptions.Count + " options");
         this.gameObject.SetActive(true);
-
-
-        //ArticyObject a = (ArticyObject)flowObj;
-        // ArticyObject speaker = dialogueFrag.Speaker;
-        //Entity speakerEntity = (Entity)dialogueFrag.Speaker;
-        /* var a = dialogueFrag as IObjectWithFeaturenpcCrew;        
-         if(a != null ) 
-         {
-             SpeakerName.text = ((npcCrew)a).DisplayName;
-         }
-         else
-         {
-             SpeakerName.text = ((PC)dialogueFrag).DisplayName;
-         }*/
-        // npcCrew crew = (npcCrew)dialogueFrag.Speaker;
-        //var crew = dialogueFrag as IObjectWithFeaturenpcCrew;
-        //IObjectWithFeaturenpcCrew
-        //npcCrew crew = (npcCrew)dialogueFrag.Speaker;
-        //if (crew != null) SpeakerName.text = crew.DisplayName;
-        // else SpeakerName.text = "NO NAME!";
+        
         SpeakerName.text = ((Entity)dialogueFrag.Speaker).DisplayName;
         SpeakerText.text = dialogueFrag.Text;
         foreach (GameObject go in DialogueOptions) go.SetActive(false);
@@ -51,20 +32,7 @@ public class ConvoUI : MonoBehaviour
             }
             else
             {
-                DialogueOptions[i].GetComponentInChildren<Text>().text = "Continue";
-                /*string buttonText = dialogueFrag.MenuText;
-                Debug.Log("ok we are not going to a dialogue fragment, so get the button text by the template: " + buttonText);
-                if (buttonText.Equals("") == false)
-                {
-                    Debug.Log("b");
-                    DialogueOptions[i].GetComponentInChildren<Text>().text = buttonText;
-                }
-                else
-                {
-                    Debug.Log("c");
-                    //string val = ArticyDatabase.DefaultGlobalVariables.GetVariableByString<string>("Misc_Globals.defaultDialogueFragmentButtonText");
-                    DialogueOptions[i].GetComponentInChildren<Text>().text = "";
-                }*/
+                DialogueOptions[i].GetComponentInChildren<Text>().text = "Continue";                
             }
         }
 
