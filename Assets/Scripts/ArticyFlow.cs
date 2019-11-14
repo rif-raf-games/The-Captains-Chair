@@ -10,6 +10,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     public ArticyState CurArticyState;
 
     public TheCaptainsChair CaptainsChair;
+    public Player Player;
 
     ArticyFlowPlayer FlowPlayer;
     IFlowObject CurPauseObject = null;
@@ -62,10 +63,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             if (b.IsValid == false) Debug.LogWarning("Invalid branch in OnBranchesUpdate(): " + b.DefaultDescription);
             CurBranches.Add(b);
         }
-        DialogueFragment df = CurPauseObject as DialogueFragment;
-        //if (df == null) Debug.Log("we do not have a dialogue fragment");
-        //else Debug.Log("we have a dialogue fragment");
-        //if (CurPauseObject.GetType().Equals(typeof(DialogueFragment)))
+        DialogueFragment df = CurPauseObject as DialogueFragment;        
         if(df != null )
         {
             StaticStuff.PrintFlowBranchesUpdate("We're on a dialogue fragment, so set the text based on current flow state.");
@@ -75,6 +73,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                     CutSceneUI.SetCutsceneNode(CurPauseObject as DialogueFragment);
                     break;
                 case ArticyState.CONVERSATION:
+                    Player.StopNavMeshMovement();
                     ConvoUI.ShowDialogueFragment(CurPauseObject as DialogueFragment, CurPauseObject, aBranches);
                     break;
                 default:
@@ -136,8 +135,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     }
 
     public void StartConvo(Dialogue convoStart)
-    {
-        StaticStuff.PrintUI("Start Conversations");
+    {        
         CurArticyState = ArticyState.CONVERSATION;
         FlowPlayer.StartOn = convoStart;
     }

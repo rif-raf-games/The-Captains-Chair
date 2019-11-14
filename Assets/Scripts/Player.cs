@@ -38,9 +38,9 @@ public class Player : MonoBehaviour
                 Dialogue dialogue = colliderArtRef.reference.GetObject() as Dialogue;
                 if (dialogue != null)
                 {
-                    Debug.Log("we have a dialogue, so set the FlowPlayer to start on it");
+                    Debug.Log("we have a dialogue, so set the FlowPlayer to start on it and see what happens");
                     ArticyFlow.StartConvo(dialogue);
-                    NavMeshAgent.SetDestination(this.transform.position);
+                    //NavMeshAgent.SetDestination(this.transform.position);
                 }
                 else
                 {
@@ -102,12 +102,17 @@ public class Player : MonoBehaviour
             }
         }        
     }
+
+    public void StopNavMeshMovement()
+    {
+        NavMeshAgent.SetDestination(this.transform.position);
+    }
     
     public void ElevatorUpdate(Elevator caller)
     {
         if(caller == SelectedElevator)
         {
-            NavMeshAgent.SetDestination(this.transform.position);
+            StopNavMeshMovement();
         }        
     }
     public void ElevatorDoneMoving(Elevator caller)
