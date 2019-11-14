@@ -14,7 +14,7 @@ public class Player : MonoBehaviour
     private NavMeshAgent NavMeshAgent;
     public Vector3 CamOffset;
 
-    public NavMeshSurface FloorNavMeshSurface;
+    public NavMeshSurface[] FloorNavMeshSurfaces;
     public NavMeshSurface[] ElevatorNavMeshSurfaces;
     bool TurnOnNavMeshes = false;
 
@@ -62,8 +62,8 @@ public class Player : MonoBehaviour
                     //if(SelectedElevator.HasRideBegun() == false)
                     if(MovementBlocked == false)
                     {
-                        Debug.Log("move player onto elevator");
-                        FloorNavMeshSurface.enabled = false;
+                        Debug.Log("move player onto elevator");                        
+                        foreach(NavMeshSurface n in FloorNavMeshSurfaces) n.enabled = false;
                         TurnOnNavMeshes = true;
                         Vector3 dest = other.gameObject.transform.parent.GetChild(1).position;                        
                         NavMeshAgent.SetDestination(dest);
@@ -73,15 +73,18 @@ public class Player : MonoBehaviour
                     }
                     else
                     {
+                        Debug.Log("Player moved off elevator, back to normal movement");
+                        SelectedElevator.transform.GetChild(1).GetComponent<SphereCollider>().enabled = true;
                         SelectedElevator.GetComponent<NavMeshSurface>().enabled = false;
                         TurnOnNavMeshes = true;
-                        SelectedElevator = null;                        
+                        SelectedElevator = null;
                         ToggleMovementBlocked(false);
                     }                    
                 }
                 else
                 {                    
-                    Debug.Log("Reached elevator EndPos");                      
+                    Debug.Log("Reached elevator EndPos so start movement");                    
+                    SelectedElevator.transform.GetChild(1).GetComponent<SphereCollider>().enabled = false;
                     int newFloor = SelectedElevator.BeginMovement();   
                     foreach(NavMeshSurface n in ElevatorNavMeshSurfaces)
                     {
@@ -111,6 +114,7 @@ public class Player : MonoBehaviour
     {        
         if(caller == SelectedElevator)
         {
+            Debug.Log("Elevator done moving, so move player back to entrance");
             NavMeshAgent.SetDestination(SelectedElevator.transform.GetChild(0).transform.position);
         }        
     }    
@@ -120,7 +124,7 @@ public class Player : MonoBehaviour
         Camera.main.transform.position = this.transform.position + CamOffset;
         if(TurnOnNavMeshes == true )
         {
-            FloorNavMeshSurface.enabled = true;
+            foreach (NavMeshSurface n in FloorNavMeshSurfaces) n.enabled = true;
             foreach (NavMeshSurface n in ElevatorNavMeshSurfaces) n.enabled = true;
         }        
     }
@@ -178,7 +182,7 @@ public class Player : MonoBehaviour
     {
         if (DebugText != null)
         {
-            DebugText.text = NavMeshAgent.navMeshOwner.name + "\n";
+            /*DebugText.text = NavMeshAgent.navMeshOwner.name + "\n";
             if (SelectedElevator == null) DebugText.text += "no SelectedElevator\n";
             else DebugText.text += "SelectedElevator: " + SelectedElevator.name + "\n";
             DebugText.text += "ClickedElevator: " + (SelectedElevator != null) + "\n";
@@ -186,7 +190,7 @@ public class Player : MonoBehaviour
             DebugText.text += "pathStatus: " + NavMeshAgent.pathStatus.ToString() + "\n";
             DebugText.text += "isStopped: " + NavMeshAgent.isStopped + "\n";
             DebugText.text += "remainingDistance: " + NavMeshAgent.remainingDistance + "\n";
-            DebugText.text += "MovementBlocked: " + MovementBlocked;
+            DebugText.text += "MovementBlocked: " + MovementBlocked;*/
         }
     }
 }

@@ -27,6 +27,7 @@ public class Elevator : MonoBehaviour
     }
     public int BeginMovement()
     {
+        Debug.Log("Elevator begin movement");
         StartPos = this.transform.localPosition;        
         IsMoving = true;
         LerpStartTime = Time.time;
