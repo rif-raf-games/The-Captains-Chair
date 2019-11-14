@@ -5,8 +5,8 @@
     "set_IncludedNodes": "Settings, Project, GlobalVariables, ObjectDefinitions, Packages, ScriptMethods, Hierarchy, Assets",
     "set_UseScriptSupport": "True",
     "ExportVersion": "1.1",
-    "ObjectDefinitionsHash": "9B696C6B1035CE893C1C820F3F4AD3FD93B4786DB05B821591170208B3645CEA",
-    "ScriptFragmentsHash": "3268450584"
+    "ObjectDefinitionsHash": "1FAD088EF38DD38A3C3339A02AB31567EAC76DC6DCDBA63D56F8B7C19264A7A4",
+    "ScriptFragmentsHash": "1989529962"
   },
   "Project": {
     "Name": "The Captains Chair",
@@ -33,6 +33,24 @@
         },
         {
           "Variable": "s01_Visited_Engine_Room",
+          "Type": "Boolean",
+          "Value": "False",
+          "Description": ""
+        },
+        {
+          "Variable": "s01_Visited_Common",
+          "Type": "Boolean",
+          "Value": "False",
+          "Description": ""
+        },
+        {
+          "Variable": "s01_Visited_Storage",
+          "Type": "Boolean",
+          "Value": "False",
+          "Description": ""
+        },
+        {
+          "Variable": "s01_Visited_Lab",
           "Type": "Boolean",
           "Value": "False",
           "Description": ""
@@ -3030,7 +3048,7 @@
             "ShortId": 1058910274,
             "InputPins": [
               {
-                "Text": "Episode_01.s01_Visited_Bridge == true &&\nEpisode_01.s01_Visited_Engine_Room == true &&\nEpisode_01.s01_Visited_Sick_Bay == true\n",
+                "Text": "",
                 "Id": "0x100000200002395",
                 "Owner": "0x100000200002302",
                 "Connections": [
@@ -3042,8 +3060,8 @@
                       "b": 0.8
                     },
                     "Label": "",
-                    "TargetPin": "0x100000200002304",
-                    "Target": "0x100000200002303"
+                    "TargetPin": "0x100000300000925",
+                    "Target": "0x100000300000923"
                   }
                 ]
               }
@@ -3064,6 +3082,224 @@
                     "Label": "",
                     "TargetPin": "0x100000300000645",
                     "Target": "0x100000300000644"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "Dialogue",
+          "Properties": {
+            "TechnicalName": "Dlg_CBD42D1A",
+            "Id": "0x1000003000008CA",
+            "Parent": "0x1000003000002C2",
+            "Attachments": [],
+            "DisplayName": "Common Space",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 317.0,
+              "y": 250.0
+            },
+            "ZIndex": 19.0,
+            "Size": {
+              "w": 291.0,
+              "h": 200.0
+            },
+            "ShortId": 3419680026,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000008CD",
+                "Owner": "0x1000003000008CA",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x1000003000008DC",
+                    "Target": "0x1000003000008DA"
+                  }
+                ]
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000008CE",
+                "Owner": "0x1000003000008CA",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x10000020000220B",
+                    "Target": "0x100000200002209"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "Dialogue",
+          "Properties": {
+            "TechnicalName": "Dlg_3CF6CE3D",
+            "Id": "0x1000003000008E8",
+            "Parent": "0x1000003000002C2",
+            "Attachments": [],
+            "DisplayName": "Storage Bay",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": -33.0,
+              "y": 225.0
+            },
+            "ZIndex": 20.0,
+            "Size": {
+              "w": 291.0,
+              "h": 200.0
+            },
+            "ShortId": 1022807613,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000008EB",
+                "Owner": "0x1000003000008E8"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000008EC",
+                "Owner": "0x1000003000008E8",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x10000020000220B",
+                    "Target": "0x100000200002209"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "Dialogue",
+          "Properties": {
+            "TechnicalName": "Dlg_E5B8B26B",
+            "Id": "0x100000300000907",
+            "Parent": "0x1000003000002C2",
+            "Attachments": [],
+            "DisplayName": "Lab",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": -133.0,
+              "y": 475.0
+            },
+            "ZIndex": 21.0,
+            "Size": {
+              "w": 291.0,
+              "h": 200.0
+            },
+            "ShortId": 3854086763,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x10000030000090A",
+                "Owner": "0x100000300000907",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300000914",
+                    "Target": "0x100000300000913"
+                  }
+                ]
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x10000030000090B",
+                "Owner": "0x100000300000907",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x10000020000220B",
+                    "Target": "0x100000200002209"
                   }
                 ]
               }
@@ -4820,6 +5056,171 @@
           }
         },
         {
+          "Type": "DialogueFragment",
+          "Properties": {
+            "TechnicalName": "DFr_3E134141",
+            "Id": "0x1000003000008D0",
+            "Parent": "0x1000003000008CA",
+            "MenuText": "",
+            "StageDirections": "",
+            "Speaker": "0x100000000000188",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "Well this room is way to fucking big for the 6 of us.",
+            "ExternalId": "",
+            "Position": {
+              "x": 725.0,
+              "y": 450.0
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 1041449281,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000008D3",
+                "Owner": "0x1000003000008D0"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "Episode_01.s01_Visited_Common = true",
+                "Id": "0x1000003000008D4",
+                "Owner": "0x1000003000008D0",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x1000003000008CE",
+                    "Target": "0x1000003000008CA"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "DialogueFragment",
+          "Properties": {
+            "TechnicalName": "DFr_41CD95BB",
+            "Id": "0x1000003000008F5",
+            "Parent": "0x1000003000008E8",
+            "MenuText": "",
+            "StageDirections": "",
+            "Speaker": "0x100000000000188",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "I'm assuming this is where all the manual labor happens.",
+            "ExternalId": "",
+            "Position": {
+              "x": 1246.0,
+              "y": 555.66666666666663
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 1103992251,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000008F6",
+                "Owner": "0x1000003000008F5"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "Episode_01.s01_Visited_Storage = true",
+                "Id": "0x1000003000008F7",
+                "Owner": "0x1000003000008F5",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x1000003000008EC",
+                    "Target": "0x1000003000008E8"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "DialogueFragment",
+          "Properties": {
+            "TechnicalName": "DFr_647765FD",
+            "Id": "0x10000030000090D",
+            "Parent": "0x100000300000907",
+            "MenuText": "",
+            "StageDirections": "",
+            "Speaker": "0x100000000000188",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "This is where we keep all the party drugs.",
+            "ExternalId": "",
+            "Position": {
+              "x": 1211.3333333333333,
+              "y": 553.0
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 1685546493,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x10000030000090E",
+                "Owner": "0x10000030000090D"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "Episode_01.s01_Visited_Lab = true",
+                "Id": "0x10000030000090F",
+                "Owner": "0x10000030000090D",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x10000030000090B",
+                    "Target": "0x100000300000907"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
           "Type": "Captain_Dialogue",
           "Properties": {
             "TechnicalName": "DFr_D974F666",
@@ -5724,6 +6125,142 @@
           }
         },
         {
+          "Type": "Jump",
+          "Properties": {
+            "TechnicalName": "Jmp_01967DFD",
+            "Id": "0x1000003000008E0",
+            "Parent": "0x1000003000008CA",
+            "Target": "0x100000200002169",
+            "TargetPin": "0x10000020000216B",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 575.0,
+              "y": 200.0
+            },
+            "ZIndex": 3.0,
+            "Size": {
+              "w": 175.0,
+              "h": 150.0
+            },
+            "ShortId": 26639869,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000008E3",
+                "Owner": "0x1000003000008E0"
+              }
+            ]
+          }
+        },
+        {
+          "Type": "Jump",
+          "Properties": {
+            "TechnicalName": "Jmp_D47BA1DB",
+            "Id": "0x100000300000900",
+            "Parent": "0x1000003000008E8",
+            "Target": "0x100000200002169",
+            "TargetPin": "0x10000020000216B",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 1096.0,
+              "y": 305.66666666666663
+            },
+            "ZIndex": 3.0,
+            "Size": {
+              "w": 175.0,
+              "h": 150.0
+            },
+            "ShortId": 3564872155,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300000901",
+                "Owner": "0x100000300000900"
+              }
+            ]
+          }
+        },
+        {
+          "Type": "Jump",
+          "Properties": {
+            "TechnicalName": "Jmp_64DCC912",
+            "Id": "0x100000300000918",
+            "Parent": "0x100000300000907",
+            "Target": "0x100000200002169",
+            "TargetPin": "0x10000020000216B",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 1061.3333333333333,
+              "y": 303.0
+            },
+            "ZIndex": 3.0,
+            "Size": {
+              "w": 175.0,
+              "h": 150.0
+            },
+            "ShortId": 1692190994,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300000919",
+                "Owner": "0x100000300000918"
+              }
+            ]
+          }
+        },
+        {
+          "Type": "Jump",
+          "Properties": {
+            "TechnicalName": "Jmp_35061E52",
+            "Id": "0x100000300000929",
+            "Parent": "0x100000200002302",
+            "Target": "0x100000200002169",
+            "TargetPin": "0x10000020000216B",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 150.0,
+              "y": 225.0
+            },
+            "ZIndex": 50.0,
+            "Size": {
+              "w": 175.0,
+              "h": 150.0
+            },
+            "ShortId": 889593426,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x10000030000092C",
+                "Owner": "0x100000300000929"
+              }
+            ]
+          }
+        },
+        {
           "Type": "Condition",
           "Properties": {
             "TechnicalName": "Cnd_3114448F",
@@ -6005,6 +6542,294 @@
                     "Label": "",
                     "TargetPin": "0x1000003000008BB",
                     "Target": "0x1000003000008B8"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "Condition",
+          "Properties": {
+            "TechnicalName": "Cnd_CC6D9E93",
+            "Id": "0x1000003000008DA",
+            "Parent": "0x1000003000008CA",
+            "DisplayName": "Episode_01.s01_Visited_Common == false",
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 175.0,
+              "y": 375.0
+            },
+            "ZIndex": 1.0,
+            "Size": {
+              "w": 225.0,
+              "h": 100.0
+            },
+            "ShortId": 3429736083,
+            "Expression": "Episode_01.s01_Visited_Common == false",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000008DC",
+                "Owner": "0x1000003000008DA"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000008DD",
+                "Owner": "0x1000003000008DA",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x1000003000008D3",
+                    "Target": "0x1000003000008D0"
+                  }
+                ]
+              },
+              {
+                "Text": "",
+                "Id": "0x1000003000008DE",
+                "Owner": "0x1000003000008DA",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x1000003000008E3",
+                    "Target": "0x1000003000008E0"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "Condition",
+          "Properties": {
+            "TechnicalName": "Cnd_E03DC4AD",
+            "Id": "0x1000003000008FB",
+            "Parent": "0x1000003000008E8",
+            "DisplayName": "Episode_01.s01_Visited_Storage == false",
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 696.0,
+              "y": 480.66666666666663
+            },
+            "ZIndex": 1.0,
+            "Size": {
+              "w": 225.0,
+              "h": 100.0
+            },
+            "ShortId": 3762144429,
+            "Expression": "Episode_01.s01_Visited_Storage == false",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000008FC",
+                "Owner": "0x1000003000008FB"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000008FD",
+                "Owner": "0x1000003000008FB",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x1000003000008F6",
+                    "Target": "0x1000003000008F5"
+                  }
+                ]
+              },
+              {
+                "Text": "",
+                "Id": "0x1000003000008FE",
+                "Owner": "0x1000003000008FB",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300000901",
+                    "Target": "0x100000300000900"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "Condition",
+          "Properties": {
+            "TechnicalName": "Cnd_B2CC4824",
+            "Id": "0x100000300000913",
+            "Parent": "0x100000300000907",
+            "DisplayName": "Episode_01.s01_Visited_Lab == false",
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 661.33333333333326,
+              "y": 478.0
+            },
+            "ZIndex": 1.0,
+            "Size": {
+              "w": 225.0,
+              "h": 100.0
+            },
+            "ShortId": 2999732260,
+            "Expression": "Episode_01.s01_Visited_Lab == false",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300000914",
+                "Owner": "0x100000300000913"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300000915",
+                "Owner": "0x100000300000913",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x10000030000090E",
+                    "Target": "0x10000030000090D"
+                  }
+                ]
+              },
+              {
+                "Text": "",
+                "Id": "0x100000300000916",
+                "Owner": "0x100000300000913",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300000919",
+                    "Target": "0x100000300000918"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "Condition",
+          "Properties": {
+            "TechnicalName": "Cnd_A0D90A34",
+            "Id": "0x100000300000923",
+            "Parent": "0x100000200002302",
+            "DisplayName": "Episode_01.s01_Visited_Bridge == true &&",
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": -150.0,
+              "y": 500.0
+            },
+            "ZIndex": 48.0,
+            "Size": {
+              "w": 225.0,
+              "h": 100.0
+            },
+            "ShortId": 2698578484,
+            "Expression": "Episode_01.s01_Visited_Bridge == true &&\nEpisode_01.s01_Visited_Engine_Room == true &&\nEpisode_01.s01_Visited_Sick_Bay == true\n",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300000925",
+                "Owner": "0x100000300000923"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300000926",
+                "Owner": "0x100000300000923",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000200002304",
+                    "Target": "0x100000200002303"
+                  }
+                ]
+              },
+              {
+                "Text": "",
+                "Id": "0x100000300000927",
+                "Owner": "0x100000300000923",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x10000030000092C",
+                    "Target": "0x100000300000929"
                   }
                 ]
               }
@@ -9848,6 +10673,82 @@
                             "Id": "0x1000003000007CD",
                             "TechnicalName": "DFr_B9356282",
                             "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x100000300000923",
+                            "TechnicalName": "Cnd_A0D90A34",
+                            "Type": "Condition"
+                          },
+                          {
+                            "Id": "0x100000300000929",
+                            "TechnicalName": "Jmp_35061E52",
+                            "Type": "Jump"
+                          }
+                        ]
+                      },
+                      {
+                        "Id": "0x1000003000008CA",
+                        "TechnicalName": "Dlg_CBD42D1A",
+                        "Type": "Dialogue",
+                        "Children": [
+                          {
+                            "Id": "0x1000003000008D0",
+                            "TechnicalName": "DFr_3E134141",
+                            "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x1000003000008DA",
+                            "TechnicalName": "Cnd_CC6D9E93",
+                            "Type": "Condition"
+                          },
+                          {
+                            "Id": "0x1000003000008E0",
+                            "TechnicalName": "Jmp_01967DFD",
+                            "Type": "Jump"
+                          }
+                        ]
+                      },
+                      {
+                        "Id": "0x1000003000008E8",
+                        "TechnicalName": "Dlg_3CF6CE3D",
+                        "Type": "Dialogue",
+                        "Children": [
+                          {
+                            "Id": "0x1000003000008F5",
+                            "TechnicalName": "DFr_41CD95BB",
+                            "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x1000003000008FB",
+                            "TechnicalName": "Cnd_E03DC4AD",
+                            "Type": "Condition"
+                          },
+                          {
+                            "Id": "0x100000300000900",
+                            "TechnicalName": "Jmp_D47BA1DB",
+                            "Type": "Jump"
+                          }
+                        ]
+                      },
+                      {
+                        "Id": "0x100000300000907",
+                        "TechnicalName": "Dlg_E5B8B26B",
+                        "Type": "Dialogue",
+                        "Children": [
+                          {
+                            "Id": "0x10000030000090D",
+                            "TechnicalName": "DFr_647765FD",
+                            "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x100000300000913",
+                            "TechnicalName": "Cnd_B2CC4824",
+                            "Type": "Condition"
+                          },
+                          {
+                            "Id": "0x100000300000918",
+                            "TechnicalName": "Jmp_64DCC912",
+                            "Type": "Jump"
                           }
                         ]
                       }
