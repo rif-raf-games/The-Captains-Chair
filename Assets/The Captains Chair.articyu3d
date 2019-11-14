@@ -5,8 +5,8 @@
     "set_IncludedNodes": "Settings, Project, GlobalVariables, ObjectDefinitions, Packages, ScriptMethods, Hierarchy, Assets",
     "set_UseScriptSupport": "True",
     "ExportVersion": "1.1",
-    "ObjectDefinitionsHash": "F0AE3B2EDCAF22935BB64352ED4D928C12DCEC0E9866C3F1B7D39E1C6D7B1FDA",
-    "ScriptFragmentsHash": "3261746142"
+    "ObjectDefinitionsHash": "9B696C6B1035CE893C1C820F3F4AD3FD93B4786DB05B821591170208B3645CEA",
+    "ScriptFragmentsHash": "3268450584"
   },
   "Project": {
     "Name": "The Captains Chair",
@@ -286,24 +286,14 @@
       ]
     },
     {
-      "Type": "Triggers",
+      "Type": "EnumValue",
       "Class": "Enum",
-      "DisplayName": "Triggers",
+      "DisplayName": "Drop-down list",
       "Values": {
-        "Value_01": 1,
-        "Value_02": 2,
-        "Value_03": 3,
-        "Value_04": 4,
-        "Value_05": 5,
-        "Value_06": 6
+        "Value_01": 1
       },
       "DisplayNames": {
-        "Value_01": "No Trigger",
-        "Value_02": "Mission Complete",
-        "Value_03": "Dialogue Complete",
-        "Value_04": "Faith",
-        "Value_05": "Fear",
-        "Value_06": "Salt"
+        "Value_01": "Value (01)"
       }
     },
     {
@@ -636,6 +626,87 @@
       ]
     },
     {
+      "Type": "One_Time_Dialogue",
+      "Class": "Dialogue",
+      "InheritsFrom": "Dialogue",
+      "Template": {
+        "TechnicalName": "One_Time_Dialogue",
+        "DisplayName": "One_Time_Dialogue",
+        "Features": [
+          {
+            "TechnicalName": "Triggers",
+            "DisplayName": "Triggers",
+            "Properties": [
+              {
+                "Property": "OnlyOnce",
+                "Type": "Bool",
+                "DisplayName": "Only Once"
+              },
+              {
+                "Property": "EnumValue",
+                "Type": "EnumValue",
+                "DisplayName": "Drop-down list"
+              },
+              {
+                "Property": "ReferenceSlot",
+                "Type": "Id",
+                "DisplayName": "Slot"
+              }
+            ],
+            "Constraints": [
+              {
+                "Property": "OnlyOnce",
+                "Type": "Boolean",
+                "DisplayAsCombobox": "False"
+              },
+              {
+                "Property": "EnumValue",
+                "Type": "Enum",
+                "IsLocalized": "False",
+                "SortMode": "BySortIndex"
+              },
+              {
+                "Property": "ReferenceSlot",
+                "Type": "ReferenceSlot",
+                "AllowedModelTypes": [
+                  "FlowFragment",
+                  "Dialogue",
+                  "DialogueFragment",
+                  "Condition",
+                  "Instruction",
+                  "Hub",
+                  "Jump",
+                  "Entity",
+                  "Location",
+                  "Link",
+                  "Path",
+                  "Spot",
+                  "Zone",
+                  "LocationText",
+                  "LocationImage",
+                  "Document",
+                  "TextObject",
+                  "Journey",
+                  "Asset"
+                ],
+                "PlaceholderValue": "",
+                "AllowedAssetCategories": [
+                  "None",
+                  "Image",
+                  "Video",
+                  "Audio",
+                  "Document",
+                  "Misc",
+                  "All"
+                ],
+                "AllowedModelTemplates": []
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
       "Type": "DialogueFragment",
       "Class": "DialogueFragment",
       "DisplayName": "DialogueFragment",
@@ -711,78 +782,7 @@
       "Template": {
         "TechnicalName": "HappensOnce",
         "DisplayName": "HappensOnce",
-        "Features": [
-          {
-            "TechnicalName": "EventUnique",
-            "DisplayName": "Event Happens Once",
-            "Properties": [
-              {
-                "Property": "BooleanValue",
-                "Type": "Bool",
-                "DisplayName": "Boolean"
-              },
-              {
-                "Property": "Triggers",
-                "Type": "Triggers",
-                "DisplayName": "Triggers"
-              },
-              {
-                "Property": "TriggerRefence",
-                "Type": "Id",
-                "DisplayName": "Trigger Refence"
-              }
-            ],
-            "Constraints": [
-              {
-                "Property": "BooleanValue",
-                "Type": "Boolean",
-                "DisplayAsCombobox": "False"
-              },
-              {
-                "Property": "Triggers",
-                "Type": "Enum",
-                "IsLocalized": "False",
-                "SortMode": "BySortIndex"
-              },
-              {
-                "Property": "TriggerRefence",
-                "Type": "ReferenceSlot",
-                "AllowedModelTypes": [
-                  "FlowFragment",
-                  "Dialogue",
-                  "DialogueFragment",
-                  "Condition",
-                  "Instruction",
-                  "Hub",
-                  "Jump",
-                  "Entity",
-                  "Location",
-                  "Link",
-                  "Path",
-                  "Spot",
-                  "Zone",
-                  "LocationText",
-                  "LocationImage",
-                  "Document",
-                  "TextObject",
-                  "Journey",
-                  "Asset"
-                ],
-                "PlaceholderValue": "",
-                "AllowedAssetCategories": [
-                  "None",
-                  "Image",
-                  "Video",
-                  "Audio",
-                  "Document",
-                  "Misc",
-                  "All"
-                ],
-                "AllowedModelTemplates": []
-              }
-            ]
-          }
-        ]
+        "Features": []
       }
     },
     {
@@ -2333,8 +2333,8 @@
             "Text": "Stu is sitting in the pilot seat as Dr. Carver leans over the back. Stu is arguing with Trena and Carver is mediating",
             "ExternalId": "",
             "Position": {
-              "x": 425.0,
-              "y": 250.0
+              "x": 400.0,
+              "y": 150.0
             },
             "ZIndex": 23.0,
             "Size": {
@@ -2489,8 +2489,8 @@
             "Text": "Loop enters engineering. Only O'Mally's feet are visible as she works on the engine.",
             "ExternalId": "",
             "Position": {
-              "x": 250.0,
-              "y": 75.0
+              "x": 675.0,
+              "y": -75.0
             },
             "ZIndex": 10.0,
             "Size": {
@@ -2593,8 +2593,8 @@
             "Text": "As Loop enters the sickbay Dr. Grunfeld is busy organizing. She almost drops something when Loop starts to talk.",
             "ExternalId": "",
             "Position": {
-              "x": 300.0,
-              "y": 175.0
+              "x": 100.0,
+              "y": 50.0
             },
             "ZIndex": 13.0,
             "Size": {
@@ -2811,8 +2811,8 @@
                       "b": 0.8
                     },
                     "Label": "",
-                    "TargetPin": "0x1000003000004C4",
-                    "Target": "0x1000003000004C3"
+                    "TargetPin": "0x1000003000008A2",
+                    "Target": "0x1000003000008A0"
                   }
                 ]
               }
@@ -2888,8 +2888,8 @@
                       "b": 0.8
                     },
                     "Label": "",
-                    "TargetPin": "0x100000300000538",
-                    "Target": "0x100000300000537"
+                    "TargetPin": "0x1000003000008BE",
+                    "Target": "0x1000003000008BC"
                   }
                 ]
               }
@@ -2943,7 +2943,7 @@
             "ExternalId": "",
             "Position": {
               "x": 317.0,
-              "y": 800.0
+              "y": 775.0
             },
             "ZIndex": 76.0,
             "Size": {
@@ -2965,8 +2965,8 @@
                       "b": 0.8
                     },
                     "Label": "",
-                    "TargetPin": "0x100000300000573",
-                    "Target": "0x100000300000572"
+                    "TargetPin": "0x1000003000008B2",
+                    "Target": "0x1000003000008B0"
                   }
                 ]
               }
@@ -5563,7 +5563,7 @@
             "ExternalId": "",
             "Position": {
               "x": 25.0,
-              "y": 875.0
+              "y": 825.0
             },
             "ZIndex": 6.0,
             "Size": {
@@ -5617,6 +5617,108 @@
                 "Text": "",
                 "Id": "0x100000200002177",
                 "Owner": "0x100000200002174"
+              }
+            ]
+          }
+        },
+        {
+          "Type": "Jump",
+          "Properties": {
+            "TechnicalName": "Jmp_130DB8F4",
+            "Id": "0x1000003000008A7",
+            "Parent": "0x1000003000004BC",
+            "Target": "0x100000200002169",
+            "TargetPin": "0x10000020000216B",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 750.0,
+              "y": 150.0
+            },
+            "ZIndex": 26.0,
+            "Size": {
+              "w": 175.0,
+              "h": 150.0
+            },
+            "ShortId": 319666420,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000008AA",
+                "Owner": "0x1000003000008A7"
+              }
+            ]
+          }
+        },
+        {
+          "Type": "Jump",
+          "Properties": {
+            "TechnicalName": "Jmp_B1A8E152",
+            "Id": "0x1000003000008AC",
+            "Parent": "0x100000300000571",
+            "Target": "0x100000200002169",
+            "TargetPin": "0x10000020000216B",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 525.0,
+              "y": 75.0
+            },
+            "ZIndex": 14.0,
+            "Size": {
+              "w": 175.0,
+              "h": 150.0
+            },
+            "ShortId": 2980634962,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000008AF",
+                "Owner": "0x1000003000008AC"
+              }
+            ]
+          }
+        },
+        {
+          "Type": "Jump",
+          "Properties": {
+            "TechnicalName": "Jmp_36623B06",
+            "Id": "0x1000003000008B8",
+            "Parent": "0x100000300000536",
+            "Target": "0x100000200002169",
+            "TargetPin": "0x10000020000216B",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 450.0,
+              "y": 25.0
+            },
+            "ZIndex": 13.0,
+            "Size": {
+              "w": 175.0,
+              "h": 150.0
+            },
+            "ShortId": 912407302,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000008BB",
+                "Owner": "0x1000003000008B8"
               }
             ]
           }
@@ -5687,6 +5789,222 @@
                     "Label": "",
                     "TargetPin": "0x100000200002177",
                     "Target": "0x100000200002174"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "Condition",
+          "Properties": {
+            "TechnicalName": "Cnd_0C6AF102",
+            "Id": "0x1000003000008A0",
+            "Parent": "0x1000003000004BC",
+            "DisplayName": "Episode_01.s01_Visited_Bridge == false",
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 400.0,
+              "y": 375.0
+            },
+            "ZIndex": 24.0,
+            "Size": {
+              "w": 225.0,
+              "h": 100.0
+            },
+            "ShortId": 208335106,
+            "Expression": "Episode_01.s01_Visited_Bridge == false",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000008A2",
+                "Owner": "0x1000003000008A0"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000008A3",
+                "Owner": "0x1000003000008A0",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x1000003000004C4",
+                    "Target": "0x1000003000004C3"
+                  }
+                ]
+              },
+              {
+                "Text": "",
+                "Id": "0x1000003000008A4",
+                "Owner": "0x1000003000008A0",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x1000003000008AA",
+                    "Target": "0x1000003000008A7"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "Condition",
+          "Properties": {
+            "TechnicalName": "Cnd_71A22FC7",
+            "Id": "0x1000003000008B0",
+            "Parent": "0x100000300000571",
+            "DisplayName": "Episode_01.s01_Visited_Sick_Bay == false",
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 200.0,
+              "y": 325.0
+            },
+            "ZIndex": 15.0,
+            "Size": {
+              "w": 225.0,
+              "h": 100.0
+            },
+            "ShortId": 1906454471,
+            "Expression": "Episode_01.s01_Visited_Sick_Bay == false",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000008B2",
+                "Owner": "0x1000003000008B0"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000008B3",
+                "Owner": "0x1000003000008B0",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300000573",
+                    "Target": "0x100000300000572"
+                  }
+                ]
+              },
+              {
+                "Text": "",
+                "Id": "0x1000003000008B4",
+                "Owner": "0x1000003000008B0",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x1000003000008AF",
+                    "Target": "0x1000003000008AC"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "Condition",
+          "Properties": {
+            "TechnicalName": "Cnd_3F72AC49",
+            "Id": "0x1000003000008BC",
+            "Parent": "0x100000300000536",
+            "DisplayName": "Episode_01.s01_Visited_Engine_Room = ...",
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 250.0,
+              "y": 275.0
+            },
+            "ZIndex": 14.0,
+            "Size": {
+              "w": 225.0,
+              "h": 100.0
+            },
+            "ShortId": 1064479817,
+            "Expression": "Episode_01.s01_Visited_Engine_Room == false",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000008BE",
+                "Owner": "0x1000003000008BC"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000008BF",
+                "Owner": "0x1000003000008BC",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300000538",
+                    "Target": "0x100000300000537"
+                  }
+                ]
+              },
+              {
+                "Text": "",
+                "Id": "0x1000003000008C0",
+                "Owner": "0x1000003000008BC",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x1000003000008BB",
+                    "Target": "0x1000003000008B8"
                   }
                 ]
               }
@@ -9265,6 +9583,16 @@
                             "Id": "0x100000300000514",
                             "TechnicalName": "FFr_3FA25734",
                             "Type": "FlowFragment"
+                          },
+                          {
+                            "Id": "0x1000003000008A0",
+                            "TechnicalName": "Cnd_0C6AF102",
+                            "Type": "Condition"
+                          },
+                          {
+                            "Id": "0x1000003000008A7",
+                            "TechnicalName": "Jmp_130DB8F4",
+                            "Type": "Jump"
                           }
                         ]
                       },
@@ -9324,6 +9652,16 @@
                             "Id": "0x100000300000564",
                             "TechnicalName": "FFr_734A5C19",
                             "Type": "FlowFragment"
+                          },
+                          {
+                            "Id": "0x1000003000008B8",
+                            "TechnicalName": "Jmp_36623B06",
+                            "Type": "Jump"
+                          },
+                          {
+                            "Id": "0x1000003000008BC",
+                            "TechnicalName": "Cnd_3F72AC49",
+                            "Type": "Condition"
                           }
                         ]
                       },
@@ -9366,6 +9704,16 @@
                             "Id": "0x10000030000059E",
                             "TechnicalName": "FFr_1C58E07A",
                             "Type": "FlowFragment"
+                          },
+                          {
+                            "Id": "0x1000003000008AC",
+                            "TechnicalName": "Jmp_B1A8E152",
+                            "Type": "Jump"
+                          },
+                          {
+                            "Id": "0x1000003000008B0",
+                            "TechnicalName": "Cnd_71A22FC7",
+                            "Type": "Condition"
                           }
                         ]
                       },
@@ -9631,8 +9979,13 @@
                 "Type": "Feature"
               },
               {
-                "Id": "0x100000000001338",
-                "TechnicalName": "EventUnique",
+                "Id": "0x10000030000084E",
+                "TechnicalName": "Feature",
+                "Type": "Feature"
+              },
+              {
+                "Id": "0x100000300000850",
+                "TechnicalName": "Triggers",
                 "Type": "Feature"
               }
             ]
@@ -9726,7 +10079,14 @@
               {
                 "Id": "0x30000008DD5C0F2",
                 "TechnicalName": "",
-                "Type": "TemplateTypeFolder"
+                "Type": "TemplateTypeFolder",
+                "Children": [
+                  {
+                    "Id": "0x100000300000816",
+                    "TechnicalName": "One_Time_Dialogue",
+                    "Type": "Template"
+                  }
+                ]
               },
               {
                 "Id": "0x300000092CF598E",
