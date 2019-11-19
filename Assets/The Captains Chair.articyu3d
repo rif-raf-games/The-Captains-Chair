@@ -6,7 +6,7 @@
     "set_UseScriptSupport": "True",
     "ExportVersion": "1.1",
     "ObjectDefinitionsHash": "B3E65A02BA371BA46A9D6AAA9620DB047F79C94FD2FDF568FD91383C68F010AB",
-    "ScriptFragmentsHash": "1763094579"
+    "ScriptFragmentsHash": "3157439730"
   },
   "Project": {
     "Name": "The Captains Chair",
@@ -2360,7 +2360,7 @@
             "Id": "0x1000003000002C2",
             "Parent": "0x1000003000002BC",
             "Attachments": [],
-            "DisplayName": "Scene 1",
+            "DisplayName": "Scene 1 (Old)",
             "PreviewImage": {
               "ViewBox": {
                 "x": 0.0,
@@ -2530,6 +2530,58 @@
                 "Text": "",
                 "Id": "0x100000300000D87",
                 "Owner": "0x100000300000D83"
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Scene",
+          "Properties": {
+            "TechnicalName": "FFr_A1FE9A81",
+            "Id": "0x100000300001127",
+            "Parent": "0x1000003000002BC",
+            "Attachments": [],
+            "DisplayName": "Scene 1 (Revised)",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.298039228,
+              "g": 0.03529412,
+              "b": 0.03137255
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 225.0,
+              "y": 175.0
+            },
+            "ZIndex": 4.0,
+            "Size": {
+              "w": 275.0,
+              "h": 200.0
+            },
+            "ShortId": 2717817473,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x10000030000112A",
+                "Owner": "0x100000300001127"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x10000030000112B",
+                "Owner": "0x100000300001127"
               }
             ]
           },
@@ -3071,71 +3123,6 @@
         {
           "Type": "Stage_Directions",
           "Properties": {
-            "TechnicalName": "FFr_F1568BF0",
-            "Id": "0x100000300000EAA",
-            "Parent": "0x100000300000EA9",
-            "Attachments": [],
-            "DisplayName": "Untitled flow fragment (10)",
-            "PreviewImage": {
-              "ViewBox": {
-                "x": 0.0,
-                "y": 0.0,
-                "w": 0.0,
-                "h": 0.0
-              },
-              "Mode": "FromAsset",
-              "Asset": "0x0"
-            },
-            "Color": {
-              "r": 0.03529412,
-              "g": 0.113725491,
-              "b": 0.286274523
-            },
-            "Text": "These are the captain's quarters, nothing going on there",
-            "ExternalId": "",
-            "Position": {
-              "x": 503.20000000000005,
-              "y": 310.4
-            },
-            "ZIndex": 0.0,
-            "Size": {
-              "w": 275.0,
-              "h": 200.0
-            },
-            "ShortId": 4048980976,
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x100000300000EAB",
-                "Owner": "0x100000300000EAA"
-              }
-            ],
-            "OutputPins": [
-              {
-                "Text": "",
-                "Id": "0x100000300000EAC",
-                "Owner": "0x100000300000EAA",
-                "Connections": [
-                  {
-                    "Color": {
-                      "a": 1.0,
-                      "r": 0.5764706,
-                      "g": 0.75686276,
-                      "b": 0.8
-                    },
-                    "Label": "",
-                    "TargetPin": "0x100000300000EB4",
-                    "Target": "0x100000300000EA9"
-                  }
-                ]
-              }
-            ]
-          },
-          "Template": {}
-        },
-        {
-          "Type": "Stage_Directions",
-          "Properties": {
             "TechnicalName": "FFr_7D46C240",
             "Id": "0x100000300000EB9",
             "Parent": "0x100000300000EB8",
@@ -3608,7 +3595,20 @@
               {
                 "Text": "",
                 "Id": "0x100000300000646",
-                "Owner": "0x100000300000644"
+                "Owner": "0x100000300000644",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x1000002000023CC",
+                    "Target": "0x1000002000023CA"
+                  }
+                ]
               }
             ]
           },
@@ -4870,8 +4870,8 @@
                       "b": 0.8
                     },
                     "Label": "",
-                    "TargetPin": "0x100000300000EAB",
-                    "Target": "0x100000300000EAA"
+                    "TargetPin": "0x1000003000010FE",
+                    "Target": "0x1000003000010FB"
                   }
                 ]
               }
@@ -5125,6 +5125,57 @@
                     "Target": "0x100000300000FBF"
                   }
                 ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "Dialogue",
+          "Properties": {
+            "TechnicalName": "Dlg_2C09ABB1",
+            "Id": "0x10000030000112D",
+            "Parent": "0x100000300001127",
+            "Attachments": [],
+            "DisplayName": "Loop's Monologue",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": -258.0,
+              "y": 225.0
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 291.0,
+              "h": 200.0
+            },
+            "ShortId": 738831281,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300001130",
+                "Owner": "0x10000030000112D"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300001131",
+                "Owner": "0x10000030000112D"
               }
             ]
           }
@@ -8157,7 +8208,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "Oh you're a sweetie but I'm not even sure there IS anything wrong other than communications being down. The best thing you could do is go check on the crew and let me know what's going on.\r\n\r\nThey are your crew after all.",
+            "Text": "Oh you're a sweetie but I'm not even sure there IS anything wrong other than communications being down. \r\n\r\nGo explore your ship, talk to your crew.",
             "ExternalId": "",
             "Position": {
               "x": 2219.6917235681003,
@@ -9433,6 +9484,83 @@
         {
           "Type": "DialogueFragment",
           "Properties": {
+            "TechnicalName": "DFr_C65B6E3F",
+            "Id": "0x1000003000010FB",
+            "Parent": "0x100000300000EA9",
+            "MenuText": "",
+            "StageDirections": "",
+            "Speaker": "0x100000000000221",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "This was all the Benefactor's design. Do you like it?",
+            "ExternalId": "",
+            "Position": {
+              "x": 550.0,
+              "y": 250.0
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 3327880767,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000010FE",
+                "Owner": "0x1000003000010FB"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000010FF",
+                "Owner": "0x1000003000010FB",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300001112",
+                    "Target": "0x10000030000110F"
+                  },
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300001118",
+                    "Target": "0x100000300001115"
+                  },
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x10000030000111E",
+                    "Target": "0x10000030000111B"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "DialogueFragment",
+          "Properties": {
             "TechnicalName": "DFr_79CE2926",
             "Id": "0x100000300000EE5",
             "Parent": "0x100000300000ECE",
@@ -10273,6 +10401,103 @@
                     "Target": "0x100000300000D83"
                   }
                 ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "DialogueFragment",
+          "Properties": {
+            "TechnicalName": "DFr_5A110C29",
+            "Id": "0x100000300001133",
+            "Parent": "0x10000030000112D",
+            "MenuText": "",
+            "StageDirections": "",
+            "Speaker": "0x100000000000188",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "Ahoy there Earth Moon and Mars! This is Frederick Loop live from The Majestic as we float somewhere between Jupiter and the Universe.",
+            "ExternalId": "",
+            "Position": {
+              "x": 103.99999999999989,
+              "y": 314.66666666666663
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 201.47058823529414,
+              "h": 300.0
+            },
+            "ShortId": 1511066665,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300001134",
+                "Owner": "0x100000300001133"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300001135",
+                "Owner": "0x100000300001133",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x10000030000113D",
+                    "Target": "0x10000030000113A"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "DialogueFragment",
+          "Properties": {
+            "TechnicalName": "DFr_9E9BFA45",
+            "Id": "0x10000030000113A",
+            "Parent": "0x10000030000112D",
+            "MenuText": "",
+            "StageDirections": "",
+            "Speaker": "0x100000000000188",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 367.33333333333326,
+              "y": 364.66666666666663
+            },
+            "ZIndex": 1.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 2661022277,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x10000030000113D",
+                "Owner": "0x10000030000113A"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x10000030000113E",
+                "Owner": "0x10000030000113A"
               }
             ]
           }
@@ -12456,6 +12681,135 @@
                     "Target": "0x100000300000E29"
                   }
                 ]
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Captain_Dialogue",
+          "Properties": {
+            "TechnicalName": "DFr_B0B90487",
+            "Id": "0x10000030000110F",
+            "Parent": "0x100000300000EA9",
+            "MenuText": "",
+            "StageDirections": "",
+            "Speaker": "0x100000000000190",
+            "Color": {
+              "r": 0.121568628,
+              "g": 0.0156862754,
+              "b": 0.0156862754
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 850.0,
+              "y": 0.0
+            },
+            "ZIndex": 2.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 2964915335,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300001112",
+                "Owner": "0x10000030000110F"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300001113",
+                "Owner": "0x10000030000110F"
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Captain_Dialogue",
+          "Properties": {
+            "TechnicalName": "DFr_C27A315E",
+            "Id": "0x100000300001115",
+            "Parent": "0x100000300000EA9",
+            "MenuText": "",
+            "StageDirections": "",
+            "Speaker": "0x100000000000190",
+            "Color": {
+              "r": 0.121568628,
+              "g": 0.0156862754,
+              "b": 0.0156862754
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 850.0,
+              "y": 250.0
+            },
+            "ZIndex": 4.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 3262787934,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300001118",
+                "Owner": "0x100000300001115"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300001119",
+                "Owner": "0x100000300001115"
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Captain_Dialogue",
+          "Properties": {
+            "TechnicalName": "DFr_D2D91CD0",
+            "Id": "0x10000030000111B",
+            "Parent": "0x100000300000EA9",
+            "MenuText": "",
+            "StageDirections": "",
+            "Speaker": "0x100000000000190",
+            "Color": {
+              "r": 0.121568628,
+              "g": 0.0156862754,
+              "b": 0.0156862754
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 850.0,
+              "y": 500.0
+            },
+            "ZIndex": 6.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 3537444048,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x10000030000111E",
+                "Owner": "0x10000030000111B"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x10000030000111F",
+                "Owner": "0x10000030000111B"
               }
             ]
           },
@@ -15010,6 +15364,60 @@
           }
         },
         {
+          "Type": "Instruction",
+          "Properties": {
+            "TechnicalName": "Ins_2EA646A5",
+            "Id": "0x1000002000023CA",
+            "Parent": "0x1000003000002C2",
+            "DisplayName": "DeleteSaveData()",
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 1925.0,
+              "y": 750.0
+            },
+            "ZIndex": 25.0,
+            "Size": {
+              "w": 225.0,
+              "h": 100.0
+            },
+            "ShortId": 782648997,
+            "Expression": "DeleteSaveData()",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000002000023CC",
+                "Owner": "0x1000002000023CA"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000002000023CD",
+                "Owner": "0x1000002000023CA",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000200002177",
+                    "Target": "0x100000200002174"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
           "Type": "Comment",
           "Properties": {
             "TechnicalName": "CMT_72057606922832424",
@@ -15571,6 +15979,10 @@
   "ScriptMethods": [
     {
       "Name": "OpenCaptainsDoor",
+      "ReturnType": "void"
+    },
+    {
+      "Name": "DeleteSaveData",
       "ReturnType": "void"
     }
   ],
@@ -19065,6 +19477,11 @@
                             "Type": "Jump"
                           }
                         ]
+                      },
+                      {
+                        "Id": "0x1000002000023CA",
+                        "TechnicalName": "Ins_2EA646A5",
+                        "Type": "Instruction"
                       }
                     ]
                   },
@@ -19458,9 +19875,24 @@
                         "Type": "Dialogue",
                         "Children": [
                           {
-                            "Id": "0x100000300000EAA",
-                            "TechnicalName": "FFr_F1568BF0",
-                            "Type": "FlowFragment"
+                            "Id": "0x1000003000010FB",
+                            "TechnicalName": "DFr_C65B6E3F",
+                            "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x10000030000110F",
+                            "TechnicalName": "DFr_B0B90487",
+                            "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x100000300001115",
+                            "TechnicalName": "DFr_C27A315E",
+                            "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x10000030000111B",
+                            "TechnicalName": "DFr_D2D91CD0",
+                            "Type": "DialogueFragment"
                           }
                         ]
                       },
@@ -19679,6 +20111,30 @@
                         "Id": "0x100000300000FF6",
                         "TechnicalName": "Jmp_7919A797",
                         "Type": "Jump"
+                      }
+                    ]
+                  },
+                  {
+                    "Id": "0x100000300001127",
+                    "TechnicalName": "FFr_A1FE9A81",
+                    "Type": "FlowFragment",
+                    "Children": [
+                      {
+                        "Id": "0x10000030000112D",
+                        "TechnicalName": "Dlg_2C09ABB1",
+                        "Type": "Dialogue",
+                        "Children": [
+                          {
+                            "Id": "0x100000300001133",
+                            "TechnicalName": "DFr_5A110C29",
+                            "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x10000030000113A",
+                            "TechnicalName": "DFr_9E9BFA45",
+                            "Type": "DialogueFragment"
+                          }
+                        ]
                       }
                     ]
                   }
