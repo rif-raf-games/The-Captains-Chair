@@ -9,25 +9,36 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     public enum ArticyState { FREE_ROAM, CUT_SCENE, CONVERSATION, NUM_ARTICY_STATES };
     public ArticyState CurArticyState;
 
-    public TheCaptainsChair CaptainsChair;
-    public Player Player;
-
+    // objet references
+    TheCaptainsChair CaptainsChair;
+    CCPlayer Player;
     ArticyFlowPlayer FlowPlayer;
+
+    // flow stuff
     IFlowObject CurPauseObject = null;
     List<Branch> CurBranches = new List<Branch>();
     Branch NextBranch = null;
 
+    // temp UI's for cutscenes and conversations
     public CutSceneUI CutSceneUI;
     public ConvoUI ConvoUI;
 
     public bool IsCalledInForecast { get; set; }
-    
+
+    void Start()
+    {
+        Player = GameObject.FindObjectOfType<CCPlayer>();
+        CaptainsChair = GameObject.FindObjectOfType<TheCaptainsChair>();
+        FlowPlayer = this.GetComponent<ArticyFlowPlayer>();       
+
+        CurArticyState = ArticyState.NUM_ARTICY_STATES;
+    }
+
     public void OpenCaptainsDoor()
     {
         if (IsCalledInForecast == false)
         {
-            Debug.Log("-------------------------------------------------------------- OpenCaptainDoor(): Open the door");
-            CaptainsChair.OpenCaptainsDoor();
+            Debug.Log("-------------------------------------------------------------- called OpenCaptainsDoor() but we're changing functionality");        
         }
         else
         {
@@ -111,7 +122,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             else if(CurPauseObject.GetType().Equals(typeof(Hub)) && CurBranches[0].Target.GetType().Equals(typeof(OutputPin)))
             {
                 StaticStuff.PrintFlowBranchesUpdate("We're paused on a Hub with no Target so we're in Free Roam.  Don't Play() anything.");
-                CurArticyState = ArticyState.FREE_ROAM;
+                CurArticyState = ArticyState.FREE_ROAM;                
             }
             
             else
@@ -156,11 +167,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         }
     }
     // Start is called before the first frame update
-    void Start()
-    {
-        FlowPlayer = this.GetComponent<ArticyFlowPlayer>();
-        CurArticyState = ArticyState.NUM_ARTICY_STATES;
-    }
+    
 
     // Update is called once per frame
     void Update()

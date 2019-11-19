@@ -6,26 +6,39 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 
-public class Player : MonoBehaviour
+public class CCPlayer : MonoBehaviour
 {    
-    public ArticyFlow ArticyFlow;
-
-    //string LastNavMeshClicked = "";    
+    ArticyFlow ArticyFlow;
+       
     private NavMeshAgent NavMeshAgent;
-    public Vector3 CamOffset;
+    Vector3 CamOffset;
 
-    public NavMeshSurface[] FloorNavMeshSurfaces;
-    public NavMeshSurface[] ElevatorNavMeshSurfaces;
+    NavMeshSurface[] FloorNavMeshSurfaces;
+    NavMeshSurface[] ElevatorNavMeshSurfaces;
     bool TurnOnNavMeshes = false;
 
     Elevator SelectedElevator = null;
 
     private bool MovementBlocked = false;
 
-    public Text DebugText;
+    //public Text DebugText;
     public GameObject DebugDestPos;
-    //public bool CameraFollow = true;
 
+    // Start is called before the first frame update
+    void Start()
+    {
+        NavMeshAgent = this.GetComponent<NavMeshAgent>();
+        ArticyFlow = FindObjectOfType<ArticyFlow>();
+        GameObject[] floors = GameObject.FindGameObjectsWithTag("FloorNavMesh");
+        FloorNavMeshSurfaces = new NavMeshSurface[floors.Length];
+        for (int i = 0; i < floors.Length; i++) FloorNavMeshSurfaces[i] = floors[i].GetComponent<NavMeshSurface>();
+        GameObject[] elevators = GameObject.FindGameObjectsWithTag("ElevatorNavMesh");
+        ElevatorNavMeshSurfaces = new NavMeshSurface[elevators.Length];
+        for (int i = 0; i < elevators.Length; i++) ElevatorNavMeshSurfaces[i] = elevators[i].GetComponent<NavMeshSurface>();
+
+        CamOffset = Camera.main.transform.position - this.transform.position;
+        ToggleMovementBlocked(false);
+    }
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log(this.name + " OnTriggerEnter() other: " + other.name + ", layer: " + other.gameObject.layer);       
@@ -132,14 +145,7 @@ public class Player : MonoBehaviour
             foreach (NavMeshSurface n in FloorNavMeshSurfaces) n.enabled = true;
             foreach (NavMeshSurface n in ElevatorNavMeshSurfaces) n.enabled = true;
         }        
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-        NavMeshAgent = this.GetComponent<NavMeshAgent>();
-        CamOffset = Camera.main.transform.position - this.transform.position;
-        ToggleMovementBlocked(false);
-    }
+    }    
 
     // Update is called once per frame
     void Update()
@@ -185,9 +191,9 @@ public class Player : MonoBehaviour
 
     void DebugStuff()
     {
-        if (DebugText != null)
+       /* if (DebugText != null)
         {
-            /*DebugText.text = NavMeshAgent.navMeshOwner.name + "\n";
+            DebugText.text = NavMeshAgent.navMeshOwner.name + "\n";
             if (SelectedElevator == null) DebugText.text += "no SelectedElevator\n";
             else DebugText.text += "SelectedElevator: " + SelectedElevator.name + "\n";
             DebugText.text += "ClickedElevator: " + (SelectedElevator != null) + "\n";
@@ -195,7 +201,7 @@ public class Player : MonoBehaviour
             DebugText.text += "pathStatus: " + NavMeshAgent.pathStatus.ToString() + "\n";
             DebugText.text += "isStopped: " + NavMeshAgent.isStopped + "\n";
             DebugText.text += "remainingDistance: " + NavMeshAgent.remainingDistance + "\n";
-            DebugText.text += "MovementBlocked: " + MovementBlocked;*/
-        }
+            DebugText.text += "MovementBlocked: " + MovementBlocked;
+        }*/
     }
 }

@@ -11,7 +11,9 @@ public class ConvoUI : MonoBehaviour
     public Text SpeakerText;
     public GameObject[] DialogueOptions;
 
-    public Player Player;
+    TheCaptainsChair CapChair;
+
+    public CCPlayer Player;
 
     public void ShowDialogueFragment(DialogueFragment dialogueFrag, IFlowObject flowObj, IList<Branch> dialogueOptions)
     {
@@ -42,12 +44,12 @@ public class ConvoUI : MonoBehaviour
     public void EndConversation()
     {
         this.gameObject.SetActive(false);
-        Player.ToggleMovementBlocked(false);
+        Player.ToggleMovementBlocked(false);        
     }
     // Start is called before the first frame update
     void Start()
     {
-        
+        CapChair = GameObject.FindObjectOfType<TheCaptainsChair>();
     }
 
     // Update is called once per frame

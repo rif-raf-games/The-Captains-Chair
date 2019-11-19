@@ -14,10 +14,10 @@ public class Elevator : MonoBehaviour
     float LerpStartTime;
     int NewFloor;    
 
-    Player Player;
+    CCPlayer Player;
     private void Start()
     {
-        Player = FindObjectOfType<Player>();
+        Player = FindObjectOfType<CCPlayer>();
     }   
     public bool ShouldMoveAsWell(int newFloor)
     {

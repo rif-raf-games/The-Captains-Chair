@@ -9,7 +9,7 @@ public class CutSceneUI : MonoBehaviour
     public Text DescriptionText; 
     public Text NodeText;
 
-    public Player Player;
+    public CCPlayer Player;
 
     public void StartCutScene(Cut_Scene cutScene)
     {

@@ -6,17 +6,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class TheCaptainsChair : MonoBehaviour
-{
-    public Door CaptainsDoor;
-    
-    public void OpenCaptainsDoor()
-    {
-        CaptainsDoor.Open();
-    }
+{           
     // Start is called before the first frame update
     void Start()
     {
         Debug.Log("Welcome to The Captain's Chair!!");
+       // LoadTheData();
     }
 
     // Update is called once per frame
@@ -31,35 +26,69 @@ public class TheCaptainsChair : MonoBehaviour
         {
             SaveTheData();
         }
-    }*/
+        if (GUI.Button(new Rect(0, 100, 100, 100), "LoadData"))
+        {
+            LoadTheData();
+        }
+        if (GUI.Button(new Rect(0, 200, 100, 100), "Delete"))
+        {
+            PlayerPrefs.DeleteKey("SaveData");
+        }
 
-    /*[System.Serializable]
+    }
+
+    [System.Serializable]
     public class SaveData
     {
         public List<string> keys;
-        public List<object> values;
+        public List<bool> values;
 
         public SaveData()
         {
             keys = new List<string>();
-            values = new List<object>();
+            values = new List<bool>();
         }
-    }*/
+    }
 
-    void SaveTheData()
+    public void SaveTheData()
     {
-        /*string s = JsonUtility.ToJson(ArticyDatabase.DefaultGlobalVariables.Variables);
+        string s = JsonUtility.ToJson(ArticyDatabase.DefaultGlobalVariables.Variables);
         Debug.Log(s);
         SaveData saveData = new SaveData();
         foreach (var pair in ArticyDatabase.DefaultGlobalVariables.Variables)
         {
-            Debug.Log(pair.Key + ", " + pair.Value);
+            Debug.Log(pair.Key + ", " + pair.Value + ", Value type: " + pair.Value.GetType());
             saveData.keys.Add(pair.Key);
-            saveData.values.Add(pair.Value);
-        }
+            saveData.values.Add((bool)pair.Value);            
+        }        
 
-        int x = 5;
-        x++;*/
+        string saveInfo = JsonUtility.ToJson(saveData);
+        Debug.Log("saveInfo: " + saveInfo);
+        PlayerPrefs.SetString("SaveData", saveInfo);
+
+        string loadInfo = PlayerPrefs.GetString("SaveData");
+        SaveData loadData = JsonUtility.FromJson<SaveData>(loadInfo);        
+    }
+    void LoadTheData()
+    {
+        if (PlayerPrefs.HasKey("SaveData") == false)
+        {
+            Debug.LogWarning("You do not have any save data to load");
+            return;
+        }
+        string loadInfo = PlayerPrefs.GetString("SaveData");
+        SaveData loadData = JsonUtility.FromJson<SaveData>(loadInfo);
+
+        int i = 0;
+        foreach(string key in loadData.keys)
+        {
+            object o = (object)loadData.values[i];
+            ArticyDatabase.DefaultGlobalVariables.SetVariableByString(key, o);
+            i++;
+        }
+    }*/
+//    saveInfo: { "keys":["Episode_01.s01_Visited_Sick_Bay","Episode_01.s01_Visited_Bridge","Episode_01.s01_Visited_Engine_Room","Episode_01.s01_Visited_Common","Episode_01.s01_Visited_Storage","Episode_01.s01_Visited_Lab","Captains_Chair.Peace_Keeper","Captains_Chair.Promethius","Captains_Chair.Sea_Exporation"]
+
 
 
 
@@ -216,5 +245,5 @@ public class TheCaptainsChair : MonoBehaviour
 
 
 
-}
+
 
