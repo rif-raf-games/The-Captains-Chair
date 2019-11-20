@@ -77,15 +77,15 @@ public class TheCaptainsChair : MonoBehaviour
 
     private void OnGUI()
     {
-        if (GUI.Button(new Rect(0, 0, 100, 100), "SaveData"))
+        /*if (GUI.Button(new Rect(0, 0, 100, 100), "SaveData"))
         {
             SaveSaveData();
         }
         if (GUI.Button(new Rect(0, 100, 100, 100), "LoadData"))
         {
             LoadSaveData();
-        }
-        if (GUI.Button(new Rect(0, 200, 100, 100), "Delete"))
+        }*/
+        if (GUI.Button(new Rect(0, 0, 100, 50), "Delete\nSave Data"))
         {
             DeleteSaveData();
         }
