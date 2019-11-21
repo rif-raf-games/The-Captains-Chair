@@ -17,4 +17,9 @@ static public class StaticStuff
     {
        // Debug.Log(s);
     }
+
+    static public void PrintTriggerEnter(string s)
+    {
+        //Debug.Log(s);
+    }
 }

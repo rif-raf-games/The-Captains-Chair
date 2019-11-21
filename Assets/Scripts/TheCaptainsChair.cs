@@ -13,6 +13,8 @@ public class TheCaptainsChair : MonoBehaviour
     void Start()
     {
         Debug.Log("Welcome to The Captain's Chair!!");
+        SoundFX soundFX = FindObjectOfType<SoundFX>();
+        SoundFXPlayer.Init(soundFX);
         LoadSaveData();
     }
 
@@ -85,10 +87,10 @@ public class TheCaptainsChair : MonoBehaviour
         {
             LoadSaveData();
         }*/
-        if (GUI.Button(new Rect(0, 0, 100, 50), "Delete\nSave Data"))
+        /*(if (GUI.Button(new Rect(0, 0, 100, 50), "Delete\nSave Data"))
         {
             DeleteSaveData();
-        }
+        }*/
 
     }
 

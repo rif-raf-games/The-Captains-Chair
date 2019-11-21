@@ -25,8 +25,13 @@ public class Ship_Door_Script : MonoBehaviour {
         }
     }
 
-    void SlideDoors(bool state) {
+    void SlideDoors(bool state)
+    {
         DoorTopAnimation.SetBool ("slide", state);
         DoorBottomAnimation.SetBool ("slide", state);
-    }
+
+        // true = open, false = close        
+        if (state == true) SoundFXPlayer.Play("Door_Open");
+        else SoundFXPlayer.Play("Door_Close");        
+    }    
 }
