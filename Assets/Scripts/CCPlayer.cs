@@ -28,7 +28,8 @@ public class CCPlayer : MonoBehaviour
     {
         NavMeshAgent = this.GetComponent<NavMeshAgent>();       
         ArticyFlow = FindObjectOfType<ArticyFlow>();
-        PlayerAnimator = GetComponent<Animator>();
+        m_Anim = GetComponent<Animator>();
+        m_Rbody = GetComponent<Rigidbody>();
 
         GameObject[] floors = GameObject.FindGameObjectsWithTag("FloorNavMesh");
         FloorNavMeshSurfaces = new NavMeshSurface[floors.Length];
@@ -37,33 +38,12 @@ public class CCPlayer : MonoBehaviour
         ElevatorNavMeshSurfaces = new NavMeshSurface[elevators.Length];
         for (int i = 0; i < elevators.Length; i++) ElevatorNavMeshSurfaces[i] = elevators[i].GetComponent<NavMeshSurface>();
 
+        m_LastPos = transform.position;
+        Debug.Log("start pos: " + transform.position.ToString("F4"));
         CamOffset = Camera.main.transform.position - this.transform.position;
         ToggleMovementBlocked(false);
     }
-
-   /* private void OnGUI()
-    {
-        if (GUI.Button(new Rect(Screen.width - 100, 0, 100, 100), "animDebug\n" +(animDebug)))
-        {
-            animDebug = !animDebug;
-            //NavMeshAgent.isStopped = true;
-        }
-    }
-    bool animDebug = false;
-    void AnimUpdate()
-    {
-        if(animDebug == true)
-        {
-            int x = 5;
-            x++;            
-        }
-        
-    }
-
-    void AnimLateUpdate()
-    {
-
-    }*/
+   
     private void OnTriggerEnter(Collider other)
     {
         StaticStuff.PrintTriggerEnter(this.name + " OnTriggerEnter() other: " + other.name + ", layer: " + other.gameObject.layer);       
@@ -167,8 +147,9 @@ public class CCPlayer : MonoBehaviour
             SetNavMeshDest(SelectedElevator.transform.GetChild(0).transform.position);            
         }        
     }
-    bool lastPath = false;
-    int frameNum = 0;
+
+    Vector3 m_LastPos = Vector3.zero;
+    Vector3 m_DeltaPos = Vector3.zero;
     private void LateUpdate()
     {        
         Camera.main.transform.position = this.transform.position + CamOffset;
@@ -177,33 +158,22 @@ public class CCPlayer : MonoBehaviour
             foreach (NavMeshSurface n in FloorNavMeshSurfaces) n.enabled = true;
             foreach (NavMeshSurface n in ElevatorNavMeshSurfaces) n.enabled = true;
         }
-       /* if (NavMeshAgent.hasPath == false && lastPath == true)
-        {
-            Debug.Log("stopped. remain: " + NavMeshAgent.remainingDistance + ", stopping: " + NavMeshAgent.stoppingDistance +
-                ", diff: " + (NavMeshAgent.remainingDistance - NavMeshAgent.stoppingDistance) + ", frameNum: " + frameNum);
-            // Debug.Log("close enough?: " + (NavMeshAgent.remainingDistance <= NavMeshAgent.stoppingDistance));
-        }
-        lastPath = NavMeshAgent.hasPath;
-        // Debug.Log("1: " + NavMeshAgent.hasPath);
-        if (NavMeshAgent.remainingDistance <= NavMeshAgent.stoppingDistance)
-        {
-            Debug.Log("less.  hasPath: " + NavMeshAgent.hasPath + ", frameNum: " + frameNum);
-        }
 
-        if (NavMeshAgent.hasPath == true)
-        { // apparently this will never be true
-            if (NavMeshAgent.remainingDistance <= NavMeshAgent.stoppingDistance)
-            {
-                Debug.Log("stop");
-                //NavMeshAgent.isStopped = true;
-            }
-        }
-        if(NavMeshAgent.remainingDistance <= 0f)
+        if(m_Anim != null)
         {
-            Debug.Log("remaingDistance is 0" + ", frameNum: " + frameNum);
-        }
-        frameNum++;*/       
-    }    
+            if (m_DeltaPos.magnitude > 0f)
+            {
+                Debug.Log("why we greater?: " + m_DeltaPos.magnitude);
+                Debug.Log("pos: " + transform.position.ToString("F4") + ", m_DeltaPos: " + m_DeltaPos.ToString("F4"));
+            }
+            m_DeltaPos = transform.position - m_LastPos;
+            m_LastPos = transform.position;
+            m_Anim.SetFloat("Delta Position Magnitude", m_DeltaPos.magnitude);
+        }        
+    }
+
+    public Animator m_Anim;
+    public Rigidbody m_Rbody;
 
     // Update is called once per frame
     void Update()
@@ -255,7 +225,10 @@ public class CCPlayer : MonoBehaviour
     {
         if (DebugText != null)
         {
-            DebugText.text = NavMeshAgent.navMeshOwner.name + "\n";            
+            DebugText.text = "";
+            return;
+            DebugText.text += "m_DeltaPos: " + m_DeltaPos.ToString("F3") + ", mag: " + m_DeltaPos.magnitude + "\n";
+            DebugText.text += NavMeshAgent.navMeshOwner.name + "\n";            
             DebugText.text += "autoBraking: " + NavMeshAgent.autoBraking + "\n";
             DebugText.text += "autoRepath: " + NavMeshAgent.autoRepath + "\n";
             DebugText.text += "destination: " + NavMeshAgent.destination + "\n";
@@ -279,3 +252,33 @@ public class CCPlayer : MonoBehaviour
         }
     }
 }
+
+/*
+ * bool lastPath = false;
+    int frameNum = 0;
+ * if (NavMeshAgent.hasPath == false && lastPath == true)
+        {
+            Debug.Log("stopped. remain: " + NavMeshAgent.remainingDistance + ", stopping: " + NavMeshAgent.stoppingDistance +
+                ", diff: " + (NavMeshAgent.remainingDistance - NavMeshAgent.stoppingDistance) + ", frameNum: " + frameNum);
+            // Debug.Log("close enough?: " + (NavMeshAgent.remainingDistance <= NavMeshAgent.stoppingDistance));
+        }
+        lastPath = NavMeshAgent.hasPath;
+        // Debug.Log("1: " + NavMeshAgent.hasPath);
+        if (NavMeshAgent.remainingDistance <= NavMeshAgent.stoppingDistance)
+        {
+            Debug.Log("less.  hasPath: " + NavMeshAgent.hasPath + ", frameNum: " + frameNum);
+        }
+
+        if (NavMeshAgent.hasPath == true)
+        { // apparently this will never be true
+            if (NavMeshAgent.remainingDistance <= NavMeshAgent.stoppingDistance)
+            {
+                Debug.Log("stop");
+                //NavMeshAgent.isStopped = true;
+            }
+        }
+        if(NavMeshAgent.remainingDistance <= 0f)
+        {
+            Debug.Log("remaingDistance is 0" + ", frameNum: " + frameNum);
+        }
+        frameNum++;*/
