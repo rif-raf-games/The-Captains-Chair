@@ -29,6 +29,8 @@ public class CCPlayer : MonoBehaviour
         NavMeshAgent = this.GetComponent<NavMeshAgent>();       
         ArticyFlow = FindObjectOfType<ArticyFlow>();
         m_Anim = GetComponent<Animator>();
+        m_Anim.enabled = false;
+        StartCoroutine(AnimStartDelay());
         m_Rbody = GetComponent<Rigidbody>();
 
         GameObject[] floors = GameObject.FindGameObjectsWithTag("FloorNavMesh");
@@ -44,6 +46,11 @@ public class CCPlayer : MonoBehaviour
         ToggleMovementBlocked(false);
     }
    
+    IEnumerator AnimStartDelay()
+    {
+        yield return new WaitForEndOfFrame();
+        m_Anim.enabled = true;
+    }
     private void OnTriggerEnter(Collider other)
     {
         StaticStuff.PrintTriggerEnter(this.name + " OnTriggerEnter() other: " + other.name + ", layer: " + other.gameObject.layer);       
