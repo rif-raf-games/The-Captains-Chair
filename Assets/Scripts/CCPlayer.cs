@@ -157,6 +157,9 @@ public class CCPlayer : MonoBehaviour
 
     Vector3 m_LastPos = Vector3.zero;
     Vector3 m_DeltaPos = Vector3.zero;
+    Vector3 m_ForwardDir = Vector3.zero;
+    Vector3 m_MoveDir = Vector3.zero;
+    float m_AngleDiff = 0f;
     private void LateUpdate()
     {        
         Camera.main.transform.position = this.transform.position + CamOffset;
@@ -168,14 +171,18 @@ public class CCPlayer : MonoBehaviour
 
         if(m_Anim != null)
         {
-            if (m_DeltaPos.magnitude > 0f)
+            /*if (m_DeltaPos.magnitude > 0f)
             {
                 Debug.Log("why we greater?: " + m_DeltaPos.magnitude);
                 Debug.Log("pos: " + transform.position.ToString("F4") + ", m_DeltaPos: " + m_DeltaPos.ToString("F4"));
-            }
+            }*/
             m_DeltaPos = transform.position - m_LastPos;
-            m_LastPos = transform.position;
+            m_MoveDir = transform.position - m_LastPos;
+            m_ForwardDir = transform.forward;
+            m_AngleDiff = Vector3.Angle(m_ForwardDir, m_MoveDir);            
             m_Anim.SetFloat("Delta Position Magnitude", m_DeltaPos.magnitude);
+            m_Anim.SetFloat("Angle Diff", m_AngleDiff);
+            m_LastPos = transform.position;
         }        
     }
 
@@ -226,15 +233,19 @@ public class CCPlayer : MonoBehaviour
         MovementBlocked = val;
     }
 
-    
+    public Vector3 offset = new Vector3(0f, 0f, 0f);   
     public Text DebugText;
     void DebugStuff()
-    {
+    {               
+        Debug.DrawRay(transform.position + offset, m_ForwardDir, Color.blue);        
+        Debug.DrawRay(transform.position + offset, m_MoveDir.normalized, Color.yellow);                
         if (DebugText != null)
         {
-            DebugText.text = "";
-            return;
+            DebugText.text = "";           
             DebugText.text += "m_DeltaPos: " + m_DeltaPos.ToString("F3") + ", mag: " + m_DeltaPos.magnitude + "\n";
+            DebugText.text += "m_ForwardDir: " + m_ForwardDir.ToString("F3") + "\n";
+            DebugText.text += "m_AngleDiff: " + m_AngleDiff + "\n";            
+            return;
             DebugText.text += NavMeshAgent.navMeshOwner.name + "\n";            
             DebugText.text += "autoBraking: " + NavMeshAgent.autoBraking + "\n";
             DebugText.text += "autoRepath: " + NavMeshAgent.autoRepath + "\n";
