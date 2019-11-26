@@ -241,11 +241,12 @@ public class CCPlayer : MonoBehaviour
         Debug.DrawRay(transform.position + offset, m_MoveDir.normalized, Color.yellow);                
         if (DebugText != null)
         {
-            DebugText.text = "";           
+            DebugText.text = "";
+            return;
             DebugText.text += "m_DeltaPos: " + m_DeltaPos.ToString("F3") + ", mag: " + m_DeltaPos.magnitude + "\n";
             DebugText.text += "m_ForwardDir: " + m_ForwardDir.ToString("F3") + "\n";
             DebugText.text += "m_AngleDiff: " + m_AngleDiff + "\n";            
-            return;
+
             DebugText.text += NavMeshAgent.navMeshOwner.name + "\n";            
             DebugText.text += "autoBraking: " + NavMeshAgent.autoBraking + "\n";
             DebugText.text += "autoRepath: " + NavMeshAgent.autoRepath + "\n";
