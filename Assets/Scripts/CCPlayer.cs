@@ -155,11 +155,15 @@ public class CCPlayer : MonoBehaviour
         }        
     }
 
+    Vector3 m_LastRot = Vector3.zero;
     Vector3 m_LastPos = Vector3.zero;
     Vector3 m_DeltaPos = Vector3.zero;
     Vector3 m_ForwardDir = Vector3.zero;
+    Vector3 m_LastForwardDir = Vector3.zero;
     Vector3 m_MoveDir = Vector3.zero;
-    float m_AngleDiff = 0f;
+    float m_WalkDir = 0f;
+    float m_TurnSpeed = 0f;
+    float m_Speed = 0f;
     private void LateUpdate()
     {        
         Camera.main.transform.position = this.transform.position + CamOffset;
@@ -179,10 +183,27 @@ public class CCPlayer : MonoBehaviour
             m_DeltaPos = transform.position - m_LastPos;
             m_MoveDir = transform.position - m_LastPos;
             m_ForwardDir = transform.forward;
-            m_AngleDiff = Vector3.Angle(m_ForwardDir, m_MoveDir);            
-            m_Anim.SetFloat("Delta Position Magnitude", m_DeltaPos.magnitude);
-            m_Anim.SetFloat("Angle Diff", m_AngleDiff);
+
+            // determines whether or not we go to the WALK bit
+            m_Speed = m_DeltaPos.magnitude * 10f;
+            m_Anim.SetFloat("Speed", m_Speed);
+
+            // determines how much of the WalkForward and WalkBackward we play
+            m_WalkDir = Vector3.Angle(m_ForwardDir, m_MoveDir)/180f;
+            m_WalkDir *= 2;
+            m_WalkDir = 1 - m_WalkDir;
+            // 0 = forward, 1 = backward
+            // 2*m_WalkDir: 0 = forward, 2 = backward
+            // 1-(above) 1=forward, -1=backward
+            m_Anim.SetFloat("Walk Dir", m_WalkDir);            
+
+            m_TurnSpeed = Vector3.SignedAngle(m_LastForwardDir, m_ForwardDir, Vector3.up);
+            m_TurnSpeed /= 2f;
+            m_Anim.SetFloat("Turn Speed", m_TurnSpeed);
+
             m_LastPos = transform.position;
+            m_LastRot = transform.rotation.eulerAngles;
+            m_LastForwardDir = m_ForwardDir;
         }        
     }
 
@@ -241,11 +262,20 @@ public class CCPlayer : MonoBehaviour
         Debug.DrawRay(transform.position + offset, m_MoveDir.normalized, Color.yellow);                
         if (DebugText != null)
         {
+                        
             DebugText.text = "";
-            return;
-            DebugText.text += "m_DeltaPos: " + m_DeltaPos.ToString("F3") + ", mag: " + m_DeltaPos.magnitude + "\n";
+            /*DebugText.text += "m_DeltaPos: " + m_DeltaPos.ToString("F3") + "\n";
+            DebugText.text += "m_Speed: " + m_Speed + "\n";
             DebugText.text += "m_ForwardDir: " + m_ForwardDir.ToString("F3") + "\n";
-            DebugText.text += "m_AngleDiff: " + m_AngleDiff + "\n";            
+            DebugText.text += "m_ForwardVsMoveDirDiff: " + m_WalkDir + "\n";
+            DebugText.text += "90f - m_ForwardVsMoveDirDiff: " + (90f - m_WalkDir) + "\n";            
+            //DebugText.text += "m_LastRot.y: " + m_LastRot.y + ", curRot.y: " + transform.rotation.eulerAngles.y + ", so \n";
+            DebugText.text += "m_TurnSpeed: " + m_TurnSpeed.ToString("F3") + "\n";
+            if (m_TurnSpeed < 0f) DebugText.text += "turning left" + "\n";
+            else if (m_TurnSpeed > 0f) DebugText.text += "turning right" + "\n";
+            else DebugText.text += "no turn" + "\n";
+            DebugText.text += "num clips: " + m_Anim.GetCurrentAnimatorClipInfoCount(0) + "\n";*/
+
 
             DebugText.text += NavMeshAgent.navMeshOwner.name + "\n";            
             DebugText.text += "autoBraking: " + NavMeshAgent.autoBraking + "\n";
