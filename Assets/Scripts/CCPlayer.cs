@@ -298,6 +298,7 @@ public class CCPlayer : MonoBehaviour
             //else DebugText.text += "SelectedElevator: " + SelectedElevator.name + "\n";
             //DebugText.text += "ClickedElevator: " + (SelectedElevator != null) + "\n";
             //DebugText.text += "MovementBlocked: " + MovementBlocked;
+            DebugText.text = "";
         }
     }
 }
