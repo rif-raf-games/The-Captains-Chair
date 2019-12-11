@@ -5,7 +5,7 @@
     "set_IncludedNodes": "Settings, Project, GlobalVariables, ObjectDefinitions, Packages, ScriptMethods, Hierarchy, Assets",
     "set_UseScriptSupport": "True",
     "ExportVersion": "1.1",
-    "ObjectDefinitionsHash": "08B0B289C3F791B54CE16464AAB7D36E37AEF9887BE64E7DC0BBAE6EAB0CEC36",
+    "ObjectDefinitionsHash": "CDA546F44C6E0620DE0A3AADF33BEF6D1D2E110376356BAED421EC9DA1055996",
     "ScriptFragmentsHash": "3219935379"
   },
   "Project": {
@@ -121,24 +121,6 @@
           "Description": ""
         },
         {
-          "Variable": "char_mal",
-          "Type": "Integer",
-          "Value": "0",
-          "Description": "Mal Dialogue Choice"
-        },
-        {
-          "Variable": "char_picard",
-          "Type": "Integer",
-          "Value": "0",
-          "Description": "Picard Dialogue Choice"
-        },
-        {
-          "Variable": "char_rick",
-          "Type": "Integer",
-          "Value": "0",
-          "Description": "Rick Dialoge Choice"
-        },
-        {
           "Variable": "Explorer",
           "Type": "Boolean",
           "Value": "False",
@@ -166,6 +148,24 @@
           "Variable": "Soldier",
           "Type": "Boolean",
           "Value": "False",
+          "Description": ""
+        },
+        {
+          "Variable": "char_rick",
+          "Type": "Integer",
+          "Value": "0",
+          "Description": ""
+        },
+        {
+          "Variable": "char_mal",
+          "Type": "Integer",
+          "Value": "0",
+          "Description": ""
+        },
+        {
+          "Variable": "char_picard",
+          "Type": "Integer",
+          "Value": "0",
           "Description": ""
         }
       ]
@@ -1144,77 +1144,13 @@
       ]
     },
     {
-      "Type": "PC",
-      "Class": "Entity",
-      "InheritsFrom": "Entity",
-      "Template": {
-        "TechnicalName": "PC",
-        "DisplayName": "PC",
-        "Features": []
-      }
-    },
-    {
       "Type": "npcCrew",
       "Class": "Entity",
       "InheritsFrom": "Entity",
       "Template": {
         "TechnicalName": "npcCrew",
         "DisplayName": "npcCrew",
-        "Features": [
-          {
-            "TechnicalName": "npcCrew",
-            "DisplayName": "npcCrew",
-            "Properties": [
-              {
-                "Property": "fear",
-                "Type": "Float",
-                "DisplayName": "Fear"
-              },
-              {
-                "Property": "faith",
-                "Type": "Float",
-                "DisplayName": "Faith"
-              },
-              {
-                "Property": "salt",
-                "Type": "Float",
-                "DisplayName": "Salt"
-              }
-            ],
-            "Constraints": [
-              {
-                "Property": "fear",
-                "Type": "Number",
-                "MinValue": "-25",
-                "MaxValue": "25",
-                "Precision": "0",
-                "MinPrecision": "0",
-                "MaxPrecision": "0",
-                "Unit": null
-              },
-              {
-                "Property": "faith",
-                "Type": "Number",
-                "MinValue": "-25",
-                "MaxValue": "25",
-                "Precision": "0",
-                "MinPrecision": "0",
-                "MaxPrecision": "0",
-                "Unit": null
-              },
-              {
-                "Property": "salt",
-                "Type": "Number",
-                "MinValue": "-25",
-                "MaxValue": "25",
-                "Precision": "0",
-                "MinPrecision": "0",
-                "MaxPrecision": "0",
-                "Unit": null
-              }
-            ]
-          }
-        ]
+        "Features": []
       }
     },
     {
@@ -1225,6 +1161,113 @@
         "TechnicalName": "npc",
         "DisplayName": "npc",
         "Features": []
+      }
+    },
+    {
+      "Type": "The_Captain",
+      "Class": "Entity",
+      "InheritsFrom": "Entity",
+      "Template": {
+        "TechnicalName": "The_Captain",
+        "DisplayName": "Untitled template (02)",
+        "Features": []
+      }
+    },
+    {
+      "Type": "PC",
+      "Class": "Entity",
+      "InheritsFrom": "Entity",
+      "Template": {
+        "TechnicalName": "PC",
+        "DisplayName": "PC",
+        "Features": [
+          {
+            "TechnicalName": "CaptainVariables",
+            "DisplayName": "CaptainVariables",
+            "Properties": [
+              {
+                "Property": "Picard",
+                "Type": "Float",
+                "DisplayName": "Picard"
+              },
+              {
+                "Property": "Mal",
+                "Type": "Float",
+                "DisplayName": "Mal"
+              },
+              {
+                "Property": "Rick",
+                "Type": "Float",
+                "DisplayName": "Rick"
+              },
+              {
+                "Property": "Picard_Script",
+                "Type": "Script_Instruction",
+                "DisplayName": "Picard_Script"
+              },
+              {
+                "Property": "Mal_Script_02",
+                "Type": "Script_Instruction",
+                "DisplayName": "Mal_Script"
+              },
+              {
+                "Property": "Rick_Script",
+                "Type": "Script_Condition",
+                "DisplayName": "Rick_Script"
+              }
+            ],
+            "Constraints": [
+              {
+                "Property": "Picard",
+                "Type": "Number",
+                "MinValue": "-25",
+                "MaxValue": "25",
+                "Precision": "0",
+                "MinPrecision": "0",
+                "MaxPrecision": "0",
+                "Unit": null
+              },
+              {
+                "Property": "Mal",
+                "Type": "Number",
+                "MinValue": "-25",
+                "MaxValue": "25",
+                "Precision": "0",
+                "MinPrecision": "0",
+                "MaxPrecision": "0",
+                "Unit": null
+              },
+              {
+                "Property": "Rick",
+                "Type": "Number",
+                "MinValue": "-25",
+                "MaxValue": "25",
+                "Precision": "0",
+                "MinPrecision": "0",
+                "MaxPrecision": "0",
+                "Unit": null
+              },
+              {
+                "Property": "Picard_Script",
+                "Type": "Script",
+                "ScriptType": "Outcome",
+                "PlaceholderValue": ""
+              },
+              {
+                "Property": "Mal_Script_02",
+                "Type": "Script",
+                "ScriptType": "Outcome",
+                "PlaceholderValue": ""
+              },
+              {
+                "Property": "Rick_Script",
+                "Type": "Script",
+                "ScriptType": "Condition",
+                "PlaceholderValue": ""
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -35579,13 +35622,7 @@
             },
             "ShortId": 741983491
           },
-          "Template": {
-            "npcCrew": {
-              "fear": 0.0,
-              "faith": 0.0,
-              "salt": 0.0
-            }
-          }
+          "Template": {}
         },
         {
           "Type": "npcCrew",
@@ -35623,13 +35660,7 @@
             },
             "ShortId": 772828410
           },
-          "Template": {
-            "npcCrew": {
-              "fear": 0.0,
-              "faith": 0.0,
-              "salt": 0.0
-            }
-          }
+          "Template": {}
         },
         {
           "Type": "npcCrew",
@@ -35667,13 +35698,7 @@
             },
             "ShortId": 2719736942
           },
-          "Template": {
-            "npcCrew": {
-              "fear": 0.0,
-              "faith": 0.0,
-              "salt": 0.0
-            }
-          }
+          "Template": {}
         },
         {
           "Type": "npcCrew",
@@ -35711,13 +35736,7 @@
             },
             "ShortId": 1474921058
           },
-          "Template": {
-            "npcCrew": {
-              "fear": 0.0,
-              "faith": 0.0,
-              "salt": 0.0
-            }
-          }
+          "Template": {}
         },
         {
           "Type": "npcCrew",
@@ -35755,13 +35774,7 @@
             },
             "ShortId": 3484275693
           },
-          "Template": {
-            "npcCrew": {
-              "fear": 0.0,
-              "faith": 0.0,
-              "salt": 0.0
-            }
-          }
+          "Template": {}
         },
         {
           "Type": "npcCrew",
@@ -35799,13 +35812,7 @@
             },
             "ShortId": 2924425108
           },
-          "Template": {
-            "npcCrew": {
-              "fear": 0.0,
-              "faith": 0.0,
-              "salt": 0.0
-            }
-          }
+          "Template": {}
         },
         {
           "Type": "npcCrew",
@@ -35843,13 +35850,7 @@
             },
             "ShortId": 763312628
           },
-          "Template": {
-            "npcCrew": {
-              "fear": 0.0,
-              "faith": 0.0,
-              "salt": 0.0
-            }
-          }
+          "Template": {}
         },
         {
           "Type": "PC",
@@ -35887,7 +35888,16 @@
             },
             "ShortId": 3768434549
           },
-          "Template": {}
+          "Template": {
+            "CaptainVariables": {
+              "Picard": 0.0,
+              "Mal": 0.0,
+              "Rick": 0.0,
+              "Picard_Script": "",
+              "Mal_Script_02": "",
+              "Rick_Script": ""
+            }
+          }
         },
         {
           "Type": "Entity",
@@ -42048,11 +42058,6 @@
                 "Type": "Feature"
               },
               {
-                "Id": "0x100000000000141",
-                "TechnicalName": "npcCrew",
-                "Type": "Feature"
-              },
-              {
                 "Id": "0x10000030000084E",
                 "TechnicalName": "Feature",
                 "Type": "Feature"
@@ -42060,6 +42065,11 @@
               {
                 "Id": "0x100000300000850",
                 "TechnicalName": "Triggers",
+                "Type": "Feature"
+              },
+              {
+                "Id": "0x10000030000297A",
+                "TechnicalName": "CaptainVariables",
                 "Type": "Feature"
               }
             ]
@@ -42087,6 +42097,11 @@
                   {
                     "Id": "0x100000000000164",
                     "TechnicalName": "npc",
+                    "Type": "Template"
+                  },
+                  {
+                    "Id": "0x100000300002978",
+                    "TechnicalName": "The_Captain",
                     "Type": "Template"
                   }
                 ]
