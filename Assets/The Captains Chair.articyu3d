@@ -5,8 +5,8 @@
     "set_IncludedNodes": "Settings, Project, GlobalVariables, ObjectDefinitions, Packages, ScriptMethods, Hierarchy, Assets",
     "set_UseScriptSupport": "True",
     "ExportVersion": "1.1",
-    "ObjectDefinitionsHash": "B3E65A02BA371BA46A9D6AAA9620DB047F79C94FD2FDF568FD91383C68F010AB",
-    "ScriptFragmentsHash": "1427307260"
+    "ObjectDefinitionsHash": "D65E93217818B4C2A1CC4C6D644CF83D0EA474B12246F0DE655240DFA263FD9C",
+    "ScriptFragmentsHash": "1433545071"
   },
   "Project": {
     "Name": "The Captains Chair",
@@ -102,21 +102,62 @@
     {
       "Namespace": "Captains_Chair",
       "Description": "",
+      "Variables": []
+    },
+    {
+      "Namespace": "TheCaptain",
+      "Description": "The Captain",
       "Variables": [
         {
-          "Variable": "Soldier",
+          "Variable": "Architect",
           "Type": "Boolean",
           "Value": "False",
           "Description": ""
         },
         {
-          "Variable": "Astronaut",
-          "Type": "Boolean",
-          "Value": "False",
-          "Description": ""
+          "Variable": "char_mal",
+          "Type": "Integer",
+          "Value": "0",
+          "Description": "Mal Dialogue Choice"
+        },
+        {
+          "Variable": "char_picard",
+          "Type": "Integer",
+          "Value": "0",
+          "Description": "Picard Dialogue Choice"
+        },
+        {
+          "Variable": "char_rick",
+          "Type": "Integer",
+          "Value": "0",
+          "Description": "Rick Dialoge Choice"
         },
         {
           "Variable": "Explorer",
+          "Type": "Boolean",
+          "Value": "False",
+          "Description": ""
+        },
+        {
+          "Variable": "Earth",
+          "Type": "Boolean",
+          "Value": "False",
+          "Description": ""
+        },
+        {
+          "Variable": "Moon",
+          "Type": "Boolean",
+          "Value": "False",
+          "Description": ""
+        },
+        {
+          "Variable": "Mars",
+          "Type": "Boolean",
+          "Value": "False",
+          "Description": ""
+        },
+        {
+          "Variable": "Soldier",
           "Type": "Boolean",
           "Value": "False",
           "Description": ""
@@ -2603,7 +2644,7 @@
             "Id": "0x1000003000009EA",
             "Parent": "0x1000003000002BC",
             "Attachments": [],
-            "DisplayName": "Scene 2",
+            "DisplayName": "Ep1.S2",
             "PreviewImage": {
               "ViewBox": {
                 "x": 0.0,
@@ -2635,7 +2676,20 @@
               {
                 "Text": "",
                 "Id": "0x1000003000009ED",
-                "Owner": "0x1000003000009EA"
+                "Owner": "0x1000003000009EA",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300000A6E",
+                    "Target": "0x100000300000A6D"
+                  }
+                ]
               }
             ],
             "OutputPins": [
@@ -2655,7 +2709,7 @@
             "Id": "0x100000300000D83",
             "Parent": "0x1000003000002BC",
             "Attachments": [],
-            "DisplayName": "Scene 3",
+            "DisplayName": "Ep1.S3",
             "PreviewImage": {
               "ViewBox": {
                 "x": 0.0,
@@ -2720,7 +2774,7 @@
             "Id": "0x100000300001140",
             "Parent": "0x1000003000002BC",
             "Attachments": [],
-            "DisplayName": "Scene 1 (Revised)",
+            "DisplayName": "Ep1.S1 (Revised)",
             "PreviewImage": {
               "ViewBox": {
                 "x": 0.0,
@@ -2785,7 +2839,7 @@
             "Id": "0x1000003000015FE",
             "Parent": "0x1000003000002BC",
             "Attachments": [],
-            "DisplayName": "Scene 5",
+            "DisplayName": "Ep1.S5",
             "PreviewImage": {
               "ViewBox": {
                 "x": 0.0,
@@ -2850,7 +2904,7 @@
             "Id": "0x100000300001FA8",
             "Parent": "0x1000003000002BC",
             "Attachments": [],
-            "DisplayName": "Scene 6",
+            "DisplayName": "Ep1.S6",
             "PreviewImage": {
               "ViewBox": {
                 "x": 0.0,
@@ -2915,7 +2969,7 @@
             "Id": "0x100000300002244",
             "Parent": "0x1000003000002BC",
             "Attachments": [],
-            "DisplayName": "Scene 4",
+            "DisplayName": "Ep1.S4",
             "PreviewImage": {
               "ViewBox": {
                 "x": 0.0,
@@ -2955,6 +3009,71 @@
                 "Text": "",
                 "Id": "0x100000300002248",
                 "Owner": "0x100000300002244"
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Scene",
+          "Properties": {
+            "TechnicalName": "FFr_B1DC8176",
+            "Id": "0x1000003000028C8",
+            "Parent": "0x1000003000002BC",
+            "Attachments": [],
+            "DisplayName": "Ep1.S7",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.298039228,
+              "g": 0.03529412,
+              "b": 0.03137255
+            },
+            "Text": "The Crew collect their thoughts",
+            "ExternalId": "",
+            "Position": {
+              "x": 2425.0,
+              "y": 475.0
+            },
+            "ZIndex": 9.0,
+            "Size": {
+              "w": 275.0,
+              "h": 200.0
+            },
+            "ShortId": 2984018294,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000028CB",
+                "Owner": "0x1000003000028C8",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x1000003000028D2",
+                    "Target": "0x1000003000028CF"
+                  }
+                ]
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000028CC",
+                "Owner": "0x1000003000028C8"
               }
             ]
           },
@@ -4767,8 +4886,8 @@
             "Text": "The Captain wakes up to the sound of alarms.",
             "ExternalId": "",
             "Position": {
-              "x": -235.33333333333343,
-              "y": 721.66666666666663
+              "x": -375.0,
+              "y": 725.0
             },
             "ZIndex": 31.0,
             "Size": {
@@ -4797,8 +4916,8 @@
                       "b": 0.8
                     },
                     "Label": "",
-                    "TargetPin": "0x1000003000009F8",
-                    "Target": "0x1000003000009F7"
+                    "TargetPin": "0x100000300000A5D",
+                    "Target": "0x100000300000A5C"
                   }
                 ]
               }
@@ -5211,8 +5330,8 @@
                       "b": 0.8
                     },
                     "Label": "",
-                    "TargetPin": "0x100000300000B29",
-                    "Target": "0x100000300000B26"
+                    "TargetPin": "0x1000003000009EE",
+                    "Target": "0x1000003000009EA"
                   }
                 ]
               }
@@ -5765,7 +5884,7 @@
             "Id": "0x100000300001141",
             "Parent": "0x100000300001140",
             "Attachments": [],
-            "DisplayName": "Bridge",
+            "DisplayName": "Bridge Ep1.S1",
             "PreviewImage": {
               "ViewBox": {
                 "x": 0.0,
@@ -5847,7 +5966,7 @@
             "Id": "0x1000003000011F3",
             "Parent": "0x100000300001140",
             "Attachments": [],
-            "DisplayName": "Engine Room a",
+            "DisplayName": "Engine Room Ep.1S.1",
             "PreviewImage": {
               "ViewBox": {
                 "x": 0.0,
@@ -5920,75 +6039,11 @@
         {
           "Type": "Dialogue",
           "Properties": {
-            "TechnicalName": "Dlg_4F65CE2D",
-            "Id": "0x10000030000124A",
-            "Parent": "0x1000003000011F3",
-            "Attachments": [],
-            "DisplayName": "Wrong Lift",
-            "PreviewImage": {
-              "ViewBox": {
-                "x": 0.0,
-                "y": 0.0,
-                "w": 0.0,
-                "h": 0.0
-              },
-              "Mode": "FromAsset",
-              "Asset": "0x0"
-            },
-            "Color": {
-              "r": 0.5764706,
-              "g": 0.75686276,
-              "b": 0.8
-            },
-            "Text": "",
-            "ExternalId": "",
-            "Position": {
-              "x": 792.0,
-              "y": -125.0
-            },
-            "ZIndex": 24.0,
-            "Size": {
-              "w": 291.0,
-              "h": 200.0
-            },
-            "ShortId": 1332071981,
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x10000030000125E",
-                "Owner": "0x10000030000124A",
-                "Connections": [
-                  {
-                    "Color": {
-                      "a": 1.0,
-                      "r": 0.5764706,
-                      "g": 0.75686276,
-                      "b": 0.8
-                    },
-                    "Label": "",
-                    "TargetPin": "0x100000300001252",
-                    "Target": "0x100000300001251"
-                  }
-                ]
-              }
-            ],
-            "OutputPins": [
-              {
-                "Text": "Episode_01.s01_Wrong_Lift = true",
-                "Id": "0x10000030000125F",
-                "Owner": "0x10000030000124A"
-              }
-            ]
-          }
-        },
-        {
-          "Type": "Dialogue",
-          "Properties": {
             "TechnicalName": "Dlg_451BCE51",
             "Id": "0x10000030000126A",
             "Parent": "0x100000300001140",
             "Attachments": [],
-            "DisplayName": "Sickbay",
+            "DisplayName": "Sickbay Ep1.S1",
             "PreviewImage": {
               "ViewBox": {
                 "x": 0.0,
@@ -6065,7 +6120,7 @@
             "Id": "0x1000003000012FA",
             "Parent": "0x100000300001140",
             "Attachments": [],
-            "DisplayName": "Room of Silent Contemplation",
+            "DisplayName": "ObservationE1.S1",
             "PreviewImage": {
               "ViewBox": {
                 "x": 0.0,
@@ -6142,7 +6197,7 @@
             "Id": "0x1000003000013B0",
             "Parent": "0x100000300001140",
             "Attachments": [],
-            "DisplayName": "Common Space",
+            "DisplayName": "Common Space Ep1.S1",
             "PreviewImage": {
               "ViewBox": {
                 "x": 0.0,
@@ -6219,7 +6274,7 @@
             "Id": "0x1000003000013C9",
             "Parent": "0x100000300001140",
             "Attachments": [],
-            "DisplayName": "Storage Bay",
+            "DisplayName": "Storage Bay Ep1.S1",
             "PreviewImage": {
               "ViewBox": {
                 "x": 0.0,
@@ -6373,7 +6428,7 @@
             "Id": "0x1000003000013FD",
             "Parent": "0x100000300001140",
             "Attachments": [],
-            "DisplayName": "Lab",
+            "DisplayName": "Lab Ep1.S1",
             "PreviewImage": {
               "ViewBox": {
                 "x": 0.0,
@@ -6720,7 +6775,20 @@
               {
                 "Text": "",
                 "Id": "0x100000300001DDB",
-                "Owner": "0x100000300001DD7"
+                "Owner": "0x100000300001DD7",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300001FA7",
+                    "Target": "0x1000003000015FE"
+                  }
+                ]
               }
             ]
           }
@@ -6969,112 +7037,6 @@
           }
         },
         {
-          "Type": "Dialogue",
-          "Properties": {
-            "TechnicalName": "Dlg_444C14B7",
-            "Id": "0x1000003000026CD",
-            "Parent": "0x100000300001140",
-            "Attachments": [],
-            "DisplayName": "Untitled dialogue (02)",
-            "PreviewImage": {
-              "ViewBox": {
-                "x": 0.0,
-                "y": 0.0,
-                "w": 0.0,
-                "h": 0.0
-              },
-              "Mode": "FromAsset",
-              "Asset": "0x0"
-            },
-            "Color": {
-              "r": 0.5764706,
-              "g": 0.75686276,
-              "b": 0.8
-            },
-            "Text": "",
-            "ExternalId": "",
-            "Position": {
-              "x": -433.0,
-              "y": 175.0
-            },
-            "ZIndex": 26.0,
-            "Size": {
-              "w": 291.0,
-              "h": 200.0
-            },
-            "ShortId": 1145836727,
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x1000003000026D0",
-                "Owner": "0x1000003000026CD"
-              }
-            ],
-            "OutputPins": [
-              {
-                "Text": "",
-                "Id": "0x1000003000026D1",
-                "Owner": "0x1000003000026CD"
-              }
-            ]
-          }
-        },
-        {
-          "Type": "DialogueFragment",
-          "Properties": {
-            "TechnicalName": "DFr_02C82C0A",
-            "Id": "0x1000003000009F7",
-            "Parent": "0x1000003000009EA",
-            "MenuText": "",
-            "StageDirections": "",
-            "Speaker": "0x100000000000221",
-            "Color": {
-              "r": 0.5764706,
-              "g": 0.75686276,
-              "b": 0.8
-            },
-            "Text": "Captain to the bridge, Captain to the bridge.",
-            "ExternalId": "",
-            "Position": {
-              "x": 164.66666666666657,
-              "y": 721.66666666666663
-            },
-            "ZIndex": 1.0,
-            "Size": {
-              "w": 225.0,
-              "h": 200.0
-            },
-            "ShortId": 46672906,
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x1000003000009F8",
-                "Owner": "0x1000003000009F7"
-              }
-            ],
-            "OutputPins": [
-              {
-                "Text": "",
-                "Id": "0x1000003000009F9",
-                "Owner": "0x1000003000009F7",
-                "Connections": [
-                  {
-                    "Color": {
-                      "a": 1.0,
-                      "r": 0.5764706,
-                      "g": 0.75686276,
-                      "b": 0.8
-                    },
-                    "Label": "",
-                    "TargetPin": "0x100000300000A5D",
-                    "Target": "0x100000300000A5C"
-                  }
-                ]
-              }
-            ]
-          }
-        },
-        {
           "Type": "DialogueFragment",
           "Properties": {
             "TechnicalName": "DFr_92B950E1",
@@ -7261,8 +7223,8 @@
             },
             "ZIndex": 15.0,
             "Size": {
-              "w": 225.0,
-              "h": 200.0
+              "w": 230.30827643189946,
+              "h": 362.388727206918
             },
             "ShortId": 1109912326,
             "InputPins": [
@@ -7561,7 +7523,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "Good! The intercom works.",
+            "Text": "Oh good, you found your way here. It seems intership communications are down.",
             "ExternalId": "",
             "Position": {
               "x": 175.0,
@@ -7618,61 +7580,6 @@
                     "Label": "",
                     "TargetPin": "0x100000300002598",
                     "Target": "0x100000300002595"
-                  }
-                ]
-              }
-            ]
-          }
-        },
-        {
-          "Type": "DialogueFragment",
-          "Properties": {
-            "TechnicalName": "DFr_22075F31",
-            "Id": "0x100000300000B26",
-            "Parent": "0x1000003000009EA",
-            "MenuText": "",
-            "StageDirections": "",
-            "Speaker": "0x3000000F071A5F6",
-            "Color": {
-              "r": 0.5764706,
-              "g": 0.75686276,
-              "b": 0.8
-            },
-            "Text": "Done!",
-            "ExternalId": "",
-            "Position": {
-              "x": 1975.0,
-              "y": 775.0
-            },
-            "ZIndex": 13.0,
-            "Size": {
-              "w": 225.0,
-              "h": 200.0
-            },
-            "ShortId": 570908465,
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x100000300000B29",
-                "Owner": "0x100000300000B26"
-              }
-            ],
-            "OutputPins": [
-              {
-                "Text": "",
-                "Id": "0x100000300000B2A",
-                "Owner": "0x100000300000B26",
-                "Connections": [
-                  {
-                    "Color": {
-                      "a": 1.0,
-                      "r": 0.5764706,
-                      "g": 0.75686276,
-                      "b": 0.8
-                    },
-                    "Label": "",
-                    "TargetPin": "0x1000003000009EE",
-                    "Target": "0x1000003000009EA"
                   }
                 ]
               }
@@ -8223,6 +8130,61 @@
                     "Label": "",
                     "TargetPin": "0x100000300000D9E",
                     "Target": "0x100000300000D9D"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "DialogueFragment",
+          "Properties": {
+            "TechnicalName": "DFr_40E72549",
+            "Id": "0x1000003000026FB",
+            "Parent": "0x100000300000D8F",
+            "MenuText": "",
+            "StageDirections": "",
+            "Speaker": "0x100000000000180",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "We'll keep you updated.",
+            "ExternalId": "",
+            "Position": {
+              "x": 4425.0,
+              "y": 550.0
+            },
+            "ZIndex": 59.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 1088890185,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000026FE",
+                "Owner": "0x1000003000026FB"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000026FF",
+                "Owner": "0x1000003000026FB",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300000E24",
+                    "Target": "0x100000300000D8F"
                   }
                 ]
               }
@@ -9104,8 +9066,8 @@
             "Text": "Oui. I wasn't expecting a triage tent, but some real money went into this. I don't think we could use all these supplies if we wanted.",
             "ExternalId": "",
             "Position": {
-              "x": 4248.6,
-              "y": 1225.0
+              "x": 4948.6,
+              "y": 1175.0
             },
             "ZIndex": 52.0,
             "Size": {
@@ -9147,6 +9109,17 @@
                     "Label": "",
                     "TargetPin": "0x100000300000F70",
                     "Target": "0x100000300000F6F"
+                  },
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x1000003000026F4",
+                    "Target": "0x1000003000026F1"
                   }
                 ]
               }
@@ -9170,8 +9143,8 @@
             "Text": "Agreed, though if Mr. Loop[ had his way we would already be out of morphine. So much noise for such a small cut.",
             "ExternalId": "",
             "Position": {
-              "x": 4850.0,
-              "y": 1175.0
+              "x": 5550.0,
+              "y": 1125.0
             },
             "ZIndex": 58.0,
             "Size": {
@@ -9247,8 +9220,8 @@
             "Text": "Oui Oui Capitan. Don't let me hold you, I should get back to organizing anyway.",
             "ExternalId": "",
             "Position": {
-              "x": 5575.0,
-              "y": 1200.0
+              "x": 6275.0,
+              "y": 1150.0
             },
             "ZIndex": 66.0,
             "Size": {
@@ -9981,7 +9954,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "That is reductive and honestly insulting. Trena was... sorry IS.. the leading expert on astro-physical quantum computing and we would do well to listen to wht she has to say.",
+            "Text": "That is reductive and honestly insulting. Trena was... sorry IS.. the leading expert on astro-physical quantum computing and we would do well to listen to what she has to say.",
             "ExternalId": "",
             "Position": {
               "x": 2337.333333333333,
@@ -10036,7 +10009,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "Thank you Doctor Carver. I have been looking forward to working with you again.",
+            "Text": "Thank you Doctor Carver. I've been looking forward to working with you again.",
             "ExternalId": "",
             "Position": {
               "x": 2624.6666666666665,
@@ -10366,7 +10339,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "Stu! You are on one today. I assumed we'd be having some guests along with us, we have plenty of space for them.\r\n\r\nSorry you had to see that, we just have a few outstanding issues waiting on the Benefactor.\r\n\r\nMy name's Doctor Jonathan Carver, and you are?",
+            "Text": "Stuart! You are on one today. I assumed we'd be having some guests along with us, we have plenty of space for them.\r\n\r\nSorry you had to see that, we just have a few outstanding issues waiting on the Benefactor.\r\n\r\nMy name's Doctor Jonathan Carver, and you are?",
             "ExternalId": "",
             "Position": {
               "x": 4948.8627450980393,
@@ -11138,61 +11111,6 @@
                     "Label": "",
                     "TargetPin": "0x100000300001C37",
                     "Target": "0x100000300001C34"
-                  }
-                ]
-              }
-            ]
-          }
-        },
-        {
-          "Type": "DialogueFragment",
-          "Properties": {
-            "TechnicalName": "DFr_ED503428",
-            "Id": "0x10000030000124B",
-            "Parent": "0x10000030000124A",
-            "MenuText": "",
-            "StageDirections": "",
-            "Speaker": "0x10000000000017C",
-            "Color": {
-              "r": 0.5764706,
-              "g": 0.75686276,
-              "b": 0.8
-            },
-            "Text": "Nothing for you up there.",
-            "ExternalId": "",
-            "Position": {
-              "x": 625.0,
-              "y": 475.0
-            },
-            "ZIndex": 0.0,
-            "Size": {
-              "w": 225.0,
-              "h": 200.0
-            },
-            "ShortId": 3981456424,
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x10000030000124C",
-                "Owner": "0x10000030000124B"
-              }
-            ],
-            "OutputPins": [
-              {
-                "Text": "",
-                "Id": "0x10000030000124D",
-                "Owner": "0x10000030000124B",
-                "Connections": [
-                  {
-                    "Color": {
-                      "a": 1.0,
-                      "r": 0.5764706,
-                      "g": 0.75686276,
-                      "b": 0.8
-                    },
-                    "Label": "",
-                    "TargetPin": "0x10000030000125F",
-                    "Target": "0x10000030000124A"
                   }
                 ]
               }
@@ -13040,7 +12958,7 @@
             "ShortId": 1727410516,
             "InputPins": [
               {
-                "Text": "Captains_Chair.Astronaut == true",
+                "Text": "TheCaptain.Architect == true",
                 "Id": "0x1000003000019EE",
                 "Owner": "0x1000003000019ED"
               }
@@ -13117,7 +13035,7 @@
             "ShortId": 4035858809,
             "InputPins": [
               {
-                "Text": "Captains_Chair.Explorer == true",
+                "Text": "TheCaptain.Explorer == true",
                 "Id": "0x100000300001A05",
                 "Owner": "0x100000300001A04"
               }
@@ -13172,7 +13090,7 @@
             "ShortId": 465455037,
             "InputPins": [
               {
-                "Text": "Captains_Chair.Soldier == true",
+                "Text": "TheCaptain.Soldier == true",
                 "Id": "0x100000300001A0B",
                 "Owner": "0x100000300001A0A"
               }
@@ -14720,7 +14638,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "Currently walking through the living room. A nice tv, 22 year old me would be very jealous.",
+            "Text": "Currently walking through the living room. A nice tv, 22 year old me would be very jealous",
             "ExternalId": "",
             "Position": {
               "x": 725.0,
@@ -15897,7 +15815,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "Oh, sorry. Just a little experiment. Some real nice gravity they got here.  I think that's the exit over ther.\r\n\r\nShall we?",
+            "Text": "Oh, sorry, no. Just a little experiment. Some real nice gravity they got here.  I think that's the exit over ther.\r\n\r\nShall we?",
             "ExternalId": "",
             "Position": {
               "x": 5880.7999999999993,
@@ -16921,7 +16839,7 @@
             "Text": "Yes. Yes I do.",
             "ExternalId": "",
             "Position": {
-              "x": 1475.0,
+              "x": 1550.0,
               "y": 75.0
             },
             "ZIndex": 24.0,
@@ -16997,61 +16915,6 @@
                 "Text": "",
                 "Id": "0x100000300001EDF",
                 "Owner": "0x100000300001EDB",
-                "Connections": [
-                  {
-                    "Color": {
-                      "a": 1.0,
-                      "r": 0.5764706,
-                      "g": 0.75686276,
-                      "b": 0.8
-                    },
-                    "Label": "",
-                    "TargetPin": "0x100000300001E2D",
-                    "Target": "0x100000300001E2C"
-                  }
-                ]
-              }
-            ]
-          }
-        },
-        {
-          "Type": "DialogueFragment",
-          "Properties": {
-            "TechnicalName": "DFr_2590A27B",
-            "Id": "0x1000003000026A5",
-            "Parent": "0x100000300001E01",
-            "MenuText": "The Rick",
-            "StageDirections": "",
-            "Speaker": "0x100000000000190",
-            "Color": {
-              "r": 0.5764706,
-              "g": 0.75686276,
-              "b": 0.8
-            },
-            "Text": "Sounds good, let us know if its poison. Or don't. Either way Dr. Grunfeld and I will figure it out eventually.",
-            "ExternalId": "",
-            "Position": {
-              "x": 1350.0,
-              "y": 375.0
-            },
-            "ZIndex": 22.0,
-            "Size": {
-              "w": 225.0,
-              "h": 200.0
-            },
-            "ShortId": 630235771,
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x1000003000026A8",
-                "Owner": "0x1000003000026A5"
-              }
-            ],
-            "OutputPins": [
-              {
-                "Text": "",
-                "Id": "0x1000003000026A9",
-                "Owner": "0x1000003000026A5",
                 "Connections": [
                   {
                     "Color": {
@@ -17184,6 +17047,17 @@
                     "Label": "",
                     "TargetPin": "0x100000300001E85",
                     "Target": "0x100000300001E84"
+                  },
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x10000030000270C",
+                    "Target": "0x100000300002709"
                   }
                 ]
               }
@@ -17527,7 +17401,7 @@
             "ExternalId": "",
             "Position": {
               "x": 725.0,
-              "y": 250.0
+              "y": 0.0
             },
             "ZIndex": 9.0,
             "Size": {
@@ -17789,6 +17663,17 @@
                     "Label": "",
                     "TargetPin": "0x100000300001F6C",
                     "Target": "0x100000300001F69"
+                  },
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x10000030000271A",
+                    "Target": "0x100000300002719"
                   }
                 ]
               }
@@ -17812,8 +17697,8 @@
             "Text": "Do? Nothing you can do until the parties over. Half the city is closed and the Browdans are blocking anyone trying to get out.",
             "ExternalId": "",
             "Position": {
-              "x": 2550.0,
-              "y": 275.0
+              "x": 2525.0,
+              "y": 200.0
             },
             "ZIndex": 23.0,
             "Size": {
@@ -17855,6 +17740,17 @@
                     "Label": "",
                     "TargetPin": "0x100000300001F82",
                     "Target": "0x100000300001F7F"
+                  },
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300002725",
+                    "Target": "0x100000300002724"
                   }
                 ]
               }
@@ -17976,6 +17872,17 @@
                     "Label": "",
                     "TargetPin": "0x100000300001FA0",
                     "Target": "0x100000300001F9D"
+                  },
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300002730",
+                    "Target": "0x10000030000272F"
                   }
                 ]
               }
@@ -17990,7 +17897,7 @@
             "Parent": "0x100000300001EE6",
             "MenuText": "",
             "StageDirections": "",
-            "Speaker": "0x0",
+            "Speaker": "0x3000000F071A5F6",
             "Color": {
               "r": 0.5764706,
               "g": 0.75686276,
@@ -17999,8 +17906,8 @@
             "Text": "Guess so. Listen, I'm just a friendly citizen of the Crossing trying to avoid some of the festivities and watching some tourists get beat up isn't how I want to spend my day.",
             "ExternalId": "",
             "Position": {
-              "x": 675.0,
-              "y": 500.0
+              "x": 725.0,
+              "y": 350.0
             },
             "ZIndex": 39.0,
             "Size": {
@@ -18031,116 +17938,6 @@
                     "Label": "",
                     "TargetPin": "0x100000300001F3E",
                     "Target": "0x100000300001F3B"
-                  }
-                ]
-              }
-            ]
-          }
-        },
-        {
-          "Type": "DialogueFragment",
-          "Properties": {
-            "TechnicalName": "DFr_CEF584E7",
-            "Id": "0x1000003000026B8",
-            "Parent": "0x100000300001EE6",
-            "MenuText": "The Rick",
-            "StageDirections": "",
-            "Speaker": "0x100000000000190",
-            "Color": {
-              "r": 0.5764706,
-              "g": 0.75686276,
-              "b": 0.8
-            },
-            "Text": "But we should listen to you?",
-            "ExternalId": "",
-            "Position": {
-              "x": 425.0,
-              "y": 250.0
-            },
-            "ZIndex": 42.0,
-            "Size": {
-              "w": 225.0,
-              "h": 200.0
-            },
-            "ShortId": 3472196839,
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x1000003000026BB",
-                "Owner": "0x1000003000026B8"
-              }
-            ],
-            "OutputPins": [
-              {
-                "Text": "",
-                "Id": "0x1000003000026BC",
-                "Owner": "0x1000003000026B8",
-                "Connections": [
-                  {
-                    "Color": {
-                      "a": 1.0,
-                      "r": 0.5764706,
-                      "g": 0.75686276,
-                      "b": 0.8
-                    },
-                    "Label": "",
-                    "TargetPin": "0x1000003000026B3",
-                    "Target": "0x1000003000026B0"
-                  }
-                ]
-              }
-            ]
-          }
-        },
-        {
-          "Type": "DialogueFragment",
-          "Properties": {
-            "TechnicalName": "DFr_E98266C5",
-            "Id": "0x100000300002005",
-            "Parent": "0x100000300001FA8",
-            "MenuText": "",
-            "StageDirections": "",
-            "Speaker": "0x100000000000190",
-            "Color": {
-              "r": 0.5764706,
-              "g": 0.75686276,
-              "b": 0.8
-            },
-            "Text": "What are you?",
-            "ExternalId": "",
-            "Position": {
-              "x": 2600.0,
-              "y": 575.0
-            },
-            "ZIndex": 38.0,
-            "Size": {
-              "w": 225.0,
-              "h": 200.0
-            },
-            "ShortId": 3917637317,
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x100000300002006",
-                "Owner": "0x100000300002005"
-              }
-            ],
-            "OutputPins": [
-              {
-                "Text": "",
-                "Id": "0x100000300002007",
-                "Owner": "0x100000300002005",
-                "Connections": [
-                  {
-                    "Color": {
-                      "a": 1.0,
-                      "r": 0.5764706,
-                      "g": 0.75686276,
-                      "b": 0.8
-                    },
-                    "Label": "",
-                    "TargetPin": "0x100000300002064",
-                    "Target": "0x100000300002061"
                   }
                 ]
               }
@@ -18251,61 +18048,6 @@
                     "Label": "",
                     "TargetPin": "0x100000300002030",
                     "Target": "0x10000030000202F"
-                  }
-                ]
-              }
-            ]
-          }
-        },
-        {
-          "Type": "DialogueFragment",
-          "Properties": {
-            "TechnicalName": "DFr_71F66D9B",
-            "Id": "0x10000030000201D",
-            "Parent": "0x100000300001FA8",
-            "MenuText": "",
-            "StageDirections": "",
-            "Speaker": "0x100000000000190",
-            "Color": {
-              "r": 0.5764706,
-              "g": 0.75686276,
-              "b": 0.8
-            },
-            "Text": "Where are we?",
-            "ExternalId": "",
-            "Position": {
-              "x": 2600.0,
-              "y": 325.0
-            },
-            "ZIndex": 36.0,
-            "Size": {
-              "w": 225.0,
-              "h": 200.0
-            },
-            "ShortId": 1911975323,
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x10000030000201E",
-                "Owner": "0x10000030000201D"
-              }
-            ],
-            "OutputPins": [
-              {
-                "Text": "",
-                "Id": "0x10000030000201F",
-                "Owner": "0x10000030000201D",
-                "Connections": [
-                  {
-                    "Color": {
-                      "a": 1.0,
-                      "r": 0.5764706,
-                      "g": 0.75686276,
-                      "b": 0.8
-                    },
-                    "Label": "",
-                    "TargetPin": "0x100000300002036",
-                    "Target": "0x100000300002035"
                   }
                 ]
               }
@@ -23426,6 +23168,378 @@
           }
         },
         {
+          "Type": "DialogueFragment",
+          "Properties": {
+            "TechnicalName": "DFr_53492815",
+            "Id": "0x1000003000028CF",
+            "Parent": "0x1000003000028C8",
+            "MenuText": "",
+            "StageDirections": "",
+            "Speaker": "0x10000000000018C",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "Wait wait, just... can you just start over I'm clearly missing something",
+            "ExternalId": "",
+            "Position": {
+              "x": 650.0,
+              "y": 375.0
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 1397303317,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000028D2",
+                "Owner": "0x1000003000028CF"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000028D3",
+                "Owner": "0x1000003000028CF",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x1000003000028D9",
+                    "Target": "0x1000003000028D6"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "DialogueFragment",
+          "Properties": {
+            "TechnicalName": "DFr_FF186655",
+            "Id": "0x1000003000028D6",
+            "Parent": "0x1000003000028C8",
+            "MenuText": "",
+            "StageDirections": "",
+            "Speaker": "0x100000000000180",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "One last time, you take the average rate of star formation, and you multiply that by the fraction of those stars that have planets, alright? Then you take that and multiply it by the average number of planets per star that might have lie, and then times that by the fraction of planets that actually have developed life....",
+            "ExternalId": "",
+            "Position": {
+              "x": 950.0,
+              "y": 375.0
+            },
+            "ZIndex": 2.0,
+            "Size": {
+              "w": 200.0,
+              "h": 200.0
+            },
+            "ShortId": 4279789141,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000028D9",
+                "Owner": "0x1000003000028D6"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000028DA",
+                "Owner": "0x1000003000028D6",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x1000003000028E0",
+                    "Target": "0x1000003000028DD"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "DialogueFragment",
+          "Properties": {
+            "TechnicalName": "DFr_A55420E8",
+            "Id": "0x1000003000028DD",
+            "Parent": "0x1000003000028C8",
+            "MenuText": "",
+            "StageDirections": "",
+            "Speaker": "0x100000000000184",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "Which until now was 1.",
+            "ExternalId": "",
+            "Position": {
+              "x": 1225.0,
+              "y": 375.0
+            },
+            "ZIndex": 4.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 2773754088,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000028E0",
+                "Owner": "0x1000003000028DD"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000028E1",
+                "Owner": "0x1000003000028DD",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x1000003000028E7",
+                    "Target": "0x1000003000028E4"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "DialogueFragment",
+          "Properties": {
+            "TechnicalName": "DFr_AEE30AC3",
+            "Id": "0x1000003000028E4",
+            "Parent": "0x1000003000028C8",
+            "MenuText": "",
+            "StageDirections": "",
+            "Speaker": "0x100000000000180",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "Correct. So the fraction of planets that actually have developed life and multipy that by the value you already have, and then you times that by the fraction of planets with intelligent life.",
+            "ExternalId": "",
+            "Position": {
+              "x": 1512.3333333333333,
+              "y": 375.0
+            },
+            "ZIndex": 6.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 2934115011,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000028E7",
+                "Owner": "0x1000003000028E4"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000028E8",
+                "Owner": "0x1000003000028E4",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x1000003000028EE",
+                    "Target": "0x1000003000028EB"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "DialogueFragment",
+          "Properties": {
+            "TechnicalName": "DFr_6772AFD6",
+            "Id": "0x1000003000028EB",
+            "Parent": "0x1000003000028C8",
+            "MenuText": "",
+            "StageDirections": "",
+            "Speaker": "0x100000000000184",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "Again, 1.",
+            "ExternalId": "",
+            "Position": {
+              "x": 1799.6666666666665,
+              "y": 375.0
+            },
+            "ZIndex": 8.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 1735569366,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000028EE",
+                "Owner": "0x1000003000028EB"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000028EF",
+                "Owner": "0x1000003000028EB",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x1000003000028FA",
+                    "Target": "0x1000003000028F7"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "DialogueFragment",
+          "Properties": {
+            "TechnicalName": "DFr_B539D52F",
+            "Id": "0x1000003000028F7",
+            "Parent": "0x1000003000028C8",
+            "MenuText": "",
+            "StageDirections": "",
+            "Speaker": "0x100000000000180",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "Right. Then you take that number and multiply it by the fraction of civilizatins that develop the technology to send message into space, and finally multiply by the time it would take for such a civilization to detect said signal.  That's the Drake Equation.",
+            "ExternalId": "",
+            "Position": {
+              "x": 2087.0,
+              "y": 375.0
+            },
+            "ZIndex": 10.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 3040466223,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000028FA",
+                "Owner": "0x1000003000028F7"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000028FB",
+                "Owner": "0x1000003000028F7",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300002901",
+                    "Target": "0x1000003000028FE"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "DialogueFragment",
+          "Properties": {
+            "TechnicalName": "DFr_C6DD8610",
+            "Id": "0x1000003000028FE",
+            "Parent": "0x1000003000028C8",
+            "MenuText": "",
+            "StageDirections": "",
+            "Speaker": "0x10000000000018C",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "And the Fermi Paradox is...",
+            "ExternalId": "",
+            "Position": {
+              "x": 2374.3333333333335,
+              "y": 375.0
+            },
+            "ZIndex": 12.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 3336406544,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300002901",
+                "Owner": "0x1000003000028FE"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300002902",
+                "Owner": "0x1000003000028FE"
+              }
+            ]
+          }
+        },
+        {
           "Type": "Captain_Dialogue",
           "Properties": {
             "TechnicalName": "DFr_70D62241",
@@ -23442,8 +23556,8 @@
             "Text": "What the puck is going on?",
             "ExternalId": "",
             "Position": {
-              "x": 525.0,
-              "y": 325.0
+              "x": 500.0,
+              "y": 300.0
             },
             "ZIndex": 13.0,
             "Size": {
@@ -23460,7 +23574,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300000AC7",
                 "Owner": "0x100000300000AC5",
                 "Connections": [
@@ -23516,7 +23630,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300000ACF",
                 "Owner": "0x100000300000ACD",
                 "Connections": [
@@ -23572,7 +23686,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300000AE1",
                 "Owner": "0x100000300000ADF",
                 "Connections": [
@@ -23628,7 +23742,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300000AF3",
                 "Owner": "0x100000300000AF1",
                 "Connections": [
@@ -23740,7 +23854,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x100000300000B08",
                 "Owner": "0x100000300000B06",
                 "Connections": [
@@ -23796,7 +23910,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x100000300000B0E",
                 "Owner": "0x100000300000B0C",
                 "Connections": [
@@ -23908,9 +24022,22 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x1000003000025A2",
-                "Owner": "0x10000030000259E"
+                "Owner": "0x10000030000259E",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300000AD4",
+                    "Target": "0x100000300000AD3"
+                  }
+                ]
               }
             ]
           },
@@ -23951,7 +24078,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300000DAC",
                 "Owner": "0x100000300000DAA",
                 "Connections": [
@@ -24007,7 +24134,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300000DB3",
                 "Owner": "0x100000300000DB1",
                 "Connections": [
@@ -24063,7 +24190,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300000DC7",
                 "Owner": "0x100000300000DC5",
                 "Connections": [
@@ -24119,7 +24246,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x100000300000DCF",
                 "Owner": "0x100000300000DCD",
                 "Connections": [
@@ -24175,7 +24302,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300000DDF",
                 "Owner": "0x100000300000DDD",
                 "Connections": [
@@ -24210,7 +24337,7 @@
               "g": 0.0156862754,
               "b": 0.0156862754
             },
-            "Text": "I don't understand.",
+            "Text": "And which do you believe?",
             "ExternalId": "",
             "Position": {
               "x": 2575.0,
@@ -24231,7 +24358,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300000DE6",
                 "Owner": "0x100000300000DE4",
                 "Connections": [
@@ -24287,7 +24414,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300000DFC",
                 "Owner": "0x100000300000DFA",
                 "Connections": [
@@ -24299,8 +24426,8 @@
                       "b": 0.8
                     },
                     "Label": "",
-                    "TargetPin": "0x100000300000E24",
-                    "Target": "0x100000300000D8F"
+                    "TargetPin": "0x1000003000028B9",
+                    "Target": "0x1000003000028B7"
                   }
                 ]
               }
@@ -24343,7 +24470,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x100000300000E03",
                 "Owner": "0x100000300000E01",
                 "Connections": [
@@ -24355,8 +24482,8 @@
                       "b": 0.8
                     },
                     "Label": "",
-                    "TargetPin": "0x100000300000E24",
-                    "Target": "0x100000300000D8F"
+                    "TargetPin": "0x1000003000028B9",
+                    "Target": "0x1000003000028B7"
                   }
                 ]
               }
@@ -24399,7 +24526,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
                 "Id": "0x1000003000025DB",
                 "Owner": "0x1000003000025D7",
                 "Connections": [
@@ -24455,7 +24582,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x1000003000025E1",
                 "Owner": "0x1000003000025DD",
                 "Connections": [
@@ -24511,7 +24638,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x1000003000025E7",
                 "Owner": "0x1000003000025E3",
                 "Connections": [
@@ -24567,7 +24694,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x1000003000025FD",
                 "Owner": "0x1000003000025F9",
                 "Connections": [
@@ -24623,7 +24750,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300002606",
                 "Owner": "0x100000300002602",
                 "Connections": [
@@ -24679,9 +24806,22 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x10000030000260F",
-                "Owner": "0x10000030000260B"
+                "Owner": "0x10000030000260B",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300000DEC",
+                    "Target": "0x100000300000DEB"
+                  }
+                ]
               }
             ]
           },
@@ -24722,7 +24862,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300002617",
                 "Owner": "0x100000300002613",
                 "Connections": [
@@ -24734,8 +24874,64 @@
                       "b": 0.8
                     },
                     "Label": "",
-                    "TargetPin": "0x100000300000E24",
-                    "Target": "0x100000300000D8F"
+                    "TargetPin": "0x1000003000028B9",
+                    "Target": "0x1000003000028B7"
+                  }
+                ]
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Captain_Dialogue",
+          "Properties": {
+            "TechnicalName": "DFr_CA2B3993",
+            "Id": "0x1000003000028C0",
+            "Parent": "0x100000300000D8F",
+            "MenuText": "",
+            "StageDirections": "",
+            "Speaker": "0x100000000000190",
+            "Color": {
+              "r": 0.121568628,
+              "g": 0.0156862754,
+              "b": 0.0156862754
+            },
+            "Text": "To be honest I'm a bit relieved, this engine would have put me out of work.",
+            "ExternalId": "",
+            "Position": {
+              "x": 4100.0,
+              "y": 225.0
+            },
+            "ZIndex": 66.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 3391830419,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000028C3",
+                "Owner": "0x1000003000028C0"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000028C4",
+                "Owner": "0x1000003000028C0",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x1000003000026FE",
+                    "Target": "0x1000003000026FB"
                   }
                 ]
               }
@@ -24760,8 +24956,8 @@
             "Text": "Are you hiding in here?",
             "ExternalId": "",
             "Position": {
-              "x": 825.0,
-              "y": 125.0
+              "x": 775.0,
+              "y": 100.0
             },
             "ZIndex": 4.0,
             "Size": {
@@ -24778,7 +24974,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300000E3B",
                 "Owner": "0x100000300000E39",
                 "Connections": [
@@ -24816,7 +25012,7 @@
             "Text": "Quite a view, isn't it?",
             "ExternalId": "",
             "Position": {
-              "x": 825.0,
+              "x": 775.0,
               "y": 350.0
             },
             "ZIndex": 6.0,
@@ -24834,7 +25030,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300000E42",
                 "Owner": "0x100000300000E40",
                 "Connections": [
@@ -24890,7 +25086,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300000E57",
                 "Owner": "0x100000300000E55",
                 "Connections": [
@@ -24946,7 +25142,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300000E5E",
                 "Owner": "0x100000300000E5C",
                 "Connections": [
@@ -24984,7 +25180,7 @@
             "Text": "Do you not hear the alarms? Wait, are you hiding in here?",
             "ExternalId": "",
             "Position": {
-              "x": 825.0,
+              "x": 775.0,
               "y": 600.0
             },
             "ZIndex": 37.0,
@@ -25002,7 +25198,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x1000003000025AC",
                 "Owner": "0x1000003000025A8",
                 "Connections": [
@@ -25058,7 +25254,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x1000003000025B6",
                 "Owner": "0x1000003000025B2",
                 "Connections": [
@@ -25114,7 +25310,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
                 "Id": "0x1000003000025C0",
                 "Owner": "0x1000003000025BC",
                 "Connections": [
@@ -25170,7 +25366,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x1000003000025C6",
                 "Owner": "0x1000003000025C2",
                 "Connections": [
@@ -25226,7 +25422,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x1000003000025CC",
                 "Owner": "0x1000003000025C8",
                 "Connections": [
@@ -25393,8 +25589,8 @@
             "Text": "No need to apologize, I'm just checking in. How's our patient?",
             "ExternalId": "",
             "Position": {
-              "x": 400.0,
-              "y": 900.0
+              "x": 350.0,
+              "y": 950.0
             },
             "ZIndex": 13.0,
             "Size": {
@@ -25411,7 +25607,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300000ED9",
                 "Owner": "0x100000300000ED7",
                 "Connections": [
@@ -25467,7 +25663,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300000EE0",
                 "Owner": "0x100000300000EDE",
                 "Connections": [
@@ -25523,7 +25719,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300000F13",
                 "Owner": "0x100000300000F11",
                 "Connections": [
@@ -25579,7 +25775,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300000F1A",
                 "Owner": "0x100000300000F18",
                 "Connections": [
@@ -25635,7 +25831,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300000F3F",
                 "Owner": "0x100000300000F3D",
                 "Connections": [
@@ -25662,7 +25858,7 @@
             "TechnicalName": "DFr_8528D67E",
             "Id": "0x100000300000F44",
             "Parent": "0x100000300000ECE",
-            "MenuText": "",
+            "MenuText": "The Picard",
             "StageDirections": "",
             "Speaker": "0x100000000000190",
             "Color": {
@@ -25691,7 +25887,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300000F46",
                 "Owner": "0x100000300000F44",
                 "Connections": [
@@ -25747,7 +25943,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300000F55",
                 "Owner": "0x100000300000F53",
                 "Connections": [
@@ -25759,8 +25955,8 @@
                       "b": 0.8
                     },
                     "Label": "",
-                    "TargetPin": "0x100000300000F62",
-                    "Target": "0x100000300000F61"
+                    "TargetPin": "0x1000003000028A8",
+                    "Target": "0x1000003000028A6"
                   }
                 ]
               }
@@ -25803,7 +25999,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300000F5C",
                 "Owner": "0x100000300000F5A",
                 "Connections": [
@@ -25815,8 +26011,8 @@
                       "b": 0.8
                     },
                     "Label": "",
-                    "TargetPin": "0x100000300000F62",
-                    "Target": "0x100000300000F61"
+                    "TargetPin": "0x1000003000028A8",
+                    "Target": "0x1000003000028A6"
                   }
                 ]
               }
@@ -25841,8 +26037,8 @@
             "Text": "Well, better safe than sorry.",
             "ExternalId": "",
             "Position": {
-              "x": 4525.0,
-              "y": 1050.0
+              "x": 5225.0,
+              "y": 1000.0
             },
             "ZIndex": 54.0,
             "Size": {
@@ -25859,7 +26055,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300000F6A",
                 "Owner": "0x100000300000F68",
                 "Connections": [
@@ -25897,8 +26093,8 @@
             "Text": "Let's hope you're right.",
             "ExternalId": "",
             "Position": {
-              "x": 4525.0,
-              "y": 1300.0
+              "x": 5225.0,
+              "y": 1250.0
             },
             "ZIndex": 56.0,
             "Size": {
@@ -25915,7 +26111,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300000F71",
                 "Owner": "0x100000300000F6F",
                 "Connections": [
@@ -25953,8 +26149,8 @@
             "Text": "He may be a bit out of his element. Give him time.",
             "ExternalId": "",
             "Position": {
-              "x": 5175.0,
-              "y": 1125.0
+              "x": 5875.0,
+              "y": 1075.0
             },
             "ZIndex": 62.0,
             "Size": {
@@ -25971,7 +26167,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300000F80",
                 "Owner": "0x100000300000F7E",
                 "Connections": [
@@ -26009,8 +26205,8 @@
             "Text": "I don't think he really thought this thing through.",
             "ExternalId": "",
             "Position": {
-              "x": 5175.0,
-              "y": 850.0
+              "x": 5875.0,
+              "y": 800.0
             },
             "ZIndex": 64.0,
             "Size": {
@@ -26027,7 +26223,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300000F87",
                 "Owner": "0x100000300000F85",
                 "Connections": [
@@ -26083,7 +26279,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x100000300002622",
                 "Owner": "0x10000030000261E",
                 "Connections": [
@@ -26139,7 +26335,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
                 "Id": "0x10000030000262B",
                 "Owner": "0x100000300002627",
                 "Connections": [
@@ -26195,7 +26391,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300002631",
                 "Owner": "0x10000030000262D",
                 "Connections": [
@@ -26251,7 +26447,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x100000300002637",
                 "Owner": "0x100000300002633",
                 "Connections": [
@@ -26307,7 +26503,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x100000300002648",
                 "Owner": "0x100000300002644",
                 "Connections": [
@@ -26334,7 +26530,7 @@
             "TechnicalName": "DFr_090ADFFA",
             "Id": "0x10000030000264E",
             "Parent": "0x100000300000ECE",
-            "MenuText": "",
+            "MenuText": "The Rick",
             "StageDirections": "",
             "Speaker": "0x100000000000190",
             "Color": {
@@ -26363,7 +26559,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x100000300002652",
                 "Owner": "0x10000030000264E",
                 "Connections": [
@@ -26419,7 +26615,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x100000300002661",
                 "Owner": "0x10000030000265D",
                 "Connections": [
@@ -26431,8 +26627,8 @@
                       "b": 0.8
                     },
                     "Label": "",
-                    "TargetPin": "0x100000300000F62",
-                    "Target": "0x100000300000F61"
+                    "TargetPin": "0x1000003000028A8",
+                    "Target": "0x1000003000028A6"
                   }
                 ]
               }
@@ -26457,8 +26653,8 @@
             "Text": "Look at it this way, none of us want to be the only one panicking and with Loop around we won't have to!",
             "ExternalId": "",
             "Position": {
-              "x": 5175.0,
-              "y": 1425.0
+              "x": 5875.0,
+              "y": 1375.0
             },
             "ZIndex": 81.0,
             "Size": {
@@ -26475,7 +26671,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x10000030000266F",
                 "Owner": "0x10000030000266B",
                 "Connections": [
@@ -26489,6 +26685,118 @@
                     "Label": "",
                     "TargetPin": "0x100000300000F8D",
                     "Target": "0x100000300000F8C"
+                  }
+                ]
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Captain_Dialogue",
+          "Properties": {
+            "TechnicalName": "DFr_08F02A20",
+            "Id": "0x1000003000026F1",
+            "Parent": "0x100000300000ECE",
+            "MenuText": "The Rick",
+            "StageDirections": "",
+            "Speaker": "0x100000000000190",
+            "Color": {
+              "r": 0.121568628,
+              "g": 0.0156862754,
+              "b": 0.0156862754
+            },
+            "Text": "Oh I'm sure we'll find a use.",
+            "ExternalId": "",
+            "Position": {
+              "x": 5225.0,
+              "y": 1475.0
+            },
+            "ZIndex": 84.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 149957152,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000026F4",
+                "Owner": "0x1000003000026F1"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
+                "Id": "0x1000003000026F5",
+                "Owner": "0x1000003000026F1",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300000F77",
+                    "Target": "0x100000300000F76"
+                  }
+                ]
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Captain_Dialogue",
+          "Properties": {
+            "TechnicalName": "DFr_9A1049DE",
+            "Id": "0x1000003000028AF",
+            "Parent": "0x100000300000ECE",
+            "MenuText": "",
+            "StageDirections": "",
+            "Speaker": "0x100000000000190",
+            "Color": {
+              "r": 0.121568628,
+              "g": 0.0156862754,
+              "b": 0.0156862754
+            },
+            "Text": "I would have killed to have these kinds of resources when I was  deployed",
+            "ExternalId": "",
+            "Position": {
+              "x": 4725.0,
+              "y": 825.0
+            },
+            "ZIndex": 89.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 2584758750,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000028B2",
+                "Owner": "0x1000003000028AF"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000028B3",
+                "Owner": "0x1000003000028AF",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300000F62",
+                    "Target": "0x100000300000F61"
                   }
                 ]
               }
@@ -27174,7 +27482,7 @@
             "TechnicalName": "DFr_CBCD3C6F",
             "Id": "0x100000300002576",
             "Parent": "0x10000030000126A",
-            "MenuText": "",
+            "MenuText": "The Mal",
             "StageDirections": "",
             "Speaker": "0x100000000000190",
             "Color": {
@@ -27182,7 +27490,7 @@
               "g": 0.0156862754,
               "b": 0.0156862754
             },
-            "Text": "",
+            "Text": "You just stopped?",
             "ExternalId": "",
             "Position": {
               "x": 3337.0000000000005,
@@ -27205,7 +27513,20 @@
               {
                 "Text": "",
                 "Id": "0x10000030000257A",
-                "Owner": "0x100000300002576"
+                "Owner": "0x100000300002576",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300001CEA",
+                    "Target": "0x100000300001CE7"
+                  }
+                ]
               }
             ]
           },
@@ -27225,7 +27546,7 @@
               "g": 0.0156862754,
               "b": 0.0156862754
             },
-            "Text": "",
+            "Text": "You must have had a good reason.",
             "ExternalId": "",
             "Position": {
               "x": 3337.0000000000005,
@@ -27248,7 +27569,20 @@
               {
                 "Text": "",
                 "Id": "0x100000300002580",
-                "Owner": "0x10000030000257C"
+                "Owner": "0x10000030000257C",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300001CEA",
+                    "Target": "0x100000300001CE7"
+                  }
+                ]
               }
             ]
           },
@@ -27260,7 +27594,7 @@
             "TechnicalName": "DFr_30BCAC49",
             "Id": "0x100000300002582",
             "Parent": "0x10000030000126A",
-            "MenuText": "",
+            "MenuText": "The Rick",
             "StageDirections": "",
             "Speaker": "0x100000000000272",
             "Color": {
@@ -27268,7 +27602,7 @@
               "g": 0.0156862754,
               "b": 0.0156862754
             },
-            "Text": "",
+            "Text": "I wouldn't want to spend my life around people like Loop either.",
             "ExternalId": "",
             "Position": {
               "x": 3337.0000000000005,
@@ -27291,7 +27625,20 @@
               {
                 "Text": "",
                 "Id": "0x100000300002586",
-                "Owner": "0x100000300002582"
+                "Owner": "0x100000300002582",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300001CEA",
+                    "Target": "0x100000300001CE7"
+                  }
+                ]
               }
             ]
           },
@@ -27314,8 +27661,8 @@
             "Text": "I was an architect. Actually designed the intrasolar path.",
             "ExternalId": "",
             "Position": {
-              "x": 1925.0,
-              "y": 1125.0
+              "x": 1850.0,
+              "y": 1025.0
             },
             "ZIndex": 73.0,
             "Size": {
@@ -27332,7 +27679,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "Captains_Chair.Astronaut = true",
+                "Text": "TheCaptain.Architect = true",
                 "Id": "0x100000300001304",
                 "Owner": "0x100000300001302",
                 "Connections": [
@@ -27388,7 +27735,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "Captains_Chair.Soldier = true",
+                "Text": "TheCaptain.Soldier = true",
                 "Id": "0x10000030000130C",
                 "Owner": "0x10000030000130A",
                 "Connections": [
@@ -27444,7 +27791,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "Captains_Chair.Explorer = true",
+                "Text": "TheCaptain.Explorer = true",
                 "Id": "0x100000300001314",
                 "Owner": "0x100000300001312",
                 "Connections": [
@@ -27500,7 +27847,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;\n",
                 "Id": "0x100000300001822",
                 "Owner": "0x10000030000181E",
                 "Connections": [
@@ -27556,7 +27903,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300001828",
                 "Owner": "0x100000300001824",
                 "Connections": [
@@ -27612,7 +27959,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x10000030000182E",
                 "Owner": "0x10000030000182A",
                 "Connections": [
@@ -27668,7 +28015,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;\n",
                 "Id": "0x100000300001840",
                 "Owner": "0x10000030000183C",
                 "Connections": [
@@ -27724,7 +28071,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300001846",
                 "Owner": "0x100000300001842",
                 "Connections": [
@@ -27751,7 +28098,7 @@
             "TechnicalName": "DFr_F1FFE15C",
             "Id": "0x100000300001848",
             "Parent": "0x1000003000012FA",
-            "MenuText": "",
+            "MenuText": "The Rick",
             "StageDirections": "",
             "Speaker": "0x100000000000190",
             "Color": {
@@ -27780,7 +28127,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x10000030000184C",
                 "Owner": "0x100000300001848",
                 "Connections": [
@@ -28922,7 +29269,7 @@
             "TechnicalName": "DFr_F22B0AC7",
             "Id": "0x1000003000023AC",
             "Parent": "0x1000003000012FA",
-            "MenuText": "",
+            "MenuText": "The Mal Reynolds",
             "StageDirections": "",
             "Speaker": "0x100000000000190",
             "Color": {
@@ -28951,7 +29298,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;\n",
                 "Id": "0x1000003000023B0",
                 "Owner": "0x1000003000023AC",
                 "Connections": [
@@ -28978,7 +29325,7 @@
             "TechnicalName": "DFr_9DC5E1A6",
             "Id": "0x1000003000023B2",
             "Parent": "0x1000003000012FA",
-            "MenuText": "",
+            "MenuText": "The Picard",
             "StageDirections": "",
             "Speaker": "0x100000000000190",
             "Color": {
@@ -29007,7 +29354,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x1000003000023B6",
                 "Owner": "0x1000003000023B2",
                 "Connections": [
@@ -29034,7 +29381,7 @@
             "TechnicalName": "DFr_F0C6A7BA",
             "Id": "0x1000003000023B8",
             "Parent": "0x1000003000012FA",
-            "MenuText": "",
+            "MenuText": "The Rick",
             "StageDirections": "",
             "Speaker": "0x100000000000190",
             "Color": {
@@ -29063,7 +29410,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x1000003000023BC",
                 "Owner": "0x1000003000023B8",
                 "Connections": [
@@ -29090,7 +29437,7 @@
             "TechnicalName": "DFr_C49533D6",
             "Id": "0x1000003000023DF",
             "Parent": "0x1000003000012FA",
-            "MenuText": "",
+            "MenuText": "Earth",
             "StageDirections": "",
             "Speaker": "0x100000000000190",
             "Color": {
@@ -29119,7 +29466,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.Earth = true",
                 "Id": "0x1000003000023E3",
                 "Owner": "0x1000003000023DF",
                 "Connections": [
@@ -29146,7 +29493,7 @@
             "TechnicalName": "DFr_930BD75D",
             "Id": "0x1000003000023E5",
             "Parent": "0x1000003000012FA",
-            "MenuText": "",
+            "MenuText": "Moon",
             "StageDirections": "",
             "Speaker": "0x100000000000190",
             "Color": {
@@ -29175,7 +29522,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.Mars = true",
                 "Id": "0x1000003000023E9",
                 "Owner": "0x1000003000023E5",
                 "Connections": [
@@ -29202,7 +29549,7 @@
             "TechnicalName": "DFr_51215E7E",
             "Id": "0x1000003000023EB",
             "Parent": "0x1000003000012FA",
-            "MenuText": "",
+            "MenuText": "Mars",
             "StageDirections": "",
             "Speaker": "0x100000000000190",
             "Color": {
@@ -29231,7 +29578,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.Mars = true",
                 "Id": "0x1000003000023EF",
                 "Owner": "0x1000003000023EB",
                 "Connections": [
@@ -29287,7 +29634,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;\n",
                 "Id": "0x100000300002417",
                 "Owner": "0x100000300002413",
                 "Connections": [
@@ -29343,7 +29690,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x10000030000241D",
                 "Owner": "0x100000300002419",
                 "Connections": [
@@ -29399,7 +29746,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;\n",
                 "Id": "0x10000030000242C",
                 "Owner": "0x100000300002428",
                 "Connections": [
@@ -29455,7 +29802,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300002432",
                 "Owner": "0x10000030000242E",
                 "Connections": [
@@ -29511,7 +29858,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;\n",
                 "Id": "0x100000300002447",
                 "Owner": "0x100000300002443",
                 "Connections": [
@@ -29567,7 +29914,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x10000030000244D",
                 "Owner": "0x100000300002449",
                 "Connections": [
@@ -29623,7 +29970,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;\n",
                 "Id": "0x1000003000024A3",
                 "Owner": "0x10000030000249F",
                 "Connections": [
@@ -29679,7 +30026,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;\n",
                 "Id": "0x1000003000024AB",
                 "Owner": "0x1000003000024A7",
                 "Connections": [
@@ -29735,7 +30082,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x1000003000024B1",
                 "Owner": "0x1000003000024AD",
                 "Connections": [
@@ -29791,9 +30138,22 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;\n",
                 "Id": "0x1000003000024B9",
-                "Owner": "0x1000003000024B5"
+                "Owner": "0x1000003000024B5",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x10000030000131E",
+                    "Target": "0x10000030000131D"
+                  }
+                ]
               }
             ]
           },
@@ -29834,9 +30194,22 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x1000003000024BF",
-                "Owner": "0x1000003000024BB"
+                "Owner": "0x1000003000024BB",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x10000030000131E",
+                    "Target": "0x10000030000131D"
+                  }
+                ]
               }
             ]
           },
@@ -29877,7 +30250,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x1000003000024CE",
                 "Owner": "0x1000003000024CA",
                 "Connections": [
@@ -29933,7 +30306,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x1000003000024D8",
                 "Owner": "0x1000003000024D4",
                 "Connections": [
@@ -29989,7 +30362,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x1000003000024E5",
                 "Owner": "0x1000003000024E1",
                 "Connections": [
@@ -30024,7 +30397,7 @@
               "g": 0.0156862754,
               "b": 0.0156862754
             },
-            "Text": "",
+            "Text": "The Rick's Response",
             "ExternalId": "",
             "Position": {
               "x": 3750.0,
@@ -30045,9 +30418,22 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x1000003000024F9",
-                "Owner": "0x1000003000024F5"
+                "Owner": "0x1000003000024F5",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x10000030000131E",
+                    "Target": "0x10000030000131D"
+                  }
+                ]
               }
             ]
           },
@@ -30088,7 +30474,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300002502",
                 "Owner": "0x1000003000024FE",
                 "Connections": [
@@ -30144,7 +30530,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x10000030000250E",
                 "Owner": "0x10000030000250A",
                 "Connections": [
@@ -30200,7 +30586,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x100000300002516",
                 "Owner": "0x100000300002512",
                 "Connections": [
@@ -30256,7 +30642,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;\n",
                 "Id": "0x100000300002537",
                 "Owner": "0x100000300002533",
                 "Connections": [
@@ -30312,7 +30698,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x10000030000253D",
                 "Owner": "0x100000300002539",
                 "Connections": [
@@ -30368,7 +30754,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x100000300002543",
                 "Owner": "0x10000030000253F",
                 "Connections": [
@@ -30424,7 +30810,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x100000300001D35",
                 "Owner": "0x100000300001D33",
                 "Connections": [
@@ -30480,7 +30866,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x100000300001D48",
                 "Owner": "0x100000300001D46",
                 "Connections": [
@@ -30515,7 +30901,7 @@
               "g": 0.0156862754,
               "b": 0.0156862754
             },
-            "Text": "Of course, this entire venture is my responsibilty, and I won't deny that im a bit curious.",
+            "Text": "Of course, this entire venture is my responsbizilty, and I won't deny that im a bit curious.",
             "ExternalId": "",
             "Position": {
               "x": 3300.0,
@@ -30536,7 +30922,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300001D55",
                 "Owner": "0x100000300001D53",
                 "Connections": [
@@ -30592,7 +30978,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300001D93",
                 "Owner": "0x100000300001D91",
                 "Connections": [
@@ -30648,7 +31034,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300001D9A",
                 "Owner": "0x100000300001D98",
                 "Connections": [
@@ -30704,7 +31090,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
                 "Id": "0x10000030000269C",
                 "Owner": "0x10000030000269A",
                 "Connections": [
@@ -30760,7 +31146,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300001E19",
                 "Owner": "0x100000300001E17",
                 "Connections": [
@@ -30798,7 +31184,7 @@
             "Text": "We should be careful of indulging ourselves, who knows how much time we have?",
             "ExternalId": "",
             "Position": {
-              "x": 1200.0,
+              "x": 1175.0,
               "y": 625.0
             },
             "ZIndex": 7.0,
@@ -30816,7 +31202,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300001E20",
                 "Owner": "0x100000300001E1E",
                 "Connections": [
@@ -30840,10 +31226,10 @@
         {
           "Type": "Captain_Dialogue",
           "Properties": {
-            "TechnicalName": "DFr_C1B9F0D7",
-            "Id": "0x100000300001E7D",
-            "Parent": "0x100000300001E66",
-            "MenuText": "",
+            "TechnicalName": "DFr_2590A27B",
+            "Id": "0x1000003000026A5",
+            "Parent": "0x100000300001E01",
+            "MenuText": "The Rick",
             "StageDirections": "",
             "Speaker": "0x100000000000190",
             "Color": {
@@ -30851,11 +31237,67 @@
               "g": 0.0156862754,
               "b": 0.0156862754
             },
-            "Text": "We don't have X-Papes",
+            "Text": "Sounds good, let us know if its poison. Or don't. Either way Dr. Grunfeld and I will figure it out eventually.",
             "ExternalId": "",
             "Position": {
-              "x": 837.33333333333337,
-              "y": 250.0
+              "x": 1350.0,
+              "y": 375.0
+            },
+            "ZIndex": 22.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 630235771,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000026A8",
+                "Owner": "0x1000003000026A5"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
+                "Id": "0x1000003000026A9",
+                "Owner": "0x1000003000026A5",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300001E2D",
+                    "Target": "0x100000300001E2C"
+                  }
+                ]
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Captain_Dialogue",
+          "Properties": {
+            "TechnicalName": "DFr_C1B9F0D7",
+            "Id": "0x100000300001E7D",
+            "Parent": "0x100000300001E66",
+            "MenuText": "The Picard",
+            "StageDirections": "",
+            "Speaker": "0x100000000000190",
+            "Color": {
+              "r": 0.121568628,
+              "g": 0.0156862754,
+              "b": 0.0156862754
+            },
+            "Text": "I apologize but we don't have the proper documentation.",
+            "ExternalId": "",
+            "Position": {
+              "x": 850.0,
+              "y": 100.0
             },
             "ZIndex": 6.0,
             "Size": {
@@ -30872,7 +31314,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300001E7F",
                 "Owner": "0x100000300001E7D",
                 "Connections": [
@@ -30899,7 +31341,7 @@
             "TechnicalName": "DFr_E0692C3C",
             "Id": "0x100000300001E84",
             "Parent": "0x100000300001E66",
-            "MenuText": "",
+            "MenuText": "The Mal Reynolds",
             "StageDirections": "",
             "Speaker": "0x100000000000190",
             "Color": {
@@ -30910,8 +31352,8 @@
             "Text": "Oh shoot, we forgot them on the ship. We'll be right back.",
             "ExternalId": "",
             "Position": {
-              "x": 837.33333333333337,
-              "y": 500.0
+              "x": 850.0,
+              "y": 650.0
             },
             "ZIndex": 8.0,
             "Size": {
@@ -30928,7 +31370,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300001E86",
                 "Owner": "0x100000300001E84",
                 "Connections": [
@@ -30955,7 +31397,7 @@
             "TechnicalName": "DFr_C9D8A660",
             "Id": "0x100000300001E93",
             "Parent": "0x100000300001E66",
-            "MenuText": "",
+            "MenuText": "The Rick",
             "StageDirections": "",
             "Speaker": "0x100000000000190",
             "Color": {
@@ -30984,7 +31426,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x100000300001E95",
                 "Owner": "0x100000300001E93",
                 "Connections": [
@@ -31011,7 +31453,7 @@
             "TechnicalName": "DFr_B3E06C1A",
             "Id": "0x100000300001E9A",
             "Parent": "0x100000300001E66",
-            "MenuText": "",
+            "MenuText": "The Picard",
             "StageDirections": "",
             "Speaker": "0x100000000000190",
             "Color": {
@@ -31040,7 +31482,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300001E9C",
                 "Owner": "0x100000300001E9A",
                 "Connections": [
@@ -31067,7 +31509,7 @@
             "TechnicalName": "DFr_CBCD784D",
             "Id": "0x100000300001EB0",
             "Parent": "0x100000300001E66",
-            "MenuText": "",
+            "MenuText": "The Rick",
             "StageDirections": "",
             "Speaker": "0x100000000000190",
             "Color": {
@@ -31096,7 +31538,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x100000300001EB2",
                 "Owner": "0x100000300001EB0",
                 "Connections": [
@@ -31123,7 +31565,7 @@
             "TechnicalName": "DFr_A3D9134A",
             "Id": "0x100000300001EB7",
             "Parent": "0x100000300001E66",
-            "MenuText": "",
+            "MenuText": "The Picard",
             "StageDirections": "",
             "Speaker": "0x100000000000190",
             "Color": {
@@ -31152,7 +31594,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300001EB9",
                 "Owner": "0x100000300001EB7",
                 "Connections": [
@@ -31179,7 +31621,7 @@
             "TechnicalName": "DFr_9FCB6E89",
             "Id": "0x100000300001EC6",
             "Parent": "0x100000300001E66",
-            "MenuText": "",
+            "MenuText": "The Rick",
             "StageDirections": "",
             "Speaker": "0x100000000000190",
             "Color": {
@@ -31208,7 +31650,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x100000300001EC8",
                 "Owner": "0x100000300001EC6",
                 "Connections": [
@@ -31222,6 +31664,62 @@
                     "Label": "",
                     "TargetPin": "0x100000300001E68",
                     "Target": "0x100000300001E67"
+                  }
+                ]
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Captain_Dialogue",
+          "Properties": {
+            "TechnicalName": "DFr_457942CD",
+            "Id": "0x100000300002709",
+            "Parent": "0x100000300001E66",
+            "MenuText": "The Rick",
+            "StageDirections": "",
+            "Speaker": "0x100000000000190",
+            "Color": {
+              "r": 0.121568628,
+              "g": 0.0156862754,
+              "b": 0.0156862754
+            },
+            "Text": "How about you show me your X-papes?",
+            "ExternalId": "",
+            "Position": {
+              "x": 837.33333333333337,
+              "y": 375.0
+            },
+            "ZIndex": 31.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 1165574861,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x10000030000270C",
+                "Owner": "0x100000300002709"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
+                "Id": "0x10000030000270D",
+                "Owner": "0x100000300002709",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300001E8C",
+                    "Target": "0x100000300001E8B"
                   }
                 ]
               }
@@ -31264,7 +31762,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300001F1D",
                 "Owner": "0x100000300001F19",
                 "Connections": [
@@ -31320,7 +31818,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300001F23",
                 "Owner": "0x100000300001F1F",
                 "Connections": [
@@ -31347,7 +31845,7 @@
             "TechnicalName": "DFr_D8D3ECC5",
             "Id": "0x100000300001F63",
             "Parent": "0x100000300001EE6",
-            "MenuText": "",
+            "MenuText": "The Picard",
             "StageDirections": "",
             "Speaker": "0x100000000000190",
             "Color": {
@@ -31359,7 +31857,7 @@
             "ExternalId": "",
             "Position": {
               "x": 2200.0,
-              "y": 150.0
+              "y": 0.0
             },
             "ZIndex": 19.0,
             "Size": {
@@ -31376,7 +31874,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300001F67",
                 "Owner": "0x100000300001F63",
                 "Connections": [
@@ -31403,7 +31901,7 @@
             "TechnicalName": "DFr_DA378CB7",
             "Id": "0x100000300001F69",
             "Parent": "0x100000300001EE6",
-            "MenuText": "",
+            "MenuText": "The Mal Reynolds",
             "StageDirections": "",
             "Speaker": "0x100000000000190",
             "Color": {
@@ -31415,7 +31913,7 @@
             "ExternalId": "",
             "Position": {
               "x": 2200.0,
-              "y": 400.0
+              "y": 250.0
             },
             "ZIndex": 21.0,
             "Size": {
@@ -31432,7 +31930,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300001F6D",
                 "Owner": "0x100000300001F69",
                 "Connections": [
@@ -31459,7 +31957,7 @@
             "TechnicalName": "DFr_9EBC0FEF",
             "Id": "0x100000300001F79",
             "Parent": "0x100000300001EE6",
-            "MenuText": "",
+            "MenuText": "The Mal Reynolds",
             "StageDirections": "",
             "Speaker": "0x100000000000190",
             "Color": {
@@ -31470,8 +31968,8 @@
             "Text": "I'm sure we can work something out with the protestors....",
             "ExternalId": "",
             "Position": {
-              "x": 2837.3333333333335,
-              "y": 150.0
+              "x": 2850.0,
+              "y": -25.0
             },
             "ZIndex": 26.0,
             "Size": {
@@ -31488,7 +31986,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300001F7D",
                 "Owner": "0x100000300001F79",
                 "Connections": [
@@ -31515,7 +32013,7 @@
             "TechnicalName": "DFr_0C4E8548",
             "Id": "0x100000300001F7F",
             "Parent": "0x100000300001EE6",
-            "MenuText": "",
+            "MenuText": "The Picard",
             "StageDirections": "",
             "Speaker": "0x100000000000190",
             "Color": {
@@ -31526,8 +32024,8 @@
             "Text": "The authorities aren't doing anything about it?",
             "ExternalId": "",
             "Position": {
-              "x": 2837.3333333333335,
-              "y": 400.0
+              "x": 2875.0,
+              "y": 550.0
             },
             "ZIndex": 28.0,
             "Size": {
@@ -31544,7 +32042,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300001F83",
                 "Owner": "0x100000300001F7F",
                 "Connections": [
@@ -31571,7 +32069,7 @@
             "TechnicalName": "DFr_D2CF3DB1",
             "Id": "0x100000300001F97",
             "Parent": "0x100000300001EE6",
-            "MenuText": "",
+            "MenuText": "The Picard",
             "StageDirections": "",
             "Speaker": "0x100000000000190",
             "Color": {
@@ -31582,8 +32080,8 @@
             "Text": "Well, we appreciate the help.",
             "ExternalId": "",
             "Position": {
-              "x": 3900.0,
-              "y": 175.0
+              "x": 3925.0,
+              "y": 25.0
             },
             "ZIndex": 35.0,
             "Size": {
@@ -31600,7 +32098,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300001F9B",
                 "Owner": "0x100000300001F97",
                 "Connections": [
@@ -31627,7 +32125,7 @@
             "TechnicalName": "DFr_80F1B515",
             "Id": "0x100000300001F9D",
             "Parent": "0x100000300001EE6",
-            "MenuText": "",
+            "MenuText": "The Rick",
             "StageDirections": "",
             "Speaker": "0x100000000000190",
             "Color": {
@@ -31638,8 +32136,8 @@
             "Text": "Thanks for nothing.",
             "ExternalId": "",
             "Position": {
-              "x": 3900.0,
-              "y": 425.0
+              "x": 3925.0,
+              "y": 275.0
             },
             "ZIndex": 37.0,
             "Size": {
@@ -31656,7 +32154,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x100000300001FA1",
                 "Owner": "0x100000300001F9D",
                 "Connections": [
@@ -31680,10 +32178,290 @@
         {
           "Type": "Captain_Dialogue",
           "Properties": {
+            "TechnicalName": "DFr_CEF584E7",
+            "Id": "0x1000003000026B8",
+            "Parent": "0x100000300001EE6",
+            "MenuText": "The Rick",
+            "StageDirections": "",
+            "Speaker": "0x100000000000190",
+            "Color": {
+              "r": 0.121568628,
+              "g": 0.0156862754,
+              "b": 0.0156862754
+            },
+            "Text": "But we should listen to you?",
+            "ExternalId": "",
+            "Position": {
+              "x": 425.0,
+              "y": 250.0
+            },
+            "ZIndex": 42.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 3472196839,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000026BB",
+                "Owner": "0x1000003000026B8"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
+                "Id": "0x1000003000026BC",
+                "Owner": "0x1000003000026B8",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x1000003000026B3",
+                    "Target": "0x1000003000026B0"
+                  }
+                ]
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Captain_Dialogue",
+          "Properties": {
+            "TechnicalName": "DFr_BB680476",
+            "Id": "0x100000300002719",
+            "Parent": "0x100000300001EE6",
+            "MenuText": "The Rick",
+            "StageDirections": "",
+            "Speaker": "0x100000000000190",
+            "Color": {
+              "r": 0.121568628,
+              "g": 0.0156862754,
+              "b": 0.0156862754
+            },
+            "Text": "So what are we supposed to do about it?",
+            "ExternalId": "",
+            "Position": {
+              "x": 2200.0,
+              "y": 500.0
+            },
+            "ZIndex": 21.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 3144156278,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x10000030000271A",
+                "Owner": "0x100000300002719"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
+                "Id": "0x10000030000271B",
+                "Owner": "0x100000300002719",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300001F74",
+                    "Target": "0x100000300001F71"
+                  }
+                ]
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Captain_Dialogue",
+          "Properties": {
+            "TechnicalName": "DFr_3459BFEC",
+            "Id": "0x100000300002724",
+            "Parent": "0x100000300001EE6",
+            "MenuText": "The Rick",
+            "StageDirections": "",
+            "Speaker": "0x100000000000190",
+            "Color": {
+              "r": 0.121568628,
+              "g": 0.0156862754,
+              "b": 0.0156862754
+            },
+            "Text": "I'm sure we can work something out...",
+            "ExternalId": "",
+            "Position": {
+              "x": 2850.0,
+              "y": 250.0
+            },
+            "ZIndex": 26.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 878297068,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300002725",
+                "Owner": "0x100000300002724"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
+                "Id": "0x100000300002726",
+                "Owner": "0x100000300002724",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300001F8A",
+                    "Target": "0x100000300001F87"
+                  }
+                ]
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Captain_Dialogue",
+          "Properties": {
+            "TechnicalName": "DFr_9F5CF262",
+            "Id": "0x10000030000272F",
+            "Parent": "0x100000300001EE6",
+            "MenuText": "The Mal Reynolds",
+            "StageDirections": "",
+            "Speaker": "0x100000000000190",
+            "Color": {
+              "r": 0.121568628,
+              "g": 0.0156862754,
+              "b": 0.0156862754
+            },
+            "Text": "Thanks for nothing.",
+            "ExternalId": "",
+            "Position": {
+              "x": 3925.0,
+              "y": 550.0
+            },
+            "ZIndex": 37.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 2673668706,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300002730",
+                "Owner": "0x10000030000272F"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
+                "Id": "0x100000300002731",
+                "Owner": "0x10000030000272F",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300001EEA",
+                    "Target": "0x100000300001EE6"
+                  }
+                ]
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Captain_Dialogue",
+          "Properties": {
+            "TechnicalName": "DFr_E98266C5",
+            "Id": "0x100000300002005",
+            "Parent": "0x100000300001FA8",
+            "MenuText": "The Rick",
+            "StageDirections": "",
+            "Speaker": "0x100000000000190",
+            "Color": {
+              "r": 0.121568628,
+              "g": 0.0156862754,
+              "b": 0.0156862754
+            },
+            "Text": "What are you?",
+            "ExternalId": "",
+            "Position": {
+              "x": 2600.0,
+              "y": 575.0
+            },
+            "ZIndex": 38.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 3917637317,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300002006",
+                "Owner": "0x100000300002005"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
+                "Id": "0x100000300002007",
+                "Owner": "0x100000300002005",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300002064",
+                    "Target": "0x100000300002061"
+                  }
+                ]
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Captain_Dialogue",
+          "Properties": {
             "TechnicalName": "DFr_4C149350",
             "Id": "0x100000300002017",
             "Parent": "0x100000300001FA8",
-            "MenuText": "",
+            "MenuText": "The Rick",
             "StageDirections": "",
             "Speaker": "0x100000000000190",
             "Color": {
@@ -31712,7 +32490,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x100000300002019",
                 "Owner": "0x100000300002017",
                 "Connections": [
@@ -31736,10 +32514,66 @@
         {
           "Type": "Captain_Dialogue",
           "Properties": {
+            "TechnicalName": "DFr_71F66D9B",
+            "Id": "0x10000030000201D",
+            "Parent": "0x100000300001FA8",
+            "MenuText": "The Mal Reynolds",
+            "StageDirections": "",
+            "Speaker": "0x100000000000190",
+            "Color": {
+              "r": 0.121568628,
+              "g": 0.0156862754,
+              "b": 0.0156862754
+            },
+            "Text": "Where are we?",
+            "ExternalId": "",
+            "Position": {
+              "x": 2600.0,
+              "y": 325.0
+            },
+            "ZIndex": 36.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 1911975323,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x10000030000201E",
+                "Owner": "0x10000030000201D"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
+                "Id": "0x10000030000201F",
+                "Owner": "0x10000030000201D",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300002036",
+                    "Target": "0x100000300002035"
+                  }
+                ]
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Captain_Dialogue",
+          "Properties": {
             "TechnicalName": "DFr_70ECDE76",
             "Id": "0x100000300002029",
             "Parent": "0x100000300001FA8",
-            "MenuText": "",
+            "MenuText": "The Mal Reynolds",
             "StageDirections": "",
             "Speaker": "0x100000000000190",
             "Color": {
@@ -31768,7 +32602,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
                 "Id": "0x10000030000202B",
                 "Owner": "0x100000300002029",
                 "Connections": [
@@ -32086,8 +32920,8 @@
             "Text": "The good news, please",
             "ExternalId": "",
             "Position": {
-              "x": 1175.0,
-              "y": 150.0
+              "x": 1150.0,
+              "y": 200.0
             },
             "ZIndex": 32.0,
             "Size": {
@@ -32104,7 +32938,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x10000030000225A",
                 "Owner": "0x100000300002258",
                 "Connections": [
@@ -32142,8 +32976,8 @@
             "Text": "The bad news, please.",
             "ExternalId": "",
             "Position": {
-              "x": 1150.6666666666665,
-              "y": 645.66666666666663
+              "x": 1150.0,
+              "y": 725.0
             },
             "ZIndex": 34.0,
             "Size": {
@@ -32160,7 +32994,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300002266",
                 "Owner": "0x100000300002264",
                 "Connections": [
@@ -32216,7 +33050,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300002349",
                 "Owner": "0x100000300002345",
                 "Connections": [
@@ -32272,7 +33106,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x10000030000234F",
                 "Owner": "0x10000030000234B",
                 "Connections": [
@@ -32328,7 +33162,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300002387",
                 "Owner": "0x100000300002383",
                 "Connections": [
@@ -32384,7 +33218,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x10000030000238D",
                 "Owner": "0x100000300002389",
                 "Connections": [
@@ -32423,7 +33257,7 @@
             "ExternalId": "",
             "Position": {
               "x": 1150.0,
-              "y": 400.0
+              "y": 450.0
             },
             "ZIndex": 83.0,
             "Size": {
@@ -32440,7 +33274,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x100000300002679",
                 "Owner": "0x100000300002675",
                 "Connections": [
@@ -32452,8 +33286,8 @@
                       "b": 0.8
                     },
                     "Label": "",
-                    "TargetPin": "0x100000300002278",
-                    "Target": "0x100000300002277"
+                    "TargetPin": "0x100000300002292",
+                    "Target": "0x100000300002291"
                   }
                 ]
               }
@@ -32475,7 +33309,7 @@
               "g": 0.0156862754,
               "b": 0.0156862754
             },
-            "Text": "Are we just saying things now?",
+            "Text": "Are we just saying things now? I think we're on the ice cream belt!",
             "ExternalId": "",
             "Position": {
               "x": 5275.0,
@@ -32496,7 +33330,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x100000300002685",
                 "Owner": "0x100000300002681",
                 "Connections": [
@@ -32552,7 +33386,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x100000300002690",
                 "Owner": "0x10000030000268C",
                 "Connections": [
@@ -32893,40 +33727,6 @@
                 "Text": "",
                 "Id": "0x1000003000011A0",
                 "Owner": "0x10000030000119F"
-              }
-            ]
-          }
-        },
-        {
-          "Type": "Jump",
-          "Properties": {
-            "TechnicalName": "Jmp_4322F386",
-            "Id": "0x100000300001257",
-            "Parent": "0x10000030000124A",
-            "Target": "0x1000003000012E2",
-            "TargetPin": "0x1000003000012E3",
-            "Color": {
-              "r": 0.5764706,
-              "g": 0.75686276,
-              "b": 0.8
-            },
-            "Text": "",
-            "ExternalId": "",
-            "Position": {
-              "x": 350.0,
-              "y": 675.0
-            },
-            "ZIndex": 4.0,
-            "Size": {
-              "w": 175.0,
-              "h": 150.0
-            },
-            "ShortId": 1126364038,
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x100000300001258",
-                "Owner": "0x100000300001257"
               }
             ]
           }
@@ -33350,6 +34150,78 @@
         {
           "Type": "Condition",
           "Properties": {
+            "TechnicalName": "Cnd_436F53D7",
+            "Id": "0x1000003000028B7",
+            "Parent": "0x100000300000D8F",
+            "DisplayName": "TheCaptain.Architect == true",
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 3975.0,
+              "y": 600.0
+            },
+            "ZIndex": 61.0,
+            "Size": {
+              "w": 225.0,
+              "h": 100.0
+            },
+            "ShortId": 1131369431,
+            "Expression": "TheCaptain.Architect == true",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000028B9",
+                "Owner": "0x1000003000028B7"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000028BA",
+                "Owner": "0x1000003000028B7",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x1000003000028C3",
+                    "Target": "0x1000003000028C0"
+                  }
+                ]
+              },
+              {
+                "Text": "",
+                "Id": "0x1000003000028BB",
+                "Owner": "0x1000003000028B7",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x1000003000026FE",
+                    "Target": "0x1000003000026FB"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "Condition",
+          "Properties": {
             "TechnicalName": "Cnd_8B4F8D61",
             "Id": "0x100000300000FD1",
             "Parent": "0x100000300000E29",
@@ -33494,6 +34366,78 @@
         {
           "Type": "Condition",
           "Properties": {
+            "TechnicalName": "Cnd_DD2C84DB",
+            "Id": "0x1000003000028A6",
+            "Parent": "0x100000300000ECE",
+            "DisplayName": "TheCaptain.Soldier == true",
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 4350.0,
+              "y": 1025.0
+            },
+            "ZIndex": 84.0,
+            "Size": {
+              "w": 225.0,
+              "h": 100.0
+            },
+            "ShortId": 3710682331,
+            "Expression": "TheCaptain.Soldier == true",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000028A8",
+                "Owner": "0x1000003000028A6"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000028A9",
+                "Owner": "0x1000003000028A6",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x1000003000028B2",
+                    "Target": "0x1000003000028AF"
+                  }
+                ]
+              },
+              {
+                "Text": "",
+                "Id": "0x1000003000028AA",
+                "Owner": "0x1000003000028A6",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300000F62",
+                    "Target": "0x100000300000F61"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "Condition",
+          "Properties": {
             "TechnicalName": "Cnd_22A455EF",
             "Id": "0x100000300000FBF",
             "Parent": "0x100000300000D83",
@@ -33629,78 +34573,6 @@
                     "Label": "",
                     "TargetPin": "0x1000003000011A0",
                     "Target": "0x10000030000119F"
-                  }
-                ]
-              }
-            ]
-          }
-        },
-        {
-          "Type": "Condition",
-          "Properties": {
-            "TechnicalName": "Cnd_83C95CA9",
-            "Id": "0x100000300001251",
-            "Parent": "0x10000030000124A",
-            "DisplayName": "Episode_01.s01_Wrong_Lift == false",
-            "Text": "",
-            "ExternalId": "",
-            "Position": {
-              "x": 0.0,
-              "y": 575.0
-            },
-            "ZIndex": 2.0,
-            "Size": {
-              "w": 225.0,
-              "h": 100.0
-            },
-            "ShortId": 2211011753,
-            "Expression": "Episode_01.s01_Wrong_Lift == false",
-            "Color": {
-              "r": 0.5764706,
-              "g": 0.75686276,
-              "b": 0.8
-            },
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x100000300001252",
-                "Owner": "0x100000300001251"
-              }
-            ],
-            "OutputPins": [
-              {
-                "Text": "",
-                "Id": "0x100000300001253",
-                "Owner": "0x100000300001251",
-                "Connections": [
-                  {
-                    "Color": {
-                      "a": 1.0,
-                      "r": 0.5764706,
-                      "g": 0.75686276,
-                      "b": 0.8
-                    },
-                    "Label": "",
-                    "TargetPin": "0x10000030000124C",
-                    "Target": "0x10000030000124B"
-                  }
-                ]
-              },
-              {
-                "Text": "",
-                "Id": "0x100000300001254",
-                "Owner": "0x100000300001251",
-                "Connections": [
-                  {
-                    "Color": {
-                      "a": 1.0,
-                      "r": 0.5764706,
-                      "g": 0.75686276,
-                      "b": 0.8
-                    },
-                    "Label": "",
-                    "TargetPin": "0x100000300001258",
-                    "Target": "0x100000300001257"
                   }
                 ]
               }
@@ -37904,11 +38776,6 @@
                         "Type": "FlowFragment"
                       },
                       {
-                        "Id": "0x1000003000009F7",
-                        "TechnicalName": "DFr_02C82C0A",
-                        "Type": "DialogueFragment"
-                      },
-                      {
                         "Id": "0x100000300000A12",
                         "TechnicalName": "Dlg_232E2661",
                         "Type": "Dialogue",
@@ -38043,11 +38910,6 @@
                             "Type": "DialogueFragment"
                           }
                         ]
-                      },
-                      {
-                        "Id": "0x100000300000B26",
-                        "TechnicalName": "DFr_22075F31",
-                        "Type": "DialogueFragment"
                       }
                     ]
                   },
@@ -38194,6 +39056,21 @@
                           {
                             "Id": "0x100000300002613",
                             "TechnicalName": "DFr_5A5FED0B",
+                            "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x1000003000026FB",
+                            "TechnicalName": "DFr_40E72549",
+                            "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x1000003000028B7",
+                            "TechnicalName": "Cnd_436F53D7",
+                            "Type": "Condition"
+                          },
+                          {
+                            "Id": "0x1000003000028C0",
+                            "TechnicalName": "DFr_CA2B3993",
                             "Type": "DialogueFragment"
                           }
                         ]
@@ -38530,6 +39407,21 @@
                             "Id": "0x10000030000266B",
                             "TechnicalName": "DFr_E5850948",
                             "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x1000003000026F1",
+                            "TechnicalName": "DFr_08F02A20",
+                            "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x1000003000028A6",
+                            "TechnicalName": "Cnd_DD2C84DB",
+                            "Type": "Condition"
+                          },
+                          {
+                            "Id": "0x1000003000028AF",
+                            "TechnicalName": "DFr_9A1049DE",
+                            "Type": "DialogueFragment"
                           }
                         ]
                       },
@@ -38785,28 +39677,6 @@
                             "Id": "0x100000300001239",
                             "TechnicalName": "DFr_D0E3A153",
                             "Type": "DialogueFragment"
-                          },
-                          {
-                            "Id": "0x10000030000124A",
-                            "TechnicalName": "Dlg_4F65CE2D",
-                            "Type": "Dialogue",
-                            "Children": [
-                              {
-                                "Id": "0x10000030000124B",
-                                "TechnicalName": "DFr_ED503428",
-                                "Type": "DialogueFragment"
-                              },
-                              {
-                                "Id": "0x100000300001251",
-                                "TechnicalName": "Cnd_83C95CA9",
-                                "Type": "Condition"
-                              },
-                              {
-                                "Id": "0x100000300001257",
-                                "TechnicalName": "Jmp_4322F386",
-                                "Type": "Jump"
-                              }
-                            ]
                           },
                           {
                             "Id": "0x100000300001B8F",
@@ -39583,11 +40453,6 @@
                         "Id": "0x100000300001419",
                         "TechnicalName": "Ins_BE873B27",
                         "Type": "Instruction"
-                      },
-                      {
-                        "Id": "0x1000003000026CD",
-                        "TechnicalName": "Dlg_444C14B7",
-                        "Type": "Dialogue"
                       }
                     ]
                   },
@@ -39988,6 +40853,11 @@
                                 "Id": "0x100000300001EC6",
                                 "TechnicalName": "DFr_9FCB6E89",
                                 "Type": "DialogueFragment"
+                              },
+                              {
+                                "Id": "0x100000300002709",
+                                "TechnicalName": "DFr_457942CD",
+                                "Type": "DialogueFragment"
                               }
                             ]
                           },
@@ -40094,6 +40964,21 @@
                               {
                                 "Id": "0x1000003000026B8",
                                 "TechnicalName": "DFr_CEF584E7",
+                                "Type": "DialogueFragment"
+                              },
+                              {
+                                "Id": "0x100000300002719",
+                                "TechnicalName": "DFr_BB680476",
+                                "Type": "DialogueFragment"
+                              },
+                              {
+                                "Id": "0x100000300002724",
+                                "TechnicalName": "DFr_3459BFEC",
+                                "Type": "DialogueFragment"
+                              },
+                              {
+                                "Id": "0x10000030000272F",
+                                "TechnicalName": "DFr_9F5CF262",
                                 "Type": "DialogueFragment"
                               }
                             ]
@@ -40753,6 +41638,48 @@
                         "Type": "DialogueFragment"
                       }
                     ]
+                  },
+                  {
+                    "Id": "0x1000003000028C8",
+                    "TechnicalName": "FFr_B1DC8176",
+                    "Type": "FlowFragment",
+                    "Children": [
+                      {
+                        "Id": "0x1000003000028CF",
+                        "TechnicalName": "DFr_53492815",
+                        "Type": "DialogueFragment"
+                      },
+                      {
+                        "Id": "0x1000003000028D6",
+                        "TechnicalName": "DFr_FF186655",
+                        "Type": "DialogueFragment"
+                      },
+                      {
+                        "Id": "0x1000003000028DD",
+                        "TechnicalName": "DFr_A55420E8",
+                        "Type": "DialogueFragment"
+                      },
+                      {
+                        "Id": "0x1000003000028E4",
+                        "TechnicalName": "DFr_AEE30AC3",
+                        "Type": "DialogueFragment"
+                      },
+                      {
+                        "Id": "0x1000003000028EB",
+                        "TechnicalName": "DFr_6772AFD6",
+                        "Type": "DialogueFragment"
+                      },
+                      {
+                        "Id": "0x1000003000028F7",
+                        "TechnicalName": "DFr_B539D52F",
+                        "Type": "DialogueFragment"
+                      },
+                      {
+                        "Id": "0x1000003000028FE",
+                        "TechnicalName": "DFr_C6DD8610",
+                        "Type": "DialogueFragment"
+                      }
+                    ]
                   }
                 ]
               }
@@ -41112,6 +42039,11 @@
           },
           {
             "Id": "0x1000002000023BA",
+            "TechnicalName": "",
+            "Type": "VariableSet"
+          },
+          {
+            "Id": "0x10000030000276F",
             "TechnicalName": "",
             "Type": "VariableSet"
           }
