@@ -15,7 +15,8 @@ public class TheCaptainsChair : MonoBehaviour
         Debug.Log("Welcome to The Captain's Chair!!");
         SoundFX soundFX = FindObjectOfType<SoundFX>();
         SoundFXPlayer.Init(soundFX);
-        LoadSaveData();
+        DeleteSaveData();
+       // LoadSaveData();
     }
 
     // Update is called once per frame
