@@ -5,8 +5,8 @@
     "set_IncludedNodes": "Settings, Project, GlobalVariables, ObjectDefinitions, Packages, ScriptMethods, Hierarchy, Assets",
     "set_UseScriptSupport": "True",
     "ExportVersion": "1.1",
-    "ObjectDefinitionsHash": "CDA546F44C6E0620DE0A3AADF33BEF6D1D2E110376356BAED421EC9DA1055996",
-    "ScriptFragmentsHash": "3219935379"
+    "ObjectDefinitionsHash": "510A2BE1BABD9D870F933EB99E67A39AE788CFB5104E25E1587D61C5DA722842",
+    "ScriptFragmentsHash": "2157835124"
   },
   "Project": {
     "Name": "The Captains Chair",
@@ -1144,36 +1144,6 @@
       ]
     },
     {
-      "Type": "npcCrew",
-      "Class": "Entity",
-      "InheritsFrom": "Entity",
-      "Template": {
-        "TechnicalName": "npcCrew",
-        "DisplayName": "npcCrew",
-        "Features": []
-      }
-    },
-    {
-      "Type": "npc",
-      "Class": "Entity",
-      "InheritsFrom": "Entity",
-      "Template": {
-        "TechnicalName": "npc",
-        "DisplayName": "npc",
-        "Features": []
-      }
-    },
-    {
-      "Type": "The_Captain",
-      "Class": "Entity",
-      "InheritsFrom": "Entity",
-      "Template": {
-        "TechnicalName": "The_Captain",
-        "DisplayName": "Untitled template (02)",
-        "Features": []
-      }
-    },
-    {
       "Type": "PC",
       "Class": "Entity",
       "InheritsFrom": "Entity",
@@ -1268,6 +1238,36 @@
             ]
           }
         ]
+      }
+    },
+    {
+      "Type": "npcCrew",
+      "Class": "Entity",
+      "InheritsFrom": "Entity",
+      "Template": {
+        "TechnicalName": "npcCrew",
+        "DisplayName": "npcCrew",
+        "Features": []
+      }
+    },
+    {
+      "Type": "npc",
+      "Class": "Entity",
+      "InheritsFrom": "Entity",
+      "Template": {
+        "TechnicalName": "npc",
+        "DisplayName": "npc",
+        "Features": []
+      }
+    },
+    {
+      "Type": "The_Captain",
+      "Class": "Entity",
+      "InheritsFrom": "Entity",
+      "Template": {
+        "TechnicalName": "The_Captain",
+        "DisplayName": "Untitled template (02)",
+        "Features": []
       }
     },
     {
@@ -14750,11 +14750,11 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "Hmmm, Big room with big boxes.",
+            "Text": "I worked in a place like this! Only for a few days but still, I know a big room filled with boxes when I see one.",
             "ExternalId": "",
             "Position": {
-              "x": 1246.0,
-              "y": 555.66666666666663
+              "x": 1225.0,
+              "y": 450.0
             },
             "ZIndex": 0.0,
             "Size": {
@@ -14805,7 +14805,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "It's a nice view. You know I spent some time in a warehouse like this exposing the practices of evil Amazon. Fun fact fans, that's how I got introduced to our famous pilot. You know he worked in that fulfilment center for 16 years! The father, of course. It really is a tragedy but I'm saving that story for my Emmy run.",
+            "Text": "It's a nice view. You know I spent some time in a warehouse like this exposing the practices of evil Amazon. Fun fact fans, that's how I got introduced to our famous pilot. You know he worked in that fulfilment center for 16 years! The father, of course. It really is a tragedy but I'm saving that story for Emmy season.",
             "ExternalId": "",
             "Position": {
               "x": 825.0,
@@ -14860,7 +14860,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "On first glance... this is where they keep the party drugs.",
+            "Text": "This is where we keep the drugs, recreational and otherwise.",
             "ExternalId": "",
             "Position": {
               "x": 1211.3333333333333,
@@ -23238,7 +23238,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "Wait wait, just... can you just start over I'm clearly missing something",
+            "Text": "Wait wait, just... you gotta start over doc.",
             "ExternalId": "",
             "Position": {
               "x": 650.0,
@@ -23855,7 +23855,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300000AFB",
                 "Owner": "0x100000300000AF9",
                 "Connections": [
@@ -24023,7 +24023,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x100000300002599",
                 "Owner": "0x100000300002595",
                 "Connections": [
@@ -26896,7 +26896,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300001CAA",
                 "Owner": "0x100000300001CA6",
                 "Connections": [
@@ -26952,7 +26952,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300001CB0",
                 "Owner": "0x100000300001CAC",
                 "Connections": [
@@ -27008,7 +27008,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x100000300002590",
                 "Owner": "0x10000030000258C",
                 "Connections": [
@@ -27064,7 +27064,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300001BF3",
                 "Owner": "0x100000300001BEF",
                 "Connections": [
@@ -27120,7 +27120,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x100000300001BF9",
                 "Owner": "0x100000300001BF5",
                 "Connections": [
@@ -27176,7 +27176,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300001C00",
                 "Owner": "0x100000300001BFC",
                 "Connections": [
@@ -27232,7 +27232,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300001C46",
                 "Owner": "0x100000300001C42",
                 "Connections": [
@@ -27288,7 +27288,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300001C4C",
                 "Owner": "0x100000300001C48",
                 "Connections": [
@@ -27456,7 +27456,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x10000030000255E",
                 "Owner": "0x10000030000255A",
                 "Connections": [
@@ -27512,7 +27512,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300002568",
                 "Owner": "0x100000300002564",
                 "Connections": [
@@ -27568,7 +27568,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal ++;\nTheCaptain.char_picard --;\nTheCaptain.char_rick --;",
                 "Id": "0x10000030000257A",
                 "Owner": "0x100000300002576",
                 "Connections": [
@@ -27624,7 +27624,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard ++;\nTheCaptain.char_rick --;",
                 "Id": "0x100000300002580",
                 "Owner": "0x10000030000257C",
                 "Connections": [
@@ -27680,7 +27680,7 @@
             ],
             "OutputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.char_mal --;\nTheCaptain.char_picard --;\nTheCaptain.char_rick ++;",
                 "Id": "0x100000300002586",
                 "Owner": "0x100000300002582",
                 "Connections": [
@@ -33791,6 +33791,40 @@
         {
           "Type": "Jump",
           "Properties": {
+            "TechnicalName": "Jmp_EFCD8F79",
+            "Id": "0x100000300002918",
+            "Parent": "0x1000003000011F3",
+            "Target": "0x1000003000012E2",
+            "TargetPin": "0x1000003000012E3",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 525.0,
+              "y": 0.0
+            },
+            "ZIndex": 3.0,
+            "Size": {
+              "w": 175.0,
+              "h": 150.0
+            },
+            "ShortId": 4023226233,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300002919",
+                "Owner": "0x100000300002918"
+              }
+            ]
+          }
+        },
+        {
+          "Type": "Jump",
+          "Properties": {
             "TechnicalName": "Jmp_CEE98FD3",
             "Id": "0x10000030000129C",
             "Parent": "0x10000030000126A",
@@ -33852,6 +33886,40 @@
                 "Text": "",
                 "Id": "0x1000003000012EA",
                 "Owner": "0x1000003000012E9"
+              }
+            ]
+          }
+        },
+        {
+          "Type": "Jump",
+          "Properties": {
+            "TechnicalName": "Jmp_B51B805A",
+            "Id": "0x100000300002906",
+            "Parent": "0x1000003000012FA",
+            "Target": "0x1000003000012E2",
+            "TargetPin": "0x1000003000012E3",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": -425.0,
+              "y": 125.0
+            },
+            "ZIndex": 3.0,
+            "Size": {
+              "w": 175.0,
+              "h": 150.0
+            },
+            "ShortId": 3038478426,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300002907",
+                "Owner": "0x100000300002906"
               }
             ]
           }
@@ -34056,74 +34124,6 @@
                 "Text": "",
                 "Id": "0x1000003000010D0",
                 "Owner": "0x1000003000010CD"
-              }
-            ]
-          }
-        },
-        {
-          "Type": "Jump",
-          "Properties": {
-            "TechnicalName": "Jmp_B51B805A",
-            "Id": "0x100000300002906",
-            "Parent": "0x1000003000012FA",
-            "Target": "0x1000003000012E2",
-            "TargetPin": "0x1000003000012E3",
-            "Color": {
-              "r": 0.5764706,
-              "g": 0.75686276,
-              "b": 0.8
-            },
-            "Text": "",
-            "ExternalId": "",
-            "Position": {
-              "x": -425.0,
-              "y": 125.0
-            },
-            "ZIndex": 3.0,
-            "Size": {
-              "w": 175.0,
-              "h": 150.0
-            },
-            "ShortId": 3038478426,
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x100000300002907",
-                "Owner": "0x100000300002906"
-              }
-            ]
-          }
-        },
-        {
-          "Type": "Jump",
-          "Properties": {
-            "TechnicalName": "Jmp_EFCD8F79",
-            "Id": "0x100000300002918",
-            "Parent": "0x1000003000011F3",
-            "Target": "0x1000003000012E2",
-            "TargetPin": "0x1000003000012E3",
-            "Color": {
-              "r": 0.5764706,
-              "g": 0.75686276,
-              "b": 0.8
-            },
-            "Text": "",
-            "ExternalId": "",
-            "Position": {
-              "x": 525.0,
-              "y": 0.0
-            },
-            "ZIndex": 3.0,
-            "Size": {
-              "w": 175.0,
-              "h": 150.0
-            },
-            "ShortId": 4023226233,
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x100000300002919",
-                "Owner": "0x100000300002918"
               }
             ]
           }
@@ -34707,6 +34707,78 @@
         {
           "Type": "Condition",
           "Properties": {
+            "TechnicalName": "Cnd_B1931F7B",
+            "Id": "0x100000300002913",
+            "Parent": "0x1000003000011F3",
+            "DisplayName": "Episode_01.s01_Visited_Engine_Room = ...",
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 225.0,
+              "y": 250.0
+            },
+            "ZIndex": 134.0,
+            "Size": {
+              "w": 225.0,
+              "h": 100.0
+            },
+            "ShortId": 2979209083,
+            "Expression": "Episode_01.s01_Visited_Engine_Room == true",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300002914",
+                "Owner": "0x100000300002913"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300002915",
+                "Owner": "0x100000300002913",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300002919",
+                    "Target": "0x100000300002918"
+                  }
+                ]
+              },
+              {
+                "Text": "",
+                "Id": "0x100000300002916",
+                "Owner": "0x100000300002913",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x1000003000011F5",
+                    "Target": "0x1000003000011F4"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "Condition",
+          "Properties": {
             "TechnicalName": "Cnd_C99F598B",
             "Id": "0x1000003000012A0",
             "Parent": "0x10000030000126A",
@@ -34842,6 +34914,78 @@
                     "Label": "",
                     "TargetPin": "0x1000003000012EA",
                     "Target": "0x1000003000012E9"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "Condition",
+          "Properties": {
+            "TechnicalName": "Cnd_B6308C3D",
+            "Id": "0x10000030000290A",
+            "Parent": "0x1000003000012FA",
+            "DisplayName": "Episode_01.s01_Observatory == true",
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": -650.0,
+              "y": 500.0
+            },
+            "ZIndex": 134.0,
+            "Size": {
+              "w": 225.0,
+              "h": 100.0
+            },
+            "ShortId": 3056634941,
+            "Expression": "Episode_01.s01_Observatory == true",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x10000030000290C",
+                "Owner": "0x10000030000290A"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x10000030000290D",
+                "Owner": "0x10000030000290A",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300002907",
+                    "Target": "0x100000300002906"
+                  }
+                ]
+              },
+              {
+                "Text": "",
+                "Id": "0x10000030000290E",
+                "Owner": "0x10000030000290A",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x1000003000012FC",
+                    "Target": "0x1000003000012FB"
                   }
                 ]
               }
@@ -35274,150 +35418,6 @@
                     "Label": "",
                     "TargetPin": "0x1000003000010D0",
                     "Target": "0x1000003000010CD"
-                  }
-                ]
-              }
-            ]
-          }
-        },
-        {
-          "Type": "Condition",
-          "Properties": {
-            "TechnicalName": "Cnd_B6308C3D",
-            "Id": "0x10000030000290A",
-            "Parent": "0x1000003000012FA",
-            "DisplayName": "Episode_01.s01_Observatory == true",
-            "Text": "",
-            "ExternalId": "",
-            "Position": {
-              "x": -650.0,
-              "y": 500.0
-            },
-            "ZIndex": 134.0,
-            "Size": {
-              "w": 225.0,
-              "h": 100.0
-            },
-            "ShortId": 3056634941,
-            "Expression": "Episode_01.s01_Observatory == true",
-            "Color": {
-              "r": 0.5764706,
-              "g": 0.75686276,
-              "b": 0.8
-            },
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x10000030000290C",
-                "Owner": "0x10000030000290A"
-              }
-            ],
-            "OutputPins": [
-              {
-                "Text": "",
-                "Id": "0x10000030000290D",
-                "Owner": "0x10000030000290A",
-                "Connections": [
-                  {
-                    "Color": {
-                      "a": 1.0,
-                      "r": 0.5764706,
-                      "g": 0.75686276,
-                      "b": 0.8
-                    },
-                    "Label": "",
-                    "TargetPin": "0x100000300002907",
-                    "Target": "0x100000300002906"
-                  }
-                ]
-              },
-              {
-                "Text": "",
-                "Id": "0x10000030000290E",
-                "Owner": "0x10000030000290A",
-                "Connections": [
-                  {
-                    "Color": {
-                      "a": 1.0,
-                      "r": 0.5764706,
-                      "g": 0.75686276,
-                      "b": 0.8
-                    },
-                    "Label": "",
-                    "TargetPin": "0x1000003000012FC",
-                    "Target": "0x1000003000012FB"
-                  }
-                ]
-              }
-            ]
-          }
-        },
-        {
-          "Type": "Condition",
-          "Properties": {
-            "TechnicalName": "Cnd_B1931F7B",
-            "Id": "0x100000300002913",
-            "Parent": "0x1000003000011F3",
-            "DisplayName": "Episode_01.s01_Visited_Engine_Room = ...",
-            "Text": "",
-            "ExternalId": "",
-            "Position": {
-              "x": 225.0,
-              "y": 250.0
-            },
-            "ZIndex": 134.0,
-            "Size": {
-              "w": 225.0,
-              "h": 100.0
-            },
-            "ShortId": 2979209083,
-            "Expression": "Episode_01.s01_Visited_Engine_Room == true",
-            "Color": {
-              "r": 0.5764706,
-              "g": 0.75686276,
-              "b": 0.8
-            },
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x100000300002914",
-                "Owner": "0x100000300002913"
-              }
-            ],
-            "OutputPins": [
-              {
-                "Text": "",
-                "Id": "0x100000300002915",
-                "Owner": "0x100000300002913",
-                "Connections": [
-                  {
-                    "Color": {
-                      "a": 1.0,
-                      "r": 0.5764706,
-                      "g": 0.75686276,
-                      "b": 0.8
-                    },
-                    "Label": "",
-                    "TargetPin": "0x100000300002919",
-                    "Target": "0x100000300002918"
-                  }
-                ]
-              },
-              {
-                "Text": "",
-                "Id": "0x100000300002916",
-                "Owner": "0x100000300002913",
-                "Connections": [
-                  {
-                    "Color": {
-                      "a": 1.0,
-                      "r": 0.5764706,
-                      "g": 0.75686276,
-                      "b": 0.8
-                    },
-                    "Label": "",
-                    "TargetPin": "0x1000003000011F5",
-                    "Target": "0x1000003000011F4"
                   }
                 ]
               }
