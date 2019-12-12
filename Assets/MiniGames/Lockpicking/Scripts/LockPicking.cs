@@ -10,6 +10,7 @@ public class LockPicking : MonoBehaviour
     public List<PathNode> StartNodes;
     public List<PathNode> DeathNodes;
     public GameObject CurTouchedRing = null;
+    float LargestRingDiameter;
 
     public void InitFromProcessing( Diode diode, GameObject centerBlock, List<Ring> rings, List<PathNode> startNodes, List<PathNode> deathNodes )    
     {
@@ -37,6 +38,8 @@ public class LockPicking : MonoBehaviour
         else
             Diode.SetStartNode(StartNodes[0]);
 
+        LargestRingDiameter = Rings[Rings.Count-1].GetComponent<MeshCollider>().bounds.extents.x;
+        Debug.Log("LargestRingDiameter: " + LargestRingDiameter);
     }   
     
     public GameObject TouchPoint, MidPoint, LastPoint;
@@ -48,9 +51,11 @@ public class LockPicking : MonoBehaviour
     Vector3 mousePos = Vector3.zero;
     Vector3 midWorld;
     float centerDir, moveDir, diffDir;
-    float moveDistWorld, moveDistMouse;
+    float worldMoveDist, moveDistMouse;
     float unModDragAngle;
     float Speed;
+    float angleDiffAbs, angleDiffAdj;
+    float mouseDragAngle, worldDragAngle, centerToWorldAngle, lastCenterToWorldAngle;
     // Update is called once per frame
     void Update()
     {
@@ -62,78 +67,88 @@ public class LockPicking : MonoBehaviour
             Vector3 m = new Vector3(mousePos.x, mousePos.y, 10f);
             world = Camera.main.ScreenToWorldPoint(m);
             lastWorld = world;
-            dragAngle = 0f;
-            moveDistWorld = 0f;
+            mouseDragAngle = 0f;
+            worldMoveDist = 0f;
             moveDistMouse = 0f;
 
             LayerMask mask = LayerMask.GetMask("Lockpick Touch Control");
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask))
-            {                
-                CurTouchedRing = hit.collider.gameObject;                                                                                              
-            }            
-        }        
-        else if(Input.GetMouseButton(0))
-        {
-            mousePos = Input.mousePosition;            
-            Vector3 m = new Vector3(mousePos.x, mousePos.y, 10f);
-            world = Camera.main.ScreenToWorldPoint(m);            
-
-            TouchPoint.transform.position = world;
-
-
-            Vector3 mouseDir = mousePos - LastMousePos;
-            unModDragAngle = Vector3.Angle(mouseDir, Vector3.right);
-            dragAngle = GetAngle(mouseDir, (mousePos.y < LastMousePos.y));           
-
-            midWorld = (lastWorld + world) / 2f;
-
-            centerDir = GetAngle(world, false);
-            moveDir = GetAngle(lastWorld - world, false);
-            diffDir = Mathf.Abs(moveDir - centerDir);
-            if (diffDir > 90f) diffDir = 180f - diffDir;
-
-            MidPoint.transform.position = midWorld;
-            LastPoint.transform.position = lastWorld;
-
-            moveDistWorld = Vector3.Distance(world, lastWorld);
-            Debug.Log(mousePos + ", " + LastMousePos);
-            moveDistMouse = Vector3.Distance(mousePos, LastMousePos);
-            Debug.Log(moveDistMouse);
-                   
-            if(moveDistWorld > 0f)
             {
-                Speed = diffDir * moveDistWorld;
-               // if (unModDragAngle > 90f) speed = -speed;
-                Rings[3].Rotate(Speed*10f);
+                CurTouchedRing = hit.collider.gameObject;
             }
-
-            LastMousePos = mousePos;
-            lastWorld = world;            
         }
-        if(Input.GetMouseButtonUp(0))
+        else if (Input.GetMouseButtonUp(0))
         {
-            //Debug.Log("up");
             CurTouchedRing = null;
         }
+        else if (Input.GetMouseButton(0) && CurTouchedRing != null)
+        {
+            mousePos = Input.mousePosition;
+            Vector3 m = new Vector3(mousePos.x, mousePos.y, 10f);
+            world = Camera.main.ScreenToWorldPoint(m);
+           
+            Vector3 worldDir = world - lastWorld;
+            worldDragAngle = GetAngle(worldDir, (world.z < lastWorld.z));
+
+            centerToWorldAngle = GetAngle(world, world.z < 0f);
+
+            worldMoveDist = Vector3.Distance(world, lastWorld) * 10f;
+
+            worldDragVec = world - lastWorld;
+            centerToWorldVec = world;
+            angleDiff = Vector3.SignedAngle(worldDragVec, centerToWorldVec, Vector3.up);
+            angleDiffAbs = Mathf.Abs(angleDiff);
+            angleDiffAdj = (angleDiffAbs > 90 ? 180f - angleDiffAbs : angleDiffAbs);
+
+            MeshCollider mc = CurTouchedRing.GetComponent<MeshCollider>();
+            //Debug.Log(mc.bounds.extents.ToString("F3"));
+
+            if(worldMoveDist > 0f)
+            {
+                Speed = angleDiffAdj * worldMoveDist;
+                if (centerToWorldAngle > lastCenterToWorldAngle) Speed = -Speed;
+                float adj = 1f / (CurTouchedRing.GetComponent<MeshCollider>().bounds.extents.x / LargestRingDiameter);
+                //Debug.Log("adj: " + adj);
+                Ring ring = CurTouchedRing.transform.GetChild(0).transform.GetChild(0).GetComponent<Ring>();
+                ring.Rotate(Speed*adj);
+            }
+
+            //TouchPoint.transform.position = world;
+           
+            lastWorld = world;
+            lastCenterToWorldAngle = centerToWorldAngle;
+        }
+        
         SetDebugString();
     }
-
-    float GetAngle(Vector3 dir, bool adjust)
-    {
-        float rot = Vector3.Angle(dir, Vector3.right);
-        if (adjust) rot = 360f - rot;
-        if (rot >= 360f) rot = rot - 360f;
-        return rot;
-    }
-    
+    Vector3 worldDragVec;
+    Vector3 centerToWorldVec;
+    float angleDiff;
     void SetDebugString()
     {
-        
         if (CurTouchedRing == null) DebugString = "no ring\n";
         else DebugString = CurTouchedRing.name + "\n";
-        DebugString += "Speed: " + Speed.ToString("F3") + "\n";
+       // DebugString += "mouseDragAngle: " + mouseDragAngle.ToString("F3") + "\n";
+       /* DebugString += "worldDragAngle: " + worldDragAngle.ToString("F3") + "\n";
+        DebugString += "centerToWorldAngle: " + centerToWorldAngle.ToString("F3") + "\n";
+        DebugString += "worldMoveDist: " + worldMoveDist.ToString("F3") + "\n";
+        DebugString += "\n";
+        DebugString += "worldDragVec: " + worldDragVec.ToString("F3") + "\n";
+        DebugString += "centerToWorldVec: " + centerToWorldVec.ToString("F3") + "\n";
+        DebugString += "angleDiff: " + angleDiff.ToString("F3") + "\n";
+        DebugString += "angleDiffAbs: " + angleDiffAbs.ToString("F3") + "\n";
+        DebugString += "angleDiffAdj: " + angleDiffAdj.ToString("F3") + "\n";
+        DebugString += "\n";
+        DebugString += "worldDragVec normal: " + worldDragVec.normalized.ToString("F3") + "\n";
+        DebugString += "centerToWorldVec normal: " + centerToWorldVec.normalized.ToString("F3") + "\n";
+       */ /*DebugString += "world: " + world.ToString("F3") + "\n";
+        DebugString += "lastWorld: " + lastWorld.ToString("F3") + "\n\n";
+
+        DebugString += "mousePos: " + mousePos.ToString("F3") + "\n";
+        DebugString += "LastMousePos: " + LastMousePos.ToString("F3") + "\n";*/
+        /*DebugString += "Speed: " + Speed.ToString("F3") + "\n";
         DebugString += "dragAngle: " + dragAngle.ToString("F3") + "\n";
         DebugString += "unModDragAngle: " + unModDragAngle.ToString("F3") + "\n";
         DebugString += "centerDir: " + centerDir.ToString("F3") + "\n";
@@ -144,8 +159,16 @@ public class LockPicking : MonoBehaviour
 
         DebugString += "mousePos: " + mousePos.ToString("F3") + "\n";
         DebugString += "LastMousePos: " + LastMousePos.ToString("F3") + "\n";        
-        DebugString += "world: " + world.ToString("F3") + "\n";
-        
+        DebugString += "world: " + world.ToString("F3") + "\n";*/
+
+    }
+
+    float GetAngle(Vector3 dir, bool adjust)
+    {
+        float rot = Vector3.Angle(dir, Vector3.right);
+        if (adjust) rot = 360f - rot;
+        if (rot >= 360f) rot = rot - 360f;
+        return rot;
     }
 
     public string DebugGetTouchedRingName()
