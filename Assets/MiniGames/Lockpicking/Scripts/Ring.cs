@@ -4,34 +4,33 @@ using UnityEngine;
 
 public class Ring : MonoBehaviour
 {
-    public float RotateSpeed = 0f;    
-    public LockpickRingPath[] Paths;
-    bool UnderFingerControl = false;
+    public float CurRotateSpeed = 0f;
+    public float DefaultRotateSpeed;
+    public LockpickRingPath[] Paths;    
     
     public void InitPaths(LockpickRingPath[] paths)
     {
         Paths = paths;
     }
-    public void SetRotateSpeed(float speed)
+    public void SetDefaultRotateSpeed(float speed)
     {
-        RotateSpeed = speed;
+        CurRotateSpeed = speed;
+        DefaultRotateSpeed = speed;
     }
-
-    // Update is called once per frame
-    
+        
+    public void ResetRotateSpeed()
+    {
+        CurRotateSpeed = DefaultRotateSpeed;
+    }
+    public void SetTouchRotateSpeed(float speed)
+    {
+        CurRotateSpeed = speed;
+    }
     public void Rotate()
     {
-        if(UnderFingerControl == false)        
-        {
-            transform.Rotate(new Vector3(0f, RotateSpeed * Time.deltaTime, 0f));
-        }        
+        transform.Rotate(new Vector3(0f, CurRotateSpeed * Time.deltaTime, 0f));               
     }
-
-    public void Rotate(float speed)
-    {
-        transform.Rotate(new Vector3(0f, speed * Time.deltaTime, 0f));
-    }
-
+    
     [System.Serializable]
     public class LockpickRingPath
     {

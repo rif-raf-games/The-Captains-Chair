@@ -36,10 +36,12 @@ public class RifRafGames
         int pathNodeLayer = LayerMask.NameToLayer("Lockpick Path Node");
         int collisionControlLayer = LayerMask.NameToLayer("Lockpick Collision Control");
         int ringLayerMask = LayerMask.GetMask("Lockpick Ring");
-        int touchControlMask = LayerMask.GetMask("Lockpick Touch Control");
+        //int touchControlMask = LayerMask.GetMask("Lockpick Touch Control");
 
         GameObject rootGO = Selection.activeGameObject;                
         LockPicking lp = rootGO.AddComponent<LockPicking>();
+        GameObject gameResultText = GameObject.Find("GameResultText");          
+        if (gameResultText != null) lp.GameResultText = gameResultText.GetComponent<Text>();
         EditorWindow.focusedWindow.SendEvent(e);
 
         GameObject centerBlock = rootGO.transform.GetChild(0).gameObject;
@@ -51,12 +53,14 @@ public class RifRafGames
 
         GameObject diodeGO = rootGO.transform.GetChild(2).gameObject;
         diodeGO.AddComponent<SphereCollider>();
-        Diode diode = diodeGO.AddComponent<Diode>();        
+        Diode diode = diodeGO.AddComponent<Diode>();
+        Rigidbody rb = diode.gameObject.AddComponent<Rigidbody>();
+        rb.useGravity = false;
+        rb.isKinematic = true;
         float diodeRadius = diode.GetComponent<SphereCollider>().radius;
         GameObject debugText = GameObject.Find("DebugText");
-        if (debugText != null) diode.DebugText = debugText.GetComponent<Text>();
-        GameObject lastPosition = GameObject.Find("LastPosition");
-        if (lastPosition != null) diode.LastPosition = lastPosition;
+        if (debugText != null) diode.DebugText = debugText.GetComponent<Text>();        
+        diode.LastPosition = new GameObject("Last Position");        
 
         List<GameObject> ringObjectRoots = new List<GameObject>();
         for(int i=3; i<rootGO.transform.childCount; i++)
@@ -64,12 +68,17 @@ public class RifRafGames
             ringObjectRoots.Add(rootGO.transform.GetChild(i).gameObject);
         }
         Debug.Log("this puzzle has " + ringObjectRoots.Count + " rings.");
-
+       
         List<Ring> rings = new List<Ring>();
         List<PathNode> startNodes = new List<PathNode>();
-        List<PathNode> deathNodes = new List<PathNode>();        
-        
-        foreach(GameObject touchControl in ringObjectRoots)
+        List<PathNode> deathNodes = new List<PathNode>();
+        List<Gate> gates = new List<Gate>();        
+        int numGates = 0;
+        float gateSize = diode.GetComponent<SphereCollider>().radius * 2f;
+        Vector3 gateScale = new Vector3(gateSize, gateSize, gateSize);
+        Gate gate = Resources.Load<Gate>("Gate");
+
+        foreach (GameObject touchControl in ringObjectRoots)
         {
             touchControl.AddComponent<MeshCollider>();
             touchControl.GetComponent<MeshRenderer>().enabled = false;
@@ -109,6 +118,13 @@ public class RifRafGames
                     {
                         nodeTransform.gameObject.SetActive(false);
                     }
+                    else
+                    {
+                        Gate g = Object.Instantiate<Gate>(gate, nodeTransform);
+                        g.transform.localScale = gateScale;
+                        g.name = "Gate " + (numGates++).ToString("D2");
+                        gates.Add(g);
+                    }
                 }
                 foreach (Collider c in colliders)
                 {
@@ -123,7 +139,7 @@ public class RifRafGames
                     }                   
                 }                
             }
-
+            
             Ring.LockpickRingPath[] paths = new Ring.LockpickRingPath[numPaths];
             for (int i=0; i<numPaths; i++)
             {
@@ -144,35 +160,17 @@ public class RifRafGames
                 paths[i].Init(ring.GetComponent<Ring>());
 
                 if (touchControl == ringObjectRoots[0] && start.gameObject.activeSelf == true) startNodes.Add(start);
-                if (touchControl == ringObjectRoots[ringObjectRoots.Count - 1] && end.gameObject.activeSelf == true) deathNodes.Add(end);                        
-                //bug.Log("path: " + i + " on ring: " + ring.name + ": " + paths[i].Start.name + " -> " + paths[i].End.name);
-                //Debug.Log("start: " + start.name + ", mid: " + mid.name + ", end: " + end.name);
+                if (touchControl == ringObjectRoots[ringObjectRoots.Count - 1] && end.gameObject.activeSelf == true)
+                {
+                    end.GetComponent<SphereCollider>().isTrigger = true;
+                    deathNodes.Add(end);
+                }
             }
             ring.GetComponent<Ring>().InitPaths(paths);
-        }
-
-        /* List<float> startDists = new List<float> { 0.064582795f, 0.08132881f, 0.12363285f, 0.16715005f };
-         List<float> endDists = new List<float> { 0.092904925f, 0.12526965f, 0.1580112f };
-         int ringIndex = 0;
-         foreach (Ring ring in rings)
-          {
-              foreach(Ring.LockpickRingPath p in ring.Paths)
-              {                                 
-                  if(p.Start.name.Contains("Start"))
-                  {
-                     p.Start.transform.position = p.Start.transform.position + (startDists[ringIndex] * -p.Start.transform.forward.normalized);
-                  }
-                  if(ringIndex != rings.Count-1 && p.End.name.Contains("End"))
-                 {
-                     p.End.transform.position = p.End.transform.position + (endDists[ringIndex] * -p.End.transform.forward.normalized);                   
-                 }
-              }
-             ringIndex++;
-              
-          }*/
-
-        lp.InitFromProcessing(diode, centerBlock, rings, startNodes, deathNodes);
-
+        }        
+        lp.InitFromProcessing(diode, centerBlock, rings, gates, startNodes, deathNodes);
+        diode.LastPosition.transform.parent = diode.transform.parent;       
+        
         // not sure why we need this but for some reason the last expand event we try to send on the ring doesn't work
         Selection.activeObject = ringObjectRoots[ringObjectRoots.Count-1].gameObject;
         EditorWindow.focusedWindow.SendEvent(e);
@@ -181,7 +179,3 @@ public class RifRafGames
         EditorSceneManager.MarkAllScenesDirty();
     }
 }
-// Diode d = Object.Instantiate(diode).GetComponent<Diode>();
-// d.transform.parent = p.Start.transform.parent;
-//d.transform.position = hit.point;
-

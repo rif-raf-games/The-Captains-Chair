@@ -1,29 +1,35 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LockPicking : MonoBehaviour
 {
     public Diode Diode;
     public GameObject CenterBlock;
     public List<Ring> Rings;
+    public List<Gate> Gates;
     public List<PathNode> StartNodes;
     public List<PathNode> DeathNodes;
-    public GameObject CurTouchedRing = null;
+    public Ring CurTouchedRing = null;
     float LargestRingDiameter;
+    Vector3 LastWorldTouchPos = Vector3.zero;
+    float LastCenterToWorldAngle;
+    public Text GameResultText;
 
-    public void InitFromProcessing( Diode diode, GameObject centerBlock, List<Ring> rings, List<PathNode> startNodes, List<PathNode> deathNodes )    
+    public void InitFromProcessing( Diode diode, GameObject centerBlock, List<Ring> rings, List<Gate> gates, List<PathNode> startNodes, List<PathNode> deathNodes )    
     {
         this.Diode = diode;
         CenterBlock = centerBlock;
         Rings = rings;
+        Gates = gates;
         StartNodes = startNodes;
         DeathNodes = deathNodes;
 
-        float speed = 0f;
-        foreach(Ring r in Rings)
+        float speed = 10f;
+        foreach (Ring r in Rings)
         {
-            r.SetRotateSpeed(speed);
+            r.SetDefaultRotateSpeed(speed);
             speed = -speed;
         }
     }
@@ -31,158 +37,148 @@ public class LockPicking : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        CenterBlock.transform.position = new Vector3(CenterBlock.transform.position.x, 0f, CenterBlock.transform.position.z);
-        int startIndex = Random.Range(0, StartNodes.Count);
-        if (DebugStartNode != null)
-            Diode.SetStartNode(DebugStartNode);
-        else
-            Diode.SetStartNode(StartNodes[0]);
-
+        CenterBlock.transform.position = new Vector3(CenterBlock.transform.position.x, 0f, CenterBlock.transform.position.z);              
         LargestRingDiameter = Rings[Rings.Count-1].GetComponent<MeshCollider>().bounds.extents.x;
-        Debug.Log("LargestRingDiameter: " + LargestRingDiameter);
-    }   
+
+        StartGame();
+    }
     
-    public GameObject TouchPoint, MidPoint, LastPoint;
-    // float startAngle, startAngleAdjust;
-    Vector3 world, lastWorld;
-    float dragAngle = 0f;
-    Vector3 LastMousePos = Vector3.zero;
-    string DebugString = "";
-    Vector3 mousePos = Vector3.zero;
-    Vector3 midWorld;
-    float centerDir, moveDir, diffDir;
-    float worldMoveDist, moveDistMouse;
-    float unModDragAngle;
-    float Speed;
-    float angleDiffAbs, angleDiffAdj;
-    float mouseDragAngle, worldDragAngle, centerToWorldAngle, lastCenterToWorldAngle;
+    void StartGame()
+    {
+        Diode.Moving = true;
+        GameResultText.gameObject.SetActive(false);
+        if (DebugStartNode != null)
+        {
+            Diode.SetStartNode(DebugStartNode);
+        }
+        else
+        {
+            int startIndex = Random.Range(0, StartNodes.Count);
+            Diode.SetStartNode(StartNodes[startIndex]);
+        }
+
+        foreach(Gate g in Gates)
+        {
+            g.gameObject.SetActive(true);
+        }
+    }
+
+    public void CollectGate(Gate gate)
+    {
+       // Debug.Log("found gate: " + gate.name);
+        gate.gameObject.SetActive(false);
+        bool allGatesFound = true;
+        foreach(Gate g in Gates)
+        {
+            if(g.gameObject.activeSelf == true)
+            {
+                allGatesFound = false;
+                break;
+            }
+        }
+        if(allGatesFound == true)
+        {
+            Debug.Log("Found All gates.  start over");
+            EndGame("You Won.");
+        }
+    }
+
+    public void CheckDeathNode(PathNode pathNode)
+    {
+       // Debug.Log("CheckDeathNode: " + pathNode.name);
+        if (DeathNodes.Contains(pathNode))
+        {
+            Debug.Log("it's a death node!");
+            EndGame("You Lost.");
+        }
+        else Debug.Log("not a death node");
+    }
+
+    void EndGame(string endGameString)
+    {
+        GameResultText.gameObject.SetActive(true);
+        GameResultText.text = endGameString;
+        Diode.Moving = false;
+        StartCoroutine(HandleEndGame());
+    }
+
+    IEnumerator HandleEndGame()
+    {
+        yield return new WaitForSeconds(3);
+        StartGame();        
+    }
+
+    
+                    
     // Update is called once per frame
     void Update()
     {
         if (Input.GetMouseButtonDown(0)) // initial press
-        {
-            mousePos = Input.mousePosition;
-            LastMousePos = mousePos;
-            midWorld = Vector3.zero;
-            Vector3 m = new Vector3(mousePos.x, mousePos.y, 10f);
-            world = Camera.main.ScreenToWorldPoint(m);
-            lastWorld = world;
-            mouseDragAngle = 0f;
-            worldMoveDist = 0f;
-            moveDistMouse = 0f;
-
+        {                        
             LayerMask mask = LayerMask.GetMask("Lockpick Touch Control");
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask))
             {
-                CurTouchedRing = hit.collider.gameObject;
+                CurTouchedRing = hit.collider.gameObject.transform.GetChild(0).transform.GetChild(0).GetComponent<Ring>();
+                LastWorldTouchPos = GetWorldPointFromMouse();
+                LastCenterToWorldAngle = GetAngle(LastWorldTouchPos, LastWorldTouchPos.z < 0f);
             }
+        }        
+        else if (Input.GetMouseButton(0) && CurTouchedRing != null)
+        {            
+            Vector3 touchVec = GetWorldPointFromMouse();
+            Vector3 dragVec = touchVec - LastWorldTouchPos;
+            float touchDragAngleDiff = Mathf.Abs(Vector3.SignedAngle(dragVec, touchVec, Vector3.up));
+            if (touchDragAngleDiff > 90) touchDragAngleDiff = 180f - touchDragAngleDiff;                
+            float centerToWorldTouchPosAngle = GetAngle(touchVec, touchVec.z < 0f);
+
+            float worldMoveDist = Vector3.Distance(touchVec, LastWorldTouchPos);
+            if (worldMoveDist > 0f)
+            {
+                float speed = touchDragAngleDiff * worldMoveDist * 12f;
+                if (centerToWorldTouchPosAngle > LastCenterToWorldAngle) speed = -speed;
+                float speedAdj = 1f / (CurTouchedRing.GetComponent<MeshCollider>().bounds.extents.x / LargestRingDiameter);
+                CurTouchedRing.SetTouchRotateSpeed(speed * speedAdj);
+            }
+            else
+            {
+                CurTouchedRing.SetTouchRotateSpeed(0f);
+            }
+
+            LastWorldTouchPos = touchVec;
+            LastCenterToWorldAngle = centerToWorldTouchPosAngle;
         }
         else if (Input.GetMouseButtonUp(0))
         {
-            CurTouchedRing = null;
-        }
-        else if (Input.GetMouseButton(0) && CurTouchedRing != null)
-        {
-            mousePos = Input.mousePosition;
-            Vector3 m = new Vector3(mousePos.x, mousePos.y, 10f);
-            world = Camera.main.ScreenToWorldPoint(m);
-           
-            Vector3 worldDir = world - lastWorld;
-            worldDragAngle = GetAngle(worldDir, (world.z < lastWorld.z));
-
-            centerToWorldAngle = GetAngle(world, world.z < 0f);
-
-            worldMoveDist = Vector3.Distance(world, lastWorld) * 10f;
-
-            worldDragVec = world - lastWorld;
-            centerToWorldVec = world;
-            angleDiff = Vector3.SignedAngle(worldDragVec, centerToWorldVec, Vector3.up);
-            angleDiffAbs = Mathf.Abs(angleDiff);
-            angleDiffAdj = (angleDiffAbs > 90 ? 180f - angleDiffAbs : angleDiffAbs);
-
-            MeshCollider mc = CurTouchedRing.GetComponent<MeshCollider>();
-            //Debug.Log(mc.bounds.extents.ToString("F3"));
-
-            if(worldMoveDist > 0f)
+            if (CurTouchedRing != null)
             {
-                Speed = angleDiffAdj * worldMoveDist;
-                if (centerToWorldAngle > lastCenterToWorldAngle) Speed = -Speed;
-                float adj = 1f / (CurTouchedRing.GetComponent<MeshCollider>().bounds.extents.x / LargestRingDiameter);
-                //Debug.Log("adj: " + adj);
-                Ring ring = CurTouchedRing.transform.GetChild(0).transform.GetChild(0).GetComponent<Ring>();
-                ring.Rotate(Speed*adj);
-            }
-
-            //TouchPoint.transform.position = world;
-           
-            lastWorld = world;
-            lastCenterToWorldAngle = centerToWorldAngle;
+                CurTouchedRing.ResetRotateSpeed();
+                CurTouchedRing = null;
+            }            
         }
-        
-        SetDebugString();
     }
-    Vector3 worldDragVec;
-    Vector3 centerToWorldVec;
-    float angleDiff;
-    void SetDebugString()
-    {
-        if (CurTouchedRing == null) DebugString = "no ring\n";
-        else DebugString = CurTouchedRing.name + "\n";
-       // DebugString += "mouseDragAngle: " + mouseDragAngle.ToString("F3") + "\n";
-       /* DebugString += "worldDragAngle: " + worldDragAngle.ToString("F3") + "\n";
-        DebugString += "centerToWorldAngle: " + centerToWorldAngle.ToString("F3") + "\n";
-        DebugString += "worldMoveDist: " + worldMoveDist.ToString("F3") + "\n";
-        DebugString += "\n";
-        DebugString += "worldDragVec: " + worldDragVec.ToString("F3") + "\n";
-        DebugString += "centerToWorldVec: " + centerToWorldVec.ToString("F3") + "\n";
-        DebugString += "angleDiff: " + angleDiff.ToString("F3") + "\n";
-        DebugString += "angleDiffAbs: " + angleDiffAbs.ToString("F3") + "\n";
-        DebugString += "angleDiffAdj: " + angleDiffAdj.ToString("F3") + "\n";
-        DebugString += "\n";
-        DebugString += "worldDragVec normal: " + worldDragVec.normalized.ToString("F3") + "\n";
-        DebugString += "centerToWorldVec normal: " + centerToWorldVec.normalized.ToString("F3") + "\n";
-       */ /*DebugString += "world: " + world.ToString("F3") + "\n";
-        DebugString += "lastWorld: " + lastWorld.ToString("F3") + "\n\n";
-
-        DebugString += "mousePos: " + mousePos.ToString("F3") + "\n";
-        DebugString += "LastMousePos: " + LastMousePos.ToString("F3") + "\n";*/
-        /*DebugString += "Speed: " + Speed.ToString("F3") + "\n";
-        DebugString += "dragAngle: " + dragAngle.ToString("F3") + "\n";
-        DebugString += "unModDragAngle: " + unModDragAngle.ToString("F3") + "\n";
-        DebugString += "centerDir: " + centerDir.ToString("F3") + "\n";
-        DebugString += "moveDir: " + moveDir.ToString("F3") + "\n";
-        DebugString += "diffDir: " + diffDir.ToString("F3") + "\n";
-        DebugString += "moveDistWorld: " + moveDistWorld.ToString("F3") + "\n";
-        DebugString += "moveDistMouse: " + moveDistMouse.ToString("F3") + "\n\n\n";
-
-        DebugString += "mousePos: " + mousePos.ToString("F3") + "\n";
-        DebugString += "LastMousePos: " + LastMousePos.ToString("F3") + "\n";        
-        DebugString += "world: " + world.ToString("F3") + "\n";*/
-
-    }
-
-    float GetAngle(Vector3 dir, bool adjust)
-    {
-        float rot = Vector3.Angle(dir, Vector3.right);
-        if (adjust) rot = 360f - rot;
-        if (rot >= 360f) rot = rot - 360f;
-        return rot;
-    }
-
-    public string DebugGetTouchedRingName()
-    {
-        // if (CurTouchedRing == null) return "no touched ring";
-        // else return CurTouchedRing.name;
-        return DebugString;
-    }
+                
     public void RotateRings()
     {
         foreach (Ring r in Rings)
         {
             r.Rotate();
         }
+    }
+
+    Vector3 GetWorldPointFromMouse()
+    {
+        Vector3 mousePos = Input.mousePosition;
+        Vector3 m = new Vector3(mousePos.x, mousePos.y, 10f);
+        return Camera.main.ScreenToWorldPoint(m);
+    }
+    float GetAngle(Vector3 dir, bool adjust)
+    {
+        float rot = Vector3.Angle(dir, Vector3.right);
+        if (adjust) rot = 360f - rot;
+        if (rot >= 360f) rot = rot - 360f;
+        return rot;
     }
 
     private void Awake()
