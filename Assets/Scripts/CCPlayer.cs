@@ -93,7 +93,7 @@ public class CCPlayer : MonoBehaviour
                         Vector3 dest = other.gameObject.transform.parent.GetChild(1).position;
                         //NavMeshAgent.SetDestination(dest);
                         SetNavMeshDest(dest);
-                        DebugDestPos.transform.position = dest;
+                        if(DebugDestPos != null ) DebugDestPos.transform.position = dest;
                         ToggleMovementBlocked(true);
                         
                     }
@@ -242,7 +242,7 @@ public class CCPlayer : MonoBehaviour
                 //Debug.Log("Set Dest b");
                 //NavMeshAgent.SetDestination(dest);
                 SetNavMeshDest(dest);
-                DebugDestPos.transform.position = dest;
+                if(DebugDestPos != null) DebugDestPos.transform.position = dest;
             }
         }        
 
