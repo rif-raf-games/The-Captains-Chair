@@ -49,7 +49,7 @@ public class CCPlayer : MonoBehaviour
     IEnumerator AnimStartDelay()
     {
         yield return new WaitForEndOfFrame();
-        m_Anim.enabled = true;
+        if(m_Anim != null ) m_Anim.enabled = true;
     }
     private void OnTriggerEnter(Collider other)
     {
