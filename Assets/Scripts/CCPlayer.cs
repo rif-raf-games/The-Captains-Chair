@@ -29,7 +29,7 @@ public class CCPlayer : MonoBehaviour
         NavMeshAgent = this.GetComponent<NavMeshAgent>();       
         ArticyFlow = FindObjectOfType<ArticyFlow>();
         m_Anim = GetComponent<Animator>();
-        m_Anim.enabled = false;
+        if(m_Anim != null ) m_Anim.enabled = false;
         StartCoroutine(AnimStartDelay());
         m_Rbody = GetComponent<Rigidbody>();
 
