@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.UI;
 
 public class Repair : MonoBehaviour
 {    
@@ -263,16 +264,17 @@ public class Repair : MonoBehaviour
         //ConnsChecked.Add(pieceConn);
         return true;
     }
-    //PieceConn pcA, pcB;
-   // public RepairPiece debugPiece;
+
+    public Text ResultText;
     private void OnGUI()
     {
-        if(GUI.Button(new Rect(0,0,100,100), "path test"))
+        if(GUI.Button(new Rect(0,100,100,100), "path test"))
         {
             foreach (RepairPiece terminal in Terminals) terminal.ReachedOnPath = false;
             bool puzzleSolved = false;
             bool brokenPathFound = false;
             string msg = "";
+            ResultText.text = "";
             foreach ( RepairPiece terminal in Terminals)
             {
                 if (terminal.ReachedOnPath == true) continue;
@@ -335,17 +337,19 @@ public class Repair : MonoBehaviour
             
             if (puzzleSolved == false)
             {
-                Debug.Log("***************************************************** epic FAIL because: " + msg + ", took " + NumChecks + " to do it");
+                string s = "epic FAIL because: " + msg + ", took " + NumChecks + " to do it";
+                Debug.Log("***************************************************************" + s);
+                ResultText.text = s;
             }
             else
             {
-                Debug.Log("******************************************************* epic WIN because: " + msg + ", took " + NumChecks + " to do it");
+                string s = "epic WIN because: " + msg + ", took " + NumChecks + " to do it";
+                Debug.Log("***************************************************************" + s);
+                ResultText.text = s;
             }
         }
        
-
-
-        if(GUI.Button(new Rect(0, 100, 100, 100), "prev Conn"))
+        /*if(GUI.Button(new Rect(0, 100, 100, 100), "prev Conn"))
         {
             if (CurConnIndex != 0) CurConnIndex--;
             ShowPathIndex();
@@ -357,33 +361,8 @@ public class Repair : MonoBehaviour
         }
         if (GUI.Button(new Rect(0, 200, 100, 100), "show path"))
         {            
-            StartCoroutine(ShowPath());
-            /*foreach(RepairPiece rp in AllPieces)
-            {
-                if (rp.Type == eRepairPieceType.BLOCKER) continue;
-                if (rp.gameObject.activeSelf == false) continue;
-                Debug.Log("checking angles for: " + rp.name);
-                Vector3 pos = new Vector3(rp.transform.position.x, PieceAnchorHeightValToUse, rp.transform.position.z);//rp.transform.position + new Vector3(0f, Repair.MODEL_HEIGHT / 2f, 0f);
-                foreach (int angle in rp.OpenAngles)
-                {
-                    int rawY = Mathf.RoundToInt(rp.transform.localRotation.eulerAngles.y);                    
-                    int adjY = 360 - rawY;
-                    int dir = angle + adjY;
-                    if (dir > 360) dir = dir - 360;
-                    if (dir < 0) dir += 360;
-                    Debug.Log("Raw angle is: " + angle);
-                    Debug.Log("rawY is: " + rawY);
-                    Debug.Log("adjY is: " + adjY);
-                    Debug.Log("final dir: " + dir);
-                    Color color = Repair.Colors[(dir - 30) / 60];
-
-                    Quaternion q = Quaternion.AngleAxis(dir, -Vector3.up);
-                    Vector3 rayDir = q * Vector3.right;
-                    Debug.DrawRay(pos, rayDir * 4, color, 5f);
-                }
-            }*/
-
-        }
+            StartCoroutine(ShowPath());            
+        }*/
     }
 
     void ShowPathIndex()
