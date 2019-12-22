@@ -22,4 +22,9 @@ static public class StaticStuff
     {
         //Debug.Log(s);
     }
+
+    static public void PrintRepairPath(string s)
+    {
+       // Debug.Log(s);
+    }
 }

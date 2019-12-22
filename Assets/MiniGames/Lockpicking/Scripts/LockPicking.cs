@@ -158,7 +158,9 @@ public class LockPicking : MonoBehaviour
             }            
         }
     }
-                
+   // ou can rotate a direction Vector3 with a Quaternion by multiplying the quaternion with the direction(in that order)
+    //    Then you just use Quaternion.AngleAxis to create the rotation
+
     public void RotateRings()
     {
         foreach (Ring r in Rings)
