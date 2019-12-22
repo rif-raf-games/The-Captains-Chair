@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class Repair : MonoBehaviour
 {    
@@ -10,7 +11,8 @@ public class Repair : MonoBehaviour
     public RepairPiece[] Terminals;
     RepairPiece CurTerminalStart;
     eFluidType CurTerminalStartFluidType;
-    RepairPiece[] AllPieces;
+    //RepairPiece[] AllPieces;
+    List<RepairPiece> AllPieces = new List<RepairPiece>();
 
     public GameObject PathErrorSphere;
 
@@ -19,8 +21,14 @@ public class Repair : MonoBehaviour
 
     public static Color[] Colors = { Color.red, Color.green, Color.blue, Color.yellow, Color.cyan, Color.magenta };
     private void Start()
-    {        
-        AllPieces = GameObject.FindObjectsOfType<RepairPiece>();
+    {
+        AllPieces = GameObject.FindObjectsOfType<RepairPiece>().ToList<RepairPiece>();
+       // Debug.Log("num before: " + AllPieces.Count);
+        foreach(RepairPiece terminal in Terminals)
+        {
+            AllPieces.Remove(terminal);
+        }
+        //Debug.Log("num after: " + AllPieces.Count);
         foreach (RepairPiece r in AllPieces)
         {
             foreach (int angle in r.OpenAngles)
@@ -88,6 +96,8 @@ public class Repair : MonoBehaviour
         DEBUG_ConnsOnThisPath.Add(newConn);
     }
 
+    public Material Fuel;
+    public Material Coolant;
     int AngleToDir(int rawAngle, int yRot, eRepairPieceType type)
     {
         if (type == eRepairPieceType.XOVER) return rawAngle;
@@ -116,7 +126,7 @@ public class Repair : MonoBehaviour
 
             Quaternion q = Quaternion.AngleAxis(dir, -Vector3.up);
             Vector3 rayDir = q * Vector3.right;
-            Debug.DrawRay(curPiecePos, rayDir * 4, color, 5f);
+           // Debug.DrawRay(curPiecePos, rayDir * 4, color, 5f);
 
             RaycastHit hit;
             Physics.Raycast(curPiecePos, rayDir, out hit, Mathf.Infinity);
@@ -164,9 +174,9 @@ public class Repair : MonoBehaviour
                             SetupPathError("We've returned to the start Terminal so fail: " + adjacentPiece.name, curPiece, hit.collider, rayDir);
                             return false;
                         }
-                        else if(adjacentPiece.FluidType != curPiece.FluidType)
+                        else if((curPiece.Type != eRepairPieceType.XOVER && curPiece.Type != eRepairPieceType.SPLITTER) && (adjacentPiece.FluidType != curPiece.FluidType) )
                         {                                                        
-                            SetupPathError("We've reached a Terminal but it's of the wrong type so bail: " + adjacentPiece.name + ", cur fluid: " + curPiece.FluidType + ", adj fluid: " + adjacentPiece.FluidType, curPiece, hit.collider, rayDir);
+                            SetupPathError("We've reached a Terminal but it's of the wrong type so bail adj: " + adjacentPiece.name + ", fluidType: " + adjacentPiece.FluidType + ", cur fluid: " + curPiece.FluidType + ", adj fluid: " + adjacentPiece.FluidType, curPiece, hit.collider, rayDir);
                             return false;
                         }
                         else
@@ -182,9 +192,10 @@ public class Repair : MonoBehaviour
                             }                           
                         }
                     }                    
-                    else if(adjacentPiece.FluidType != eFluidType.NONE && adjacentPiece.FluidType != curPiece.FluidType )
+                    else if( (curPiece.Type != eRepairPieceType.XOVER && curPiece.Type != eRepairPieceType.SPLITTER) && ( adjacentPiece.FluidType != eFluidType.NONE && adjacentPiece.FluidType != curPiece.FluidType ) )
                     {                                                
                         SetupPathError("we just crossed paths with a piece that already has a different fluid type attached so FAIL. curPiece type: " + curPiece.FluidType.ToString() + ", adjacent type: " + adjacentPiece.FluidType.ToString(), curPiece, hit.collider, rayDir);
+                        Debug.Log("fluid type fail. Cur: " + curPiece.name + ", " + curPiece.FluidType + ", adj: " + adjacentPiece.name + ", " + adjacentPiece.FluidType);
                         return false;
                     }
                     else
@@ -204,17 +215,21 @@ public class Repair : MonoBehaviour
                             int dirAdj = (dir > 180 ? dir - 180 : dir);                            
                             int openAngle = (dirAdj < 150 ? dir - 60 : dir + 60);
                             if (openAngle > 360) openAngle -= 360;
+                            int newDir = AngleToDir(openAngle, Mathf.RoundToInt(adjacentPiece.transform.localRotation.eulerAngles.y), eRepairPieceType.SPLITTER);
                             StaticStuff.PrintRepairPath("There is a piece called: " + hit.collider.transform.parent.name + " on the spot that " + curPiece.name + "'s ray collided with but it " +
                                 "is an SPLITTER type, so assign the SPLITTER's only relevant OpenAngle: " + openAngle + " to check and do NOT assign a fluid type.  Create a new " +
                                 "conn Us: " + hit.collider.transform.parent.name + ", From: " + curPiece.name);                            
                             adjacentPiece.OpenAngles.Clear();
-                            adjacentPiece.OpenAngles.Add(openAngle);
+                            adjacentPiece.OpenAngles.Add(newDir);
                         }
                         else
                         {
                             StaticStuff.PrintRepairPath("There is a piece called: " + hit.collider.transform.parent.name + " on the spot that " + curPiece.name + "'s ray collided with that does NOT have the same fluid type " +
                             "as our current path so assign the fluid type and create a new conn Us: " + hit.collider.transform.parent.name + ", From: " + curPiece.name);                            
                             adjacentPiece.FluidType = CurTerminalStartFluidType;
+                            if (adjacentPiece.FluidType == eFluidType.FUEL) adjacentPiece.GetComponentInChildren<MeshRenderer>().material = Fuel;
+                            else adjacentPiece.GetComponentInChildren<MeshRenderer>().material = Coolant;
+
                         }
 
                         RepairPiece rp = hit.collider.transform.parent.GetComponent<RepairPiece>();
@@ -254,61 +269,71 @@ public class Repair : MonoBehaviour
     {
         if(GUI.Button(new Rect(0,0,100,100), "path test"))
         {
-            NumChecks = 0;
+            foreach (RepairPiece terminal in Terminals) terminal.ReachedOnPath = false;
             bool puzzleSolved = false;
-            string msg = "";            
-            CurTerminalStart = Terminals[0];
-            CurTerminalStartFluidType = CurTerminalStart.FluidType;
-            ConnsToCheck.Clear();
-            AllConnsChecked.Clear();
-            DEBUG_ConnsOnThisPath.Clear();
-            ConnsResult.Clear();
-            ConnsToCheck.Add(new PieceConn(CurTerminalStart, CurTerminalStart));            
-            CurTerminalStart.ReachedOnPath = true;
-            int i = 0; // this is just for debugging so that we don't get into an infinite loop
-            while (ConnsToCheck.Count != 0 && i < 100)
+            bool brokenPathFound = false;
+            string msg = "";
+            foreach ( RepairPiece terminal in Terminals)
             {
-                PieceConn curPieceConn = ConnsToCheck[0];
-                ConnsToCheck.Remove(curPieceConn);
-                Debug.Log("************************************ going to check conn Us: " + curPieceConn.Cur.name + " , From: " + curPieceConn.From.name);
-                if (CheckPieceConn(curPieceConn) == false)
-                {                                        
-                    ConnsToCheck.Clear();
-                    puzzleSolved = false;
-                    msg = PathErrorMessage;
-                }
-                else
-                {                    
-                    //Debug.Log("we haven't bailed the path check yet and we have this many more conns to look into: " + ConnsToCheck.Count);
-                    if(ConnsToCheck.Count == 0 )
+                if (terminal.ReachedOnPath == true) continue;
+                //foreach (RepairPiece rp in AllPieces) rp.FluidType = eFluidType.NONE;
+                NumChecks = 0;                                
+                CurTerminalStart = terminal;
+                CurTerminalStartFluidType = CurTerminalStart.FluidType;
+                ConnsToCheck.Clear();
+                AllConnsChecked.Clear();
+                DEBUG_ConnsOnThisPath.Clear();
+                ConnsResult.Clear();
+                ConnsToCheck.Add(new PieceConn(CurTerminalStart, CurTerminalStart));
+                CurTerminalStart.ReachedOnPath = true;
+                Debug.Log("going to check a path from terminal: " + CurTerminalStart.name);
+                int i = 0; // this is just for debugging so that we don't get into an infinite loop
+                while (ConnsToCheck.Count != 0 && i < 100)
+                {
+                    PieceConn curPieceConn = ConnsToCheck[0];
+                    ConnsToCheck.Remove(curPieceConn);
+                    StaticStuff.PrintRepairPath("************************************ going to check conn Us: " + curPieceConn.Cur.name + " , From: " + curPieceConn.From.name);
+                    if (CheckPieceConn(curPieceConn) == false)
                     {
-                        //Debug.Log("haven't gotten a fail yet and there's NO conns to check so let's see if we're done.");
-                        RepairPiece pieceNotReached = null;
-                        foreach(RepairPiece piece in Terminals)
-                        {
-                            if(piece.ReachedOnPath == false)
-                            {
-                                pieceNotReached = piece;
-                                break;
-                            }
-                        } 
-                        if(pieceNotReached == null )
-                        {                            
-                            puzzleSolved = true;
-                            msg = "CONGRATS WE HAVE REACHED EVERY TERMINAL ON THE PUZZLE SO WE WIN!!!!!!";
+                        ConnsToCheck.Clear();
+                        puzzleSolved = false;
+                        brokenPathFound = true;
+                        Debug.Log("***************************************************bailed due to broken puzzle");
+                        msg = PathErrorMessage;
+                        break;
+                    }
+                    //Debug.Log("a");
+                }
+                if (brokenPathFound == true) break;
+                //Debug.Log("b");                
+            }
+            //Debug.Log("c");
 
-                        }
-                        else
-                        {
-                            puzzleSolved = false;
-                            msg = "WE HAVE AT LEAST 1 TERMINAL " + pieceNotReached.name + " THAT HAS NOT BEEN REACHED SO WE FAIL!!!!!!";                            
-                            PathErrorSphere.transform.position = pieceNotReached.transform.position + new Vector3(0f, .5f, 0f);
-                        }
+            if(brokenPathFound == false)
+            {
+                RepairPiece pieceNotReached = null;
+                foreach (RepairPiece piece in Terminals)
+                {
+                    if (piece.ReachedOnPath == false)
+                    {
+                        pieceNotReached = piece;
+                        break;
                     }
                 }
-                i++;
+                if (pieceNotReached == null)
+                {
+                    puzzleSolved = true;
+                    msg = "CONGRATS WE HAVE REACHED EVERY TERMINAL ON THE PUZZLE SO WE WIN!!!!!!";
+                }
+                else
+                {
+                    puzzleSolved = false;
+                    msg = "WE HAVE AT LEAST 1 TERMINAL " + pieceNotReached.name + " THAT HAS NOT BEEN REACHED SO WE FAIL!!!!!!";
+                    PathErrorSphere.transform.position = pieceNotReached.transform.position + new Vector3(0f, .5f, 0f);
+                }
             }
-            if(puzzleSolved == false)
+            
+            if (puzzleSolved == false)
             {
                 Debug.Log("***************************************************** epic FAIL because: " + msg + ", took " + NumChecks + " to do it");
             }
@@ -317,27 +342,9 @@ public class Repair : MonoBehaviour
                 Debug.Log("******************************************************* epic WIN because: " + msg + ", took " + NumChecks + " to do it");
             }
         }
-       /* if (GUI.Button(new Rect(0, 100, 100, 100), "coll test"))
-        {
-            Vector3 pos = debugPiece.transform.position + new Vector3(0f, Repair.MODEL_HEIGHT / 2f, 0f);
-            foreach (int angle in debugPiece.OpenAngles)
-            {
-                int rawY = Mathf.RoundToInt(debugPiece.transform.localRotation.eulerAngles.y);
-                int adjY = 360 - rawY;
-                int dir = angle + adjY;
-                if (dir > 360) dir = dir - 360;
-                if (dir < 0) dir += 360;                
-                Color color = Repair.Colors[(dir - 30) / 60];
+       
 
-                Quaternion q = Quaternion.AngleAxis(dir, -Vector3.up);
-                Vector3 rayDir = q * Vector3.right;
-                Debug.DrawRay(pos, rayDir * 4, color, 5f);
-                RaycastHit hit;
-                Physics.Raycast(pos, rayDir, out hit, Mathf.Infinity);                
-                if (hit.collider == null) Debug.Log("piece: " + debugPiece.name + ", dir: " + dir + ", rayDir: " + rayDir.ToString("F3") + " had no collisions");
-                else Debug.Log("piece: " + debugPiece.name + ", dir: " + dir + ", rayDir: " + rayDir.ToString("F3") + " collided with: " + hit.collider.name);
-            }
-        }*/
+
         if(GUI.Button(new Rect(0, 100, 100, 100), "prev Conn"))
         {
             if (CurConnIndex != 0) CurConnIndex--;
