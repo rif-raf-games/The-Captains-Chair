@@ -5,8 +5,8 @@
     "set_IncludedNodes": "Settings, Project, GlobalVariables, ObjectDefinitions, Packages, ScriptMethods, Hierarchy, Assets",
     "set_UseScriptSupport": "True",
     "ExportVersion": "1.1",
-    "ObjectDefinitionsHash": "A02C0F7DB397E1D59A2C89BB865C780681F12DF6E7C3DB75512D1AEFAED5A1A6",
-    "ScriptFragmentsHash": "3578629737"
+    "ObjectDefinitionsHash": "680D8576A164626E2C50C42D4B91490D464C75C3CB7D11FB09F05B18F9A01011",
+    "ScriptFragmentsHash": "1844349316"
   },
   "Project": {
     "Name": "The Captains Chair",
@@ -123,6 +123,12 @@
         },
         {
           "Variable": "s02_Captain_Quarters",
+          "Type": "Boolean",
+          "Value": "False",
+          "Description": ""
+        },
+        {
+          "Variable": "s01_Loop_Intro",
           "Type": "Boolean",
           "Value": "False",
           "Description": ""
@@ -2786,8 +2792,8 @@
                       "b": 0.8
                     },
                     "Label": "",
-                    "TargetPin": "0x1000003000011ED",
-                    "Target": "0x1000003000011D5"
+                    "TargetPin": "0x100000300003013",
+                    "Target": "0x100000300003010"
                   }
                 ]
               }
@@ -4549,8 +4555,8 @@
             "Text": "The Majestic floats past the red eye of Jupiter as Rhapsody in Blue plays in the background. The outer hull fades as Frederick Loop walks the deck followed by his floating camera.",
             "ExternalId": "",
             "Position": {
-              "x": -700.0,
-              "y": 400.0
+              "x": -550.0,
+              "y": -150.0
             },
             "ZIndex": 45.0,
             "Size": {
@@ -4582,20 +4588,7 @@
               {
                 "Text": "",
                 "Id": "0x1000003000011EE",
-                "Owner": "0x1000003000011D5",
-                "Connections": [
-                  {
-                    "Color": {
-                      "a": 1.0,
-                      "r": 0.5764706,
-                      "g": 0.75686276,
-                      "b": 0.8
-                    },
-                    "Label": "",
-                    "TargetPin": "0x1000003000012E3",
-                    "Target": "0x1000003000012E2"
-                  }
-                ]
+                "Owner": "0x1000003000011D5"
               }
             ]
           },
@@ -5732,7 +5725,7 @@
             "Text": "The Captain\r\n\r\nTriggered by entering room",
             "ExternalId": "",
             "Position": {
-              "x": -333.0,
+              "x": -258.0,
               "y": 400.0
             },
             "ZIndex": 50.0,
@@ -6701,6 +6694,83 @@
                     "Label": "",
                     "TargetPin": "0x100000300002248",
                     "Target": "0x100000300002244"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "Dialogue",
+          "Properties": {
+            "TechnicalName": "Dlg_F51417CC",
+            "Id": "0x100000300003010",
+            "Parent": "0x100000300001140",
+            "Attachments": [],
+            "DisplayName": "Loop's Intro",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "Character Creation",
+            "ExternalId": "",
+            "Position": {
+              "x": -733.0,
+              "y": 400.0
+            },
+            "ZIndex": 22.0,
+            "Size": {
+              "w": 291.0,
+              "h": 200.0
+            },
+            "ShortId": 4111734732,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300003013",
+                "Owner": "0x100000300003010",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x10000030000307F",
+                    "Target": "0x10000030000307D"
+                  }
+                ]
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "Episode_01.s01_Loop_Intro = true",
+                "Id": "0x100000300003014",
+                "Owner": "0x100000300003010",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x1000003000012E3",
+                    "Target": "0x1000003000012E2"
                   }
                 ]
               }
@@ -10596,8 +10666,8 @@
             "Text": "Ahoy there Earth Moon and Mars! This is Frederick Loop, your favorite hard hitting journalist reporting live and alive from somewhere between Jupiter and history.",
             "ExternalId": "",
             "Position": {
-              "x": -225.0,
-              "y": 350.0
+              "x": 698.52941176470586,
+              "y": 500.0
             },
             "ZIndex": 0.0,
             "Size": {
@@ -10651,8 +10721,8 @@
             "Text": "For all you fans out there just tuning in, though let's be honest anybody who's anybody is already in the know, I'm here on The Majestic about to push the limits of the human experience. In just a few minutes our Noble Captain will give the word and our next episode will be a long distance call from Proxima freakin Centauri.",
             "ExternalId": "",
             "Position": {
-              "x": 101.47058823529414,
-              "y": 300.0
+              "x": 1025.0,
+              "y": 475.0
             },
             "ZIndex": 1.0,
             "Size": {
@@ -10706,8 +10776,8 @@
             "Text": "I know who you're all really tuning in to see, but damn if my supporting cast isn't impressive... even if there have been some unexpected changes. Let's take a look at where and with whom I'll be spending the next few months starting with our fearless leader who just arrived and I believe is waiting for us in the observation deck. Let's go introduce ourselves, shall we?",
             "ExternalId": "",
             "Position": {
-              "x": 425.0,
-              "y": 315.0
+              "x": 1348.5294117647059,
+              "y": 490.0
             },
             "ZIndex": 4.0,
             "Size": {
@@ -10758,11 +10828,11 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "Alright alright, just a little background for the voice over. I swear I'm the only one who does the reading.\r\n\r\nThe Majestic... right? A bit on the nose. Built as a prototype by the simple company, designed by the late Trena Arsillion and apparently the benefactor himself.... yup, okay... proxima centauri.... C E N T A... no I won't start over. No, lets just ad lib it... WHAT DO YOU MEAN THE BENEFACTOR ISN'T COMING. That was the entire goddamn point... who's in charge then?... Right now? Shoot okay, start rolling in 5.",
+            "Text": "Alright alright, just a little background for the voice over. I swear I'm the only one who does the reading.\r\n\r\nThe Majestic... right? A bit on the nose. Built as a prototype by the simple company, designed by the late Trena Arsillion and apparently the benefactor himself.... yup, okay... proxima centauri.... C E N T A... no I won't start over. No, lets just ad lib it... WHAT DO YOU MEAN THE BENEFACTOR ISN'T COMING. That was the entire goddamn point... who's in charge then? Jesus okay, so what's their deal. Where are they from?",
             "ExternalId": "",
             "Position": {
-              "x": -675.0,
-              "y": 325.0
+              "x": -975.0,
+              "y": 450.0
             },
             "ZIndex": 6.0,
             "Size": {
@@ -10782,6 +10852,160 @@
                 "Text": "",
                 "Id": "0x10000030000239D",
                 "Owner": "0x100000300002399",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300002F96",
+                    "Target": "0x100000300002F95"
+                  },
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300002F9D",
+                    "Target": "0x100000300002F9C"
+                  },
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300002FA4",
+                    "Target": "0x100000300002FA3"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "DialogueFragment",
+          "Properties": {
+            "TechnicalName": "DFr_47B087A4",
+            "Id": "0x100000300002FAD",
+            "Parent": "0x1000003000011D5",
+            "MenuText": "",
+            "StageDirections": "",
+            "Speaker": "0x100000000000188",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "Okay, got it. Any more background? I need something. What was their last job?",
+            "ExternalId": "",
+            "Position": {
+              "x": -200.0,
+              "y": 550.0
+            },
+            "ZIndex": 14.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 1202751396,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300002FB0",
+                "Owner": "0x100000300002FAD"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300002FB1",
+                "Owner": "0x100000300002FAD",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300002FBF",
+                    "Target": "0x100000300002FBE"
+                  },
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300002FC7",
+                    "Target": "0x100000300002FC6"
+                  },
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300002FB7",
+                    "Target": "0x100000300002FB6"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "DialogueFragment",
+          "Properties": {
+            "TechnicalName": "DFr_2366990B",
+            "Id": "0x100000300002FD6",
+            "Parent": "0x1000003000011D5",
+            "MenuText": "",
+            "StageDirections": "",
+            "Speaker": "0x100000000000188",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "Okay, I can work with this. Start rolling, I'lll keep you on and just keep feeding it to me.",
+            "ExternalId": "",
+            "Position": {
+              "x": 412.33333333333337,
+              "y": 550.0
+            },
+            "ZIndex": 24.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 593926411,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300002FD9",
+                "Owner": "0x100000300002FD6"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300002FDA",
+                "Owner": "0x100000300002FD6",
                 "Connections": [
                   {
                     "Color": {
@@ -12727,6 +12951,83 @@
         {
           "Type": "DialogueFragment",
           "Properties": {
+            "TechnicalName": "DFr_939DA6B0",
+            "Id": "0x100000300003065",
+            "Parent": "0x100000300003010",
+            "MenuText": "",
+            "StageDirections": "",
+            "Speaker": "0x100000000000188",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "Okay, got it. Any more background? I need something. What was their last job?",
+            "ExternalId": "",
+            "Position": {
+              "x": 882.68628509787436,
+              "y": 683.90174416181844
+            },
+            "ZIndex": 14.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 2476582576,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300003066",
+                "Owner": "0x100000300003065"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300003067",
+                "Owner": "0x100000300003065",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300003047",
+                    "Target": "0x100000300003046"
+                  },
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x10000030000304F",
+                    "Target": "0x10000030000304E"
+                  },
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x10000030000305E",
+                    "Target": "0x10000030000305D"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "DialogueFragment",
+          "Properties": {
             "TechnicalName": "DFr_59B9689D",
             "Id": "0x10000030000131D",
             "Parent": "0x1000003000012FA",
@@ -13959,7 +14260,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "We have a lot of ground to cover Captain. You're actually on the feed right now. Tell the people at home a bit about yourself. Where are you from?",
+            "Text": "We have a lot of ground to cover Captain. You're actually on the feed right now. Tell the people at home a bit about yourself. You grew up on",
             "ExternalId": "",
             "Position": {
               "x": 725.0,
@@ -13992,8 +14293,8 @@
                       "b": 0.8
                     },
                     "Label": "",
-                    "TargetPin": "0x1000003000023E2",
-                    "Target": "0x1000003000023DF"
+                    "TargetPin": "0x100000300002FE1",
+                    "Target": "0x100000300002FDE"
                   },
                   {
                     "Color": {
@@ -14003,8 +14304,8 @@
                       "b": 0.8
                     },
                     "Label": "",
-                    "TargetPin": "0x1000003000023E8",
-                    "Target": "0x1000003000023E5"
+                    "TargetPin": "0x100000300002FE7",
+                    "Target": "0x100000300002FE4"
                   },
                   {
                     "Color": {
@@ -14014,8 +14315,8 @@
                       "b": 0.8
                     },
                     "Label": "",
-                    "TargetPin": "0x1000003000023EE",
-                    "Target": "0x1000003000023EB"
+                    "TargetPin": "0x100000300002FED",
+                    "Target": "0x100000300002FEA"
                   }
                 ]
               }
@@ -14025,10 +14326,10 @@
         {
           "Type": "DialogueFragment",
           "Properties": {
-            "TechnicalName": "DFr_8ECEFAD6",
-            "Id": "0x1000003000023F4",
+            "TechnicalName": "DFr_01D3FB9B",
+            "Id": "0x100000300002FEA",
             "Parent": "0x1000003000012FA",
-            "MenuText": "",
+            "MenuText": "Mars",
             "StageDirections": "",
             "Speaker": "0x100000000000188",
             "Color": {
@@ -14036,30 +14337,30 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "And what do you do?",
+            "Text": "Mars. Far out.",
             "ExternalId": "",
             "Position": {
-              "x": 1375.0,
-              "y": 400.0
+              "x": 1075.0,
+              "y": 725.0
             },
-            "ZIndex": 72.0,
+            "ZIndex": 133.0,
             "Size": {
               "w": 225.0,
               "h": 200.0
             },
-            "ShortId": 2395929302,
+            "ShortId": 30669723,
             "InputPins": [
               {
-                "Text": "",
-                "Id": "0x1000003000023F7",
-                "Owner": "0x1000003000023F4"
+                "Text": "TheCaptain.Mars == true",
+                "Id": "0x100000300002FED",
+                "Owner": "0x100000300002FEA"
               }
             ],
             "OutputPins": [
               {
                 "Text": "",
-                "Id": "0x1000003000023F8",
-                "Owner": "0x1000003000023F4",
+                "Id": "0x100000300002FEE",
+                "Owner": "0x100000300002FEA",
                 "Connections": [
                   {
                     "Color": {
@@ -14069,9 +14370,53 @@
                       "b": 0.8
                     },
                     "Label": "",
-                    "TargetPin": "0x100000300001303",
-                    "Target": "0x100000300001302"
-                  },
+                    "TargetPin": "0x100000300003096",
+                    "Target": "0x100000300003094"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "DialogueFragment",
+          "Properties": {
+            "TechnicalName": "DFr_717266CD",
+            "Id": "0x100000300002FE4",
+            "Parent": "0x1000003000012FA",
+            "MenuText": "Moon",
+            "StageDirections": "",
+            "Speaker": "0x100000000000188",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "The moon. Very cool.",
+            "ExternalId": "",
+            "Position": {
+              "x": 1075.0,
+              "y": 475.0
+            },
+            "ZIndex": 131.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 1903322829,
+            "InputPins": [
+              {
+                "Text": "TheCaptain.Moon == true",
+                "Id": "0x100000300002FE7",
+                "Owner": "0x100000300002FE4"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300002FE8",
+                "Owner": "0x100000300002FE4",
+                "Connections": [
                   {
                     "Color": {
                       "a": 1.0,
@@ -14080,9 +14425,53 @@
                       "b": 0.8
                     },
                     "Label": "",
-                    "TargetPin": "0x100000300001313",
-                    "Target": "0x100000300001312"
-                  },
+                    "TargetPin": "0x100000300003096",
+                    "Target": "0x100000300003094"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "DialogueFragment",
+          "Properties": {
+            "TechnicalName": "DFr_0620B0FF",
+            "Id": "0x100000300002FDE",
+            "Parent": "0x1000003000012FA",
+            "MenuText": "Earth",
+            "StageDirections": "",
+            "Speaker": "0x100000000000188",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "Earth. Just like me.",
+            "ExternalId": "",
+            "Position": {
+              "x": 1075.0,
+              "y": 225.0
+            },
+            "ZIndex": 129.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 102805759,
+            "InputPins": [
+              {
+                "Text": "TheCaptain.Earth == true",
+                "Id": "0x100000300002FE1",
+                "Owner": "0x100000300002FDE"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300002FE2",
+                "Owner": "0x100000300002FDE",
+                "Connections": [
                   {
                     "Color": {
                       "a": 1.0,
@@ -14091,8 +14480,8 @@
                       "b": 0.8
                     },
                     "Label": "",
-                    "TargetPin": "0x10000030000130B",
-                    "Target": "0x10000030000130A"
+                    "TargetPin": "0x100000300003096",
+                    "Target": "0x100000300003094"
                   }
                 ]
               }
@@ -14113,11 +14502,11 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "Was?",
+            "Text": "And before the benefactor hired you, you were a Colonel with the UN Peacekeepers. That's quite an elite unit. What happened?",
             "ExternalId": "",
             "Position": {
               "x": 2200.0,
-              "y": 0.0
+              "y": 125.0
             },
             "ZIndex": 76.0,
             "Size": {
@@ -14127,7 +14516,7 @@
             "ShortId": 1075561110,
             "InputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.Soldier == true",
                 "Id": "0x100000300002403",
                 "Owner": "0x100000300002400"
               }
@@ -14190,7 +14579,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "Was?",
+            "Text": "And before the benefactor hired you, you were a deep sea explorer. What happened?",
             "ExternalId": "",
             "Position": {
               "x": 2187.3333333333335,
@@ -14204,7 +14593,7 @@
             "ShortId": 4285392362,
             "InputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.Explorer == true",
                 "Id": "0x100000300002424",
                 "Owner": "0x100000300002421"
               }
@@ -14267,11 +14656,11 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "Was?",
+            "Text": "And before the benefactor hired you, you were the man who designed the inter-planet connection. What happened?",
             "ExternalId": "",
             "Position": {
-              "x": 2225.0,
-              "y": 1125.0
+              "x": 2175.0,
+              "y": 625.0
             },
             "ZIndex": 88.0,
             "Size": {
@@ -14281,7 +14670,7 @@
             "ShortId": 2448788941,
             "InputPins": [
               {
-                "Text": "",
+                "Text": "TheCaptain.Architect == true",
                 "Id": "0x100000300002439",
                 "Owner": "0x100000300002436"
               }
@@ -21675,6 +22064,303 @@
           }
         },
         {
+          "Type": "DialogueFragment",
+          "Properties": {
+            "TechnicalName": "DFr_1088E7F5",
+            "Id": "0x100000300003040",
+            "Parent": "0x100000300003010",
+            "MenuText": "",
+            "StageDirections": "",
+            "Speaker": "0x100000000000188",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "Okay, I can work with this. Start rolling, I'lll keep you on and just keep feeding it to me.",
+            "ExternalId": "",
+            "Position": {
+              "x": 1495.0196184312076,
+              "y": 683.90174416181844
+            },
+            "ZIndex": 24.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 277407733,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300003041",
+                "Owner": "0x100000300003040"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300003042",
+                "Owner": "0x100000300003040",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x10000030000301F",
+                    "Target": "0x10000030000301E"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "DialogueFragment",
+          "Properties": {
+            "TechnicalName": "DFr_463E5F65",
+            "Id": "0x100000300003032",
+            "Parent": "0x100000300003010",
+            "MenuText": "",
+            "StageDirections": "Offscreen to his producer",
+            "Speaker": "0x100000000000188",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "Alright alright, just a little background for the voice over. I swear I'm the only one who does the reading.\r\n\r\nThe Majestic... right? A bit on the nose. Built as a prototype by the simple company, designed by the late Trena Arsillion and apparently the benefactor himself.... yup, okay... proxima centauri.... C E N T A... no I won't start over. No, lets just ad lib it... WHAT DO YOU MEAN THE BENEFACTOR ISN'T COMING. That was the entire goddamn point... who's in charge then? Jesus okay, so what's their deal. Where are they from?",
+            "ExternalId": "",
+            "Position": {
+              "x": 107.68628509787436,
+              "y": 583.90174416181844
+            },
+            "ZIndex": 6.0,
+            "Size": {
+              "w": 306.0,
+              "h": 325.0
+            },
+            "ShortId": 1178492773,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300003033",
+                "Owner": "0x100000300003032"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300003034",
+                "Owner": "0x100000300003032",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x10000030000303A",
+                    "Target": "0x100000300003039"
+                  },
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x10000030000302C",
+                    "Target": "0x10000030000302B"
+                  },
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300003057",
+                    "Target": "0x100000300003056"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "DialogueFragment",
+          "Properties": {
+            "TechnicalName": "DFr_D8BDEF21",
+            "Id": "0x100000300003025",
+            "Parent": "0x100000300003010",
+            "MenuText": "",
+            "StageDirections": "",
+            "Speaker": "0x100000000000188",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "For all you fans out there just tuning in, though let's be honest anybody who's anybody is already in the know, I'm here on The Majestic about to push the limits of the human experience. In just a few minutes our Noble Captain will give the word and our next episode will be a long distance call from Proxima freakin Centauri.",
+            "ExternalId": "",
+            "Position": {
+              "x": 2107.6862850978741,
+              "y": 608.90174416181844
+            },
+            "ZIndex": 1.0,
+            "Size": {
+              "w": 202.94117647058829,
+              "h": 400.0
+            },
+            "ShortId": 3636326177,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300003026",
+                "Owner": "0x100000300003025"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300003027",
+                "Owner": "0x100000300003025",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300003019",
+                    "Target": "0x100000300003018"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "DialogueFragment",
+          "Properties": {
+            "TechnicalName": "DFr_A4BD5B26",
+            "Id": "0x10000030000301E",
+            "Parent": "0x100000300003010",
+            "MenuText": "",
+            "StageDirections": "",
+            "Speaker": "0x100000000000188",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "Ahoy there Earth Moon and Mars! This is Frederick Loop, your favorite hard hitting journalist reporting live and alive from somewhere between Jupiter and history.",
+            "ExternalId": "",
+            "Position": {
+              "x": 1781.2156968625802,
+              "y": 633.90174416181844
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 201.47058823529414,
+              "h": 300.0
+            },
+            "ShortId": 2763873062,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x10000030000301F",
+                "Owner": "0x10000030000301E"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300003020",
+                "Owner": "0x10000030000301E",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300003026",
+                    "Target": "0x100000300003025"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "DialogueFragment",
+          "Properties": {
+            "TechnicalName": "DFr_165C619A",
+            "Id": "0x100000300003018",
+            "Parent": "0x100000300003010",
+            "MenuText": "",
+            "StageDirections": "",
+            "Speaker": "0x100000000000188",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "I know who you're all really tuning in to see, but damn if my supporting cast isn't impressive... even if there have been some unexpected changes. Let's take a look at where and with whom I'll be spending the next few months starting with our fearless leader who just arrived and I believe is waiting for us in the observation deck. Let's go introduce ourselves, shall we?",
+            "ExternalId": "",
+            "Position": {
+              "x": 2431.2156968625804,
+              "y": 623.90174416181844
+            },
+            "ZIndex": 4.0,
+            "Size": {
+              "w": 234.66666666666652,
+              "h": 360.0
+            },
+            "ShortId": 375153050,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300003019",
+                "Owner": "0x100000300003018"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x10000030000301A",
+                "Owner": "0x100000300003018",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300003014",
+                    "Target": "0x100000300003010"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
           "Type": "Captain_Dialogue",
           "Properties": {
             "TechnicalName": "DFr_39DA4645",
@@ -25782,6 +26468,316 @@
         {
           "Type": "Captain_Dialogue",
           "Properties": {
+            "TechnicalName": "DFr_01AAF97A",
+            "Id": "0x100000300002F95",
+            "Parent": "0x1000003000011D5",
+            "MenuText": "Earth",
+            "StageDirections": "",
+            "Speaker": "0x100000000000188",
+            "Color": {
+              "r": 0.121568628,
+              "g": 0.0156862754,
+              "b": 0.0156862754
+            },
+            "Text": "Earth",
+            "ExternalId": "",
+            "Position": {
+              "x": -600.0,
+              "y": 300.0
+            },
+            "ZIndex": 66.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 27982202,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300002F96",
+                "Owner": "0x100000300002F95"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "TheCaptain.Earth = true",
+                "Id": "0x100000300002F97",
+                "Owner": "0x100000300002F95",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300002FB0",
+                    "Target": "0x100000300002FAD"
+                  }
+                ]
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Captain_Dialogue",
+          "Properties": {
+            "TechnicalName": "DFr_A3E84FD5",
+            "Id": "0x100000300002F9C",
+            "Parent": "0x1000003000011D5",
+            "MenuText": "Moon",
+            "StageDirections": "",
+            "Speaker": "0x100000000000188",
+            "Color": {
+              "r": 0.121568628,
+              "g": 0.0156862754,
+              "b": 0.0156862754
+            },
+            "Text": "Moon",
+            "ExternalId": "",
+            "Position": {
+              "x": -600.0,
+              "y": 550.0
+            },
+            "ZIndex": 68.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 2749910997,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300002F9D",
+                "Owner": "0x100000300002F9C"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "TheCaptain.Mars = true",
+                "Id": "0x100000300002F9E",
+                "Owner": "0x100000300002F9C",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300002FB0",
+                    "Target": "0x100000300002FAD"
+                  }
+                ]
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Captain_Dialogue",
+          "Properties": {
+            "TechnicalName": "DFr_DC8C4F33",
+            "Id": "0x100000300002FA3",
+            "Parent": "0x1000003000011D5",
+            "MenuText": "Mars",
+            "StageDirections": "",
+            "Speaker": "0x100000000000188",
+            "Color": {
+              "r": 0.121568628,
+              "g": 0.0156862754,
+              "b": 0.0156862754
+            },
+            "Text": "Mars",
+            "ExternalId": "",
+            "Position": {
+              "x": -600.0,
+              "y": 775.0
+            },
+            "ZIndex": 70.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 3700182835,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300002FA4",
+                "Owner": "0x100000300002FA3"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "TheCaptain.Mars = true",
+                "Id": "0x100000300002FA5",
+                "Owner": "0x100000300002FA3",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300002FB0",
+                    "Target": "0x100000300002FAD"
+                  }
+                ]
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Captain_Dialogue",
+          "Properties": {
+            "TechnicalName": "DFr_22B4D977",
+            "Id": "0x100000300002FB6",
+            "Parent": "0x1000003000011D5",
+            "MenuText": "Soldier",
+            "StageDirections": "",
+            "Speaker": "0x100000000000188",
+            "Color": {
+              "r": 0.121568628,
+              "g": 0.0156862754,
+              "b": 0.0156862754
+            },
+            "Text": "They were a Colonel in the U.N. Peacekeepers?",
+            "ExternalId": "",
+            "Position": {
+              "x": 125.0,
+              "y": 300.0
+            },
+            "ZIndex": 69.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 582277495,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300002FB7",
+                "Owner": "0x100000300002FB6"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "TheCaptain.Soldier = true",
+                "Id": "0x100000300002FB8",
+                "Owner": "0x100000300002FB6"
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Captain_Dialogue",
+          "Properties": {
+            "TechnicalName": "DFr_B63D80F4",
+            "Id": "0x100000300002FBE",
+            "Parent": "0x1000003000011D5",
+            "MenuText": "Architect",
+            "StageDirections": "",
+            "Speaker": "0x100000000000188",
+            "Color": {
+              "r": 0.121568628,
+              "g": 0.0156862754,
+              "b": 0.0156862754
+            },
+            "Text": "They were an interplanetary architect?",
+            "ExternalId": "",
+            "Position": {
+              "x": 125.0,
+              "y": 800.0
+            },
+            "ZIndex": 73.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 3057484020,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300002FBF",
+                "Owner": "0x100000300002FBE"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "TheCaptain.Architect = true",
+                "Id": "0x100000300002FC0",
+                "Owner": "0x100000300002FBE"
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Captain_Dialogue",
+          "Properties": {
+            "TechnicalName": "DFr_9CAB91DD",
+            "Id": "0x100000300002FC6",
+            "Parent": "0x1000003000011D5",
+            "MenuText": "Explorer",
+            "StageDirections": "",
+            "Speaker": "0x100000000000188",
+            "Color": {
+              "r": 0.121568628,
+              "g": 0.0156862754,
+              "b": 0.0156862754
+            },
+            "Text": "They were a deep sea explorer?",
+            "ExternalId": "",
+            "Position": {
+              "x": 125.0,
+              "y": 550.0
+            },
+            "ZIndex": 71.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 2628489693,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300002FC7",
+                "Owner": "0x100000300002FC6"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "TheCaptain.Explorer = true",
+                "Id": "0x100000300002FC8",
+                "Owner": "0x100000300002FC6",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300002FD9",
+                    "Target": "0x100000300002FD6"
+                  }
+                ]
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Captain_Dialogue",
+          "Properties": {
             "TechnicalName": "DFr_0BB74F60",
             "Id": "0x100000300001BEF",
             "Parent": "0x1000003000011F3",
@@ -26454,41 +27450,41 @@
         {
           "Type": "Captain_Dialogue",
           "Properties": {
-            "TechnicalName": "DFr_DAB9C41B",
-            "Id": "0x100000300001302",
-            "Parent": "0x1000003000012FA",
-            "MenuText": "Architect",
+            "TechnicalName": "DFr_EC9FD9C8",
+            "Id": "0x100000300003056",
+            "Parent": "0x100000300003010",
+            "MenuText": "Moon",
             "StageDirections": "",
-            "Speaker": "0x100000000000190",
+            "Speaker": "0x100000000000188",
             "Color": {
               "r": 0.121568628,
               "g": 0.0156862754,
               "b": 0.0156862754
             },
-            "Text": "I was an architect. Actually designed the intrasolar path.",
+            "Text": "Moon",
             "ExternalId": "",
             "Position": {
-              "x": 1850.0,
-              "y": 1025.0
+              "x": 482.68628509787436,
+              "y": 683.90174416181844
             },
-            "ZIndex": 73.0,
+            "ZIndex": 68.0,
             "Size": {
               "w": 225.0,
               "h": 200.0
             },
-            "ShortId": 3669607451,
+            "ShortId": 3969898952,
             "InputPins": [
               {
                 "Text": "",
-                "Id": "0x100000300001303",
-                "Owner": "0x100000300001302"
+                "Id": "0x100000300003057",
+                "Owner": "0x100000300003056"
               }
             ],
             "OutputPins": [
               {
-                "Text": "TheCaptain.Architect = true",
-                "Id": "0x100000300001304",
-                "Owner": "0x100000300001302",
+                "Text": "TheCaptain.Mars = true",
+                "Id": "0x100000300003058",
+                "Owner": "0x100000300003056",
                 "Connections": [
                   {
                     "Color": {
@@ -26498,8 +27494,8 @@
                       "b": 0.8
                     },
                     "Label": "",
-                    "TargetPin": "0x100000300002439",
-                    "Target": "0x100000300002436"
+                    "TargetPin": "0x100000300003066",
+                    "Target": "0x100000300003065"
                   }
                 ]
               }
@@ -26510,97 +27506,41 @@
         {
           "Type": "Captain_Dialogue",
           "Properties": {
-            "TechnicalName": "DFr_04EA5137",
-            "Id": "0x10000030000130A",
-            "Parent": "0x1000003000012FA",
-            "MenuText": "Soldier",
-            "StageDirections": "",
-            "Speaker": "0x100000000000190",
-            "Color": {
-              "r": 0.121568628,
-              "g": 0.0156862754,
-              "b": 0.0156862754
-            },
-            "Text": "I was a Colonel in the U.N. Peacekeepers.",
-            "ExternalId": "",
-            "Position": {
-              "x": 1900.0,
-              "y": 125.0
-            },
-            "ZIndex": 69.0,
-            "Size": {
-              "w": 225.0,
-              "h": 200.0
-            },
-            "ShortId": 82465079,
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x10000030000130B",
-                "Owner": "0x10000030000130A"
-              }
-            ],
-            "OutputPins": [
-              {
-                "Text": "TheCaptain.Soldier = true",
-                "Id": "0x10000030000130C",
-                "Owner": "0x10000030000130A",
-                "Connections": [
-                  {
-                    "Color": {
-                      "a": 1.0,
-                      "r": 0.5764706,
-                      "g": 0.75686276,
-                      "b": 0.8
-                    },
-                    "Label": "",
-                    "TargetPin": "0x100000300002403",
-                    "Target": "0x100000300002400"
-                  }
-                ]
-              }
-            ]
-          },
-          "Template": {}
-        },
-        {
-          "Type": "Captain_Dialogue",
-          "Properties": {
-            "TechnicalName": "DFr_A6160E04",
-            "Id": "0x100000300001312",
-            "Parent": "0x1000003000012FA",
+            "TechnicalName": "DFr_FE69675B",
+            "Id": "0x10000030000305D",
+            "Parent": "0x100000300003010",
             "MenuText": "Explorer",
             "StageDirections": "",
-            "Speaker": "0x100000000000190",
+            "Speaker": "0x100000000000188",
             "Color": {
               "r": 0.121568628,
               "g": 0.0156862754,
               "b": 0.0156862754
             },
-            "Text": "I was an explorer, spent most of my life in the deep sea.",
+            "Text": "They were a deep sea explorer? Really?",
             "ExternalId": "",
             "Position": {
-              "x": 1900.0,
-              "y": 375.0
+              "x": 1207.6862850978744,
+              "y": 683.90174416181844
             },
             "ZIndex": 71.0,
             "Size": {
               "w": 225.0,
               "h": 200.0
             },
-            "ShortId": 2786463236,
+            "ShortId": 4268320603,
             "InputPins": [
               {
                 "Text": "",
-                "Id": "0x100000300001313",
-                "Owner": "0x100000300001312"
+                "Id": "0x10000030000305E",
+                "Owner": "0x10000030000305D"
               }
             ],
             "OutputPins": [
               {
                 "Text": "TheCaptain.Explorer = true",
-                "Id": "0x100000300001314",
-                "Owner": "0x100000300001312",
+                "Id": "0x10000030000305F",
+                "Owner": "0x10000030000305D",
                 "Connections": [
                   {
                     "Color": {
@@ -26610,8 +27550,8 @@
                       "b": 0.8
                     },
                     "Label": "",
-                    "TargetPin": "0x100000300002424",
-                    "Target": "0x100000300002421"
+                    "TargetPin": "0x100000300003041",
+                    "Target": "0x100000300003040"
                   }
                 ]
               }
@@ -28231,174 +29171,6 @@
                     "Label": "",
                     "TargetPin": "0x1000003000023D2",
                     "Target": "0x1000003000023CF"
-                  }
-                ]
-              }
-            ]
-          },
-          "Template": {}
-        },
-        {
-          "Type": "Captain_Dialogue",
-          "Properties": {
-            "TechnicalName": "DFr_C49533D6",
-            "Id": "0x1000003000023DF",
-            "Parent": "0x1000003000012FA",
-            "MenuText": "Earth",
-            "StageDirections": "",
-            "Speaker": "0x100000000000190",
-            "Color": {
-              "r": 0.121568628,
-              "g": 0.0156862754,
-              "b": 0.0156862754
-            },
-            "Text": "I'm from Earth.",
-            "ExternalId": "",
-            "Position": {
-              "x": 1012.3333333333334,
-              "y": 150.0
-            },
-            "ZIndex": 66.0,
-            "Size": {
-              "w": 225.0,
-              "h": 200.0
-            },
-            "ShortId": 3298112470,
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x1000003000023E2",
-                "Owner": "0x1000003000023DF"
-              }
-            ],
-            "OutputPins": [
-              {
-                "Text": "TheCaptain.Earth = true",
-                "Id": "0x1000003000023E3",
-                "Owner": "0x1000003000023DF",
-                "Connections": [
-                  {
-                    "Color": {
-                      "a": 1.0,
-                      "r": 0.5764706,
-                      "g": 0.75686276,
-                      "b": 0.8
-                    },
-                    "Label": "",
-                    "TargetPin": "0x1000003000023F7",
-                    "Target": "0x1000003000023F4"
-                  }
-                ]
-              }
-            ]
-          },
-          "Template": {}
-        },
-        {
-          "Type": "Captain_Dialogue",
-          "Properties": {
-            "TechnicalName": "DFr_930BD75D",
-            "Id": "0x1000003000023E5",
-            "Parent": "0x1000003000012FA",
-            "MenuText": "Moon",
-            "StageDirections": "",
-            "Speaker": "0x100000000000190",
-            "Color": {
-              "r": 0.121568628,
-              "g": 0.0156862754,
-              "b": 0.0156862754
-            },
-            "Text": "I'm from Mars",
-            "ExternalId": "",
-            "Position": {
-              "x": 1012.3333333333334,
-              "y": 400.0
-            },
-            "ZIndex": 68.0,
-            "Size": {
-              "w": 225.0,
-              "h": 200.0
-            },
-            "ShortId": 2467026781,
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x1000003000023E8",
-                "Owner": "0x1000003000023E5"
-              }
-            ],
-            "OutputPins": [
-              {
-                "Text": "TheCaptain.Mars = true",
-                "Id": "0x1000003000023E9",
-                "Owner": "0x1000003000023E5",
-                "Connections": [
-                  {
-                    "Color": {
-                      "a": 1.0,
-                      "r": 0.5764706,
-                      "g": 0.75686276,
-                      "b": 0.8
-                    },
-                    "Label": "",
-                    "TargetPin": "0x1000003000023F7",
-                    "Target": "0x1000003000023F4"
-                  }
-                ]
-              }
-            ]
-          },
-          "Template": {}
-        },
-        {
-          "Type": "Captain_Dialogue",
-          "Properties": {
-            "TechnicalName": "DFr_51215E7E",
-            "Id": "0x1000003000023EB",
-            "Parent": "0x1000003000012FA",
-            "MenuText": "Mars",
-            "StageDirections": "",
-            "Speaker": "0x100000000000190",
-            "Color": {
-              "r": 0.121568628,
-              "g": 0.0156862754,
-              "b": 0.0156862754
-            },
-            "Text": "Born on the moon, actually.",
-            "ExternalId": "",
-            "Position": {
-              "x": 1012.3333333333334,
-              "y": 650.0
-            },
-            "ZIndex": 70.0,
-            "Size": {
-              "w": 225.0,
-              "h": 200.0
-            },
-            "ShortId": 1361141374,
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x1000003000023EE",
-                "Owner": "0x1000003000023EB"
-              }
-            ],
-            "OutputPins": [
-              {
-                "Text": "TheCaptain.Mars = true",
-                "Id": "0x1000003000023EF",
-                "Owner": "0x1000003000023EB",
-                "Connections": [
-                  {
-                    "Color": {
-                      "a": 1.0,
-                      "r": 0.5764706,
-                      "g": 0.75686276,
-                      "b": 0.8
-                    },
-                    "Label": "",
-                    "TargetPin": "0x1000003000023F7",
-                    "Target": "0x1000003000023F4"
                   }
                 ]
               }
@@ -31935,6 +32707,230 @@
           "Template": {}
         },
         {
+          "Type": "Captain_Dialogue",
+          "Properties": {
+            "TechnicalName": "DFr_E2E30778",
+            "Id": "0x10000030000304E",
+            "Parent": "0x100000300003010",
+            "MenuText": "Architect",
+            "StageDirections": "",
+            "Speaker": "0x100000000000188",
+            "Color": {
+              "r": 0.121568628,
+              "g": 0.0156862754,
+              "b": 0.0156862754
+            },
+            "Text": "They were an interplanetary architect? They're going to be insuferable.",
+            "ExternalId": "",
+            "Position": {
+              "x": 1207.6862850978744,
+              "y": 933.90174416181844
+            },
+            "ZIndex": 73.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 3806529400,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x10000030000304F",
+                "Owner": "0x10000030000304E"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "TheCaptain.Architect = true",
+                "Id": "0x100000300003050",
+                "Owner": "0x10000030000304E",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300003041",
+                    "Target": "0x100000300003040"
+                  }
+                ]
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Captain_Dialogue",
+          "Properties": {
+            "TechnicalName": "DFr_1A1F219C",
+            "Id": "0x100000300003046",
+            "Parent": "0x100000300003010",
+            "MenuText": "Soldier",
+            "StageDirections": "",
+            "Speaker": "0x100000000000188",
+            "Color": {
+              "r": 0.121568628,
+              "g": 0.0156862754,
+              "b": 0.0156862754
+            },
+            "Text": "They were a Colonel in the U.N. Peacekeepers? Oh bou.",
+            "ExternalId": "",
+            "Position": {
+              "x": 1207.6862850978744,
+              "y": 433.90174416181844
+            },
+            "ZIndex": 69.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 438247836,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300003047",
+                "Owner": "0x100000300003046"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "TheCaptain.Soldier = true",
+                "Id": "0x100000300003048",
+                "Owner": "0x100000300003046",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300003041",
+                    "Target": "0x100000300003040"
+                  }
+                ]
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Captain_Dialogue",
+          "Properties": {
+            "TechnicalName": "DFr_BEF4CD0D",
+            "Id": "0x100000300003039",
+            "Parent": "0x100000300003010",
+            "MenuText": "Mars",
+            "StageDirections": "",
+            "Speaker": "0x100000000000188",
+            "Color": {
+              "r": 0.121568628,
+              "g": 0.0156862754,
+              "b": 0.0156862754
+            },
+            "Text": "Mars",
+            "ExternalId": "",
+            "Position": {
+              "x": 482.68628509787436,
+              "y": 908.90174416181844
+            },
+            "ZIndex": 70.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 3203714317,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x10000030000303A",
+                "Owner": "0x100000300003039"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "TheCaptain.Mars = true",
+                "Id": "0x10000030000303B",
+                "Owner": "0x100000300003039",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300003066",
+                    "Target": "0x100000300003065"
+                  }
+                ]
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Captain_Dialogue",
+          "Properties": {
+            "TechnicalName": "DFr_4F6AFAD7",
+            "Id": "0x10000030000302B",
+            "Parent": "0x100000300003010",
+            "MenuText": "Earth",
+            "StageDirections": "",
+            "Speaker": "0x100000000000188",
+            "Color": {
+              "r": 0.121568628,
+              "g": 0.0156862754,
+              "b": 0.0156862754
+            },
+            "Text": "Earth",
+            "ExternalId": "",
+            "Position": {
+              "x": 482.68628509787436,
+              "y": 433.90174416181844
+            },
+            "ZIndex": 66.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 1332411095,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x10000030000302C",
+                "Owner": "0x10000030000302B"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "TheCaptain.Earth = true",
+                "Id": "0x10000030000302D",
+                "Owner": "0x10000030000302B",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300003066",
+                    "Target": "0x100000300003065"
+                  }
+                ]
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
           "Type": "Hub",
           "Properties": {
             "TechnicalName": "Hub_37957727",
@@ -31970,86 +32966,6 @@
                 "Text": "",
                 "Id": "0x100000300000D8C",
                 "Owner": "0x100000300000D8A"
-              }
-            ]
-          }
-        },
-        {
-          "Type": "Hub",
-          "Properties": {
-            "TechnicalName": "Hub_9B8239DF",
-            "Id": "0x1000003000012E2",
-            "Parent": "0x100000300001140",
-            "DisplayName": "Ship Free Roam",
-            "Color": {
-              "r": 0.5764706,
-              "g": 0.75686276,
-              "b": 0.8
-            },
-            "Text": "",
-            "ExternalId": "",
-            "Position": {
-              "x": 100.0,
-              "y": 475.0
-            },
-            "ZIndex": 6.0,
-            "Size": {
-              "w": 175.0,
-              "h": 50.0
-            },
-            "ShortId": 2609002975,
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x1000003000012E3",
-                "Owner": "0x1000003000012E2"
-              }
-            ],
-            "OutputPins": [
-              {
-                "Text": "",
-                "Id": "0x1000003000012E4",
-                "Owner": "0x1000003000012E2"
-              }
-            ]
-          }
-        },
-        {
-          "Type": "Hub",
-          "Properties": {
-            "TechnicalName": "Hub_7912D5F9",
-            "Id": "0x100000300002EFF",
-            "Parent": "0x100000300001DD7",
-            "DisplayName": "Explore",
-            "Color": {
-              "r": 0.5764706,
-              "g": 0.75686276,
-              "b": 0.8
-            },
-            "Text": "",
-            "ExternalId": "",
-            "Position": {
-              "x": 1400.0,
-              "y": 425.0
-            },
-            "ZIndex": 5.0,
-            "Size": {
-              "w": 175.0,
-              "h": 50.0
-            },
-            "ShortId": 2031277561,
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x100000300002F01",
-                "Owner": "0x100000300002EFF"
-              }
-            ],
-            "OutputPins": [
-              {
-                "Text": "",
-                "Id": "0x100000300002F02",
-                "Owner": "0x100000300002EFF"
               }
             ]
           }
@@ -32123,6 +33039,161 @@
                     "Label": "",
                     "TargetPin": "0x1000003000025DA",
                     "Target": "0x1000003000025D7"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "Hub",
+          "Properties": {
+            "TechnicalName": "Hub_9B8239DF",
+            "Id": "0x1000003000012E2",
+            "Parent": "0x100000300001140",
+            "DisplayName": "Ship Free Roam",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 150.0,
+              "y": 475.0
+            },
+            "ZIndex": 6.0,
+            "Size": {
+              "w": 175.0,
+              "h": 50.0
+            },
+            "ShortId": 2609002975,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000012E3",
+                "Owner": "0x1000003000012E2"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000012E4",
+                "Owner": "0x1000003000012E2"
+              }
+            ]
+          }
+        },
+        {
+          "Type": "Hub",
+          "Properties": {
+            "TechnicalName": "Hub_7912D5F9",
+            "Id": "0x100000300002EFF",
+            "Parent": "0x100000300001DD7",
+            "DisplayName": "Explore",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 1400.0,
+              "y": 425.0
+            },
+            "ZIndex": 5.0,
+            "Size": {
+              "w": 175.0,
+              "h": 50.0
+            },
+            "ShortId": 2031277561,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300002F01",
+                "Owner": "0x100000300002EFF"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300002F02",
+                "Owner": "0x100000300002EFF"
+              }
+            ]
+          }
+        },
+        {
+          "Type": "Hub",
+          "Properties": {
+            "TechnicalName": "Hub_C072C9E9",
+            "Id": "0x100000300003094",
+            "Parent": "0x1000003000012FA",
+            "DisplayName": "Untitled hub",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 1575.0,
+              "y": 550.0
+            },
+            "ZIndex": 125.0,
+            "Size": {
+              "w": 175.0,
+              "h": 50.0
+            },
+            "ShortId": 3228748265,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300003096",
+                "Owner": "0x100000300003094"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300003097",
+                "Owner": "0x100000300003094",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300002439",
+                    "Target": "0x100000300002436"
+                  },
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300002424",
+                    "Target": "0x100000300002421"
+                  },
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300002403",
+                    "Target": "0x100000300002400"
                   }
                 ]
               }
@@ -32227,6 +33298,40 @@
                 "Text": "",
                 "Id": "0x100000300000FF4",
                 "Owner": "0x100000300000FF1"
+              }
+            ]
+          }
+        },
+        {
+          "Type": "Jump",
+          "Properties": {
+            "TechnicalName": "Jmp_657A4339",
+            "Id": "0x100000300002F6B",
+            "Parent": "0x100000300002A73",
+            "Target": "0x100000300000D8A",
+            "TargetPin": "0x100000300000D8B",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": -50.0,
+              "y": 350.0
+            },
+            "ZIndex": 43.0,
+            "Size": {
+              "w": 175.0,
+              "h": 150.0
+            },
+            "ShortId": 1702511417,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300002F6E",
+                "Owner": "0x100000300002F6B"
               }
             ]
           }
@@ -32676,40 +33781,6 @@
         {
           "Type": "Jump",
           "Properties": {
-            "TechnicalName": "Jmp_D2EF00BE",
-            "Id": "0x100000300002DF7",
-            "Parent": "0x100000300002C9D",
-            "Target": "0x100000300000D8A",
-            "TargetPin": "0x100000300000D8B",
-            "Color": {
-              "r": 0.5764706,
-              "g": 0.75686276,
-              "b": 0.8
-            },
-            "Text": "",
-            "ExternalId": "",
-            "Position": {
-              "x": 675.0,
-              "y": 1025.0
-            },
-            "ZIndex": 19.0,
-            "Size": {
-              "w": 175.0,
-              "h": 150.0
-            },
-            "ShortId": 3538878654,
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x100000300002DF8",
-                "Owner": "0x100000300002DF7"
-              }
-            ]
-          }
-        },
-        {
-          "Type": "Jump",
-          "Properties": {
             "TechnicalName": "Jmp_F0F33964",
             "Id": "0x100000300002F31",
             "Parent": "0x100000300001E01",
@@ -32737,40 +33808,6 @@
                 "Text": "",
                 "Id": "0x100000300002F34",
                 "Owner": "0x100000300002F31"
-              }
-            ]
-          }
-        },
-        {
-          "Type": "Jump",
-          "Properties": {
-            "TechnicalName": "Jmp_8F6D76C8",
-            "Id": "0x100000300002F42",
-            "Parent": "0x100000300001EE6",
-            "Target": "0x100000300002EFF",
-            "TargetPin": "0x100000300002F01",
-            "Color": {
-              "r": 0.5764706,
-              "g": 0.75686276,
-              "b": 0.8
-            },
-            "Text": "",
-            "ExternalId": "",
-            "Position": {
-              "x": -125.0,
-              "y": 125.0
-            },
-            "ZIndex": 56.0,
-            "Size": {
-              "w": 175.0,
-              "h": 150.0
-            },
-            "ShortId": 2406315720,
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x100000300002F45",
-                "Owner": "0x100000300002F42"
               }
             ]
           }
@@ -32812,6 +33849,40 @@
         {
           "Type": "Jump",
           "Properties": {
+            "TechnicalName": "Jmp_8F6D76C8",
+            "Id": "0x100000300002F42",
+            "Parent": "0x100000300001EE6",
+            "Target": "0x100000300002EFF",
+            "TargetPin": "0x100000300002F01",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": -125.0,
+              "y": 125.0
+            },
+            "ZIndex": 56.0,
+            "Size": {
+              "w": 175.0,
+              "h": 150.0
+            },
+            "ShortId": 2406315720,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300002F45",
+                "Owner": "0x100000300002F42"
+              }
+            ]
+          }
+        },
+        {
+          "Type": "Jump",
+          "Properties": {
             "TechnicalName": "Jmp_865FA8AF",
             "Id": "0x100000300002F5E",
             "Parent": "0x100000300002ED3",
@@ -32846,9 +33917,9 @@
         {
           "Type": "Jump",
           "Properties": {
-            "TechnicalName": "Jmp_657A4339",
-            "Id": "0x100000300002F6B",
-            "Parent": "0x100000300002A73",
+            "TechnicalName": "Jmp_D2EF00BE",
+            "Id": "0x100000300002DF7",
+            "Parent": "0x100000300002C9D",
             "Target": "0x100000300000D8A",
             "TargetPin": "0x100000300000D8B",
             "Color": {
@@ -32859,20 +33930,54 @@
             "Text": "",
             "ExternalId": "",
             "Position": {
-              "x": -50.0,
-              "y": 350.0
+              "x": 675.0,
+              "y": 1025.0
             },
-            "ZIndex": 43.0,
+            "ZIndex": 19.0,
             "Size": {
               "w": 175.0,
               "h": 150.0
             },
-            "ShortId": 1702511417,
+            "ShortId": 3538878654,
             "InputPins": [
               {
                 "Text": "",
-                "Id": "0x100000300002F6E",
-                "Owner": "0x100000300002F6B"
+                "Id": "0x100000300002DF8",
+                "Owner": "0x100000300002DF7"
+              }
+            ]
+          }
+        },
+        {
+          "Type": "Jump",
+          "Properties": {
+            "TechnicalName": "Jmp_EB589293",
+            "Id": "0x10000030000308A",
+            "Parent": "0x100000300003010",
+            "Target": "0x1000003000012E2",
+            "TargetPin": "0x1000003000012E3",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": -148.51337440849147,
+              "y": 473.06600756696753
+            },
+            "ZIndex": 26.0,
+            "Size": {
+              "w": 175.0,
+              "h": 150.0
+            },
+            "ShortId": 3948450451,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x10000030000308B",
+                "Owner": "0x10000030000308A"
               }
             ]
           }
@@ -33231,6 +34336,78 @@
                     "Label": "",
                     "TargetPin": "0x100000300000F62",
                     "Target": "0x100000300000F61"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "Condition",
+          "Properties": {
+            "TechnicalName": "Cnd_2A9C8E02",
+            "Id": "0x100000300002F64",
+            "Parent": "0x100000300002A73",
+            "DisplayName": "Episode_01.s02_Captain_Quarters == true",
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": -150.0,
+              "y": 650.0
+            },
+            "ZIndex": 40.0,
+            "Size": {
+              "w": 225.0,
+              "h": 100.0
+            },
+            "ShortId": 714903042,
+            "Expression": "Episode_01.s02_Captain_Quarters == true",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300002F66",
+                "Owner": "0x100000300002F64"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300002F67",
+                "Owner": "0x100000300002F64",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300002F6E",
+                    "Target": "0x100000300002F6B"
+                  }
+                ]
+              },
+              {
+                "Text": "",
+                "Id": "0x100000300002F68",
+                "Owner": "0x100000300002F64",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300002AD6",
+                    "Target": "0x100000300002AD5"
                   }
                 ]
               }
@@ -34176,78 +35353,6 @@
         {
           "Type": "Condition",
           "Properties": {
-            "TechnicalName": "Cnd_351C72FB",
-            "Id": "0x100000300002DF2",
-            "Parent": "0x100000300002C9D",
-            "DisplayName": "Episode_01.s02_Visited_Engine_Room = ...",
-            "Text": "",
-            "ExternalId": "",
-            "Position": {
-              "x": 215.66666666666674,
-              "y": 861.33333333333348
-            },
-            "ZIndex": 10.0,
-            "Size": {
-              "w": 225.0,
-              "h": 100.0
-            },
-            "ShortId": 891056891,
-            "Expression": "Episode_01.s02_Visited_Engine_Room == true &&\nEpisode_01.s02_Visited_Observatory == true &&\nEpisode_01.s02_Visited_Sick_Bay == true",
-            "Color": {
-              "r": 0.5764706,
-              "g": 0.75686276,
-              "b": 0.8
-            },
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x100000300002DF3",
-                "Owner": "0x100000300002DF2"
-              }
-            ],
-            "OutputPins": [
-              {
-                "Text": "",
-                "Id": "0x100000300002DF4",
-                "Owner": "0x100000300002DF2",
-                "Connections": [
-                  {
-                    "Color": {
-                      "a": 1.0,
-                      "r": 0.5764706,
-                      "g": 0.75686276,
-                      "b": 0.8
-                    },
-                    "Label": "",
-                    "TargetPin": "0x100000300002CB2",
-                    "Target": "0x100000300002CB1"
-                  }
-                ]
-              },
-              {
-                "Text": "",
-                "Id": "0x100000300002DF5",
-                "Owner": "0x100000300002DF2",
-                "Connections": [
-                  {
-                    "Color": {
-                      "a": 1.0,
-                      "r": 0.5764706,
-                      "g": 0.75686276,
-                      "b": 0.8
-                    },
-                    "Label": "",
-                    "TargetPin": "0x100000300002DF8",
-                    "Target": "0x100000300002DF7"
-                  }
-                ]
-              }
-            ]
-          }
-        },
-        {
-          "Type": "Condition",
-          "Properties": {
             "TechnicalName": "Cnd_2F0E4CA1",
             "Id": "0x100000300002F2A",
             "Parent": "0x100000300001E01",
@@ -34311,78 +35416,6 @@
                     "Label": "",
                     "TargetPin": "0x100000300001E03",
                     "Target": "0x100000300001E02"
-                  }
-                ]
-              }
-            ]
-          }
-        },
-        {
-          "Type": "Condition",
-          "Properties": {
-            "TechnicalName": "Cnd_A885CB00",
-            "Id": "0x100000300002F3B",
-            "Parent": "0x100000300001EE6",
-            "DisplayName": "Episode_01.s04_Crowd == true",
-            "Text": "",
-            "ExternalId": "",
-            "Position": {
-              "x": -325.0,
-              "y": 350.0
-            },
-            "ZIndex": 53.0,
-            "Size": {
-              "w": 225.0,
-              "h": 100.0
-            },
-            "ShortId": 2827340544,
-            "Expression": "Episode_01.s04_Crowd == true",
-            "Color": {
-              "r": 0.5764706,
-              "g": 0.75686276,
-              "b": 0.8
-            },
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x100000300002F3D",
-                "Owner": "0x100000300002F3B"
-              }
-            ],
-            "OutputPins": [
-              {
-                "Text": "",
-                "Id": "0x100000300002F3E",
-                "Owner": "0x100000300002F3B",
-                "Connections": [
-                  {
-                    "Color": {
-                      "a": 1.0,
-                      "r": 0.5764706,
-                      "g": 0.75686276,
-                      "b": 0.8
-                    },
-                    "Label": "",
-                    "TargetPin": "0x100000300002F45",
-                    "Target": "0x100000300002F42"
-                  }
-                ]
-              },
-              {
-                "Text": "",
-                "Id": "0x100000300002F3F",
-                "Owner": "0x100000300002F3B",
-                "Connections": [
-                  {
-                    "Color": {
-                      "a": 1.0,
-                      "r": 0.5764706,
-                      "g": 0.75686276,
-                      "b": 0.8
-                    },
-                    "Label": "",
-                    "TargetPin": "0x100000300001F02",
-                    "Target": "0x100000300001EFF"
                   }
                 ]
               }
@@ -34464,6 +35497,78 @@
         {
           "Type": "Condition",
           "Properties": {
+            "TechnicalName": "Cnd_A885CB00",
+            "Id": "0x100000300002F3B",
+            "Parent": "0x100000300001EE6",
+            "DisplayName": "Episode_01.s04_Crowd == true",
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": -325.0,
+              "y": 350.0
+            },
+            "ZIndex": 53.0,
+            "Size": {
+              "w": 225.0,
+              "h": 100.0
+            },
+            "ShortId": 2827340544,
+            "Expression": "Episode_01.s04_Crowd == true",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300002F3D",
+                "Owner": "0x100000300002F3B"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300002F3E",
+                "Owner": "0x100000300002F3B",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300002F45",
+                    "Target": "0x100000300002F42"
+                  }
+                ]
+              },
+              {
+                "Text": "",
+                "Id": "0x100000300002F3F",
+                "Owner": "0x100000300002F3B",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300001F02",
+                    "Target": "0x100000300001EFF"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "Condition",
+          "Properties": {
             "TechnicalName": "Cnd_3A6E29AD",
             "Id": "0x100000300002F57",
             "Parent": "0x100000300002ED3",
@@ -34536,23 +35641,23 @@
         {
           "Type": "Condition",
           "Properties": {
-            "TechnicalName": "Cnd_2A9C8E02",
-            "Id": "0x100000300002F64",
-            "Parent": "0x100000300002A73",
-            "DisplayName": "Episode_01.s02_Captain_Quarters == true",
+            "TechnicalName": "Cnd_351C72FB",
+            "Id": "0x100000300002DF2",
+            "Parent": "0x100000300002C9D",
+            "DisplayName": "Episode_01.s02_Visited_Engine_Room = ...",
             "Text": "",
             "ExternalId": "",
             "Position": {
-              "x": -150.0,
-              "y": 650.0
+              "x": 215.66666666666674,
+              "y": 861.33333333333348
             },
-            "ZIndex": 40.0,
+            "ZIndex": 10.0,
             "Size": {
               "w": 225.0,
               "h": 100.0
             },
-            "ShortId": 714903042,
-            "Expression": "Episode_01.s02_Captain_Quarters == true",
+            "ShortId": 891056891,
+            "Expression": "Episode_01.s02_Visited_Engine_Room == true &&\nEpisode_01.s02_Visited_Observatory == true &&\nEpisode_01.s02_Visited_Sick_Bay == true",
             "Color": {
               "r": 0.5764706,
               "g": 0.75686276,
@@ -34561,15 +35666,15 @@
             "InputPins": [
               {
                 "Text": "",
-                "Id": "0x100000300002F66",
-                "Owner": "0x100000300002F64"
+                "Id": "0x100000300002DF3",
+                "Owner": "0x100000300002DF2"
               }
             ],
             "OutputPins": [
               {
                 "Text": "",
-                "Id": "0x100000300002F67",
-                "Owner": "0x100000300002F64",
+                "Id": "0x100000300002DF4",
+                "Owner": "0x100000300002DF2",
                 "Connections": [
                   {
                     "Color": {
@@ -34579,15 +35684,15 @@
                       "b": 0.8
                     },
                     "Label": "",
-                    "TargetPin": "0x100000300002F6E",
-                    "Target": "0x100000300002F6B"
+                    "TargetPin": "0x100000300002CB2",
+                    "Target": "0x100000300002CB1"
                   }
                 ]
               },
               {
                 "Text": "",
-                "Id": "0x100000300002F68",
-                "Owner": "0x100000300002F64",
+                "Id": "0x100000300002DF5",
+                "Owner": "0x100000300002DF2",
                 "Connections": [
                   {
                     "Color": {
@@ -34597,8 +35702,80 @@
                       "b": 0.8
                     },
                     "Label": "",
-                    "TargetPin": "0x100000300002AD6",
-                    "Target": "0x100000300002AD5"
+                    "TargetPin": "0x100000300002DF8",
+                    "Target": "0x100000300002DF7"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "Condition",
+          "Properties": {
+            "TechnicalName": "Cnd_AAD09D81",
+            "Id": "0x10000030000307D",
+            "Parent": "0x100000300003010",
+            "DisplayName": "Episode_01.s01_Loop_Intro == true",
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": -300.0,
+              "y": 675.0
+            },
+            "ZIndex": 28.0,
+            "Size": {
+              "w": 225.0,
+              "h": 100.0
+            },
+            "ShortId": 2865798529,
+            "Expression": "Episode_01.s01_Loop_Intro == true",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x10000030000307F",
+                "Owner": "0x10000030000307D"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300003080",
+                "Owner": "0x10000030000307D",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x10000030000308B",
+                    "Target": "0x10000030000308A"
+                  }
+                ]
+              },
+              {
+                "Text": "",
+                "Id": "0x100000300003081",
+                "Owner": "0x10000030000307D",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300003033",
+                    "Target": "0x100000300003032"
                   }
                 ]
               }
@@ -39024,6 +40201,46 @@
                             "Id": "0x100000300002399",
                             "TechnicalName": "DFr_7638D37F",
                             "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x100000300002F95",
+                            "TechnicalName": "DFr_01AAF97A",
+                            "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x100000300002F9C",
+                            "TechnicalName": "DFr_A3E84FD5",
+                            "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x100000300002FA3",
+                            "TechnicalName": "DFr_DC8C4F33",
+                            "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x100000300002FAD",
+                            "TechnicalName": "DFr_47B087A4",
+                            "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x100000300002FB6",
+                            "TechnicalName": "DFr_22B4D977",
+                            "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x100000300002FBE",
+                            "TechnicalName": "DFr_B63D80F4",
+                            "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x100000300002FC6",
+                            "TechnicalName": "DFr_9CAB91DD",
+                            "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x100000300002FD6",
+                            "TechnicalName": "DFr_2366990B",
+                            "Type": "DialogueFragment"
                           }
                         ]
                       },
@@ -39307,21 +40524,6 @@
                             "Type": "DialogueFragment"
                           },
                           {
-                            "Id": "0x100000300001302",
-                            "TechnicalName": "DFr_DAB9C41B",
-                            "Type": "DialogueFragment"
-                          },
-                          {
-                            "Id": "0x10000030000130A",
-                            "TechnicalName": "DFr_04EA5137",
-                            "Type": "DialogueFragment"
-                          },
-                          {
-                            "Id": "0x100000300001312",
-                            "TechnicalName": "DFr_A6160E04",
-                            "Type": "DialogueFragment"
-                          },
-                          {
                             "Id": "0x10000030000131D",
                             "TechnicalName": "DFr_59B9689D",
                             "Type": "DialogueFragment"
@@ -39579,26 +40781,6 @@
                             "Type": "DialogueFragment"
                           },
                           {
-                            "Id": "0x1000003000023DF",
-                            "TechnicalName": "DFr_C49533D6",
-                            "Type": "DialogueFragment"
-                          },
-                          {
-                            "Id": "0x1000003000023E5",
-                            "TechnicalName": "DFr_930BD75D",
-                            "Type": "DialogueFragment"
-                          },
-                          {
-                            "Id": "0x1000003000023EB",
-                            "TechnicalName": "DFr_51215E7E",
-                            "Type": "DialogueFragment"
-                          },
-                          {
-                            "Id": "0x1000003000023F4",
-                            "TechnicalName": "DFr_8ECEFAD6",
-                            "Type": "DialogueFragment"
-                          },
-                          {
                             "Id": "0x100000300002400",
                             "TechnicalName": "DFr_401BC296",
                             "Type": "DialogueFragment"
@@ -39752,6 +40934,26 @@
                             "Id": "0x10000030000290A",
                             "TechnicalName": "Cnd_B6308C3D",
                             "Type": "Condition"
+                          },
+                          {
+                            "Id": "0x100000300002FDE",
+                            "TechnicalName": "DFr_0620B0FF",
+                            "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x100000300002FE4",
+                            "TechnicalName": "DFr_717266CD",
+                            "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x100000300002FEA",
+                            "TechnicalName": "DFr_01D3FB9B",
+                            "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x100000300003094",
+                            "TechnicalName": "Hub_C072C9E9",
+                            "Type": "Hub"
                           }
                         ]
                       },
@@ -39874,6 +41076,83 @@
                         "Id": "0x100000300002A6E",
                         "TechnicalName": "Jmp_C29750F4",
                         "Type": "Jump"
+                      },
+                      {
+                        "Id": "0x100000300003010",
+                        "TechnicalName": "Dlg_F51417CC",
+                        "Type": "Dialogue",
+                        "Children": [
+                          {
+                            "Id": "0x100000300003018",
+                            "TechnicalName": "DFr_165C619A",
+                            "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x10000030000301E",
+                            "TechnicalName": "DFr_A4BD5B26",
+                            "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x100000300003025",
+                            "TechnicalName": "DFr_D8BDEF21",
+                            "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x10000030000302B",
+                            "TechnicalName": "DFr_4F6AFAD7",
+                            "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x100000300003032",
+                            "TechnicalName": "DFr_463E5F65",
+                            "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x100000300003039",
+                            "TechnicalName": "DFr_BEF4CD0D",
+                            "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x100000300003040",
+                            "TechnicalName": "DFr_1088E7F5",
+                            "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x100000300003046",
+                            "TechnicalName": "DFr_1A1F219C",
+                            "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x10000030000304E",
+                            "TechnicalName": "DFr_E2E30778",
+                            "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x100000300003056",
+                            "TechnicalName": "DFr_EC9FD9C8",
+                            "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x10000030000305D",
+                            "TechnicalName": "DFr_FE69675B",
+                            "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x100000300003065",
+                            "TechnicalName": "DFr_939DA6B0",
+                            "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x10000030000307D",
+                            "TechnicalName": "Cnd_AAD09D81",
+                            "Type": "Condition"
+                          },
+                          {
+                            "Id": "0x10000030000308A",
+                            "TechnicalName": "Jmp_EB589293",
+                            "Type": "Jump"
+                          }
+                        ]
                       }
                     ]
                   },
