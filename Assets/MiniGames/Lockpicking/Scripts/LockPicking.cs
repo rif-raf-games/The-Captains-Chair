@@ -168,7 +168,8 @@ public class LockPicking : MonoBehaviour
             r.Rotate();
         }
     }
-
+    
+    // monote - add this to StaticStuff
     Vector3 GetWorldPointFromMouse()
     {
         Vector3 mousePos = Input.mousePosition;

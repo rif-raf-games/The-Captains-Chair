@@ -8,8 +8,9 @@ public class RepairPiece : MonoBehaviour
     public Repair.eRepairPieceType Type;
 
     public List<int> OpenAngles = new List<int>();
-    public List<int> AdjAngles = new List<int>();
+    //public List<int> AdjAngles = new List<int>();
 
+    public bool Movable = true;
     public bool ReachedOnPath = false; // this MIGHT want to be moved to a sub-class for terminals
 
 

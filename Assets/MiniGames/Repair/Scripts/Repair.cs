@@ -12,33 +12,18 @@ public class Repair : MonoBehaviour
     public RepairPiece[] Terminals;
     RepairPiece CurTerminalStart;
     eFluidType CurTerminalStartFluidType;
-    //RepairPiece[] AllPieces;
     List<RepairPiece> AllPieces = new List<RepairPiece>();
 
     public GameObject PathErrorSphere;
-
-    //public static float MODEL_HEIGHT = 0.5542563f; // This was calculated elsewhere for use here    
+    
     public static float PieceAnchorHeightValToUse = .3f;
 
     public static Color[] Colors = { Color.red, Color.green, Color.blue, Color.yellow, Color.cyan, Color.magenta };
-    private void Start()
-    {
-        AllPieces = GameObject.FindObjectsOfType<RepairPiece>().ToList<RepairPiece>();
-       // Debug.Log("num before: " + AllPieces.Count);
-        foreach(RepairPiece terminal in Terminals)
-        {
-            AllPieces.Remove(terminal);
-        }
-        //Debug.Log("num after: " + AllPieces.Count);
-        foreach (RepairPiece r in AllPieces)
-        {
-            foreach (int angle in r.OpenAngles)
-            {
-                int dir = AngleToDir(angle, Mathf.RoundToInt(r.transform.localRotation.eulerAngles.y), r.Type);
-                r.AdjAngles.Add(dir);
-            }
-        }
-    }
+
+    public Transform BoardPieces;
+    public Transform Belt;
+
+    float BeltMoveRange;
    
     class PieceConn
     {
@@ -58,8 +43,340 @@ public class Repair : MonoBehaviour
     List<PieceConn> AllConnsChecked = new List<PieceConn>();
     List<PieceConn> DEBUG_ConnsOnThisPath = new List<PieceConn>();
     List<string> ConnsResult = new List<string>();
+    List<GameObject> BeltAnchors = new List<GameObject>();
     int NumChecks = 0;
-   
+
+    private void Start()
+    {
+        AllPieces = GameObject.FindObjectsOfType<RepairPiece>().ToList<RepairPiece>();
+        foreach (RepairPiece terminal in Terminals)
+        {
+            AllPieces.Remove(terminal);
+        }
+        
+        Bounds beltBounds = Belt.GetComponent<BoxCollider>().bounds;
+        Vector3 beltTopWP = new Vector3(beltBounds.center.x, 0f, beltBounds.max.z);        
+        Vector3 beltTopVP = Camera.main.WorldToViewportPoint(beltTopWP);
+        Vector3 vpDiff = new Vector3(0f, 0f, beltTopVP.y - 1f);
+        Vector3 wpDiff = Camera.main.ViewportToWorldPoint(vpDiff);
+        BeltMoveRange = Belt.GetComponent<BoxCollider>().size.z/2f + wpDiff.z;
+
+        BeltAnchors = GameObject.FindGameObjectsWithTag("Repair Piece Belt Anchor").ToList<GameObject>();
+        BeltAnchors = BeltAnchors.OrderBy(go => go.name).ToList<GameObject>();
+        //for (int i = 0; i < BeltSpaces.Count; i++) Debug.Log(BeltSpaces[i].name);
+    }
+
+    RepairPiece HeldPiece;
+    Vector3 LastMovePos;
+    Vector3 HeldPieceStartPos;
+    float TapTimer;
+    enum eMoveType { BELT, PIECE, WAITING_FOR_TYPE, NO_MOVEMENT };
+    eMoveType MoveType = eMoveType.NO_MOVEMENT;
+    enum eLocationType { BELT, BOARD, };
+
+    static float TAP_TIME = .1f;
+    private void Update()
+    {
+        ResultText.text = "";
+        float deltaY=0f;
+        Vector3 newWorldPoint = Vector3.zero;
+        if (Input.GetMouseButtonDown(0))
+        {
+            int mask = 1 << LayerMask.NameToLayer("Repair Piece");
+            mask |= (1 << LayerMask.NameToLayer("Repair Piece Belt"));
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);            
+            RaycastHit hit;            
+            if(Physics.Raycast(ray, out hit, Mathf.Infinity, mask))
+            {
+                //Debug.Log("clicked: " + hit.collider.name);
+                if(hit.collider.tag.Equals("Repair Piece"))
+                {
+                    RepairPiece p = hit.collider.transform.parent.GetComponent<RepairPiece>();
+                    if(p.Movable == true)
+                    {
+                        //Debug.Log("repair piece we clicked on is: " + p.name);
+                        if (p.transform.parent == null) { Debug.LogError("All RepairPieces need a parent"); return; }
+                        HeldPiece = p;
+                        LastMovePos = HeldPiece.transform.position;
+                        HeldPieceStartPos = LastMovePos;
+                        TapTimer = 0f;
+                        if(HeldPiece.transform.parent == BoardPieces) MoveType = eMoveType.PIECE;
+                        else MoveType = eMoveType.WAITING_FOR_TYPE;                     
+                    }                                                            
+                }
+                else
+                {
+                    MoveType = eMoveType.BELT;
+                    LastMovePos = GetWorldPointFromMouse();
+                }
+            }
+        }
+        else if (Input.GetMouseButton(0))
+        {
+            newWorldPoint = GetWorldPointFromMouse();
+            if (MoveType == eMoveType.WAITING_FOR_TYPE && Vector3.Distance(newWorldPoint, HeldPieceStartPos) > .25f )
+            {
+                float angle = Vector3.Angle(HeldPieceStartPos - newWorldPoint, Vector3.right);
+                Debug.Log("angle: " + angle);
+                if (angle > 120f)
+                {
+                    Debug.Log("We're switching to piece move mode");
+                    MoveType = eMoveType.PIECE;
+                }
+                else
+                {
+                    Debug.Log("We're moving the belt");
+                    MoveType = eMoveType.BELT;
+                }
+            }
+            else if(MoveType == eMoveType.BELT)
+            {
+                deltaY = newWorldPoint.z - LastMovePos.z;
+                Belt.position += new Vector3(0f, 0f, deltaY);
+                if (Belt.position.z > BeltMoveRange) Belt.position = new Vector3(Belt.position.x, Belt.position.y, BeltMoveRange);
+                if(Belt.position.z < -BeltMoveRange ) Belt.position = new Vector3(Belt.position.x, Belt.position.y, -BeltMoveRange);
+            }
+            else if(MoveType == eMoveType.PIECE)
+            {
+                TapTimer += Time.deltaTime;
+                if(TapTimer > TAP_TIME)
+                {
+                    HeldPiece.transform.position = new Vector3(newWorldPoint.x, 1f, newWorldPoint.z);
+                }
+            }
+            LastMovePos = newWorldPoint;
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {            
+            if (MoveType == eMoveType.PIECE && HeldPiece != null)
+            {
+                if (TapTimer <= TAP_TIME)
+                {
+                    HeldPiece.transform.Rotate(0f, 60f, 0f);
+                    if (HeldPiece.transform.rotation.eulerAngles.y > 180)
+                    {
+                        Debug.Log("rotate");
+                        HeldPiece.transform.eulerAngles = new Vector3(0f, HeldPiece.transform.rotation.eulerAngles.y - 360f, 0f);
+                    }
+                }
+                else
+                {
+                    bool newLocFound = false;
+                    HeldPiece.GetComponentInChildren<MeshCollider>().enabled = false;
+                    int mask = 1 << LayerMask.NameToLayer("Repair Piece Anchor");
+                    mask |= (1 << LayerMask.NameToLayer("Repair Piece Belt Anchor"));
+                    Vector3 checkLoc = new Vector3(HeldPiece.transform.position.x, 0f, HeldPiece.transform.position.z);
+                    Collider[] overlapColliders = Physics.OverlapSphere(checkLoc, 1f, mask);
+                    //Debug.Log("num possible points: " + overlapColliders.Count());
+                    
+                    if (overlapColliders.Count() != 0)
+                    {
+                        List<AnchorHitPoint> anchorPoints = new List<AnchorHitPoint>();
+                        foreach (Collider c in overlapColliders)
+                        {
+                           // Debug.Log("possible point: " + c.name + ", pos: " + c.transform.position);
+                            float dist = Vector3.Distance(checkLoc, c.transform.position);
+                            anchorPoints.Add(new AnchorHitPoint(dist, c.gameObject));
+                        }
+                        anchorPoints = anchorPoints.OrderBy(p => p.Dist).ToList<AnchorHitPoint>();
+                        // find out the type of location were looking for
+                        eLocationType locType;
+                        if (overlapColliders[0].gameObject.tag == "Repair Piece Anchor") locType = eLocationType.BOARD;
+                        else locType = eLocationType.BELT;
+                        Debug.Log("******************locType: " + locType);
+                        foreach (AnchorHitPoint p in anchorPoints)
+                        {
+                            //Debug.Log("dist: " + p.Dist + ", pos: " + p.Coll.transform.position);
+                            RaycastHit hit;
+                            Vector3 colliderPos = p.Coll.transform.position + 2f * Vector3.up;
+                            Physics.Raycast(colliderPos, Vector3.down, out hit, Mathf.Infinity);
+                             Debug.Log("hit collider: " + hit.collider.name + ", tag: " + hit.collider.tag);
+                            if (hit.collider == null) { Debug.LogError("We should have collided with an anchor point"); return; }                            
+                            if (hit.collider.tag == "Repair Piece") continue;                            
+                            else if (hit.collider.tag == "Repair Piece Anchor" || hit.collider.tag == "Repair Piece Belt Anchor")
+                            {                                
+                                HeldPiece.transform.position = p.Coll.transform.position;
+                                HeldPiece.transform.parent = ( locType == eLocationType.BOARD ? BoardPieces : Belt);
+                                newLocFound = true;
+                                break;
+                            }                            
+                        }
+                        // if we're here and we're belt type then try to find an empty piece
+                        if (newLocFound == false && locType == eLocationType.BELT) newLocFound = AssignBeltSpot(anchorPoints[0]);
+                    }
+                    HeldPiece.GetComponentInChildren<MeshCollider>().enabled = true;
+                    if (newLocFound == false)
+                    {
+                        HeldPiece.transform.position = HeldPieceStartPos;                        
+                    }                    
+                }
+            }
+            TapTimer = 0f;
+            HeldPiece = null;
+            MoveType = eMoveType.NO_MOVEMENT;
+        }
+
+        if ( ResultText != null)
+        {                        
+            ResultText.text += "MoveType: " + MoveType.ToString() + "\n";
+            ResultText.text += "deltaY: " + deltaY.ToString("F3") + "\n";
+            ResultText.text += "newWorldPoint: " + newWorldPoint.ToString("F3") + "\n";
+            if (HeldPiece != null)
+            {
+                ResultText.text += "HeldPiece parent: " + HeldPiece.transform.parent + "\n";
+                ResultText.text += "HeldPiece.name: " + HeldPiece.name + "\n";
+                ResultText.text += "HelpPieceStartPos: " + HeldPieceStartPos.ToString("F3") + "\n";
+            }
+
+        }
+    }
+
+    bool PushPiecesUp(GameObject beltAnchor)
+    {
+        int baIndex = BeltAnchors.IndexOf(beltAnchor);
+        if(baIndex == -1) { Debug.LogError("we're trying to FindSpotAbove but the beltAnchor isn't in the list: " + beltAnchor.name); return false; }
+        Debug.Log("Find spot above starting with index: " + baIndex);
+        // start going through the list, looking for an empty spot
+        bool spotFound = false;
+        int foundSpotIndex=-1;
+        for(int i=baIndex; i>=0; i--)
+        {
+            GameObject ba = BeltAnchors[i];
+            RaycastHit hit;
+            Vector3 colliderPos = ba.transform.position + 2f * Vector3.up;
+            Physics.Raycast(colliderPos, Vector3.down, out hit, Mathf.Infinity);
+            if(hit.collider == null) { Debug.LogError("why is there no hit on the belt at this spot?: " + i + ", " + ba.name); return false; }
+            if(hit.collider.tag == "Repair Piece Belt Anchor")
+            {
+                spotFound = true;
+                foundSpotIndex = i;
+                break;
+            }
+        }
+
+        if(spotFound == true)
+        {
+            Debug.Log("found an empty spot above at index: " + foundSpotIndex + " so push pieces up");
+            for(int i=baIndex; i> foundSpotIndex; i--)
+            {
+                GameObject ba = BeltAnchors[i];
+                RaycastHit hit;
+                Vector3 colliderPos = ba.transform.position + 2f * Vector3.up;
+                Physics.Raycast(colliderPos, Vector3.down, out hit, Mathf.Infinity);
+                if(hit.collider == null || hit.collider.tag != "Repair Piece") { Debug.LogError("we have some odd behavor finding a belt spot."); return false; }
+                hit.collider.transform.parent.gameObject.transform.position = BeltAnchors[i - 1].transform.position;
+            }
+            return true;
+        }
+        else
+        {
+            Debug.Log("didn't find any spot above");
+        }
+
+        return false;
+    }
+    bool PushPiecesDown(GameObject beltAnchor)
+    {
+        int baIndex = BeltAnchors.IndexOf(beltAnchor);
+        if (baIndex == -1) { Debug.LogError("we're trying to FindSpotBelow but the beltAnchor isn't in the list: " + beltAnchor.name); return false; }
+        Debug.Log("Find spot below starting with index: " + baIndex);
+        // start going through the list, looking for an empty spot
+        bool spotFound = false;
+        int foundSpotIndex = -1;
+        for (int i = baIndex; i < BeltAnchors.Count; i++)
+        {
+            GameObject ba = BeltAnchors[i];
+            RaycastHit hit;
+            Vector3 colliderPos = ba.transform.position + 2f * Vector3.up;
+            Physics.Raycast(colliderPos, Vector3.down, out hit, Mathf.Infinity);
+            if (hit.collider == null) { Debug.LogError("why is there no hit on the belt at this spot?: " + i + ", " + ba.name); return false; }
+            if (hit.collider.tag == "Repair Piece Belt Anchor")
+            {
+                spotFound = true;
+                foundSpotIndex = i;
+                break;
+            }
+        }
+
+        if (spotFound == true)
+        {
+            Debug.Log("found an empty spot below at index: " + foundSpotIndex + " so push pieces down");
+            for (int i = baIndex; i < foundSpotIndex; i++)
+            {
+                GameObject ba = BeltAnchors[i];
+                RaycastHit hit;
+                Vector3 colliderPos = ba.transform.position + 2f * Vector3.up;
+                Physics.Raycast(colliderPos, Vector3.down, out hit, Mathf.Infinity);
+                if (hit.collider == null || hit.collider.tag != "Repair Piece") { Debug.LogError("we have some odd behavor finding a belt spot."); return false; }
+                hit.collider.transform.parent.gameObject.transform.position = BeltAnchors[i + 1].transform.position;
+            }
+            return true;
+        }
+        else
+        {
+            Debug.Log("didn't find any spot below");
+        }
+
+        return false;
+    }
+
+    bool AssignBeltSpot(AnchorHitPoint p)
+    {
+        Debug.Log("AssignBeltSpot() coll: " + p.Coll.name + ", which is index: " + BeltAnchors.IndexOf(p.Coll));
+        bool piecesMoved = false;
+        if (HeldPiece.transform.position.z < p.Coll.transform.position.z)
+        {
+            Debug.Log("push pieces up");
+            piecesMoved = PushPiecesUp(p.Coll);
+            Debug.Log("did push the pieces up and open up the AnchorHitPoint's passed in spot?: " + piecesMoved);
+            if (piecesMoved == false)
+            {
+                Debug.Log("Couldn't push the pieces up, so try down");
+                piecesMoved = PushPiecesDown(p.Coll);
+            }
+        }        
+        else 
+        {
+            Debug.Log("push pieces down");
+            piecesMoved = PushPiecesDown(p.Coll);
+            Debug.Log("did push the pieces down and open up the AnchorHitPoint's passed in spot?: " + piecesMoved);
+            if(piecesMoved == false)
+            {
+                Debug.Log("Couldn't push the pieces down, so try up");
+                piecesMoved = PushPiecesUp(p.Coll);
+            }
+        }        
+
+        if (piecesMoved)
+        {
+            Debug.Log("pieces were moved so put the piece at the spot");
+            HeldPiece.transform.position = p.Coll.transform.position;
+            HeldPiece.transform.parent = Belt;
+        }   
+        else
+        {
+            Debug.Log("Nope, no empty spots so the belt must be full");
+        }
+        return piecesMoved;
+    }
+                
+    Vector3 GetWorldPointFromMouse()
+    {
+        Vector3 mousePos = Input.mousePosition;
+        Vector3 m = new Vector3(mousePos.x, mousePos.y, Camera.main.transform.position.y);
+        return Camera.main.ScreenToWorldPoint(m);
+    }
+    class AnchorHitPoint
+    {
+        public float Dist;
+        public GameObject Coll;
+        public AnchorHitPoint(float dist, GameObject coll)
+        {
+            Dist = dist;
+            Coll = coll;
+        }
+    }
+
     bool HasConnBeenChecked(PieceConn pieceConn)
     {        
         foreach (PieceConn pc in AllConnsChecked)
@@ -102,7 +419,7 @@ public class Repair : MonoBehaviour
     int AngleToDir(int rawAngle, int yRot, eRepairPieceType type)
     {
         if (type == eRepairPieceType.XOVER) return rawAngle;
-        bool show = false;// name.Contains("NonMovable");// || name.Contains("Pipe_1_Way") ;
+        bool show = false;
         if(show) Debug.Log("-----rawAngle: " + rawAngle);
         if (show) Debug.Log("yRot: " + yRot);
         int adjY = 360 - yRot;
@@ -268,6 +585,7 @@ public class Repair : MonoBehaviour
     public Text ResultText;
     private void OnGUI()
     {
+        return;
         if(GUI.Button(new Rect(0,100,100,100), "path test"))
         {
             foreach (RepairPiece terminal in Terminals) terminal.ReachedOnPath = false;
@@ -303,13 +621,10 @@ public class Repair : MonoBehaviour
                         Debug.Log("***************************************************bailed due to broken puzzle");
                         msg = PathErrorMessage;
                         break;
-                    }
-                    //Debug.Log("a");
+                    }                    
                 }
-                if (brokenPathFound == true) break;
-                //Debug.Log("b");                
-            }
-            //Debug.Log("c");
+                if (brokenPathFound == true) break;                
+            }            
 
             if(brokenPathFound == false)
             {
@@ -348,7 +663,22 @@ public class Repair : MonoBehaviour
                 ResultText.text = s;
             }
         }
-       
+
+        if (GUI.Button(new Rect(0, 200, 100, 100), "p1, p2"))
+        {
+            float dist = Vector3.Distance(p1.transform.position, p2.transform.position);
+            Debug.Log("p1: " + p1.transform.position);
+            Debug.Log("p2: " + p2.transform.position);
+            Debug.Log("dist: " + dist);
+        }
+        if (GUI.Button(new Rect(0, 300, 100, 100), "p1, p3"))
+        {
+            float dist = Vector3.Distance(p1.transform.position, p3.transform.position);
+            Debug.Log("p1: " + p1.transform.position);
+            Debug.Log("p3: " + p3.transform.position);
+            Debug.Log("dist: " + dist);
+            
+        }
         /*if(GUI.Button(new Rect(0, 100, 100, 100), "prev Conn"))
         {
             if (CurConnIndex != 0) CurConnIndex--;
@@ -364,7 +694,7 @@ public class Repair : MonoBehaviour
             StartCoroutine(ShowPath());            
         }*/
     }
-
+    public GameObject p1, p2, p3;
     void ShowPathIndex()
     {
         PieceConn pc = DEBUG_ConnsOnThisPath[CurConnIndex];
@@ -413,8 +743,5 @@ public class Repair : MonoBehaviour
             yield return new WaitForSeconds(1f);
         }
     }
-    private void Update()
-    {
-
-    }    
+     
 }
