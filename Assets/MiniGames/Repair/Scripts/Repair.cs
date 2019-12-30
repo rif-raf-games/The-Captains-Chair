@@ -25,6 +25,8 @@ public class Repair : MonoBehaviour
     public Transform Belt;
 
     float BeltMoveRange;
+
+    bool PuzzleFinishedTest = false;
    
     class PieceConn
     {
@@ -105,6 +107,7 @@ public class Repair : MonoBehaviour
                 if (hit.collider.tag.Equals("Repair Piece"))
                 {   // clicked on a piece
                     RepairPiece p = hit.collider.transform.parent.GetComponent<RepairPiece>();
+                    Debug.Log("clicked on a repair piece: " + p.gameObject.name);
                     if(p.Movable == true)
                     {                        
                         if (p.transform.parent == null) { Debug.LogError("All RepairPieces need a parent"); return; }
@@ -158,10 +161,10 @@ public class Repair : MonoBehaviour
                 if (TapTimer <= TAP_TIME)
                 {   // tap/click time was fast enough so rotate
                     HeldPiece.transform.Rotate(0f, 60f, 0f);
-                    if (HeldPiece.transform.rotation.eulerAngles.y > 180)
-                    {                        
+                   /* if (HeldPiece.transform.rotation.eulerAngles.y > 180)
+                    {   // moangleupdate                     
                         HeldPiece.transform.eulerAngles = new Vector3(0f, HeldPiece.transform.rotation.eulerAngles.y - 360f, 0f);
-                    }
+                    }*/
                 }
                 else
                 {   // ok we've released our touch after moving a piece around, so figure out what to do
@@ -333,18 +336,23 @@ public class Repair : MonoBehaviour
         }
         return false;
     }
+
+    GameObject EndColPiece;
     void SetupPathError(string s, RepairPiece curPiece, Collider collider, Vector3 rayDir)
     {
+        string err = "<FAIL>: SetupPathError() s: " + s + ", curPiece: " + curPiece.name;        
         RepairPiece collPiece = null;
         Vector3 collPos = Vector3.zero;
 
         PathErrorMessage = s;        
         if (collider == null)
         {
+            err += ", collider was null so setting PathErrorSphere to rayDir*3";
             PathErrorSphere.transform.position = curPiece.transform.position + rayDir * 3f;            
         }
         else
         {
+            err += ", collider name is: " + collider.gameObject.name;
             PathErrorSphere.transform.position = collider.transform.position + new Vector3(0f, .5f, 0f);
             collPiece = collider.transform.parent.GetComponent<RepairPiece>();            
         }
@@ -352,30 +360,24 @@ public class Repair : MonoBehaviour
         {
             GameObject go = new GameObject();
             collPiece = go.AddComponent<RepairPiece>();
+            EndColPiece = go;
             collPiece.transform.position = collider.transform.position;
         }
 
+        Debug.Log(err);
         PieceConn newConn = new PieceConn(collPiece, curPiece);
         DEBUG_ConnsOnThisPath.Add(newConn);
     }
 
-    public Material Fuel;
-    public Material Coolant;
-    int AngleToDir(int rawAngle, int yRot, eRepairPieceType type)
+    public Material FuelMat;
+    public Material CoolantMat;
+    public Material NoneMat;    
+
+    Color GetColor(int dir)
     {
-        if (type == eRepairPieceType.XOVER) return rawAngle;
-        bool show = false;
-        if(show) Debug.Log("-----rawAngle: " + rawAngle);
-        if (show) Debug.Log("yRot: " + yRot);
-        int adjY = 360 - yRot;
-        if (show) Debug.Log("adjY: " + adjY);
-        int dir = rawAngle + adjY;
-        if (show) Debug.Log("dir 1: " + dir);
-        if (dir > 360) dir = dir - 360;
-        if (show) Debug.Log("dir 2: " + dir);
-        if (dir < 0) dir += 360;
-        if (show) Debug.Log("dir 3: " + dir);
-        return dir;
+        int dirAdj = (dir + 360) % 360;
+        int index = (dirAdj - 30) / 60;
+        return Colors[index];        
     }
     private bool CheckPieceConn(PieceConn pieceConn)
     {             
@@ -384,19 +386,19 @@ public class Repair : MonoBehaviour
         foreach (int angle in curPiece.OpenAngles)
         {
             NumChecks++;            
-            int dir = AngleToDir(angle, Mathf.RoundToInt(curPiece.transform.localRotation.eulerAngles.y), curPiece.Type);
-            Color color = Repair.Colors[(dir - 30) / 60];
-
-            Quaternion q = Quaternion.AngleAxis(dir, -Vector3.up);
+            int pieceRot = Mathf.RoundToInt(curPiece.transform.localRotation.eulerAngles.y);
+            int angleAdj = ( curPiece.Type == eRepairPieceType.XOVER || curPiece.Type == eRepairPieceType.SPLITTER ? angle : angle + pieceRot);            
+            Color color = GetColor(angleAdj);
+            Quaternion q = Quaternion.AngleAxis(angleAdj, Vector3.up);
             Vector3 rayDir = q * Vector3.right;
-           // Debug.DrawRay(curPiecePos, rayDir * 4, color, 5f);
-
+           // Debug.DrawRay(curPiecePos, rayDir * 4, color, 100000f);
+            
             RaycastHit hit;
             Physics.Raycast(curPiecePos, rayDir, out hit, Mathf.Infinity);
-            StaticStuff.PrintRepairPath("-----------------------------curPiece: " + curPiece.name + " checking dir: " + dir);                  
+            StaticStuff.PrintRepairPath("-----------------------------curPiece: " + curPiece.name + " checking dir: " + angleAdj);                  
             if (hit.collider == null)
             {                                                
-                SetupPathError(curPiece.name + " hit nothing at dir: " + dir + " so we must have shot off the board.", curPiece, null, rayDir);
+                SetupPathError(curPiece.name + " hit nothing at dir: " + angleAdj + " so we must have shot off the board.", curPiece, null, rayDir);
                 return false;
             }
             else
@@ -413,10 +415,7 @@ public class Repair : MonoBehaviour
                     Debug.LogError("checking if piece is on location hit nothing, which should never happen so see what's up");                    
                     return false;
                 }
-                else
-                {
-                    //Debug.Log("checking for hit: " + hit.collider.name);
-                }
+                
                 if (hit.collider.tag == "Repair Piece Anchor")
                 {                    
                     SetupPathError("There is NO piece on the spot " + hit.collider.name, curPiece, hit.collider, rayDir);
@@ -465,33 +464,49 @@ public class Repair : MonoBehaviour
                     {                        
                         if(adjacentPiece.Type == eRepairPieceType.XOVER)
                         {
-                            // 0 rot: 210 -> 210
-                            // -60                             
+                            // moangleupdate                             
                             StaticStuff.PrintRepairPath("There is a piece called: " + hit.collider.transform.parent.name + " on the spot that " + curPiece.name + "'s ray collided with but it " +
-                                "is an XOVER type, so assign the XOVER's only relevant OpenAngle: " + dir + " to check and do NOT assign a fluid type.  Create a new " +
+                                "is an XOVER type, so assign the XOVER's only relevant OpenAngle: " + angleAdj + " to check and do NOT assign a fluid type.  Create a new " +
                                 "conn Us: " + hit.collider.transform.parent.name + ", From: " + curPiece.name);                            
                             adjacentPiece.OpenAngles.Clear();
-                            adjacentPiece.OpenAngles.Add(dir);
+                            adjacentPiece.OpenAngles.Add(angleAdj);
                         }
                         else if(adjacentPiece.Type == eRepairPieceType.SPLITTER)
-                        {                                                        
-                            int dirAdj = (dir > 180 ? dir - 180 : dir);                            
-                            int openAngle = (dirAdj < 150 ? dir - 60 : dir + 60);
-                            if (openAngle > 360) openAngle -= 360;
-                            int newDir = AngleToDir(openAngle, Mathf.RoundToInt(adjacentPiece.transform.localRotation.eulerAngles.y), eRepairPieceType.SPLITTER);
+                        {           // moangleupdate                                                                                                                                         
+                            Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ HERE WE GO^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");                            
+                            
+                            // First get the direction vec between the curPiece and the adjacentPiece
+                            Vector3 dirVecBetweenPieces = adjacentPiece.transform.position - curPiece.transform.position;                                                                                    
+                            // Get the rotation of the adjacent piece
+                            int adjPieceRot = Mathf.RoundToInt(adjacentPiece.transform.localRotation.eulerAngles.y);
+                            Debug.Log("adjPieceRot: " + adjPieceRot);
+                            // Vector3.forward is what we use for Vector3.Rotate when it's bouncing off an angle of 0, so turn Vector3.forward into an angle
+                            float angleForward = Quaternion.FromToRotation(Vector3.right, Vector3.forward).eulerAngles.y;
+                            Debug.Log("angleForward: " + angleForward);
+                            // Add the adjacent piece rotation to the Vector3.forward's calculated angle
+                            float angleOfNormalToUse = angleForward + adjPieceRot;
+                            // now get the direction for that new angle
+                            Quaternion _q = Quaternion.AngleAxis(angleOfNormalToUse, Vector3.up);
+                            Vector3 normalToUseDirVec = _q * Vector3.right;
+                            // now reflect on that angle
+                            Vector3 reflectDirVec = Vector3.Reflect(dirVecBetweenPieces, normalToUseDirVec);
+                            // Now get the angle that that dir vec represents
+                            float reflectAngle = Quaternion.FromToRotation(Vector3.right, reflectDirVec).eulerAngles.y;
+                            // round it off
+                            int reflectAngleInt = Mathf.RoundToInt(reflectAngle);
                             StaticStuff.PrintRepairPath("There is a piece called: " + hit.collider.transform.parent.name + " on the spot that " + curPiece.name + "'s ray collided with but it " +
-                                "is an SPLITTER type, so assign the SPLITTER's only relevant OpenAngle: " + openAngle + " to check and do NOT assign a fluid type.  Create a new " +
-                                "conn Us: " + hit.collider.transform.parent.name + ", From: " + curPiece.name);                            
+                                "is an SPLITTER type, so assign the SPLITTER's only relevant reflectAngleInt: " + reflectAngleInt + " to check and do NOT assign a fluid type.  Create a new " +
+                                "conn Us: " + hit.collider.transform.parent.name + ", From: " + curPiece.name);
                             adjacentPiece.OpenAngles.Clear();
-                            adjacentPiece.OpenAngles.Add(newDir);
+                            adjacentPiece.OpenAngles.Add(reflectAngleInt);
                         }
                         else
                         {
                             StaticStuff.PrintRepairPath("There is a piece called: " + hit.collider.transform.parent.name + " on the spot that " + curPiece.name + "'s ray collided with that does NOT have the same fluid type " +
                             "as our current path so assign the fluid type and create a new conn Us: " + hit.collider.transform.parent.name + ", From: " + curPiece.name);                            
                             adjacentPiece.FluidType = CurTerminalStartFluidType;
-                            if (adjacentPiece.FluidType == eFluidType.FUEL) adjacentPiece.GetComponentInChildren<MeshRenderer>().material = Fuel;
-                            else adjacentPiece.GetComponentInChildren<MeshRenderer>().material = Coolant;
+                            if (adjacentPiece.FluidType == eFluidType.FUEL) adjacentPiece.GetComponentInChildren<MeshRenderer>().material = FuelMat;
+                            else adjacentPiece.GetComponentInChildren<MeshRenderer>().material = CoolantMat;
 
                         }
 
@@ -521,16 +536,47 @@ public class Repair : MonoBehaviour
                 Debug.LogError("we hit something that's not a Repair Piece Anchor or a Repair Piece: " + hit.collider.name);                
                 return false;
             }
-        }
-        //Debug.Log("No fails on conn check Us: " + pieceConn.Us.name + " from: " + pieceConn.From.name + " so keep checking if necessary");
-        //ConnsChecked.Add(pieceConn);
+        }        
         return true;
     }
 
     public Text ResultText;
+    void ResetPuzzleState( bool startOver )
+    {
+        NumChecks = 0;
+        CurTerminalStart = null;
+        CurTerminalStartFluidType = eFluidType.NONE;
+        ConnsToCheck.Clear();
+        AllConnsChecked.Clear();
+        DEBUG_ConnsOnThisPath.Clear();
+        ConnsResult.Clear();     
+        
+        if(startOver == true)
+        {
+            foreach (RepairPiece terminal in Terminals) terminal.ReachedOnPath = false;
+            foreach (RepairPiece piece in AllPieces) piece.GetComponentInChildren<MeshRenderer>().material = NoneMat;
+        }
+    }
+    
     private void OnGUI()
-    {        
-        if(GUI.Button(new Rect(0,100,100,100), "path test"))
+    {
+        if(PuzzleFinishedTest == true)
+        {
+            if (GUI.Button(new Rect(0, 100, 100, 100), "reset"))
+            {
+                ResetPuzzleState(true);
+                PuzzleFinishedTest = false;
+                ResultText.text = "";
+                PathErrorSphere.transform.position = new Vector3(-9999f, 0f, -9999f);
+                if(EndColPiece != null)
+                {
+                    Destroy(EndColPiece);
+                    EndColPiece = null;
+                }
+            }
+            return;
+        }
+        if (GUI.Button(new Rect(0,100,100,100), "path test"))
         {
             foreach (RepairPiece terminal in Terminals) terminal.ReachedOnPath = false;
             bool puzzleSolved = false;
@@ -540,8 +586,13 @@ public class Repair : MonoBehaviour
             foreach ( RepairPiece terminal in Terminals)
             {
                 if (terminal.ReachedOnPath == true) continue;
+                ResetPuzzleState(false);
+                CurTerminalStart = terminal;
+                CurTerminalStartFluidType = CurTerminalStart.FluidType;
+                ConnsToCheck.Add(new PieceConn(CurTerminalStart, CurTerminalStart));
+                CurTerminalStart.ReachedOnPath = true;
                 //foreach (RepairPiece rp in AllPieces) rp.FluidType = eFluidType.NONE;
-                NumChecks = 0;                                
+                /*NumChecks = 0;                                
                 CurTerminalStart = terminal;
                 CurTerminalStartFluidType = CurTerminalStart.FluidType;
                 ConnsToCheck.Clear();
@@ -549,8 +600,9 @@ public class Repair : MonoBehaviour
                 DEBUG_ConnsOnThisPath.Clear();
                 ConnsResult.Clear();
                 ConnsToCheck.Add(new PieceConn(CurTerminalStart, CurTerminalStart));
-                CurTerminalStart.ReachedOnPath = true;
-                Debug.Log("going to check a path from terminal: " + CurTerminalStart.name);
+                CurTerminalStart.ReachedOnPath = true;*/
+
+                //Debug.Log("going to check a path from terminal: " + CurTerminalStart.name);
                 int i = 0; // this is just for debugging so that we don't get into an infinite loop
                 while (ConnsToCheck.Count != 0 && i < 100)
                 {
@@ -606,6 +658,7 @@ public class Repair : MonoBehaviour
                 Debug.Log("***************************************************************" + s);
                 ResultText.text = s;
             }
+            PuzzleFinishedTest = true;
         }
 
         /*if (GUI.Button(new Rect(0, 200, 100, 100), "p1, p2"))
