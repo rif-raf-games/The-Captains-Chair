@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-public class NewRepairTest : MonoBehaviour
+public class RepairDebug : MonoBehaviour
 {
     float ModelHeight = 0.5542563f;
     Color[] Colors = { Color.red, Color.green, Color.blue, Color.yellow, Color.cyan, Color.magenta };
