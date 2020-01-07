@@ -5,7 +5,7 @@
     "set_IncludedNodes": "Settings, Project, GlobalVariables, ObjectDefinitions, Packages, ScriptMethods, Hierarchy, Assets",
     "set_UseScriptSupport": "True",
     "ExportVersion": "1.1",
-    "ObjectDefinitionsHash": "2529D1B3386155D07D90BD5FB4586A15BEB49F1F1D76A5FEB1693242A0D153DF",
+    "ObjectDefinitionsHash": "97E92D06EB71DF62B2CE1ED27E6BC32A91664A9B10AC90175436257F9C17D967",
     "ScriptFragmentsHash": "2888936911"
   },
   "Project": {
@@ -452,12 +452,12 @@
       "Values": {
         "Walk": 1,
         "Animation": 2,
-        "EndCAL": 3
+        "NoAction": 3
       },
       "DisplayNames": {
         "Walk": "Walk",
         "Animation": "Animation",
-        "EndCAL": "End CAL"
+        "NoAction": "No Action"
       }
     },
     {
@@ -887,11 +887,6 @@
                 "DisplayName": "Action Info"
               },
               {
-                "Property": "CharacterEntity",
-                "Type": "Id",
-                "DisplayName": "Character Entity"
-              },
-              {
                 "Property": "BeginCameraFollow",
                 "Type": "Bool",
                 "DisplayName": "Begin Camera Follow"
@@ -907,9 +902,14 @@
                 "DisplayName": "Look At Entity When Done"
               },
               {
-                "Property": "EntityToLookAt",
-                "Type": "Id",
-                "DisplayName": "Entity To Look At"
+                "Property": "ObjectToAct",
+                "Type": "string",
+                "DisplayName": "Object To Act"
+              },
+              {
+                "Property": "ObjectToLookAt",
+                "Type": "string",
+                "DisplayName": "Object To Look At"
               }
             ],
             "Constraints": [
@@ -928,42 +928,6 @@
                 "AllowsLinebreaks": "False"
               },
               {
-                "Property": "CharacterEntity",
-                "Type": "ReferenceSlot",
-                "AllowedModelTypes": [
-                  "FlowFragment",
-                  "Dialogue",
-                  "DialogueFragment",
-                  "Condition",
-                  "Instruction",
-                  "Hub",
-                  "Jump",
-                  "Entity",
-                  "Location",
-                  "Link",
-                  "Path",
-                  "Spot",
-                  "Zone",
-                  "LocationText",
-                  "LocationImage",
-                  "Document",
-                  "TextObject",
-                  "Journey",
-                  "Asset"
-                ],
-                "PlaceholderValue": "",
-                "AllowedAssetCategories": [
-                  "None",
-                  "Image",
-                  "Video",
-                  "Audio",
-                  "Document",
-                  "Misc",
-                  "All"
-                ],
-                "AllowedModelTemplates": []
-              },
-              {
                 "Property": "BeginCameraFollow",
                 "Type": "Boolean",
                 "DisplayAsCombobox": "False"
@@ -982,40 +946,20 @@
                 "DisplayAsCombobox": "False"
               },
               {
-                "Property": "EntityToLookAt",
-                "Type": "ReferenceSlot",
-                "AllowedModelTypes": [
-                  "FlowFragment",
-                  "Dialogue",
-                  "DialogueFragment",
-                  "Condition",
-                  "Instruction",
-                  "Hub",
-                  "Jump",
-                  "Entity",
-                  "Location",
-                  "Link",
-                  "Path",
-                  "Spot",
-                  "Zone",
-                  "LocationText",
-                  "LocationImage",
-                  "Document",
-                  "TextObject",
-                  "Journey",
-                  "Asset"
-                ],
+                "Property": "ObjectToAct",
+                "Type": "Text",
+                "MaxLength": "2048",
                 "PlaceholderValue": "",
-                "AllowedAssetCategories": [
-                  "None",
-                  "Image",
-                  "Video",
-                  "Audio",
-                  "Document",
-                  "Misc",
-                  "All"
-                ],
-                "AllowedModelTemplates": []
+                "IsLocalized": "False",
+                "AllowsLinebreaks": "False"
+              },
+              {
+                "Property": "ObjectToLookAt",
+                "Type": "Text",
+                "MaxLength": "2048",
+                "PlaceholderValue": "",
+                "IsLocalized": "False",
+                "AllowsLinebreaks": "False"
               }
             ]
           }
@@ -5902,7 +5846,7 @@
               "g": 0.149019614,
               "b": 0.0
             },
-            "Text": "The Captain walks to the Engine room but the door doesn't automatically open. The player 'manually' opens and a rush of opaque steam empties out of the room. As the steam clears we see O'Mally working quickly while Carver is reviewing data.",
+            "Text": "we see O'Mally working quickly while Carver is reviewing data.",
             "ExternalId": "",
             "Position": {
               "x": -375.0,
@@ -9682,81 +9626,6 @@
         {
           "Type": "Character_Action_List_Template",
           "Properties": {
-            "TechnicalName": "FFr_91C78D8F",
-            "Id": "0x1000004000003A3",
-            "Parent": "0x10000040000035A",
-            "Attachments": [],
-            "DisplayName": "Action List 1",
-            "PreviewImage": {
-              "ViewBox": {
-                "x": 0.0,
-                "y": 0.0,
-                "w": 0.0,
-                "h": 0.0
-              },
-              "Mode": "FromAsset",
-              "Asset": "0x0"
-            },
-            "Color": {
-              "r": 0.5764706,
-              "g": 0.75686276,
-              "b": 0.8
-            },
-            "Text": "",
-            "ExternalId": "",
-            "Position": {
-              "x": 1500.0,
-              "y": 400.0
-            },
-            "ZIndex": 65.0,
-            "Size": {
-              "w": 275.0,
-              "h": 200.0
-            },
-            "ShortId": 2445774223,
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x1000004000003A4",
-                "Owner": "0x1000004000003A3"
-              }
-            ],
-            "OutputPins": [
-              {
-                "Text": "",
-                "Id": "0x1000004000003A5",
-                "Owner": "0x1000004000003A3",
-                "Connections": [
-                  {
-                    "Color": {
-                      "a": 1.0,
-                      "r": 0.5764706,
-                      "g": 0.75686276,
-                      "b": 0.8
-                    },
-                    "Label": "",
-                    "TargetPin": "0x100000400000386",
-                    "Target": "0x100000400000385"
-                  }
-                ]
-              }
-            ]
-          },
-          "Template": {
-            "Character_Action_List_Feature": {
-              "ActionStrip": [
-                "0x1000004000003AF",
-                "0x1000004000003B7",
-                "0x1000004000003BF",
-                "0x1000004000003C7",
-                "0x1000004000003CF"
-              ]
-            }
-          }
-        },
-        {
-          "Type": "Character_Action_List_Template",
-          "Properties": {
             "TechnicalName": "FFr_53BDC7F7",
             "Id": "0x100000400000586",
             "Parent": "0x100000300001E01",
@@ -9831,6 +9700,453 @@
           }
         },
         {
+          "Type": "Character_Action_List_Template",
+          "Properties": {
+            "TechnicalName": "FFr_91C78D8F",
+            "Id": "0x1000004000003A3",
+            "Parent": "0x10000040000035A",
+            "Attachments": [],
+            "DisplayName": "Action List 1",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 1500.0,
+              "y": 400.0
+            },
+            "ZIndex": 65.0,
+            "Size": {
+              "w": 275.0,
+              "h": 200.0
+            },
+            "ShortId": 2445774223,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000004000003A4",
+                "Owner": "0x1000004000003A3"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000004000003A5",
+                "Owner": "0x1000004000003A3",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000400000386",
+                    "Target": "0x100000400000385"
+                  }
+                ]
+              }
+            ]
+          },
+          "Template": {
+            "Character_Action_List_Feature": {
+              "ActionStrip": [
+                "0x1000004000003AF",
+                "0x1000004000003B7",
+                "0x1000004000003BF",
+                "0x1000004000003C7",
+                "0x1000004000003CF"
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Character_Action_Template",
+          "Properties": {
+            "TechnicalName": "FFr_5A55963E",
+            "Id": "0x100000400000599",
+            "Parent": "0x100000300001E01",
+            "Attachments": [],
+            "DisplayName": "Carver Walk To Alien Food Vendor",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.372549027,
+              "g": 0.372549027,
+              "b": 0.372549027
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 3125.0,
+              "y": 500.0
+            },
+            "ZIndex": 32.0,
+            "Size": {
+              "w": 275.0,
+              "h": 200.0
+            },
+            "ShortId": 1515558462,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x10000040000059C",
+                "Owner": "0x100000400000599"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x10000040000059D",
+                "Owner": "0x100000400000599"
+              }
+            ]
+          },
+          "Template": {
+            "Character_Action_Feature": {
+              "Action": 1,
+              "ActionInfo": "14.62,.02,-37.45",
+              "BeginCameraFollow": true,
+              "CamFollowOffset": "0,8,12",
+              "LookAtEntityWhenDone": true,
+              "ObjectToAct": "Carver",
+              "ObjectToLookAt": "Food Alien"
+            }
+          }
+        },
+        {
+          "Type": "Character_Action_Template",
+          "Properties": {
+            "TechnicalName": "FFr_DBF626B7",
+            "Id": "0x10000040000064B",
+            "Parent": "0x100000300001E01",
+            "Attachments": [],
+            "DisplayName": "Carver Anim 01",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.372549027,
+              "g": 0.372549027,
+              "b": 0.372549027
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 3125.0,
+              "y": 750.0
+            },
+            "ZIndex": 32.0,
+            "Size": {
+              "w": 275.0,
+              "h": 200.0
+            },
+            "ShortId": 3690342071,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x10000040000064E",
+                "Owner": "0x10000040000064B"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x10000040000064F",
+                "Owner": "0x10000040000064B"
+              }
+            ]
+          },
+          "Template": {
+            "Character_Action_Feature": {
+              "Action": 2,
+              "ActionInfo": "JUMP01B",
+              "BeginCameraFollow": null,
+              "CamFollowOffset": "",
+              "LookAtEntityWhenDone": null,
+              "ObjectToAct": "Carver",
+              "ObjectToLookAt": ""
+            }
+          }
+        },
+        {
+          "Type": "Character_Action_Template",
+          "Properties": {
+            "TechnicalName": "FFr_CCDFE859",
+            "Id": "0x100000400000726",
+            "Parent": "0x100000300001E01",
+            "Attachments": [],
+            "DisplayName": "Alien Anim 01",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.372549027,
+              "g": 0.372549027,
+              "b": 0.372549027
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 3450.0,
+              "y": 500.0
+            },
+            "ZIndex": 33.0,
+            "Size": {
+              "w": 275.0,
+              "h": 200.0
+            },
+            "ShortId": 3437226073,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000400000729",
+                "Owner": "0x100000400000726"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x10000040000072A",
+                "Owner": "0x100000400000726"
+              }
+            ]
+          },
+          "Template": {
+            "Character_Action_Feature": {
+              "Action": 2,
+              "ActionInfo": "DAMAGED00",
+              "BeginCameraFollow": null,
+              "CamFollowOffset": "",
+              "LookAtEntityWhenDone": null,
+              "ObjectToAct": "Food Alien",
+              "ObjectToLookAt": ""
+            }
+          }
+        },
+        {
+          "Type": "Character_Action_Template",
+          "Properties": {
+            "TechnicalName": "FFr_3315E245",
+            "Id": "0x10000040000072F",
+            "Parent": "0x100000300001E01",
+            "Attachments": [],
+            "DisplayName": "Carver Anim 02",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.372549027,
+              "g": 0.372549027,
+              "b": 0.372549027
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 3450.0,
+              "y": 750.0
+            },
+            "ZIndex": 34.0,
+            "Size": {
+              "w": 275.0,
+              "h": 200.0
+            },
+            "ShortId": 857072197,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000400000732",
+                "Owner": "0x10000040000072F"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000400000733",
+                "Owner": "0x10000040000072F"
+              }
+            ]
+          },
+          "Template": {
+            "Character_Action_Feature": {
+              "Action": 2,
+              "ActionInfo": "REFLESH00",
+              "BeginCameraFollow": null,
+              "CamFollowOffset": "",
+              "LookAtEntityWhenDone": null,
+              "ObjectToAct": "Carver",
+              "ObjectToLookAt": ""
+            }
+          }
+        },
+        {
+          "Type": "Character_Action_Template",
+          "Properties": {
+            "TechnicalName": "FFr_50BACDD5",
+            "Id": "0x100000400000738",
+            "Parent": "0x100000300001E01",
+            "Attachments": [],
+            "DisplayName": "Carver Walk Back",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.372549027,
+              "g": 0.372549027,
+              "b": 0.372549027
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 3775.0,
+              "y": 500.0
+            },
+            "ZIndex": 35.0,
+            "Size": {
+              "w": 275.0,
+              "h": 200.0
+            },
+            "ShortId": 1354419669,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x10000040000073B",
+                "Owner": "0x100000400000738"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x10000040000073C",
+                "Owner": "0x100000400000738"
+              }
+            ]
+          },
+          "Template": {
+            "Character_Action_Feature": {
+              "Action": 1,
+              "ActionInfo": "Start_Position",
+              "BeginCameraFollow": null,
+              "CamFollowOffset": "",
+              "LookAtEntityWhenDone": true,
+              "ObjectToAct": "Carver",
+              "ObjectToLookAt": "Captain"
+            }
+          }
+        },
+        {
+          "Type": "Character_Action_Template",
+          "Properties": {
+            "TechnicalName": "FFr_BAC9F6E9",
+            "Id": "0x100000400000742",
+            "Parent": "0x100000300001E01",
+            "Attachments": [],
+            "DisplayName": "Action LIst End",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.372549027,
+              "g": 0.372549027,
+              "b": 0.372549027
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 3775.0,
+              "y": 750.0
+            },
+            "ZIndex": 36.0,
+            "Size": {
+              "w": 275.0,
+              "h": 200.0
+            },
+            "ShortId": 3133798121,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000400000745",
+                "Owner": "0x100000400000742"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000400000746",
+                "Owner": "0x100000400000742"
+              }
+            ]
+          },
+          "Template": {
+            "Character_Action_Feature": {
+              "Action": 3,
+              "ActionInfo": "",
+              "BeginCameraFollow": true,
+              "CamFollowOffset": "-1,13,24",
+              "LookAtEntityWhenDone": null,
+              "ObjectToAct": "Captain",
+              "ObjectToLookAt": ""
+            }
+          }
+        },
+        {
           "Type": "Character_Action_Template",
           "Properties": {
             "TechnicalName": "FFr_78E79F3E",
@@ -9884,11 +10200,11 @@
             "Character_Action_Feature": {
               "Action": 1,
               "ActionInfo": "14.62,.02,-37.45",
-              "CharacterEntity": "0x100000000000180",
               "BeginCameraFollow": null,
               "CamFollowOffset": "",
               "LookAtEntityWhenDone": null,
-              "EntityToLookAt": "0x0"
+              "ObjectToAct": "",
+              "ObjectToLookAt": ""
             }
           }
         },
@@ -9946,11 +10262,11 @@
             "Character_Action_Feature": {
               "Action": 2,
               "ActionInfo": "JUMP01B",
-              "CharacterEntity": "0x100000000000180",
               "BeginCameraFollow": null,
               "CamFollowOffset": "",
               "LookAtEntityWhenDone": null,
-              "EntityToLookAt": "0x0"
+              "ObjectToAct": "",
+              "ObjectToLookAt": ""
             }
           }
         },
@@ -10008,11 +10324,11 @@
             "Character_Action_Feature": {
               "Action": 2,
               "ActionInfo": "DAMAGED00",
-              "CharacterEntity": "0x100000300002F12",
               "BeginCameraFollow": null,
               "CamFollowOffset": "",
               "LookAtEntityWhenDone": null,
-              "EntityToLookAt": "0x0"
+              "ObjectToAct": "",
+              "ObjectToLookAt": ""
             }
           }
         },
@@ -10070,11 +10386,11 @@
             "Character_Action_Feature": {
               "Action": 2,
               "ActionInfo": "REFLESH00",
-              "CharacterEntity": "0x100000000000180",
               "BeginCameraFollow": null,
               "CamFollowOffset": "",
               "LookAtEntityWhenDone": null,
-              "EntityToLookAt": "0x0"
+              "ObjectToAct": "",
+              "ObjectToLookAt": ""
             }
           }
         },
@@ -10132,383 +10448,11 @@
             "Character_Action_Feature": {
               "Action": 1,
               "ActionInfo": "Orig_Position",
-              "CharacterEntity": "0x100000000000180",
               "BeginCameraFollow": null,
               "CamFollowOffset": "",
               "LookAtEntityWhenDone": null,
-              "EntityToLookAt": "0x0"
-            }
-          }
-        },
-        {
-          "Type": "Character_Action_Template",
-          "Properties": {
-            "TechnicalName": "FFr_DBF626B7",
-            "Id": "0x10000040000064B",
-            "Parent": "0x100000300001E01",
-            "Attachments": [],
-            "DisplayName": "Carver Anim 01",
-            "PreviewImage": {
-              "ViewBox": {
-                "x": 0.0,
-                "y": 0.0,
-                "w": 0.0,
-                "h": 0.0
-              },
-              "Mode": "FromAsset",
-              "Asset": "0x0"
-            },
-            "Color": {
-              "r": 0.376262158,
-              "g": 0.376262158,
-              "b": 0.376262158
-            },
-            "Text": "",
-            "ExternalId": "",
-            "Position": {
-              "x": 3450.0,
-              "y": 525.0
-            },
-            "ZIndex": 32.0,
-            "Size": {
-              "w": 275.0,
-              "h": 200.0
-            },
-            "ShortId": 3690342071,
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x10000040000064E",
-                "Owner": "0x10000040000064B"
-              }
-            ],
-            "OutputPins": [
-              {
-                "Text": "",
-                "Id": "0x10000040000064F",
-                "Owner": "0x10000040000064B"
-              }
-            ]
-          },
-          "Template": {
-            "Character_Action_Feature": {
-              "Action": 2,
-              "ActionInfo": "JUMP01B",
-              "CharacterEntity": "0x100000000000180",
-              "BeginCameraFollow": null,
-              "CamFollowOffset": "",
-              "LookAtEntityWhenDone": null,
-              "EntityToLookAt": "0x0"
-            }
-          }
-        },
-        {
-          "Type": "Character_Action_Template",
-          "Properties": {
-            "TechnicalName": "FFr_5A55963E",
-            "Id": "0x100000400000599",
-            "Parent": "0x100000300001E01",
-            "Attachments": [],
-            "DisplayName": "Carver Walk To Alien Food Vendor",
-            "PreviewImage": {
-              "ViewBox": {
-                "x": 0.0,
-                "y": 0.0,
-                "w": 0.0,
-                "h": 0.0
-              },
-              "Mode": "FromAsset",
-              "Asset": "0x0"
-            },
-            "Color": {
-              "r": 0.376262158,
-              "g": 0.376262158,
-              "b": 0.376262158
-            },
-            "Text": "",
-            "ExternalId": "",
-            "Position": {
-              "x": 3125.0,
-              "y": 525.0
-            },
-            "ZIndex": 32.0,
-            "Size": {
-              "w": 275.0,
-              "h": 200.0
-            },
-            "ShortId": 1515558462,
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x10000040000059C",
-                "Owner": "0x100000400000599"
-              }
-            ],
-            "OutputPins": [
-              {
-                "Text": "",
-                "Id": "0x10000040000059D",
-                "Owner": "0x100000400000599"
-              }
-            ]
-          },
-          "Template": {
-            "Character_Action_Feature": {
-              "Action": 1,
-              "ActionInfo": "14.62,.02,-37.45",
-              "CharacterEntity": "0x100000000000180",
-              "BeginCameraFollow": true,
-              "CamFollowOffset": "0,8,12",
-              "LookAtEntityWhenDone": true,
-              "EntityToLookAt": "0x100000300002F12"
-            }
-          }
-        },
-        {
-          "Type": "Character_Action_Template",
-          "Properties": {
-            "TechnicalName": "FFr_CCDFE859",
-            "Id": "0x100000400000726",
-            "Parent": "0x100000300001E01",
-            "Attachments": [],
-            "DisplayName": "Alien Anim 01",
-            "PreviewImage": {
-              "ViewBox": {
-                "x": 0.0,
-                "y": 0.0,
-                "w": 0.0,
-                "h": 0.0
-              },
-              "Mode": "FromAsset",
-              "Asset": "0x0"
-            },
-            "Color": {
-              "r": 0.376262158,
-              "g": 0.376262158,
-              "b": 0.376262158
-            },
-            "Text": "",
-            "ExternalId": "",
-            "Position": {
-              "x": 3125.0,
-              "y": 775.0
-            },
-            "ZIndex": 33.0,
-            "Size": {
-              "w": 275.0,
-              "h": 200.0
-            },
-            "ShortId": 3437226073,
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x100000400000729",
-                "Owner": "0x100000400000726"
-              }
-            ],
-            "OutputPins": [
-              {
-                "Text": "",
-                "Id": "0x10000040000072A",
-                "Owner": "0x100000400000726"
-              }
-            ]
-          },
-          "Template": {
-            "Character_Action_Feature": {
-              "Action": 2,
-              "ActionInfo": "DAMAGED00",
-              "CharacterEntity": "0x100000300002F12",
-              "BeginCameraFollow": null,
-              "CamFollowOffset": "",
-              "LookAtEntityWhenDone": null,
-              "EntityToLookAt": "0x0"
-            }
-          }
-        },
-        {
-          "Type": "Character_Action_Template",
-          "Properties": {
-            "TechnicalName": "FFr_3315E245",
-            "Id": "0x10000040000072F",
-            "Parent": "0x100000300001E01",
-            "Attachments": [],
-            "DisplayName": "Carver Anim 02",
-            "PreviewImage": {
-              "ViewBox": {
-                "x": 0.0,
-                "y": 0.0,
-                "w": 0.0,
-                "h": 0.0
-              },
-              "Mode": "FromAsset",
-              "Asset": "0x0"
-            },
-            "Color": {
-              "r": 0.376262158,
-              "g": 0.376262158,
-              "b": 0.376262158
-            },
-            "Text": "",
-            "ExternalId": "",
-            "Position": {
-              "x": 3475.0,
-              "y": 775.0
-            },
-            "ZIndex": 34.0,
-            "Size": {
-              "w": 275.0,
-              "h": 200.0
-            },
-            "ShortId": 857072197,
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x100000400000732",
-                "Owner": "0x10000040000072F"
-              }
-            ],
-            "OutputPins": [
-              {
-                "Text": "",
-                "Id": "0x100000400000733",
-                "Owner": "0x10000040000072F"
-              }
-            ]
-          },
-          "Template": {
-            "Character_Action_Feature": {
-              "Action": 2,
-              "ActionInfo": "REFLESH00",
-              "CharacterEntity": "0x100000000000180",
-              "BeginCameraFollow": null,
-              "CamFollowOffset": "",
-              "LookAtEntityWhenDone": null,
-              "EntityToLookAt": "0x0"
-            }
-          }
-        },
-        {
-          "Type": "Character_Action_Template",
-          "Properties": {
-            "TechnicalName": "FFr_50BACDD5",
-            "Id": "0x100000400000738",
-            "Parent": "0x100000300001E01",
-            "Attachments": [],
-            "DisplayName": "Carver Walk Back",
-            "PreviewImage": {
-              "ViewBox": {
-                "x": 0.0,
-                "y": 0.0,
-                "w": 0.0,
-                "h": 0.0
-              },
-              "Mode": "FromAsset",
-              "Asset": "0x0"
-            },
-            "Color": {
-              "r": 0.376262158,
-              "g": 0.376262158,
-              "b": 0.376262158
-            },
-            "Text": "",
-            "ExternalId": "",
-            "Position": {
-              "x": 3775.0,
-              "y": 525.0
-            },
-            "ZIndex": 35.0,
-            "Size": {
-              "w": 275.0,
-              "h": 200.0
-            },
-            "ShortId": 1354419669,
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x10000040000073B",
-                "Owner": "0x100000400000738"
-              }
-            ],
-            "OutputPins": [
-              {
-                "Text": "",
-                "Id": "0x10000040000073C",
-                "Owner": "0x100000400000738"
-              }
-            ]
-          },
-          "Template": {
-            "Character_Action_Feature": {
-              "Action": 1,
-              "ActionInfo": "Start_Position",
-              "CharacterEntity": "0x100000000000180",
-              "BeginCameraFollow": null,
-              "CamFollowOffset": "",
-              "LookAtEntityWhenDone": true,
-              "EntityToLookAt": "0x100000000000190"
-            }
-          }
-        },
-        {
-          "Type": "Character_Action_Template",
-          "Properties": {
-            "TechnicalName": "FFr_BAC9F6E9",
-            "Id": "0x100000400000742",
-            "Parent": "0x100000300001E01",
-            "Attachments": [],
-            "DisplayName": "Action LIst End",
-            "PreviewImage": {
-              "ViewBox": {
-                "x": 0.0,
-                "y": 0.0,
-                "w": 0.0,
-                "h": 0.0
-              },
-              "Mode": "FromAsset",
-              "Asset": "0x0"
-            },
-            "Color": {
-              "r": 0.376262158,
-              "g": 0.376262158,
-              "b": 0.376262158
-            },
-            "Text": "",
-            "ExternalId": "",
-            "Position": {
-              "x": 3800.0,
-              "y": 775.0
-            },
-            "ZIndex": 36.0,
-            "Size": {
-              "w": 275.0,
-              "h": 200.0
-            },
-            "ShortId": 3133798121,
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x100000400000745",
-                "Owner": "0x100000400000742"
-              }
-            ],
-            "OutputPins": [
-              {
-                "Text": "",
-                "Id": "0x100000400000746",
-                "Owner": "0x100000400000742"
-              }
-            ]
-          },
-          "Template": {
-            "Character_Action_Feature": {
-              "Action": 3,
-              "ActionInfo": "",
-              "CharacterEntity": "0x100000000000190",
-              "BeginCameraFollow": true,
-              "CamFollowOffset": "-1,13,24",
-              "LookAtEntityWhenDone": null,
-              "EntityToLookAt": "0x0"
+              "ObjectToAct": "",
+              "ObjectToLookAt": ""
             }
           }
         },
@@ -12633,7 +12577,7 @@
             "ExternalId": "",
             "Position": {
               "x": 1742.0,
-              "y": 125.0
+              "y": -75.0
             },
             "ZIndex": 54.0,
             "Size": {
@@ -12709,8 +12653,8 @@
             "Text": "The crew try to enter the crossing proper.\r\n\r\nTriggered by walking through a gateway",
             "ExternalId": "",
             "Position": {
-              "x": 1767.0,
-              "y": 625.0
+              "x": 1742.0,
+              "y": 425.0
             },
             "ZIndex": 49.0,
             "Size": {
@@ -12787,7 +12731,7 @@
             "ExternalId": "",
             "Position": {
               "x": 1742.0,
-              "y": 375.0
+              "y": 175.0
             },
             "ZIndex": 12.0,
             "Size": {
@@ -12940,8 +12884,8 @@
             "Text": "Family waiting to watch shiips depart",
             "ExternalId": "",
             "Position": {
-              "x": 1717.0,
-              "y": -200.0
+              "x": 1742.0,
+              "y": -325.0
             },
             "ZIndex": 10.0,
             "Size": {
@@ -13062,7 +13006,7 @@
             "Id": "0x100000300002C9D",
             "Parent": "0x100000300002244",
             "Attachments": [],
-            "DisplayName": "Bridge Convo",
+            "DisplayName": "Bridge ConvoEp1.S3",
             "PreviewImage": {
               "ViewBox": {
                 "x": 0.0,
@@ -13139,7 +13083,7 @@
             "Id": "0x10000030000309F",
             "Parent": "0x100000300002244",
             "Attachments": [],
-            "DisplayName": "2nd Bridge Convo (Aliens)",
+            "DisplayName": "2nd Bridge Convo (Aliens)Ep1.S3",
             "PreviewImage": {
               "ViewBox": {
                 "x": 0.0,
@@ -13216,7 +13160,7 @@
             "Id": "0x10000030000312B",
             "Parent": "0x100000300002244",
             "Attachments": [],
-            "DisplayName": "Finding/Installing the Signal Booster",
+            "DisplayName": "Finding/Installing the Signal BoosterEp1.S3",
             "PreviewImage": {
               "ViewBox": {
                 "x": 0.0,
@@ -13500,6 +13444,57 @@
                 "Text": "",
                 "Id": "0x10000030000324F",
                 "Owner": "0x100000300003221"
+              }
+            ]
+          }
+        },
+        {
+          "Type": "Dialogue",
+          "Properties": {
+            "TechnicalName": "Dlg_560C2D6B",
+            "Id": "0x1000003000033BE",
+            "Parent": "0x100000300003221",
+            "Attachments": [],
+            "DisplayName": "During LockpickingEp1.S4",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 2217.0,
+              "y": 100.0
+            },
+            "ZIndex": 13.0,
+            "Size": {
+              "w": 291.0,
+              "h": 200.0
+            },
+            "ShortId": 1443638635,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000033C1",
+                "Owner": "0x1000003000033BE"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000033C2",
+                "Owner": "0x1000003000033BE"
               }
             ]
           }
@@ -15423,7 +15418,7 @@
             "ExternalId": "",
             "Position": {
               "x": 300.0,
-              "y": 650.0
+              "y": 675.0
             },
             "ZIndex": 10.0,
             "Size": {
@@ -15650,7 +15645,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "Here's the thing. It doesn't really matter. Understand or not we're not going anywhere soon. We still have sublight but we won't be jumping again until I get a better handle on things.",
+            "Text": "Here's the thing. It doesn't really matter. Understand or not we're not going anywhere soon. We still have sublight but we won't be jumping again until I get a better handle on things and maybe do some work on the gravitational constant.",
             "ExternalId": "",
             "Position": {
               "x": 2950.0,
@@ -15705,7 +15700,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "Any insights, Captain?",
+            "Text": "Hm. I don't know what to tell you. Once Trena reboots maybe she'll have some answers. I have a feeling some wires got crossed. This is a test flight after all. Could you provide any insights?",
             "ExternalId": "",
             "Position": {
               "x": 3236.8,
@@ -17168,7 +17163,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "Oh you're a sweetie but I'm not even sure there IS anything wrong other than communications being down. \r\n\r\nGo explore your ship, talk to your crew and I'll give you a ring when i got anything new.",
+            "Text": "Oh you're a sweetie but I'm not even sure there IS anything wrong.\r\n\r\nGo explore your ship, talk to your crew. I'm going to try a quick reboot and I'll let you know once I have more information.",
             "ExternalId": "",
             "Position": {
               "x": 2219.6917235681003,
@@ -17223,7 +17218,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "I'm honestly not sure, sir. I thought something was in our way so I stopped up, but now I'm not detecting anything. Truthfully none of the readings I'm getting make much sense.",
+            "Text": "I'm honestly not sure, sir. The engines just seem to have...cut out. We're still moving but maybe at 1/100th our cruising speed.",
             "ExternalId": "",
             "Position": {
               "x": 894.69172356810054,
@@ -17608,7 +17603,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "Everybody drop what they're doing. We have some things to discuss.",
+            "Text": "I'm back! I think you should all come to the bridge, we have... a lot to discuss.",
             "ExternalId": "",
             "Position": {
               "x": 1175.0,
@@ -30881,7 +30876,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "Hi everyone! So sorry about that, seems I had a little crash. Don't worry though I'm pretty sure everything's back to normal. \r\n\r\nI've processed a lot of data and we have much to discuss.\r\n\r\nYou want the good news or the bad news?",
+            "Text": "Hi everyone! So sorry about that. \r\n\r\nI've processed a lot of data and we have much to discuss.\r\n\r\nYou want the good news or the bad news?",
             "ExternalId": "",
             "Position": {
               "x": 1052.5333333333328,
@@ -31016,8 +31011,8 @@
             "Text": "We are very much alive.",
             "ExternalId": "",
             "Position": {
-              "x": 1651.1333333333328,
-              "y": 754.0
+              "x": 1650.0,
+              "y": 675.0
             },
             "ZIndex": 36.0,
             "Size": {
@@ -31071,8 +31066,8 @@
             "Text": "Setting the bar a bit low there, aren't we?\r\n\r\nWhat's the bad news then?",
             "ExternalId": "",
             "Position": {
-              "x": 1937.9333333333329,
-              "y": 754.0
+              "x": 1950.0,
+              "y": 675.0
             },
             "ZIndex": 39.0,
             "Size": {
@@ -31398,7 +31393,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "I do not recognize a single star in the sky. Not a single one. Either this is a trick or we've travelled approximitely... halfway across the galaxy... give or take a couple thousand light years.",
+            "Text": "I do not recognize a single star in the sky. Not a single one. Either this is a trick or we've travelled approximately... halfway across the galaxy... give or take a couple thousand light years.",
             "ExternalId": "",
             "Position": {
               "x": 5014.333333333333,
@@ -31640,7 +31635,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "The stars, I'm saying the stars are not where they should be, which means...this would actually explain the readings I was getting earlier.",
+            "Text": "The stars, I'm saying the stars are not where they should be, which means... well this would actually explain the readings I was getting earlier.",
             "ExternalId": "",
             "Position": {
               "x": 4551.333333333333,
@@ -31750,7 +31745,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "Yeaa,,, I hate to say it but the doctor's right, and I'm not broken...whether you like it or not.",
+            "Text": "I hate to say it but the doctor's right, and I'm not broken...whether you like it or not.",
             "ExternalId": "",
             "Position": {
               "x": 5913.666666666667,
@@ -31805,7 +31800,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "Say you're right, which to be clear I'm not.  We only have the impulse drive for now so we're not going anywhere fast anyway.",
+            "Text": "Say you're right, which to be clear I'm not.  We only have the sublight drive for now so we're not going anywhere fast anyway. Honestly I can't even find the parts that <i>aren't </i>working.",
             "ExternalId": "",
             "Position": {
               "x": 6488.333333333333,
@@ -32583,8 +32578,8 @@
             },
             "ZIndex": 83.0,
             "Size": {
-              "w": 225.0,
-              "h": 200.0
+              "w": 288.66666666666242,
+              "h": 250.0
             },
             "ShortId": 2349923790,
             "InputPins": [
@@ -32608,8 +32603,30 @@
                       "b": 0.8
                     },
                     "Label": "",
-                    "TargetPin": "0x100000300002CA1",
-                    "Target": "0x100000300002C9D"
+                    "TargetPin": "0x1000003000033A5",
+                    "Target": "0x1000003000033A2"
+                  },
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x1000003000033AB",
+                    "Target": "0x1000003000033A8"
+                  },
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x1000003000033B1",
+                    "Target": "0x1000003000033AE"
                   }
                 ]
               }
@@ -33257,7 +33274,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "Well that was easy. Bring it over here and lets see what we got.",
+            "Text": "Alright now we're cooking.",
             "ExternalId": "",
             "Position": {
               "x": 891.33333333333348,
@@ -34325,7 +34342,20 @@
               {
                 "Text": "",
                 "Id": "0x1000003000032CD",
-                "Owner": "0x1000003000032C9"
+                "Owner": "0x1000003000032C9",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x10000030000329C",
+                    "Target": "0x100000300003298"
+                  }
+                ]
               }
             ]
           }
@@ -34619,7 +34649,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "Fascinating. It looks like some kind of biometric scanner. Look here's the iris and the retina.It looks like the diode maps the connections. Let me see.",
+            "Text": "Fascinating. It looks like some kind of biometric scanner. Look here's the iris and the retina. It looks like the diode maps the connections. Let me see.",
             "ExternalId": "",
             "Position": {
               "x": 1925.0,
@@ -34627,8 +34657,8 @@
             },
             "ZIndex": 10.0,
             "Size": {
-              "w": 225.0,
-              "h": 200.0
+              "w": 275.0,
+              "h": 250.0
             },
             "ShortId": 1329950853,
             "InputPins": [
@@ -34729,7 +34759,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "One last time, you take the average rate of star formation, and you multiply that by the fraction of those stars that have planets, alright? Then you take that and multiply it by the average number of planets per star that might have lie, and then times that by the fraction of planets that actually have developed life....",
+            "Text": "One last time, you take the average rate of star formation, and you multiply that by the fraction of those stars that have planets, alright? Then you take that and multiply it by the average number of planets per star that might have life, and then times that by the fraction of planets that actually have developed life....",
             "ExternalId": "",
             "Position": {
               "x": 950.0,
@@ -34737,8 +34767,8 @@
             },
             "ZIndex": 2.0,
             "Size": {
-              "w": 200.0,
-              "h": 200.0
+              "w": 250.0,
+              "h": 325.0
             },
             "ShortId": 4279789141,
             "InputPins": [
@@ -34847,8 +34877,8 @@
             },
             "ZIndex": 6.0,
             "Size": {
-              "w": 225.0,
-              "h": 200.0
+              "w": 237.66666666666674,
+              "h": 350.0
             },
             "ShortId": 2934115011,
             "InputPins": [
@@ -34949,7 +34979,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "Right. Then you take that number and multiply it by the fraction of civilizatins that develop the technology to send message into space, and finally multiply by the time it would take for such a civilization to detect said signal.  That's the Drake Equation.",
+            "Text": "Right. Then you take that number and multiply it by the fraction of civilizations that develop the technology to send message into space, and finally multiply by the time it would take for such a civilization to detect said signal. That's the Drake Equation.",
             "ExternalId": "",
             "Position": {
               "x": 2087.0,
@@ -34957,8 +34987,8 @@
             },
             "ZIndex": 10.0,
             "Size": {
-              "w": 225.0,
-              "h": 200.0
+              "w": 263.0,
+              "h": 325.0
             },
             "ShortId": 3040466223,
             "InputPins": [
@@ -34982,8 +35012,8 @@
                       "b": 0.8
                     },
                     "Label": "",
-                    "TargetPin": "0x100000300002901",
-                    "Target": "0x1000003000028FE"
+                    "TargetPin": "0x100000300003397",
+                    "Target": "0x100000300003394"
                   }
                 ]
               }
@@ -34993,18 +35023,18 @@
         {
           "Type": "DialogueFragment",
           "Properties": {
-            "TechnicalName": "DFr_C6DD8610",
-            "Id": "0x1000003000028FE",
+            "TechnicalName": "DFr_201A7E20",
+            "Id": "0x100000300003394",
             "Parent": "0x1000003000028C8",
             "MenuText": "",
             "StageDirections": "",
-            "Speaker": "0x10000000000018C",
+            "Speaker": "0x100000000000184",
             "Color": {
               "r": 0.5764706,
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "And the Fermi Paradox is...",
+            "Text": "Too much guessing for me. There's not a single provable value that you can use.",
             "ExternalId": "",
             "Position": {
               "x": 2374.3333333333335,
@@ -35015,19 +35045,74 @@
               "w": 225.0,
               "h": 200.0
             },
-            "ShortId": 3336406544,
+            "ShortId": 538607136,
             "InputPins": [
               {
                 "Text": "",
-                "Id": "0x100000300002901",
-                "Owner": "0x1000003000028FE"
+                "Id": "0x100000300003397",
+                "Owner": "0x100000300003394"
               }
             ],
             "OutputPins": [
               {
                 "Text": "",
-                "Id": "0x100000300002902",
-                "Owner": "0x1000003000028FE"
+                "Id": "0x100000300003398",
+                "Owner": "0x100000300003394",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x10000030000339E",
+                    "Target": "0x10000030000339B"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "DialogueFragment",
+          "Properties": {
+            "TechnicalName": "DFr_AE89B8B5",
+            "Id": "0x10000030000339B",
+            "Parent": "0x1000003000028C8",
+            "MenuText": "",
+            "StageDirections": "",
+            "Speaker": "0x100000000000180",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "It was at least a starting point, but now....",
+            "ExternalId": "",
+            "Position": {
+              "x": 2661.666666666667,
+              "y": 375.0
+            },
+            "ZIndex": 14.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 2928261301,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x10000030000339E",
+                "Owner": "0x10000030000339B"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x10000030000339F",
+                "Owner": "0x10000030000339B"
               }
             ]
           }
@@ -57363,7 +57448,7 @@
               "g": 0.0156862754,
               "b": 0.0156862754
             },
-            "Text": "Anyone alive in here?",
+            "Text": "What did you do to my engine?",
             "ExternalId": "",
             "Position": {
               "x": -12.666666666666657,
@@ -57419,7 +57504,7 @@
               "g": 0.0156862754,
               "b": 0.0156862754
             },
-            "Text": "What in hell....",
+            "Text": "Report!",
             "ExternalId": "",
             "Position": {
               "x": -12.666666666666657,
@@ -57475,7 +57560,7 @@
               "g": 0.0156862754,
               "b": 0.0156862754
             },
-            "Text": "This is... not great.",
+            "Text": "What is going on with my engine?",
             "ExternalId": "",
             "Position": {
               "x": -12.666666666666657,
@@ -67485,7 +67570,7 @@
               "g": 0.0156862754,
               "b": 0.0156862754
             },
-            "Text": "The bad news, please.",
+            "Text": "Bad news out of the way please.",
             "ExternalId": "",
             "Position": {
               "x": 1363.6666666666665,
@@ -67744,6 +67829,174 @@
                     "Label": "",
                     "TargetPin": "0x100000300002DA9",
                     "Target": "0x100000300002DA8"
+                  }
+                ]
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Captain_Dialogue",
+          "Properties": {
+            "TechnicalName": "DFr_13FBCF83",
+            "Id": "0x1000003000033A2",
+            "Parent": "0x100000300002C9D",
+            "MenuText": "The Mal",
+            "StageDirections": "",
+            "Speaker": "0x100000000000190",
+            "Color": {
+              "r": 0.121568628,
+              "g": 0.0156862754,
+              "b": 0.0156862754
+            },
+            "Text": "Let's get to it then!",
+            "ExternalId": "",
+            "Position": {
+              "x": 10587.666666666672,
+              "y": 650.0
+            },
+            "ZIndex": 85.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 335269763,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000033A5",
+                "Owner": "0x1000003000033A2"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000033A6",
+                "Owner": "0x1000003000033A2",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300002CA1",
+                    "Target": "0x100000300002C9D"
+                  }
+                ]
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Captain_Dialogue",
+          "Properties": {
+            "TechnicalName": "DFr_CAC39637",
+            "Id": "0x1000003000033A8",
+            "Parent": "0x100000300002C9D",
+            "MenuText": "The Picard",
+            "StageDirections": "",
+            "Speaker": "0x100000000000190",
+            "Color": {
+              "r": 0.121568628,
+              "g": 0.0156862754,
+              "b": 0.0156862754
+            },
+            "Text": "Whatever it takes!",
+            "ExternalId": "",
+            "Position": {
+              "x": 10600.0,
+              "y": 900.0
+            },
+            "ZIndex": 87.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 3401815607,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000033AB",
+                "Owner": "0x1000003000033A8"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000033AC",
+                "Owner": "0x1000003000033A8",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300002CA1",
+                    "Target": "0x100000300002C9D"
+                  }
+                ]
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Captain_Dialogue",
+          "Properties": {
+            "TechnicalName": "DFr_0E1FDF7E",
+            "Id": "0x1000003000033AE",
+            "Parent": "0x100000300002C9D",
+            "MenuText": "The Rick",
+            "StageDirections": "",
+            "Speaker": "0x100000000000190",
+            "Color": {
+              "r": 0.121568628,
+              "g": 0.0156862754,
+              "b": 0.0156862754
+            },
+            "Text": "Whatever it takes to get some answers.",
+            "ExternalId": "",
+            "Position": {
+              "x": 10587.666666666672,
+              "y": 1150.0
+            },
+            "ZIndex": 89.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 236969854,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000033B1",
+                "Owner": "0x1000003000033AE"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000033B2",
+                "Owner": "0x1000003000033AE",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300002CA1",
+                    "Target": "0x100000300002C9D"
                   }
                 ]
               }
@@ -82443,6 +82696,21 @@
                             "Id": "0x10000030000318A",
                             "TechnicalName": "DFr_8C10FDCE",
                             "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x1000003000033A2",
+                            "TechnicalName": "DFr_13FBCF83",
+                            "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x1000003000033A8",
+                            "TechnicalName": "DFr_CAC39637",
+                            "Type": "DialogueFragment"
+                          },
+                          {
+                            "Id": "0x1000003000033AE",
+                            "TechnicalName": "DFr_0E1FDF7E",
+                            "Type": "DialogueFragment"
                           }
                         ]
                       },
@@ -82686,6 +82954,11 @@
                                 "Id": "0x100000300003245",
                                 "TechnicalName": "DFr_4F457085",
                                 "Type": "DialogueFragment"
+                              },
+                              {
+                                "Id": "0x1000003000033BE",
+                                "TechnicalName": "Dlg_560C2D6B",
+                                "Type": "Dialogue"
                               }
                             ]
                           }
@@ -82729,8 +83002,13 @@
                         "Type": "DialogueFragment"
                       },
                       {
-                        "Id": "0x1000003000028FE",
-                        "TechnicalName": "DFr_C6DD8610",
+                        "Id": "0x100000300003394",
+                        "TechnicalName": "DFr_201A7E20",
+                        "Type": "DialogueFragment"
+                      },
+                      {
+                        "Id": "0x10000030000339B",
+                        "TechnicalName": "DFr_AE89B8B5",
                         "Type": "DialogueFragment"
                       }
                     ]

@@ -58,9 +58,10 @@ public class CharacterActionList : MonoBehaviour
 
             Character_Action_Template curActionTemplate = CurCALFeature.ActionStrip[CurCALIndex] as Character_Action_Template;
             Character_Action_FeatureFeature curActionData = curActionTemplate.Template.Character_Action_Feature;
-            if (curActionData.CharacterEntity == null) { Debug.LogError("No Entity on this Character Action Feature"); yield break; }
-            CharacterEntity curEntityObject = GetEntityObjectFromActionEntity(curActionData.CharacterEntity);
-            if (curEntityObject == null) { Debug.LogError("ERROR: no character entity object match: " + GetCharacterEntityDisplayName(curActionData.EntityToLookAt)); yield break; }
+            GameObject objectToAct = GameObject.Find(curActionData.ObjectToAct);      // mochange                      
+            if (objectToAct == null) { Debug.LogError("No object in the scene called: " + curActionData.ObjectToAct); yield break; }
+            CharacterEntity curEntityObject = objectToAct.GetComponent<CharacterEntity>();
+            if (curEntityObject == null) { Debug.LogError("There's no CharacterEntity object on the ObjectToAct: " + curActionData.ObjectToAct); yield break; }
             PrintCurActionDataInfo(curActionData);
 
             // set up the current action
@@ -96,7 +97,7 @@ public class CharacterActionList : MonoBehaviour
                     animTime = curEntityObject.PlayAnim(curActionData.ActionInfo);
                     if (animTime == -1) { Debug.LogError("ERROR: " + curActionData.ActionInfo + " is not in the " + curEntityObject.name + "'s Animtor"); yield break; }
                     break;
-                case Action.EndCAL:
+                case Action.NoAction:
                     if (curActionData.BeginCameraFollow == true)
                     {
                         string[] vec = curActionData.CamFollowOffset.Split(',');
@@ -124,10 +125,10 @@ public class CharacterActionList : MonoBehaviour
                             {
                                 if (curActionData.LookAtEntityWhenDone == true)
                                 {
-                                    if (curActionData.EntityToLookAt == null) { Debug.LogError("You want to look at an entity but haven't specified onefor " + curEntityObject.name + " to look at."); yield break; }
-
-                                    CharacterEntity entityToLookAt = GetEntityObjectFromActionEntity(curActionData.EntityToLookAt);
-                                    if (entityToLookAt == null) { Debug.LogError("No object in scene found to match the look at entity: " + GetCharacterEntityDisplayName(curActionData.EntityToLookAt)); yield break; }
+                                    GameObject objectToLookAt = GameObject.Find(curActionData.ObjectToLookAt);                                      
+                                    if (objectToLookAt == null) { Debug.LogError("No object in the scene to look at called: " + curActionData.ObjectToLookAt); yield break; }
+                                    CharacterEntity entityToLookAt = objectToLookAt.GetComponent<CharacterEntity>();
+                                    if (entityToLookAt == null) { Debug.LogError("no object in the scene with this name: " + curActionData.ObjectToLookAt + "that has a CharacterEntity component"); yield break; }
 
                                     LerpRotStart = curEntityObject.transform.rotation;
                                     curEntityObject.transform.LookAt(entityToLookAt.transform);
@@ -223,10 +224,10 @@ public class CharacterActionList : MonoBehaviour
 
     void PrintCurActionDataInfo(Character_Action_FeatureFeature curActionData)
     {
-        string s = "-------Begin Action with entity: " + GetCharacterEntityDisplayName(curActionData.CharacterEntity) + ", Action: " + curActionData.Action + ", info: " + curActionData.ActionInfo + "\n";
+        string s = "-------Begin Action with object: " + curActionData.ObjectToAct + ", Action: " + curActionData.Action + ", info: " + curActionData.ActionInfo + "\n";
         s += "Begin Cam Follow: " + curActionData.BeginCameraFollow + ", Cam Follow Offset: " + curActionData.CamFollowOffset + "\n";
         s += "Look at entity when done: " + curActionData.LookAtEntityWhenDone;
-        if (curActionData.EntityToLookAt != null) s += ", entity to look at: " + curActionData.EntityToLookAt.name;
+        if(curActionData.LookAtEntityWhenDone == true) s += ", object to look at: " + curActionData.ObjectToLookAt;        
         Debug.Log(s);
     }
 
