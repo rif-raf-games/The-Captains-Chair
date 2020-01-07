@@ -17,8 +17,10 @@ public class ConvoUI : MonoBehaviour
 
     public void ShowDialogueFragment(DialogueFragment dialogueFrag, IFlowObject flowObj, IList<Branch> dialogueOptions)
     {
-        Debug.Log("going to set up a dialogue fragment with speaker: " + dialogueFrag.Speaker + " with text: " + dialogueFrag.Text);
-        Debug.Log("this dialogue fragment has: " + dialogueOptions.Count + " options");
+        StaticStuff.PrintUI("going to set up a dialogue fragment with speaker: " + dialogueFrag.Speaker + " with text: " + dialogueFrag.Text + ", tech name: " + dialogueFrag.TechnicalName);
+        StaticStuff.PrintUI("this dialogue fragment has: " + dialogueOptions.Count + " options");
+        DialogueFragment d = dialogueOptions[0].Target as DialogueFragment;
+        if(d!=null) StaticStuff.PrintUI(d.MenuText + ", " + d.Text + ", " + d.TechnicalName);
         this.gameObject.SetActive(true);
         
         SpeakerName.text = ((Entity)dialogueFrag.Speaker).DisplayName;
@@ -41,8 +43,16 @@ public class ConvoUI : MonoBehaviour
         Player.ToggleMovementBlocked(true);
     }
 
-    public void EndConversation()
+    public void PauseConversation()
     {
+        // conversation isn't over, but we want to temporarily shut it off while a character moves somewhere.
+       // Debug.Log("----------------------- PauseConversation()");
+        this.gameObject.SetActive(false);
+        Player.ToggleMovementBlocked(true);
+    }
+    public void EndConversation()
+    { 
+        //Debug.Log("----------------------- EndConversation()");
         this.gameObject.SetActive(false);
         Player.ToggleMovementBlocked(false);        
     }

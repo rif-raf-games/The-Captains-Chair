@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Articy.Unity;
 using Articy.The_Captain_s_Chair;
+using Articy.The_Captain_s_Chair.Features;
+using UnityEngine.UI;
+using System.Linq;
 
 public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMethodProvider
 {
-    public enum ArticyState { FREE_ROAM, CUT_SCENE, CONVERSATION, NUM_ARTICY_STATES };
+    public enum ArticyState { FREE_ROAM, CUT_SCENE, CONVERSATION, ACTION_LIST, NUM_ARTICY_STATES };
     public ArticyState CurArticyState;
 
     // objet references
@@ -17,33 +20,60 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     // flow stuff
     IFlowObject CurPauseObject = null;
     List<Branch> CurBranches = new List<Branch>();
+    DialogueFragment LastDFPlayed;
     Branch NextBranch = null;
+    Character_Movement_FeatureFeature CurCMFeature = null;
 
-    // temp UI's for cutscenes and conversations
+    // list of characters in the scene for quick reference
+    List<CharacterEntity> CharacterEntities = new List<CharacterEntity>(); // this is temp until I update the scripts    
+    public List<CharacterEntity> GetCharacterEntities() { return CharacterEntities; }
+
+    // UI's for cutscenes and conversations
     public CutSceneUI CutSceneUI;
     public ConvoUI ConvoUI;
 
+    // Articy stuff
     public bool IsCalledInForecast { get; set; }
-    
+                   
+    //debug
+    public Text DebugText;
+
     void Start()
     {
-        Player = GameObject.FindObjectOfType<CCPlayer>();
-        CaptainsChair = GameObject.FindObjectOfType<TheCaptainsChair>();
-        FlowPlayer = this.GetComponent<ArticyFlowPlayer>();       
-
         CurArticyState = ArticyState.NUM_ARTICY_STATES;
 
-        ArticyDatabase.DefaultGlobalVariables.Notifications.AddListener("*.*", MyGameStateVariablesChanged);
+        Player = GameObject.FindObjectOfType<CCPlayer>();
+        CaptainsChair = GameObject.FindObjectOfType<TheCaptainsChair>();
+        FlowPlayer = this.GetComponent<ArticyFlowPlayer>();
+        CharacterEntities = GameObject.FindObjectsOfType<CharacterEntity>().ToList();
 
-
+        ArticyDatabase.DefaultGlobalVariables.Notifications.AddListener("*.*", MyGameStateVariablesChanged);          
     }
 
+    #region ARTICY
+    /// <summary>
+    /// Called from Articy when a variable changes
+    /// </summary>    
     void MyGameStateVariablesChanged(string aVariableName, object aValue)
     {
         Debug.Log("aVariableName: " + aVariableName + " changed to: " + aValue.ToString());
         CaptainsChair.SaveSaveData();
     }
- 
+
+    /// <summary>
+    /// This is called from an Articy fragment defined in the project file
+    /// </summary>
+    public void OpenCaptainsDoor()
+    {
+        if (IsCalledInForecast == false)
+        {
+            Debug.Log("-------------------------------------------------------------- called OpenCaptainsDoor() but we're changing functionality");
+        }
+        else
+        {
+            Debug.Log("-------------------------------------------------------------- OpenCaptainDoor(): Do NOT open door, we're just forecasting");
+        }
+    }
 
     public void DeleteSaveData()
     {
@@ -52,57 +82,114 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             CaptainsChair.DeleteSaveData();
         }        
     }
-    public void OpenCaptainsDoor()
-    {
-        if (IsCalledInForecast == false)
-        {
-            Debug.Log("-------------------------------------------------------------- called OpenCaptainsDoor() but we're changing functionality");        
-        }
-        else
-        {
-            Debug.Log("-------------------------------------------------------------- OpenCaptainDoor(): Do NOT open door, we're just forecasting");
-        }
-            
-    }
+    #endregion
 
+    #region ARTICY_FLOW       
+    /// <summary>
+    /// Checks to see if the Player has reached the specified point and the last dialogue flow fragment
+    /// in the Character_Movement setup has been reached
+    /// </summary>    
+    IEnumerator Character_Movement_Check()
+    {        
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+
+        bool isFinished = false;
+        while(isFinished == false)
+        {            
+            // right now it's just the player, but we should add a new class that keeps track of the game object as well
+            if(LastDFPlayed == CurCMFeature.DialogueFragmentThatMustComplete && Player.NavMeshDone())
+            {
+                Debug.Log("----------------------- We're Done");
+                FlowPlayer.StartOn = CurCMFeature.StartingDialogueFragment;                
+                isFinished = true;
+                CurCMFeature = null;
+                LastDFPlayed = null;               
+            }
+            if(isFinished==false) yield return new WaitForEndOfFrame();
+        }
+    }    
+
+    /// <summary>
+    /// Callback from Articy when we've reached a pause point
+    /// </summary>    
     public void OnFlowPlayerPaused(IFlowObject aObject)
     {
         StaticStuff.PrintFlowPaused("************** OnFlowPlayerPaused() START *************");
+        //Debug.Log("************** OnFlowPlayerPaused() START *************");
+        CurPauseObject = null;
         if(aObject == null)
         {
-            Debug.LogWarning("We have a null iFlowObject in OnFlowPlayerPaused(), so we're at a dangling end point somewhere that needs to get sorted out.");
+            StaticStuff.PrintFlowPaused("We have a null iFlowObject in OnFlowPlayerPaused(), and for the moment the only supported case is if a Character_Movement thing is in effect so check that.");
+            if(CurCMFeature != null)
+            {
+                Debug.Log("------------------------ Yup, we've got a valid Character_Movement thing in effect so lets handle it.");
+                StartCoroutine(Character_Movement_Check());
+            }
+            else
+            {
+                Debug.LogWarning("We have a null iFlowObject in OnFlowPlayerPaused() and no valid Character_Movement so we're at a dangling end point somewhere that needs to get sorted out.");
+            }
+            //StaticStuff.PrintFlowPaused("************** OnFlowPlayerPaused() END aObject WAS null***************");
+            Debug.Log("************** OnFlowPlayerPaused() END aObject WAS null***************");
             return;
         }
         StaticStuff.PrintFlowPaused("OnFlowPlayerPaused() IFlowObject Type: " + aObject.GetType() + ", with TechnicalName: " + ((ArticyObject)aObject).TechnicalName);
 
+        DialogueFragment d = aObject as DialogueFragment;
+        if (d != null) StaticStuff.PrintFlowPaused("CurPauseObject technical name: " + d.TechnicalName);
         CurPauseObject = aObject;
+        
 
-        StaticStuff.PrintFlowPaused("************** OnFlowPlayerPaused() END ***************");
+        StaticStuff.PrintFlowPaused("************** OnFlowPlayerPaused() END aObject was NOT null***************");
+        //Debug.Log("************** OnFlowPlayerPaused() END aObject was NOT null***************");
     }
+    
+    /// <summary>
+    /// Callback from Articy when it's calculated the available branches
+    /// </summary>    
     public void OnBranchesUpdated(IList<Branch> aBranches)
     {
         StaticStuff.PrintFlowBranchesUpdate("************** OnBranchesUpdated() START *************");
         StaticStuff.PrintFlowBranchesUpdate("Num branches: " + aBranches.Count);
+       // Debug.Log("************** OnBranchesUpdated() START *************");
+        //Debug.Log("Num branches: " + aBranches.Count);
 
         CurBranches.Clear();
+        
         int i = 0;
         foreach (Branch b in aBranches)
         {
             StaticStuff.PrintFlowBranchesUpdate("branch: " + i + " is type: " + b.Target.GetType());
+            //Debug.Log("branch: " + i + " is type: " + b.Target.GetType() + ", desc: " + b.DefaultDescription);
+            string s = "branch: " + i + " is type: " + b.Target.GetType() + ", desc: " + b.DefaultDescription;
+            DialogueFragment d = b.Target as DialogueFragment;
+            if (d != null) s += ", tech name: " + d.TechnicalName;
+            //Debug.Log(s);
             if (b.IsValid == false) Debug.LogWarning("Invalid branch in OnBranchesUpdate(): " + b.DefaultDescription);
+            if (b.Target == CurPauseObject)
+            {
+                Debug.LogWarning("ERROR: We should NOT have a Branch that points to itself");
+                NextBranch = b;
+                return;
+            }
+
             CurBranches.Add(b);
         }
         DialogueFragment df = CurPauseObject as DialogueFragment;        
         if(df != null )
         {
             StaticStuff.PrintFlowBranchesUpdate("We're on a dialogue fragment, so set the text based on current flow state.");
+            LastDFPlayed = df;
             switch (CurArticyState)
             {
                 case ArticyState.CUT_SCENE:
                     CutSceneUI.SetCutsceneNode(CurPauseObject as DialogueFragment);
                     break;
                 case ArticyState.CONVERSATION:
-                    Player.StopNavMeshMovement();
+                    if(CurCMFeature == null) Player.StopNavMeshMovement();
                     ConvoUI.ShowDialogueFragment(CurPauseObject as DialogueFragment, CurPauseObject, aBranches);
                     break;
                 default:
@@ -112,7 +199,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         }
         else if (aBranches.Count == 1)
         {   // We're paused and there's only one valid branch available. This is common so have it's own section
-            if(CurBranches[0].Target.GetType().Equals(typeof(Scene)))
+            if (CurBranches[0].Target.GetType().Equals(typeof(Scene)))
             {
                 StaticStuff.PrintFlowBranchesUpdate("The target is a Scene, so Play() it.");
                 NextBranch = CurBranches[0];
@@ -122,12 +209,12 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                 StaticStuff.PrintFlowBranchesUpdate("We're starting a cut scene.");
                 StartCutScene(CurPauseObject as Cut_Scene);
             }
-            else if(CurPauseObject.GetType().Equals(typeof(Dialogue)))
+            else if (CurPauseObject.GetType().Equals(typeof(Dialogue)))
             {
                 StaticStuff.PrintFlowBranchesUpdate("We're about to start a Dialogue.");
                 NextBranch = CurBranches[0];
-            }            
-            else if(CurBranches[0].Target.GetType().Equals(typeof(Hub)))
+            }
+            else if (CurBranches[0].Target.GetType().Equals(typeof(Hub)))
             {
                 StaticStuff.PrintFlowBranchesUpdate("The target is a Hub, so Play() it.");
                 NextBranch = CurBranches[0];
@@ -137,15 +224,51 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                 StaticStuff.PrintFlowBranchesUpdate("The target is a Cut_Scene, so Play() it.");
                 NextBranch = CurBranches[0];
             }
-            else if(CurPauseObject.GetType().Equals(typeof(Hub)) && CurBranches[0].Target.GetType().Equals(typeof(OutputPin)))
+            else if (CurPauseObject.GetType().Equals(typeof(Hub)) && CurBranches[0].Target.GetType().Equals(typeof(OutputPin)))
             {
                 StaticStuff.PrintFlowBranchesUpdate("We're paused on a Hub with no Target so we're in Free Roam.  Don't Play() anything.");
-                CurArticyState = ArticyState.FREE_ROAM;                
+                CurArticyState = ArticyState.FREE_ROAM;
             }
-            
-            else
+            else if (CurPauseObject.GetType().Equals(typeof(Character_Movement_Template)))
             {
+                //                StaticStuff.PrintFlowBranchesUpdate("*********************************We've arrived at a Character_Movement type, so get things set up. CurPauseObject: " + CurPauseObject.GetType() + ", branch: " + CurBranches[0].Target.GetType());
+                StaticStuff.PrintFlowBranchesUpdate("We've arrived at a Character_Movement type, so get things set up. CurPauseObject: " + CurPauseObject.GetType() + ", branch: " + CurBranches[0].Target.GetType());
+                Character_Movement_Template c_m = CurPauseObject as Character_Movement_Template;
+                //Character_Movement_FeatureFeature CurCMFeature = null;
+                CurCMFeature = c_m.Template.Character_Movement_Feature;
+                CharacterEntity characterEntity = null;
+                foreach(CharacterEntity go in CharacterEntities)
+                {
+                    ArticyReference ar = go.GetComponent<ArticyReference>();
+                    if (ar == null) { Debug.LogError("Our Player has no ArticyReference?"); return; }
+                    if (ar.reference.GetObject() == CurCMFeature.CharacterEntity)
+                    {
+                        Debug.Log("We got an entity match: " + go.name);
+                        characterEntity = go;
+                        break;
+                    }
+                }
+                if(characterEntity == null)
+                {
+                    Debug.LogError("ERROR: no character entity match: " + CurCMFeature.CharacterEntity.name);
+                    return;
+                }
+                
+                string[] pos = CurCMFeature.LocationToWalkTo.Split(',');
+                Vector3 loc = new Vector3(float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]));
+                Debug.Log("Move to: " + loc.ToString("F2") + ". NOTE: right now only the player can get a Character_Movement but this will be updated.");
+                characterEntity.GetComponent<CCPlayer>().SetNavMeshDest(loc);                             
+                NextBranch = CurBranches[0];
+            }
+            else if(CurPauseObject.GetType().Equals(typeof(Character_Action_List_Template)))
+            {
+                Debug.Log("-----------------------------------We've arrived at a Character Action List so let's see what's up");
+                BeginCAL(CurPauseObject, CurBranches[0]);
+            }
+            else
+            {                
                 Debug.LogWarning("We haven't supported this single branch situation yet. CurPauseObject: " + CurPauseObject.GetType() + ", branch: " + CurBranches[0].Target.GetType());
+                
             }
         }
         else
@@ -154,8 +277,45 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         }
 
         StaticStuff.PrintFlowBranchesUpdate("************** OnBranchesUpdated() END ***************");
+        //Debug.Log("************** OnBranchesUpdated() END ***************");
+    }
+    #endregion
+
+    #region CHARACTER_ACTION_LIST
+
+    /// <summary>
+    /// Begin the Character Action List fragement from the Articy data
+    /// </summary>
+    
+    public void BeginCAL(IFlowObject calObject, Branch calNextBranch)
+    {
+        CurArticyState = ArticyState.ACTION_LIST;
+        Player.ToggleMovementBlocked(true);
+        NextBranch = null; // don't go anywhere yet
+        GetComponent<CharacterActionList>().BeginCAL(CurPauseObject, CurBranches[0]);
     }
 
+    /// <summary>
+    /// End the current Character Action List.  This is called from the CharacterActionList component
+    /// </summary>
+    public void EndCAL(Branch calNextBranch)
+    {
+        DialogueFragment df = calNextBranch.Target as DialogueFragment;
+        if (df != null)
+        {
+            Debug.Log("ready to head back to conversation");
+            CurArticyState = ArticyState.CONVERSATION;
+        }
+        else
+        {
+            Debug.LogWarning("We haven't added support for Action Lists continuing on anything other than DialogueFragments so see what happens.");
+        }
+
+        NextBranch = calNextBranch;        
+    }
+    #endregion    
+
+    #region UI
     public void StartCutScene(Cut_Scene cutScene)
     {
         CurArticyState = ArticyState.CUT_SCENE;        
@@ -172,20 +332,43 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     public void UIButtonCallback(int buttonIndex)
     {
         StaticStuff.PrintUI("UIButtonCallback() buttonIndex: " + buttonIndex);
+        //Debug.Log("UIButtonCallback() buttonIndex: " + buttonIndex);
         NextBranch = CurBranches[buttonIndex];
-        if (CurBranches[buttonIndex].Target.GetType().Equals(typeof(DialogueFragment)) == false)
+        StaticStuff.PrintUI("NextBranchType: " + NextBranch.Target.GetType());
+        DialogueFragment df = CurBranches[buttonIndex].Target as DialogueFragment;
+        // if (CurBranches[buttonIndex].Target.GetType().Equals(typeof(DialogueFragment)) == false)
+        //if (CurBranches[buttonIndex].Target.GetType().Equals(typeof(DialogueFragment)) == true)
+        if(df != null)
         {
-            StaticStuff.PrintUI("Chosen branch isn't a dialogue fragment, so for now assume we're done talking and shut off the UI");
-            CutSceneUI.EndCutScene();
-            ConvoUI.EndConversation();
+            StaticStuff.PrintUI("Chosen branch is a dialogue fragment, so just let the engine handle the next phase.");
+            //Debug.Log("Chosen branch is a dialogue fragment, so just let the engine handle the next phase.");
+        }
+        else if(CurBranches[buttonIndex].Target.GetType().Equals(typeof(Character_Movement_Template)))
+        {
+            StaticStuff.PrintUI("Next thing is a Character_Movement, so don't end the conversation but let the engine advance to that Character_Movement to do it's thing");            
+            //Debug.LogWarning("Next thing is a Character_Movement, so don't end the conversation but let the engine advance to that Character_Movement to do it's thing");
+        }
+        else if(CurBranches[buttonIndex].Target.GetType().Equals(typeof(Character_Action_List_Template)))
+        {
+            //StaticStuff.PrintUI("Next thing is a Character_Action_List_Template, so shut off the UI and let the action list do it's thing.");
+            Debug.Log("---------------------------Next thing is a Character_Action_List_Template, so shut off the UI and let the action list do it's thing.");
+            EndUIs();
         }
         else
         {
-            StaticStuff.PrintUI("Chosen branch is a dialogue fragment, so just let the engine handle the next phase.");
+            StaticStuff.PrintUI("Chosen branch isn't a DialogueFragment or a Character_Movement so for now just assume we're done talking and shut off the UI");
+            //Debug.Log("----------------------------------- Chosen branch isn't a DialogueFragment or a Character_Movement so for now just assume we're done talking and shut off the UI");
+            EndUIs();
         }
     }
-    // Start is called before the first frame update
-    
+
+    void EndUIs()
+    {
+        CutSceneUI.EndCutScene();
+        if (CurCMFeature != null) ConvoUI.PauseConversation();
+        else ConvoUI.EndConversation();
+    }
+    #endregion
 
     // Update is called once per frame
     void Update()
@@ -196,155 +379,10 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             NextBranch = null;
             FlowPlayer.Play(b);
         }
-    }
-}
-
-//If you don't have JSON.NET you could also write to a text file like this. This is how you would save
-/*using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"D:\SaveFile.txt"))
-{
-    foreach (var pair in ArticyDatabase.DefaultGlobalVariables.Variables)
-    {
-        file.WriteLine(string.Format("{0} = {1}", pair.Key, pair.Value));
-    }
-}*/
-//and this how you read the data
-/*using (System.IO.StreamReader file = new System.IO.StreamReader(@"D:\SaveFile.txt"))
-{
-    Dictionary<string, object> savedVars = new Dictionary<string, object>();
-    string line;
-
-    while ((line = file.ReadLine()) != null)
-    {
-        var split = line.Split('=');
-        var name = split[0];
-        var value = split[1];
-
-        savedVars[name] = name;
-
-        UnityEngine.Debug.LogFormat("Read saved var: {0} Value: {1}", name, value);
-    }
-
-    ArticyDatabase.DefaultGlobalVariables.Variables = savedVars;
-}*/
-//s = JsonConvert.SerializeObject(ArticyDatabase.DefaultGlobalVariables.Variables);
-//Debug.Log(s);
-//JsonConvert.SerializeObject(ArticyDatabase.DefaultGlobalVariables.Variables;
-
-//default variables, just use ArticyDatabase.DefaultGlobalVariables.
-
-// How you save is up to you, for example if you are using JSON.NET, it could look something like this
-// save the variables
-// File.WriteAllText(@"d:\SaveFile.json", JsonConvert.SerializeObject(ArticyDatabase.DefaultGlobalVariables.Variables));
-// load the variables
-//ArticyDatabase.DefaultGlobalVariables.Variables = JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(@"D:\SaveFile.json"));
-
-
-
-
-//There are methods to set variables directly, but not on the database.You will find those on the global variables. 
-// For example if you want to change a variable on the default set of global variables, you could write something like this:
-// ArticyDatabase.DefaultGlobalVariables.SetVariableByString("GameState.Health", 100);
-// var health = ArticyDatabase.DefaultGlobalVariables.GetVariableByString<int>("GameState.Health");
-
-
-// But you can of course build your own save / load functionality, especially making use of the setProp() and getProp() methods on each object.
-// While this can be a bit cumbersome, especially if you can't make sure which objects/types/property you need to save, it should work.
-// Here is a very basic solution to get you started, this uses json, but using BinaryWriter/ Reader should be very similar.
-
-// As you see you have to write down which objects and which property you want to save / load.While not perfect, it might be a start for your solution.
-/*public class SaveFileHandler
-{
-public void Save()
-{
-    using (StreamWriter file = File.CreateText(@"D:\save.json"))
-    {
-        using (JsonWriter writer = new JsonTextWriter(file))
+        if (DebugText != null)
         {
-            writer.Formatting = Formatting.Indented;
-
-            var playerCharacter = ArticyDatabase.GetObject<Character>("PlayerCharacter");
-
-            writer.WriteStartObject();
-            WriteObjectProperty(writer, playerCharacter, "DisplayName");
-            // read all the other important properties
-
-            writer.WriteEndObject();
+            DebugText.text = CurArticyState.ToString() + "\n";
+            DebugText.text += Player.IsMovementBlocked() + "\n";
         }
     }
 }
-
-public void Load()
-{
-    var values = JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(@"D:\save.json"));
-
-    var playerCharacter = ArticyDatabase.GetObject<Character>("PlayerCharacter");
-    playerCharacter.setProp("DisplayName", values["DisplayName"]);
-    // read all the other important properties
-}
-
-
-public void WriteObjectProperty(JsonWriter aJsonWriter, IPropertyProvider aObject, string aName)
-{
-    aJsonWriter.WritePropertyName(aName);
-    aJsonWriter.WriteValue((string)aObject.getProp(aName));
-}
-
- public void OnApplicationPause(bool pauseStatus)
-{
-Save();
-}
-
-public void OnApplicationQuit()
-{
-Save();
-}
-
-
-
-/// <summary>
-///  Sauvegarde - à refaire
-/// </summary>
-public void Save()
-{
-//Manque save des isNew des feature DisplayCondition
-
-if (isLoaded)
-{
-    using (System.IO.StreamWriter file = new System.IO.StreamWriter(Application.persistentDataPath  + "\\SaveFileDatabase.txt"))
-    {
-        foreach (var pair in ArticyDatabase.DefaultGlobalVariables.Variables)
-        {
-            UnityEngine.Debug.LogFormat("Save var: {0} Value: {1}.", pair.Key, pair.Value);
-
-            file.WriteLine(string.Format("{0}={1}", pair.Key, pair.Value));
-        }
-
-
-
-    }
-
-
-    using (System.IO.StreamWriter file = new System.IO.StreamWriter(Application.persistentDataPath + "\\SaveFileTemplate.txt"))
-    {
-
-        List<Message> listMessage = ArticyDatabase.GetAllOfType<Message>();
-        file.WriteLine("Message");
-        foreach (Message msg in listMessage)
-        {
-
-            file.WriteLine(string.Format("{0}={1}={2}", msg.TechnicalName, "Read",msg.Template.Path.isPath));
-
-        }
-
-        List<CallEvent> listCall = ArticyDatabase.GetAllOfType<CallEvent>();
-        file.WriteLine("CallEvent");
-        foreach (CallEvent call in listCall)
-        {
-
-            file.WriteLine(string.Format("{0}={1}={2}", call.TechnicalName, "Read", call.Template.Call.Listen));
-        }
-    }
-}
-}
-
- */

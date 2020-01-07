@@ -239,6 +239,7 @@ public class Repair : MonoBehaviour
             {
                 DestroyImmediate(terminal.gameObject);
             }
+            terminal.GetComponentInChildren<MeshCollider>().enabled = true; // turn this back on    
         }
 
         EditorUtility.SetDirty(this);
@@ -480,7 +481,7 @@ public class Repair : MonoBehaviour
             }
             else
             {
-               // Debug.Log(curPiece.name + " hit " + hit.collider.name + ", with tag: " + hit.collider.tag + " at dir: " + dir);
+                StaticStuff.PrintRepairPath(curPiece.name + " hit " + hit.collider.name + ", with tag: " + hit.collider.tag + " at angleAdj: " + angleAdj);
             }
             // We've hit something with our curPiece ray, so see what it is
             if (hit.collider.tag == "Repair Piece Anchor")
@@ -655,6 +656,7 @@ public class Repair : MonoBehaviour
         }
         if (GUI.Button(new Rect(0,100,100,100), "path test"))
         {
+            foreach (RepairPiece piece in AllPieces) Debug.Log("piece: " + piece.name + " rot: " + piece.transform.eulerAngles.ToString("F2"));
             foreach (RepairPiece terminal in Terminals) terminal.ReachedOnPath = false;
             bool puzzleSolved = false;
             bool brokenPathFound = false;

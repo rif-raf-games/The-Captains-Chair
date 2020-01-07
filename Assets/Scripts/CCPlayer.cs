@@ -6,51 +6,43 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 
-public class CCPlayer : MonoBehaviour
+public class CCPlayer : CharacterEntity
 {    
+    
     ArticyFlow ArticyFlow;               
 
-    private NavMeshAgent NavMeshAgent;
+    //private NavMeshAgent NavMeshAgent;
     NavMeshSurface[] FloorNavMeshSurfaces;
     NavMeshSurface[] ElevatorNavMeshSurfaces;
     bool TurnOnNavMeshes = false;
-    Vector3 CamOffset;
-    Animator PlayerAnimator;
+    //Vector3 CamOffset;
+    //Animator PlayerAnimator;
+   // ArticyReference ID;
 
     Elevator SelectedElevator = null;
 
     private bool MovementBlocked = false;
-    
+
+    [Header("CCPlayer")]
     public GameObject DebugDestPos;
 
     // Start is called before the first frame update
-    void Start()
+    public override void Start()
     {
-        NavMeshAgent = this.GetComponent<NavMeshAgent>();       
+        base.Start();
+        
         ArticyFlow = FindObjectOfType<ArticyFlow>();
-        m_Anim = GetComponent<Animator>();
-        if(m_Anim != null ) m_Anim.enabled = false;
-        StartCoroutine(AnimStartDelay());
-        m_Rbody = GetComponent<Rigidbody>();
-
+        
         GameObject[] floors = GameObject.FindGameObjectsWithTag("FloorNavMesh");
         FloorNavMeshSurfaces = new NavMeshSurface[floors.Length];
         for (int i = 0; i < floors.Length; i++) FloorNavMeshSurfaces[i] = floors[i].GetComponent<NavMeshSurface>();
         GameObject[] elevators = GameObject.FindGameObjectsWithTag("ElevatorNavMesh");
         ElevatorNavMeshSurfaces = new NavMeshSurface[elevators.Length];
-        for (int i = 0; i < elevators.Length; i++) ElevatorNavMeshSurfaces[i] = elevators[i].GetComponent<NavMeshSurface>();
-
-        m_LastPos = transform.position;
-        Debug.Log("start pos: " + transform.position.ToString("F4"));
-        CamOffset = Camera.main.transform.position - this.transform.position;
-        ToggleMovementBlocked(false);
+        for (int i = 0; i < elevators.Length; i++) ElevatorNavMeshSurfaces[i] = elevators[i].GetComponent<NavMeshSurface>();               
+        
+        ToggleMovementBlocked(false);      
     }
-   
-    IEnumerator AnimStartDelay()
-    {
-        yield return new WaitForEndOfFrame();
-        if(m_Anim != null ) m_Anim.enabled = true;
-    }
+    
     private void OnTriggerEnter(Collider other)
     {
         StaticStuff.PrintTriggerEnter(this.name + " OnTriggerEnter() other: " + other.name + ", layer: " + other.gameObject.layer);       
@@ -128,17 +120,18 @@ public class CCPlayer : MonoBehaviour
             }
         }        
     }
-
-    void SetNavMeshDest(Vector3 dest)
-    {
-        NavMeshAgent.SetDestination(dest);
-    }
-
-    public void StopNavMeshMovement()
-    {                
-        SetNavMeshDest(this.transform.position);
-    }
     
+    public void ToggleMovementBlocked(bool val)
+    {
+       // Debug.Log("------------------ - ToggleMovementBlocked() val: " + val);
+        
+        MovementBlocked = val;
+    }
+    public bool IsMovementBlocked()
+    {
+        return MovementBlocked;
+    }
+
     public void ElevatorUpdate(Elevator caller)
     {
         if(caller == SelectedElevator)
@@ -154,65 +147,22 @@ public class CCPlayer : MonoBehaviour
             SetNavMeshDest(SelectedElevator.transform.GetChild(0).transform.position);            
         }        
     }
-
-    Vector3 m_LastRot = Vector3.zero;
-    Vector3 m_LastPos = Vector3.zero;
-    Vector3 m_DeltaPos = Vector3.zero;
-    Vector3 m_ForwardDir = Vector3.zero;
-    Vector3 m_LastForwardDir = Vector3.zero;
-    Vector3 m_MoveDir = Vector3.zero;
-    float m_WalkDir = 0f;
-    float m_TurnSpeed = 0f;
-    float m_Speed = 0f;
-    private void LateUpdate()
-    {        
-        Camera.main.transform.position = this.transform.position + CamOffset;
-        if(TurnOnNavMeshes == true )
+    
+    public override void LateUpdate()
+    {
+        base.LateUpdate();
+        // Camera.main.transform.position = this.transform.position + CamOffset;
+        if (TurnOnNavMeshes == true )
         {
             foreach (NavMeshSurface n in FloorNavMeshSurfaces) n.enabled = true;
             foreach (NavMeshSurface n in ElevatorNavMeshSurfaces) n.enabled = true;
-        }
-
-        if(m_Anim != null)
-        {
-            /*if (m_DeltaPos.magnitude > 0f)
-            {
-                Debug.Log("why we greater?: " + m_DeltaPos.magnitude);
-                Debug.Log("pos: " + transform.position.ToString("F4") + ", m_DeltaPos: " + m_DeltaPos.ToString("F4"));
-            }*/
-            m_DeltaPos = transform.position - m_LastPos;
-            m_MoveDir = transform.position - m_LastPos;
-            m_ForwardDir = transform.forward;
-
-            // determines whether or not we go to the WALK bit
-            m_Speed = m_DeltaPos.magnitude * 10f;
-            m_Anim.SetFloat("Speed", m_Speed);
-
-            // determines how much of the WalkForward and WalkBackward we play
-            m_WalkDir = Vector3.Angle(m_ForwardDir, m_MoveDir)/180f;
-            m_WalkDir *= 2;
-            m_WalkDir = 1 - m_WalkDir;
-            // 0 = forward, 1 = backward
-            // 2*m_WalkDir: 0 = forward, 2 = backward
-            // 1-(above) 1=forward, -1=backward
-            m_Anim.SetFloat("Walk Dir", m_WalkDir);            
-
-            m_TurnSpeed = Vector3.SignedAngle(m_LastForwardDir, m_ForwardDir, Vector3.up);
-            m_TurnSpeed /= 2f;
-            m_Anim.SetFloat("Turn Speed", m_TurnSpeed);
-
-            m_LastPos = transform.position;
-            m_LastRot = transform.rotation.eulerAngles;
-            m_LastForwardDir = m_ForwardDir;
         }        
     }
 
-    public Animator m_Anim;
-    public Rigidbody m_Rbody;
-
     // Update is called once per frame
-    void Update()
-    {        
+    public override void Update()
+    {
+        base.Update();
         if (MovementBlocked == false && Input.GetMouseButtonDown(0))
         {            
             int maskk = 1 << LayerMask.NameToLayer("Floor");            
@@ -224,8 +174,9 @@ public class CCPlayer : MonoBehaviour
                 Vector3 dest = Vector3.zero;
                 string layerClicked = LayerMask.LayerToName(hit.collider.gameObject.layer);
                 if(layerClicked.Equals("Floor"))
-                {
+                {                    
                     dest = hit.point;
+                    //Debug.Log("go to this spot: " + dest.ToString("F3"));
                     SelectedElevator = null;
                 }
                 else if(layerClicked.Equals("Elevator"))
@@ -238,28 +189,23 @@ public class CCPlayer : MonoBehaviour
                         SelectedElevator = hit.collider.GetComponent<Elevator>();
                         
                     }                                        
-                }
-                //Debug.Log("Set Dest b");
-                //NavMeshAgent.SetDestination(dest);
+                }                                
                 SetNavMeshDest(dest);
                 if(DebugDestPos != null) DebugDestPos.transform.position = dest;
             }
         }        
 
-        DebugStuff();
+        //DebugStuff();
     }
     
-    public void ToggleMovementBlocked(bool val)
-    {
-        MovementBlocked = val;
-    }
+    
 
     public Vector3 offset = new Vector3(0f, 0f, 0f);   
     public Text DebugText;
     void DebugStuff()
     {               
-        Debug.DrawRay(transform.position + offset, m_ForwardDir, Color.blue);        
-        Debug.DrawRay(transform.position + offset, m_MoveDir.normalized, Color.yellow);                
+       // Debug.DrawRay(transform.position + offset, m_ForwardDir, Color.blue);        
+        //Debug.DrawRay(transform.position + offset, m_MoveDir.normalized, Color.yellow);                
         if (DebugText != null)
         {
                         
@@ -276,8 +222,14 @@ public class CCPlayer : MonoBehaviour
             else DebugText.text += "no turn" + "\n";
             DebugText.text += "num clips: " + m_Anim.GetCurrentAnimatorClipInfoCount(0) + "\n";*/
 
+            DebugText.text += "remainingDistance: " + NavMeshAgent.remainingDistance + "\n";
+            DebugText.text += "stoppingDistance: " + NavMeshAgent.stoppingDistance + "\n";
+            DebugText.text += "hasPath: " + NavMeshAgent.hasPath + "\n";
+            DebugText.text += "velocity: " + NavMeshAgent.velocity.sqrMagnitude + "\n";
 
-            DebugText.text += NavMeshAgent.navMeshOwner.name + "\n";            
+            DebugText.text = "MovementBlocked: " + MovementBlocked.ToString();
+
+            /*DebugText.text += NavMeshAgent.navMeshOwner.name + "\n";            
             DebugText.text += "autoBraking: " + NavMeshAgent.autoBraking + "\n";
             DebugText.text += "autoRepath: " + NavMeshAgent.autoRepath + "\n";
             DebugText.text += "destination: " + NavMeshAgent.destination + "\n";
@@ -293,12 +245,12 @@ public class CCPlayer : MonoBehaviour
             DebugText.text += "remainingDistance: " + NavMeshAgent.remainingDistance + "\n";
             DebugText.text += "steeringTarget: " + NavMeshAgent.steeringTarget + "\n";
             DebugText.text += "stoppingDistance: " + NavMeshAgent.stoppingDistance + "\n";
-            DebugText.text += "updateRotation: " + NavMeshAgent.updateRotation + "\n";
+            DebugText.text += "updateRotation: " + NavMeshAgent.updateRotation + "\n";*/
             // if (SelectedElevator == null) DebugText.text += "no SelectedElevator\n";
             //else DebugText.text += "SelectedElevator: " + SelectedElevator.name + "\n";
             //DebugText.text += "ClickedElevator: " + (SelectedElevator != null) + "\n";
             //DebugText.text += "MovementBlocked: " + MovementBlocked;
-            DebugText.text = "";
+            //DebugText.text = "";
         }
     }
 }
