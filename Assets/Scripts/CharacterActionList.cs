@@ -104,7 +104,10 @@ public class CharacterActionList : MonoBehaviour
                         Vector3 dist = new Vector3(float.Parse(vec[0]), float.Parse(vec[1]), float.Parse(vec[2]));
                         CamFollow.SetupNewCamFollow(curEntityObject, dist);
                     }
-                    isActionDone = true;
+                    if(curActionData.LookAtEntityWhenDone == false)
+                    {
+                        isActionDone = true;
+                    }                    
                     break;
 
                 default:
