@@ -120,6 +120,37 @@ public class CharacterActionList : MonoBehaviour
             {
                 switch (curActionData.Action)
                 {
+                    case Action.NoAction:
+                        {
+                            isMoveDone = true;
+                            if(isActionDone == false)
+                            {
+                                if (curActionData.LookAtEntityWhenDone == true)
+                                {
+                                    GameObject objectToLookAt = GameObject.Find(curActionData.ObjectToLookAt);
+                                    if (objectToLookAt == null) { Debug.LogError("No object in the scene to look at called: " + curActionData.ObjectToLookAt); yield break; }
+                                    CharacterEntity entityToLookAt = objectToLookAt.GetComponent<CharacterEntity>();
+                                    if (entityToLookAt == null) { Debug.LogError("no object in the scene with this name: " + curActionData.ObjectToLookAt + "that has a CharacterEntity component"); yield break; }
+
+                                    LerpRotStart = curEntityObject.transform.rotation;
+                                    curEntityObject.transform.LookAt(entityToLookAt.transform);
+                                    LerpRotEnd = curEntityObject.transform.rotation;
+                                    curEntityObject.transform.rotation = LerpRotStart;
+                                }
+                            }
+                            else if (isRotDone == false)
+                            {
+                                timer += Time.deltaTime * 5f;
+                                curEntityObject.transform.rotation = Quaternion.Lerp(LerpRotStart, LerpRotEnd, timer);
+                                if (timer >= 1f)
+                                {
+                                    curEntityObject.transform.rotation = LerpRotEnd;
+                                    isRotDone = true;
+                                }
+                            }
+                            if (isMoveDone && isRotDone) isActionDone = true;
+                        }
+                        break;
                     case Action.Walk:
                         if (isMoveDone == false)
                         {
