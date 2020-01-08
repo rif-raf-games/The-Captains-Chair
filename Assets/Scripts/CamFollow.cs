@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+[ExecuteInEditMode]
 public class CamFollow : MonoBehaviour
 {
     public CharacterEntity EntityToFollow;
@@ -11,7 +13,11 @@ public class CamFollow : MonoBehaviour
 
     private void LateUpdate()
     {
-        transform.position = EntityToFollow.transform.position + CamOffset;
+        //Debug.Log("LateUpdate");
+        if(EntityToFollow != null)
+        {
+            transform.position = EntityToFollow.transform.position + CamOffset;
+        }        
     }
 
     public void SetupNewCamFollow(CharacterEntity newEntityToFollow, Vector3 newCamOffset)
