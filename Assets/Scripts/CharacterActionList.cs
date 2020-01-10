@@ -22,256 +22,187 @@ class EntitySaveData
 
 public class CharacterActionList : MonoBehaviour
 {
-    CamFollow CamFollow;    
-    
-    Character_Action_List_FeatureFeature CurCALFeature = null;
+    CamFollow CamFollow;
+
+    Character_Action_List_FeatureFeature CurCALObject = null;
     Dictionary<CharacterEntity, EntitySaveData> CurCALEntitySaveData = new Dictionary<CharacterEntity, EntitySaveData>();
-    int CurCALIndex = 0;
-    Branch CALNextBranch = null;
+    int CurCALIndex = 0;    
 
     private void Start()
     {
-        CamFollow = FindObjectOfType<CamFollow>();        
+        CamFollow = FindObjectOfType<CamFollow>();
     }
 
-    public void BeginCAL(IFlowObject calObject, Branch calNextBranch)
-    {        
+    class ActionState
+    {
+        public Action action;
+        public string actionInfo;
+        public GameObject actionObject;
+        public float actionTime = -1;
+        public float timer = -1;
+        public Quaternion LerpRotStart = Quaternion.identity;
+        public Quaternion LerpRotEnd = Quaternion.identity;
+        public bool isDone = false;
+
+        public ActionState(Action action, string actionInfo, GameObject actionObject/*, Vector3 startPosition*/)
+        {
+            this.action = action;
+            this.actionInfo = actionInfo;
+            this.actionObject = actionObject;
+            //this.startPosition = startPosition;
+        }
+    }
+
+    
+        
+    bool AllActionsDone(List<ActionState> actionStates)
+    {
+        bool allDone = true;
+        foreach(ActionState actionState in actionStates)
+        {
+            if (actionState.isDone == false) allDone = false;
+        }
+        return allDone;
+    }
+    public void BeginCAL(Character_Action_List_FeatureFeature calObject)
+    {
         CurCALIndex = 0;
-        CALNextBranch = calNextBranch;
-        CurCALFeature = (calObject as Character_Action_List_Template).Template.Character_Action_List_Feature;
+        CurCALObject = calObject;
         CurCALEntitySaveData.Clear();
         StartCoroutine(PlayCAL());
     }
-
     IEnumerator PlayCAL()
-    {
-        bool isCALDone = false;
-        while (isCALDone == false)
-        {
-            float animTime = -1f;
-            bool isActionDone = false;
-            bool isMoveDone = false;
-            bool isRotDone = false;
-            float timer = 0f;
-            Quaternion LerpRotStart = Quaternion.identity;
-            Quaternion LerpRotEnd = Quaternion.identity;
-
-            Character_Action_Template curActionTemplate = CurCALFeature.ActionStrip[CurCALIndex] as Character_Action_Template;
-            Character_Action_FeatureFeature curActionData = curActionTemplate.Template.Character_Action_Feature;
-            GameObject objectToAct = GameObject.Find(curActionData.ObjectToAct);      // mochange                      
-            if (objectToAct == null) { Debug.LogError("No object in the scene called: " + curActionData.ObjectToAct); yield break; }
-            CharacterEntity curEntityObject = objectToAct.GetComponent<CharacterEntity>();
-            if (curEntityObject == null) { Debug.LogError("There's no CharacterEntity object on the ObjectToAct: " + curActionData.ObjectToAct); yield break; }
-            PrintCurActionDataInfo(curActionData);
-
-            // set up the current action
-            switch (curActionData.Action)
+    {        
+        //Debug.Log("PlayCAL() going to do " + CurCALFeature.ActionsStrip.Count + " action groups");
+        foreach(Character_Action_Group_Template CAT in CurCALObject.ActionsStrip)
+        {           
+            Character_Action_Group_FeatureFeature actionsFeature = CAT.Template.Character_Action_Group_Feature;
+           // Debug.Log("Actions: " + CAT.DisplayName + " has " + actionsFeature.ActionStrip.Count + " actions");            
+            List<ActionState> actionsStates = new List<ActionState>();            
+            // Set up the initial state of the data
+            foreach ( Character_Action_Template actionTemplate in actionsFeature.ActionStrip)                
             {
-                case Action.Walk:
-                    if (curActionData.ActionInfo == "Start_Position")
-                    {
-                        if (CurCALEntitySaveData.ContainsKey(curEntityObject) == false) { Debug.LogError("This entity object isn't in the save data list. Make sure Start_Position isn't the first ActionInfo for walking on this entity: " + curEntityObject.name); yield break; }
-                        curEntityObject.SetNavMeshDest(CurCALEntitySaveData[curEntityObject].StartPos);
-                    }
-                    else
-                    {
-                        string[] pos = curActionData.ActionInfo.Split(',');
-                        Vector3 loc = new Vector3(float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]));
-                        if (CurCALEntitySaveData.ContainsKey(curEntityObject) == false)
-                        {
-                            CurCALEntitySaveData.Add(curEntityObject, new EntitySaveData(curEntityObject.transform.position, curEntityObject.GetStoppingDist(), curEntityObject.GetShouldFollowEntity()));
-                            curEntityObject.SetStoppingDist(0f);
-                            curEntityObject.ToggleFollowEntity(false);
-                        }
-                        curEntityObject.SetNavMeshDest(loc);
-                    }
-                    if (curActionData.BeginCameraFollow == true)
-                    {
-                        string[] vec = curActionData.CamFollowOffset.Split(',');
-                        Vector3 dist = new Vector3(float.Parse(vec[0]), float.Parse(vec[1]), float.Parse(vec[2]));
-                        CamFollow.SetupNewCamFollow(curEntityObject, dist);
-                    }
-                    break;
-
-                case Action.Animation:
-                    animTime = curEntityObject.PlayAnim(curActionData.ActionInfo);
-                    if (animTime == -1) { Debug.LogError("ERROR: " + curActionData.ActionInfo + " is not in the " + curEntityObject.name + "'s Animtor"); yield break; }
-                    break;
-                case Action.NoAction:
-                    if (curActionData.BeginCameraFollow == true)
-                    {
-                        string[] vec = curActionData.CamFollowOffset.Split(',');
-                        Vector3 dist = new Vector3(float.Parse(vec[0]), float.Parse(vec[1]), float.Parse(vec[2]));
-                        CamFollow.SetupNewCamFollow(curEntityObject, dist);
-                    }
-                    if(curActionData.LookAtEntityWhenDone == false)
-                    {
-                        isActionDone = true;
-                    }                    
-                    break;
-
-                default:
-                    Debug.LogError("This Action is not supported: " + curActionData.Action);
-                    yield break;
-            }
-
-            // perform the current action                        
-            while (isActionDone == false)
-            {
+                Character_Action_FeatureFeature curActionData = actionTemplate.Template.Character_Action_Feature;
+               // PrintActionInfo(actionTemplate.DisplayName, curActionData);
+                GameObject actionObject = GameObject.Find(curActionData.ObjectToAct);                
+                if (actionObject == null ){ Debug.LogError("No object in the scene called: " + curActionData.ObjectToAct); yield break; }
+                ActionState actionState = new ActionState(curActionData.Action, curActionData.ActionInfo, actionObject/*, actionObject.transform.position*/);
+                actionsStates.Add(actionState);
+                CharacterEntity ce;
                 switch (curActionData.Action)
                 {
-                    case Action.NoAction:
-                        {
-                            isMoveDone = true;
-                            if(isActionDone == false)
-                            {
-                                if (curActionData.LookAtEntityWhenDone == true)
-                                {
-                                    GameObject objectToLookAt = GameObject.Find(curActionData.ObjectToLookAt);
-                                    if (objectToLookAt == null) { Debug.LogError("No object in the scene to look at called: " + curActionData.ObjectToLookAt); yield break; }
-                                    CharacterEntity entityToLookAt = objectToLookAt.GetComponent<CharacterEntity>();
-                                    if (entityToLookAt == null) { Debug.LogError("no object in the scene with this name: " + curActionData.ObjectToLookAt + "that has a CharacterEntity component"); yield break; }
-
-                                    LerpRotStart = curEntityObject.transform.rotation;
-                                    curEntityObject.transform.LookAt(entityToLookAt.transform);
-                                    LerpRotEnd = curEntityObject.transform.rotation;
-                                    curEntityObject.transform.rotation = LerpRotStart;
-                                }
-                            }
-                            else if (isRotDone == false)
-                            {
-                                timer += Time.deltaTime * 5f;
-                                curEntityObject.transform.rotation = Quaternion.Lerp(LerpRotStart, LerpRotEnd, timer);
-                                if (timer >= 1f)
-                                {
-                                    curEntityObject.transform.rotation = LerpRotEnd;
-                                    isRotDone = true;
-                                }
-                            }
-                            if (isMoveDone && isRotDone) isActionDone = true;
-                        }
+                    case Action.CameraFollow:                        
+                        ce = actionState.actionObject.GetComponent<CharacterEntity>();
+                        if (ce == null) { Debug.LogError("Camera can't follow something that's not a Player/NPC: " + actionState.actionObject.name); yield break; }
+                        string[] offset = actionState.actionInfo.Split(',');
+                        Vector3 offsetVec = new Vector3(float.Parse(offset[0]), float.Parse(offset[1]), float.Parse(offset[2]));
+                        CamFollow.SetupNewCamFollow(ce, offsetVec);
+                        actionState.isDone = true;
                         break;
-                    case Action.Walk:
-                        if (isMoveDone == false)
-                        {
-                            isMoveDone = curEntityObject.NavMeshDone();
-                            if (isMoveDone == true)
-                            {
-                                if (curActionData.LookAtEntityWhenDone == true)
-                                {
-                                    GameObject objectToLookAt = GameObject.Find(curActionData.ObjectToLookAt);                                      
-                                    if (objectToLookAt == null) { Debug.LogError("No object in the scene to look at called: " + curActionData.ObjectToLookAt); yield break; }
-                                    CharacterEntity entityToLookAt = objectToLookAt.GetComponent<CharacterEntity>();
-                                    if (entityToLookAt == null) { Debug.LogError("no object in the scene with this name: " + curActionData.ObjectToLookAt + "that has a CharacterEntity component"); yield break; }
-
-                                    LerpRotStart = curEntityObject.transform.rotation;
-                                    curEntityObject.transform.LookAt(entityToLookAt.transform);
-                                    LerpRotEnd = curEntityObject.transform.rotation;
-                                    curEntityObject.transform.rotation = LerpRotStart;
-                                }
-                                else
-                                {
-                                    isRotDone = true;
-                                }
-                            }
-                        }
-                        else if (isRotDone == false)
-                        {
-                            timer += Time.deltaTime * 5f;
-                            curEntityObject.transform.rotation = Quaternion.Lerp(LerpRotStart, LerpRotEnd, timer);
-                            if (timer >= 1f)
-                            {
-                                curEntityObject.transform.rotation = LerpRotEnd;
-                                isRotDone = true;
-                            }
-                        }
-                        if (isMoveDone && isRotDone) isActionDone = true;
+                    case Action.WalkToObject:
+                        ce = actionState.actionObject.GetComponent<CharacterEntity>();
+                        if (ce == null) { Debug.LogError("Can't tell an object that's not a Player/NPC to walk to an object: " + actionState.actionObject.name); yield break; }
+                        GameObject objectToWalkTo = GameObject.Find(actionState.actionInfo);
+                        if(objectToWalkTo == null) { Debug.LogError("The object to walk to: " + actionState.actionInfo + " is not in the scene."); yield break; }
+                        ce.SetNavMeshDest(objectToWalkTo.transform.position);
                         break;
-
+                    case Action.WalkToLocation:                        
+                        ce = actionState.actionObject.GetComponent<CharacterEntity>();
+                        if (ce == null) { Debug.LogError("Can't tell an object that's not a Player/NPC to walk to a location: " + actionState.actionObject.name); yield break; }
+                        if (curActionData.ActionInfo == "Start_Position")
+                        {
+                            if (CurCALEntitySaveData.ContainsKey(ce) == false) { Debug.LogError("This entity object isn't in the save data list. Make sure Start_Position isn't the first ActionInfo for walking on this entity: " + actionState.actionObject.name); yield break; }
+                            ce.SetNavMeshDest(CurCALEntitySaveData[ce].StartPos);                            
+                        }
+                        else 
+                        {
+                            string[] pos = curActionData.ActionInfo.Split(',');
+                            Vector3 loc = new Vector3(float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]));
+                            if (CurCALEntitySaveData.ContainsKey(ce) == false)
+                            {
+                                CurCALEntitySaveData.Add(ce, new EntitySaveData(ce.transform.position, ce.GetStoppingDist(), ce.GetShouldFollowEntity()));
+                                ce.SetStoppingDist(0f);
+                                ce.SetShouldFollowEntity(false);
+                            }                            
+                            ce.SetNavMeshDest(loc);
+                        }                        
+                            break;
                     case Action.Animation:
-                        timer += Time.deltaTime;
-                        if (timer > animTime)
-                        {
-                            Debug.Log("anim is done");
-                            isActionDone = true;
-                        }
+                        ce = actionState.actionObject.GetComponent<CharacterEntity>();
+                        if(ce == null) { Debug.LogError("Can't call an animation on an object that's not a Player/NPC: " + actionState.actionObject.name); yield break;}
+                        actionState.actionTime = ce.PlayAnim(actionState.actionInfo);
+                        if(actionState.actionTime == -1) { Debug.LogError(actionState.actionObject + " does not have an animation called: " + actionState.actionInfo + " in it."); yield break; }
                         break;
+                    case Action.TurnTowards:
+                        GameObject objectToLookAt = GameObject.Find(curActionData.ActionInfo);
+                        if (objectToLookAt == null) { Debug.LogError("No object in the scene to look at called: " + curActionData.ActionInfo); yield break; }
+                        actionState.LerpRotStart = actionState.actionObject.transform.rotation;
+                        actionState.actionObject.transform.LookAt(objectToLookAt.transform);
+                        actionState.LerpRotEnd = actionState.actionObject.transform.rotation;
+                        actionState.actionObject.transform.rotation = actionState.LerpRotStart;
+                       // Debug.Log(actionState.LerpRotStart.eulerAngles + ", end: " + actionState.LerpRotEnd.eulerAngles);
+                        break;
+                }
+                
+            } 
+            // now get the loop going
+            while(AllActionsDone(actionsStates) == false)
+            {                
+                foreach(ActionState actionState in actionsStates)
+                {
+                    if(actionState.isDone == false)
+                    {                        
+                        switch (actionState.action)
+                        {
+                            case Action.WalkToLocation:
+                                actionState.isDone = actionState.actionObject.GetComponent<CharacterEntity>().NavMeshDone();
+                                break;
+                            case Action.WalkToObject:
+                                actionState.isDone = actionState.actionObject.GetComponent<CharacterEntity>().NavMeshDone();
+                              //  if (DebugText != null) DebugText.text = "arrived at object?: " + actionState.isDone;
+                                break;
+                            case Action.Animation:
+                                actionState.timer += Time.deltaTime;
+                                if(actionState.timer >= actionState.actionTime)
+                                {
+                                    actionState.isDone = true;
+                                }
+                                break;
+                            case Action.TurnTowards:                                
+                                actionState.timer += Time.deltaTime * 5f;
+                                actionState.actionObject.transform.rotation = Quaternion.Lerp(actionState.LerpRotStart, actionState.LerpRotEnd, actionState.timer);                               
+                                if (actionState.timer > 1f)
+                                {
+                                    actionState.actionObject.transform.rotation = actionState.LerpRotEnd;
+                                    actionState.isDone = true;
+                                }
+                                break;
+                        }
+                    }                    
                 }
                 yield return new WaitForEndOfFrame();
             }
-
-            Debug.Log("action done");
-            CurCALIndex++;
-            if (CurCALIndex >= CurCALFeature.ActionStrip.Count)
-            {
-                Debug.Log("done with this action list.");
-                isCALDone = true;
-            }
-            yield return new WaitForEndOfFrame();
+            Debug.Log("all actions done");            
         }
 
+        Debug.Log("CAL done");
         foreach (KeyValuePair<CharacterEntity, EntitySaveData> entry in CurCALEntitySaveData)
         {
             entry.Key.SetStoppingDist(entry.Value.NavMeshStoppingDist);
             entry.Key.SetShouldFollowEntity(entry.Value.ShouldFollowEntity);
         }
-
-        GetComponent<ArticyFlow>().EndCAL(CALNextBranch);
-        CurCALFeature = null;
-        CALNextBranch = null;
-        
-        
-        /* DialogueFragment df = CALNextBranch.Target as DialogueFragment;
-
-         if (df != null)
-         {
-             Debug.Log("ready to head back to conversation");
-             CurArticyState = ArticyState.CONVERSATION;
-         }
-         else
-         {
-             Debug.LogWarning("We haven't added support for Action Lists continuing on anything other than DialogueFragments so see what happens.");
-         }
-         foreach (KeyValuePair<CharacterEntity, EntitySaveData> entry in CurCALEntitySaveData)
-         {
-             entry.Key.SetStoppingDist(entry.Value.NavMeshStoppingDist);
-             entry.Key.SetShouldFollowEntity(entry.Value.ShouldFollowEntity);
-         }
-         NextBranch = CALNextBranch;
-         CurCALFeature = null;
-         CALNextBranch = null;*/
+        GetComponent<ArticyFlow>().EndCAL();
+        CurCALObject = null;        
     }
 
-    CharacterEntity GetEntityObjectFromActionEntity(ArticyObject characterEntity)
-    {        
-        foreach (CharacterEntity go in GetComponent<ArticyFlow>().GetCharacterEntities())
-        {
-            ArticyReference ar = go.GetComponent<ArticyReference>();
-            if (ar == null) { Debug.LogError("Our Player has no ArticyReference?"); return null; }
-            if (ar.reference.GetObject() == characterEntity)
-            {
-                return go;
-            }
-        }
-        return null;
-    }
-
-    void PrintCurActionDataInfo(Character_Action_FeatureFeature curActionData)
+    void PrintActionInfo(string actionName, Character_Action_FeatureFeature curActionData)
     {
-        string s = "-------Begin Action with object: " + curActionData.ObjectToAct + ", Action: " + curActionData.Action + ", info: " + curActionData.ActionInfo + "\n";
-        s += "Begin Cam Follow: " + curActionData.BeginCameraFollow + ", Cam Follow Offset: " + curActionData.CamFollowOffset + "\n";
-        s += "Look at entity when done: " + curActionData.LookAtEntityWhenDone;
-        if(curActionData.LookAtEntityWhenDone == true) s += ", object to look at: " + curActionData.ObjectToLookAt;        
+        string s = "\tAction name: " + actionName + ", ";
+        s += "Action type: " + curActionData.Action + ", ";
+        s += "action info: " + curActionData.ActionInfo + ", ";
+        s += "action Object: " + curActionData.ObjectToAct;
         Debug.Log(s);
     }
-
-
-
-    string GetCharacterEntityDisplayName(ArticyObject entity)
-    {
-        Debug.Log("GetName(): " + entity.GetType());
-        if (entity.GetType().Equals(typeof(npcCrew))) return (entity as npcCrew).DisplayName;
-        else if (entity.GetType().Equals(typeof(PC))) return (entity as PC).DisplayName;
-        else return "Unknown type: " + entity.GetType().ToString();
-    }
+    public Text DebugText;    
+    
 }

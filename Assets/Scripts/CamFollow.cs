@@ -22,10 +22,10 @@ public class CamFollow : MonoBehaviour
 
     public void SetupNewCamFollow(CharacterEntity newEntityToFollow, Vector3 newCamOffset)
     {
-        Debug.Log("SetupNewCamFollow() newEntityToFollow: " + newEntityToFollow.name + ", newCamOffset: " + newCamOffset.ToString("F2"));
-        Debug.Log("curOffset: " + CamOffset.ToString("F2"));
-        Debug.Log("newOffset on new entity: " + (transform.position - newEntityToFollow.transform.position).ToString("F2"));
-        Debug.Log("newCamOffset: " + newCamOffset.ToString("F2"));
+        //Debug.Log("SetupNewCamFollow() newEntityToFollow: " + newEntityToFollow.name + ", newCamOffset: " + newCamOffset.ToString("F2"));
+       // Debug.Log("curOffset: " + CamOffset.ToString("F2"));
+       // Debug.Log("newOffset on new entity: " + (transform.position - newEntityToFollow.transform.position).ToString("F2"));
+      //  Debug.Log("newCamOffset: " + newCamOffset.ToString("F2"));
        
         this.EntityToFollow = newEntityToFollow;
 

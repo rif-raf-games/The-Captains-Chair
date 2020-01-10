@@ -46,7 +46,7 @@ public class ConvoUI : MonoBehaviour
     public void PauseConversation()
     {
         // conversation isn't over, but we want to temporarily shut it off while a character moves somewhere.
-       // Debug.Log("----------------------- PauseConversation()");
+        Debug.Log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ PauseConversation()");
         this.gameObject.SetActive(false);
         Player.ToggleMovementBlocked(true);
     }

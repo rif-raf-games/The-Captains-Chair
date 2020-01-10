@@ -21,7 +21,7 @@ public class CharacterEntity : MonoBehaviour
     protected NavMeshAgent NavMeshAgent;
 
     public GameObject EntityToFollow;
-    bool ShouldFollowEntity = false;
+    public bool ShouldFollowEntity = false;
    
     // Start is called before the first frame update
     public virtual void Start()
@@ -97,7 +97,7 @@ public class CharacterEntity : MonoBehaviour
     {       
         if(Animator != null)
         {
-            Debug.Log("PlayAnim: " + "Base Layer." + anim);
+            //Debug.Log("PlayAnim: " + "Base Layer." + anim);
             Animator.Play("Base Layer." + anim);
             if (AnimClipInfo.ContainsKey(anim) == false)
             {
@@ -107,7 +107,7 @@ public class CharacterEntity : MonoBehaviour
             else
             {
                 float time = AnimClipInfo[anim];
-                Debug.Log("time of anim: " + time);
+               // Debug.Log("time of anim: " + time);
                 return time;
             }            
         }
@@ -116,8 +116,7 @@ public class CharacterEntity : MonoBehaviour
 
     public void ToggleFollowEntity(bool val)
     {
-        if (EntityToFollow != null) ShouldFollowEntity = val;
-        else Debug.LogWarning("You're telling this entity to follow something but there's no object set to follow");
+        if (EntityToFollow != null) ShouldFollowEntity = val;        
     }
 
     public void SetNavMeshDest(Vector3 dest)
@@ -147,6 +146,7 @@ public class CharacterEntity : MonoBehaviour
     {
         NavMeshAgent.stoppingDistance = dist;
     }
+
 
     public bool NavMeshDone()
     {

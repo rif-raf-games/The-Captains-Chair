@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Scratch
-{
+
+{ 
     //If you don't have JSON.NET you could also write to a text file like this. This is how you would save
     /*using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"D:\SaveFile.txt"))
     {

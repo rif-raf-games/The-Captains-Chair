@@ -56,8 +56,7 @@ public class CCPlayer : CharacterEntity
                 if (dialogue != null)
                 {
                     StaticStuff.PrintTriggerEnter("we have a dialogue, so set the FlowPlayer to start on it and see what happens");
-                    ArticyFlow.StartConvo(dialogue);
-                    //NavMeshAgent.SetDestination(this.transform.position);
+                    ArticyFlow.StartConvo(dialogue);                    
                 }
                 else
                 {
@@ -123,7 +122,7 @@ public class CCPlayer : CharacterEntity
     
     public void ToggleMovementBlocked(bool val)
     {
-       // Debug.Log("------------------ - ToggleMovementBlocked() val: " + val);
+        //Debug.Log("------------------ - ToggleMovementBlocked() val: " + val);
         
         MovementBlocked = val;
     }
