@@ -104,6 +104,12 @@ public class CharacterActionList : MonoBehaviour
                         if (ce == null) { Debug.LogError("Can't tell an object that's not a Player/NPC to walk to an object: " + actionState.actionObject.name); yield break; }
                         GameObject objectToWalkTo = GameObject.Find(actionState.actionInfo);
                         if(objectToWalkTo == null) { Debug.LogError("The object to walk to: " + actionState.actionInfo + " is not in the scene."); yield break; }
+                        if (CurCALEntitySaveData.ContainsKey(ce) == false)
+                        {
+                            CurCALEntitySaveData.Add(ce, new EntitySaveData(ce.transform.position, ce.GetStoppingDist(), ce.GetShouldFollowEntity()));
+                            //ce.SetStoppingDist(0f);
+                            ce.SetShouldFollowEntity(false);
+                        }
                         ce.SetNavMeshDest(objectToWalkTo.transform.position);
                         break;
                     case Action.WalkToLocation:                        
