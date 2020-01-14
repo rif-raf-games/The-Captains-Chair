@@ -73,15 +73,31 @@ public class CharacterActionList : MonoBehaviour
     }
     IEnumerator PlayCAL()
     {        
-        //Debug.Log("PlayCAL() going to do " + CurCALFeature.ActionsStrip.Count + " action groups");
-        foreach(Character_Action_Group_Template CAT in CurCALObject.ActionsStrip)
-        {           
-            Character_Action_Group_FeatureFeature actionsFeature = CAT.Template.Character_Action_Group_Feature;
-           // Debug.Log("Actions: " + CAT.DisplayName + " has " + actionsFeature.ActionStrip.Count + " actions");            
-            List<ActionState> actionsStates = new List<ActionState>();            
-            // Set up the initial state of the data
-            foreach ( Character_Action_Template actionTemplate in actionsFeature.ActionStrip)                
+        Debug.Log("PlayCAL() going to do " + CurCALObject.ActionsStrip.Count + " action groups");
+        foreach(ArticyObject ao in CurCALObject.ActionsStrip)
+        {
+            List<Character_Action_Template> actionsToTake = new List<Character_Action_Template>();
+            // it's either an Action Group or just an Action
+            Character_Action_Group_Template cagt = ao as Character_Action_Group_Template;
+            Character_Action_Template cat = ao as Character_Action_Template;
+            if (cagt != null)
             {
+                //Debug.Log("element is an action group: " + cag.DisplayName);
+                Character_Action_Group_FeatureFeature actionsFeature = cagt.Template.Character_Action_Group_Feature;
+                foreach(Character_Action_Template catt in actionsFeature.ActionStrip)
+                {
+                    actionsToTake.Add(catt);
+                }
+            }
+            else if(cat != null)
+            {
+                //Debug.Log("element is an action: " + cat.DisplayName);
+                actionsToTake.Add(cat);
+            }                                          
+
+            List<ActionState> actionsStates = new List<ActionState>();                                  
+            foreach(Character_Action_Template actionTemplate in actionsToTake)
+            {   // Set up the initial state of the data  
                 Character_Action_FeatureFeature curActionData = actionTemplate.Template.Character_Action_Feature;
                // PrintActionInfo(actionTemplate.DisplayName, curActionData);
                 GameObject actionObject = GameObject.Find(curActionData.ObjectToAct);                
@@ -164,8 +180,7 @@ public class CharacterActionList : MonoBehaviour
                                 actionState.isDone = actionState.actionObject.GetComponent<CharacterEntity>().NavMeshDone();
                                 break;
                             case Action.WalkToObject:
-                                actionState.isDone = actionState.actionObject.GetComponent<CharacterEntity>().NavMeshDone();
-                              //  if (DebugText != null) DebugText.text = "arrived at object?: " + actionState.isDone;
+                                actionState.isDone = actionState.actionObject.GetComponent<CharacterEntity>().NavMeshDone();                              
                                 break;
                             case Action.Animation:
                                 actionState.timer += Time.deltaTime;
@@ -188,10 +203,10 @@ public class CharacterActionList : MonoBehaviour
                 }
                 yield return new WaitForEndOfFrame();
             }
-            Debug.Log("all actions done");            
+           // Debug.Log("all actions done");            
         }
 
-        Debug.Log("CAL done");
+        //Debug.Log("CAL done");
         foreach (KeyValuePair<CharacterEntity, EntitySaveData> entry in CurCALEntitySaveData)
         {
             entry.Key.SetStoppingDist(entry.Value.NavMeshStoppingDist);
