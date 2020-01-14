@@ -157,7 +157,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     public void OnBranchesUpdated(IList<Branch> aBranches)
     {
         StaticStuff.PrintFlowBranchesUpdate("************** OnBranchesUpdated() START *************");
-        StaticStuff.PrintFlowBranchesUpdate("Num branches: " + aBranches.Count);
+        StaticStuff.PrintFlowBranchesUpdate("Num branches: " + aBranches.Count); 
        // Debug.Log("************** OnBranchesUpdated() START *************");
         //Debug.Log("Num branches: " + aBranches.Count);
 
