@@ -15,12 +15,13 @@ public class WanderManager : MonoBehaviour
         Wanderers = transform.GetComponentsInChildren<Wanderer>().ToList();
     }
     
-    public WanderPoint GetWanderPoint()
+    public WanderPoint GetWanderPoint(GameObject objectGettingPoint)
     {
         int index = Random.Range(0, UnusedWanderPoints.Count);
         WanderPoint wp = UnusedWanderPoints[index];
         UnusedWanderPoints.Remove(wp);
         UsedWanderPoints.Add(wp);
+        Debug.Log("wander dist: " + Vector3.Distance(objectGettingPoint.transform.position, wp.transform.position));
         return wp;
     }
 
@@ -29,5 +30,4 @@ public class WanderManager : MonoBehaviour
         UnusedWanderPoints.Add(wp);
         UsedWanderPoints.Remove(wp);
     }
-
-}
+}            

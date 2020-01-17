@@ -35,7 +35,7 @@ public class Wanderer : NPC
     void StartWalkState()
     {
         WanderState = eWanderStates.MOVING;
-        CurWanderPoint = WanderManager.GetWanderPoint();
+        CurWanderPoint = WanderManager.GetWanderPoint(this.gameObject);
         SetNavMeshDest(CurWanderPoint.transform.position);
     }
 

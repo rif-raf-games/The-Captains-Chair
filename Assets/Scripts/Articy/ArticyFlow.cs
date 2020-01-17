@@ -248,7 +248,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                 Character_Action_List_FeatureFeature CurCALObject = (CurPauseObject as Character_Action_List_Template).Template.Character_Action_List_Feature;
                 ActiveCALPauseObjects = CurCALObject.PauseFrags;
                 //Debug.Log("num pause frags: " + ActiveCALPauseObjects.Count);
-                GetComponent<CharacterActionList>().BeginCAL(CurCALObject);                
+                GetComponent<CharacterActionList>().BeginCAL(CurCALObject, this.gameObject);                
             }
             else
             {
