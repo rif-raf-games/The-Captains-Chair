@@ -9,7 +9,7 @@ public class AmbientEntity : NPC
 {
     Character_Action_List_FeatureFeature MyActionList;
     CharacterActionList MyActionListPlayer;
-    TextMesh BarkText;
+    public TextMesh BarkText;
     // Start is called before the first frame update
     public override void Start()
     {
@@ -31,9 +31,15 @@ public class AmbientEntity : NPC
         if(BarkText == null) { Debug.LogError("There's no TextMesh on this AmbientEntity: " + this.gameObject.name); return;  }
         ToggleBarkText(false);
     }
-
+    void Awake() //Mo Look here for weird bark text while walking issue (ask MR)
+    {
+        BarkText = GetComponentInChildren<TextMesh>();
+        if (BarkText == null) { Debug.LogError("There's no TextMesh on this AmbientEntity: " + this.gameObject.name); return; }
+        ToggleBarkText(false);
+    }
     public void SetBarkText(string text)
     {
+        Debug.LogWarning("Setting text: " + text + " on object: " + this.name);
         BarkText.text = text;
     }
     public void ToggleBarkText(bool val)
