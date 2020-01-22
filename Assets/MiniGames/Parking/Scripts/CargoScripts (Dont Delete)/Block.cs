@@ -29,63 +29,7 @@ public class Block : MonoBehaviour
         GetComponentInChildren<MeshRenderer>().material.color = Color.blue;
     }*/
     
-    /// <summary>
-    /// Handles the actual movment of the block based on the values calculated in the MCP
-    /// </summary>   
-    public void Move(Vector3 moveDelta)
-    {
-        // various error checks just to be safe
-        if (CurState != eState.MOVING) { Debug.LogError("ERROR: trying to move a block not in a MOVING state. State: " + CurState); return; }
-        if (moveDelta.magnitude == 0) { Debug.LogError("ERROR: trying to move block but moveDelta is 0."); return; }
-        if (moveDelta.magnitude > .95f || moveDelta.magnitude < -.95f) { Debug.LogError("ERROR: trying to move too far: " + moveDelta.magnitude); return; }       
-        if (Dir == eDir.HORIZONTAL && moveDelta.z != 0f) { Debug.LogError("have z value for HORIZONTAL movement: " + moveDelta.ToString("F3")); return; }
-        if (Dir == eDir.VERTICAL && moveDelta.x != 0f) { Debug.LogError("have x value for VERTICAL movement: " + moveDelta.ToString("F3")); return; }
-        // we're good, so start the movement
-        Vector3 startPosition = transform.position;       
-        Vector3 collisionPoint = CheckMovementCollision(moveDelta); // check for collisions
-        if (collisionPoint.Equals(Vector3.positiveInfinity) == false)
-        {   // if we've made it here then there was a collision with something   
-            // get our rotation so we know which direction we're moving in either HORIZONTAL (up/down) or VERTICAL (left/right)
-            float rotY = transform.eulerAngles.y;
-            if (rotY < 0) rotY += 360f;
-            if (rotY >= 360f) rotY = 0f;                 
-            if (Dir == eDir.HORIZONTAL)
-            {   // get the X position that we want the block to be based on where the collision point is
-                float newX = 0f;                
-                if (moveDelta.x > 0)
-                {   // moving right
-                    if (rotY < 90f) newX = collisionPoint.x - MyBoxCollider.size.x;
-                    else newX = collisionPoint.x;
-                }
-                else
-                {   // moving left
-                    if (rotY < 90f) newX = collisionPoint.x;
-                    else newX = collisionPoint.x + MyBoxCollider.size.x;
-                }
-               // Debug.Log("newX: " + newX + ", rotY: " + rotY + ", moveDelta.x: " + moveDelta.x);
-                transform.position = new Vector3(newX, transform.position.y, transform.position.z); // set our position to the newX point based on the collision point          
-            }
-            else
-            {   // get the Y position that we want the block to be based on where the collision point is
-                float newZ = 0f;                
-                if (moveDelta.z > 0)
-                {   // moving up                                      
-                    if (rotY < 100f && MyBoxCollider.size.x >= 1.1f) newZ = collisionPoint.z;
-                    else newZ = collisionPoint.z - MyBoxCollider.size.x;
-                }
-                else
-                {   // moving down                    
-                    if (rotY < 100f && MyBoxCollider.size.x >= 1.1f) newZ = collisionPoint.z + MyBoxCollider.size.x;
-                    else newZ = collisionPoint.z;
-                }
-                transform.position = new Vector3(transform.position.x, transform.position.y, newZ); // set our position to the newX point based on the collision point                         
-            }
-        }
-        else
-        {   // no collision, so just move the block to the new spot based on the movement provided by the CargoPuzzle            
-            transform.position += moveDelta;
-        }
-    }        
+       
     /// <summary>
     /// Stop this block from moving. Handles setting up the Snap values
     /// </summary>    
@@ -313,31 +257,63 @@ public class Block : MonoBehaviour
     }
     #endregion
     #region COLLISIONS
+    
     /// <summary>
-    /// Helper function used by the collision detection to return the closest collision point based on the 
-    /// inputted values.  
-    /// </summary>
-    Vector3 GetClosestCollisionPoint(Vector3 center, Vector3 size, Vector3 sizeOffset)
+    /// Handles the actual movment of the block based on the values calculated in the MCP
+    /// </summary>   
+    public void Move(Vector3 moveDelta)
     {
-        Vector3 closestPoint = Vector3.positiveInfinity;
-        Collider[] colliders = Physics.OverlapBox(center, (size / 2) - sizeOffset, transform.rotation);
-        if (colliders != null)
-        {
-            if (colliders.Length > 0)
-            {
-                foreach (Collider c in colliders)
-                {
-                    if (c.gameObject == this.gameObject) continue; // ignore your own collider
-                    if (c.isTrigger == false ) // make sure it's not a trigger
-                    {
-                        closestPoint = c.ClosestPoint(center);
-                        //Debug.Log("collision: " + c.name + ", closestPoint: " + closestPoint.ToString("0.000") + ", center: " + center.ToString("F3"));                        
-                        break;
-                    }
+        // various error checks just to be safe
+        if (CurState != eState.MOVING) { Debug.LogError("ERROR: trying to move a block not in a MOVING state. State: " + CurState); return; }
+        if (moveDelta.magnitude == 0) { Debug.LogError("ERROR: trying to move block but moveDelta is 0."); return; }
+        if (moveDelta.magnitude > .95f || moveDelta.magnitude < -.95f) { Debug.LogError("ERROR: trying to move too far: " + moveDelta.magnitude); return; }
+        if (Dir == eDir.HORIZONTAL && moveDelta.z != 0f) { Debug.LogError("have z value for HORIZONTAL movement: " + moveDelta.ToString("F3")); return; }
+        if (Dir == eDir.VERTICAL && moveDelta.x != 0f) { Debug.LogError("have x value for VERTICAL movement: " + moveDelta.ToString("F3")); return; }
+        // we're good, so start the movement
+        Vector3 startPosition = transform.position;
+        Vector3 collisionPoint = CheckMovementCollision(moveDelta); // check for collisions
+        if (collisionPoint.Equals(Vector3.positiveInfinity) == false)
+        {   // if we've made it here then there was a collision with something   
+            // get our rotation so we know which direction we're moving in either HORIZONTAL (up/down) or VERTICAL (left/right)
+            float rotY = transform.eulerAngles.y;
+            if (rotY < 0) rotY += 360f;
+            if (rotY >= 360f) rotY = 0f;
+            if (Dir == eDir.HORIZONTAL)
+            {   // get the X position that we want the block to be based on where the collision point is
+                float newX = 0f;
+                if (moveDelta.x > 0)
+                {   // moving right
+                    if (rotY < 90f) newX = collisionPoint.x - MyBoxCollider.size.x;
+                    else newX = collisionPoint.x;
                 }
+                else
+                {   // moving left
+                    if (rotY < 90f) newX = collisionPoint.x;
+                    else newX = collisionPoint.x + MyBoxCollider.size.x;
+                }
+                // Debug.Log("newX: " + newX + ", rotY: " + rotY + ", moveDelta.x: " + moveDelta.x);
+                transform.position = new Vector3(newX, transform.position.y, transform.position.z); // set our position to the newX point based on the collision point          
+            }
+            else
+            {   // get the Y position that we want the block to be based on where the collision point is
+                float newZ = 0f;
+                if (moveDelta.z > 0)
+                {   // moving up                                      
+                    if (rotY < 100f && MyBoxCollider.size.x >= 1.1f) newZ = collisionPoint.z;
+                    else newZ = collisionPoint.z - MyBoxCollider.size.x;
+                }
+                else
+                {   // moving down                    
+                    if (rotY < 100f && MyBoxCollider.size.x >= 1.1f) newZ = collisionPoint.z + MyBoxCollider.size.x;
+                    else newZ = collisionPoint.z;
+                }
+                transform.position = new Vector3(transform.position.x, transform.position.y, newZ); // set our position to the newX point based on the collision point                         
             }
         }
-        return closestPoint;
+        else
+        {   // no collision, so just move the block to the new spot based on the movement provided by the CargoPuzzle            
+            transform.position += moveDelta;
+        }
     }
     /// <summary>
     /// Handles checking for collision based on movement
@@ -363,6 +339,32 @@ public class Block : MonoBehaviour
         }
         Vector3 closestPoint = GetClosestCollisionPoint(center, size, sizeOffset);
         transform.position -= moveOffset;
+        return closestPoint;
+    }
+    /// <summary>
+    /// Helper function used by the collision detection to return the closest collision point based on the 
+    /// inputted values.  
+    /// </summary>
+    Vector3 GetClosestCollisionPoint(Vector3 center, Vector3 size, Vector3 sizeOffset)
+    {
+        Vector3 closestPoint = Vector3.positiveInfinity;
+        Collider[] colliders = Physics.OverlapBox(center, (size / 2) - sizeOffset, transform.rotation);
+        if (colliders != null)
+        {
+            if (colliders.Length > 0)
+            {
+                foreach (Collider c in colliders)
+                {
+                    if (c.gameObject == this.gameObject) continue; // ignore your own collider
+                    if (c.isTrigger == false) // make sure it's not a trigger
+                    {
+                        closestPoint = c.ClosestPoint(center);
+                        //Debug.Log("collision: " + c.name + ", closestPoint: " + closestPoint.ToString("0.000") + ", center: " + center.ToString("F3"));                        
+                        break;
+                    }
+                }
+            }
+        }
         return closestPoint;
     }
     /// <summary>

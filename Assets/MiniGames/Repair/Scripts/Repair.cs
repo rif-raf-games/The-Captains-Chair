@@ -133,7 +133,7 @@ public class Repair : MonoBehaviour
             if (MoveType == eMoveType.WAITING_FOR_TYPE && Vector3.Distance(newWorldTouchPos, StartWorldTouchPos) > .25f )
             {   // if we clicked on a piece that was on the belt, wait until the touch has moved far enough from the start touch spot before
                 // determining if we're moving the belt or the piece
-                float angle = Vector3.Angle(StartWorldTouchPos - newWorldTouchPos, Vector3.right);                
+                float angle = Vector3.Angle(StartWorldTouchPos - newWorldTouchPos, Vector3.right); // moangle           
                 if (angle > 120f) MoveType = eMoveType.PIECE;                
                 else MoveType = eMoveType.BELT;                
             }
@@ -241,8 +241,9 @@ public class Repair : MonoBehaviour
             }
             terminal.GetComponentInChildren<MeshCollider>().enabled = true; // turn this back on    
         }
-
+#if UNITY_EDITOR
         EditorUtility.SetDirty(this);
+#endif
     }
 
     float GetNewRot(float rot)
@@ -468,7 +469,7 @@ public class Repair : MonoBehaviour
             int angleAdj = ( curPiece.Type == eRepairPieceType.XOVER || curPiece.Type == eRepairPieceType.SPLITTER ? angle : angle + pieceRot);            
             Color color = GetColor(angleAdj);
             Quaternion q = Quaternion.AngleAxis(angleAdj, Vector3.up);
-            Vector3 rayDir = q * Vector3.right;
+            Vector3 rayDir = q * Vector3.right;// moangle
            // Debug.DrawRay(curPiecePos, rayDir * 4, color, 100000f);
             
             RaycastHit hit;
@@ -559,7 +560,7 @@ public class Repair : MonoBehaviour
                             int adjPieceRot = Mathf.RoundToInt(adjacentPiece.transform.localRotation.eulerAngles.y);
                             Debug.Log("adjPieceRot: " + adjPieceRot);
                             // Vector3.forward is what we use for Vector3.Rotate when it's bouncing off an angle of 0, so turn Vector3.forward into an angle
-                            float angleForward = Quaternion.FromToRotation(Vector3.right, Vector3.forward).eulerAngles.y;
+                            float angleForward = Quaternion.FromToRotation(Vector3.right, Vector3.forward).eulerAngles.y; // moangle
                             Debug.Log("angleForward: " + angleForward);
                             // Add the adjacent piece rotation to the Vector3.forward's calculated angle
                             float angleOfNormalToUse = angleForward + adjPieceRot;
