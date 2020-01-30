@@ -27,12 +27,13 @@ public class NPC : CharacterEntity
         {
             Behaviors.Add(child as Character_Action_List_Template);
         }
-
+        Debug.Log(this.name + " has " + Behaviors.Count + " Behaviors.");
         RestartBehavior();
     }    
 
     public void RestartBehavior()
     {
+        //Debug.Log(this.name + ": RestartBehavior()");
         CurBehavior = GetValidBehavior();
         StartCurrentBehavior();
     }
@@ -72,7 +73,7 @@ public class NPC : CharacterEntity
 
     public void EndCAL()
     {
-       // Debug.Log(this.name + ": NPC EndCAL()");
+        //Debug.Log(this.name + ": NPC EndCAL()");
         if (CurBehavior == null) { Debug.LogError("trying to get output pins on a null behavior on this npc: " + this.name); return; }
         List<OutputPin> outputPins = CurBehavior.OutputPins;
         foreach(OutputPin pin in outputPins)

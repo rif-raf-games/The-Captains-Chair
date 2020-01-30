@@ -22,7 +22,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     List<Branch> CurBranches = new List<Branch>();
     //DialogueFragment LastDFPlayed;
     Branch NextBranch = null;
-    public ArticyObject NextFragment = null;
+    ArticyObject NextFragment = null;
     //Character_Movement_FeatureFeature CurCMFeature = null;
 
     // list of characters in the scene for quick reference

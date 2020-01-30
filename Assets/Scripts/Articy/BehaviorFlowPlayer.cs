@@ -36,7 +36,7 @@ public class BehaviorFlowPlayer : MonoBehaviour
 
         foreach (OutgoingConnection outCon in firstPin.Connections)
         {
-            //Debug.Log("this outCon has a target type: " + outCon.Target.GetType());
+           // Debug.Log("this outCon has a target type: " + outCon.Target.GetType());
             FlowFragment target = outCon.Target as FlowFragment;
             InputPin targetInputPin = target.InputPins[0];
             if (targetInputPin.Text.CallScript() == true)
@@ -63,7 +63,7 @@ public class BehaviorFlowPlayer : MonoBehaviour
             }
             else if(ao as Character_Action_List_Template != null)
             {
-                //Debug.Log(this.name + ": we've got a Character_Action_List_Template is our fragment, which is the end of the flow so this SHOULD be the only node connected so we should be ending after this");
+               // Debug.Log(this.name + ": we've got a Character_Action_List_Template is our fragment, which is the end of the flow so this SHOULD be the only node connected so we should be ending after this");
             }
             else
             {
@@ -141,7 +141,7 @@ public class BehaviorFlowPlayer : MonoBehaviour
 
     void CurrentActionsDone()
     {
-       // Debug.Log(this.name + ": CurrentActionsDone()");
+        //Debug.Log(this.name + ": CurrentActionsDone()");
         List<FlowFragment> newValidTargets = new List<FlowFragment>();
         foreach (Character_Action_Template action in ActionsToTake)
         {
@@ -156,7 +156,7 @@ public class BehaviorFlowPlayer : MonoBehaviour
                 }
             }
         }
-       // Debug.Log(this.name + ": we've got " + newValidTargets.Count + " new targets after the last set");
+        //Debug.Log(this.name + ": we've got " + newValidTargets.Count + " new targets after the last set");
         if(newValidTargets.Count == 0)
         {
             Debug.LogError(this.name + "we should always have at least 1 target, even if it's the end of the flow, so check the flow on this npc please: " + this.name);
@@ -269,6 +269,9 @@ public class BehaviorFlowPlayer : MonoBehaviour
                         case Action.TurnTowardsEachOther:
                             Debug.LogError("We should never get to Action.TurnTowardsEachOther here because the Action(s) for each ActionState on the characters turning towards each other were both changed to Action.TurnTowards");
                             yield break;
+                        case Action.Idle:
+                            actionState.isActionDone = true;
+                            break;
                     }
                 }
             }
@@ -379,6 +382,9 @@ public class BehaviorFlowPlayer : MonoBehaviour
                 ce.SetEntityToFollow(followObject);
                 actionState.delayDone = true;
                 actionState.isActionDone = true;
+                break;
+            case Action.Idle:
+                // nothing to do here
                 break;
             default:
                 Debug.LogError("ERROR: we don't have code for this action: " + actionState.action);
