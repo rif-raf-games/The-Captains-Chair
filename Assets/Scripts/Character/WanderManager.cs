@@ -7,21 +7,22 @@ public class WanderManager : MonoBehaviour
 {
     List<WanderPoint> UnusedWanderPoints = new List<WanderPoint>();
     List<WanderPoint> UsedWanderPoints = new List<WanderPoint>();
-    List<Wanderer> Wanderers = new List<Wanderer>();
+   // List<Wanderer> Wanderers = new List<Wanderer>();
     
     private void Awake()    
     {
         UnusedWanderPoints = transform.GetComponentsInChildren<WanderPoint>().ToList();
-        Wanderers = transform.GetComponentsInChildren<Wanderer>().ToList();
+      //  Wanderers = transform.GetComponentsInChildren<Wanderer>().ToList();
     }
     
     public WanderPoint GetWanderPoint(GameObject objectGettingPoint)
     {
         int index = Random.Range(0, UnusedWanderPoints.Count);
+        //Debug.Log(UnusedWanderPoints.Count + " index: " + index);
         WanderPoint wp = UnusedWanderPoints[index];
         UnusedWanderPoints.Remove(wp);
         UsedWanderPoints.Add(wp);
-        Debug.Log("wander dist: " + Vector3.Distance(objectGettingPoint.transform.position, wp.transform.position));
+       // Debug.Log("wander dist: " + Vector3.Distance(objectGettingPoint.transform.position, wp.transform.position));
         return wp;
     }
 

@@ -2,12 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Articy.Unity;
+using UnityEngine.UI;
 
 public class CharacterEntity : MonoBehaviour
 {    
     [Header("CharacterEntity")]        
-    // Animation stuff
-    public Animator Animator;
+    // Animation stuff    
+    public ArticyRef ArticyEntityReference;
+    public ArticyRef ArticyAIReference;
+    Animator Animator;
+    [Header("Debug")]
+    public Text DebugText;
+  
+    GameObject EntityToFollow;
+    bool ShouldFollowEntity = false;
+
     Dictionary<string, float> AnimClipInfo = new Dictionary<string, float>();
     Vector3 LastPos = Vector3.zero;
     Vector3 DeltaPos = Vector3.zero;
@@ -20,14 +30,18 @@ public class CharacterEntity : MonoBehaviour
 
     protected NavMeshAgent NavMeshAgent;
 
-    public GameObject EntityToFollow;
-    public bool ShouldFollowEntity = false;
-   
+    public void SetEntityToFollow(GameObject followEntity)
+    {
+        EntityToFollow = followEntity;
+        ShouldFollowEntity = true;
+    }
+
+
     // Start is called before the first frame update
     public virtual void Start()
     {
-       // Debug.Log("Chracter Entity Start");        
-
+        // Debug.Log("Chracter Entity Start");                       
+        Animator = GetComponent<Animator>();
         if (Animator != null)
         {
             Animator.enabled = false;
@@ -41,12 +55,7 @@ public class CharacterEntity : MonoBehaviour
         StartCoroutine(AnimStartDelay());
         LastPos = transform.position;
 
-        NavMeshAgent = this.GetComponent<NavMeshAgent>();
-
-        if(EntityToFollow != null)
-        {
-            ShouldFollowEntity = true;
-        }
+        NavMeshAgent = this.GetComponent<NavMeshAgent>();      
     }
 
     
@@ -114,10 +123,11 @@ public class CharacterEntity : MonoBehaviour
         return -1f;
     }
 
-    public void ToggleFollowEntity(bool val)
-    {
-        if (EntityToFollow != null) ShouldFollowEntity = val;        
-    }
+    public void StopAnim()
+    {        
+        if(Animator == null ) { Debug.LogError("No Animator to StopAnim: " + this.name); return; }
+        Animator.SetTrigger("BackToIdleTrigger");
+    }    
 
     public void SetNavMeshDest(Vector3 dest)
     {
@@ -131,11 +141,11 @@ public class CharacterEntity : MonoBehaviour
         SetNavMeshDest(this.transform.position);
     }    
     public bool GetShouldFollowEntity()
-    {
+    {        
         return ShouldFollowEntity;
     }
     public void SetShouldFollowEntity(bool val)
-    {
+    {        
         ShouldFollowEntity = val;
     }
     public float GetStoppingDist()

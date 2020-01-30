@@ -4,14 +4,27 @@ using UnityEngine;
 
 static public class StaticStuff 
 {
-    // Start is called before the first frame update
-    static public void PrintFlowPaused( string s )
+    static ArticyFlow ArticyFlowToPrint;
+    static public void SetCaptainsChair(ArticyFlow articyFlowToPrint)
     {
-        //Debug.Log(s);
+        ArticyFlowToPrint = articyFlowToPrint;
     }
-    static public void PrintFlowBranchesUpdate(string s)
+    // Start is called before the first frame update
+    static public void PrintFlowPaused( string s, ArticyFlow articyFlowCaller)
     {
-        //Debug.Log(s);
+        if (ArticyFlowToPrint != null && (ArticyFlowToPrint == articyFlowCaller))
+        {
+            Debug.Log("caller: " + articyFlowCaller.name + ": " + s);
+        }            
+    }
+    static public void PrintFlowBranchesUpdate(string s, ArticyFlow articyFlowCaller)
+    {
+        if (ArticyFlowToPrint != null && (ArticyFlowToPrint == articyFlowCaller))
+        {
+             
+             Debug.Log("caller: " + articyFlowCaller.name + ": " + s);
+        }
+
     }
     static public void PrintUI(string s)
     {
@@ -20,11 +33,16 @@ static public class StaticStuff
 
     static public void PrintTriggerEnter(string s)
     {
-        //Debug.Log(s);
+       // Debug.Log(s);
     }
 
     static public void PrintRepairPath(string s)
     {
         //Debug.Log(s);
+    }
+
+    static public void PrintCAL(string s)
+    {
+
     }
 }

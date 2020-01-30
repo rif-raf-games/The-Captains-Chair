@@ -6,18 +6,78 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Linq;
 
 public class TheCaptainsChair : MonoBehaviour
 {
+    public ArticyRef FlowPauseTarget;
+    [Header("Debug")]
+    public ArticyFlow ArticyFlowToPrint;
+    Dictionary<string, NPC> ArticyRefNPCs = new Dictionary<string, NPC>();
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("Welcome to The Captain's Chair!!");
+        //Debug.Log("Welcome to The Captain's Chair!!");
+        StaticStuff.SetCaptainsChair(this.ArticyFlowToPrint);
+        // get a list of all the NPC's so that we can search for them quickly via an articy reference
+        List<NPC> npcs = GameObject.FindObjectsOfType<NPC>().ToList();
+        foreach(NPC npc in npcs)
+        {
+            if (npc.ArticyEntityReference == null || npc.ArticyEntityReference.GetObject() == null)
+            {
+                Debug.LogWarning("This NPC has a missing or broken ArticyRef so make sure all is well: " + npc.name);
+                continue;                
+            }
+            ArticyRefNPCs.Add(npc.name, npc);
+        }        
         SoundFX soundFX = FindObjectOfType<SoundFX>();
         SoundFXPlayer.Init(soundFX);
         DeleteSaveData();
        // LoadSaveData();
     }
+
+    public NPC GetNPCFromActorName(string name)
+    {
+       // Debug.Log("get npc: " + name);
+        NPC npc = ArticyRefNPCs[name];
+        return npc;
+    }
+    /*public ArticyRef DebugAmbientTrigger;
+    private void OnGUI()
+    {
+        if (GUI.Button(new Rect(0, 0, 100, 100), "fel"))
+        {
+            Ambient_Trigger at = DebugAmbientTrigger.GetObject() as Ambient_Trigger;
+            Debug.Log("Want to start an ambient flow: " + at.name);
+            List<ArticyObject> ambientEntities = at.Template.Ambient_Actors.Ambient_Actors_Strip;
+            foreach (ArticyObject ao in ambientEntities)
+            {
+                NPC npc = GetNPCFromArticyObj(ao);
+                if (npc == null) { Debug.LogError("There's no NPC associated with the provided ArticyObject. " + ao.name); return; }
+                Debug.Log("found this NPC from the AmbientFlow list: " + npc.name);
+                ArticyFlowPlayer afp = npc.GetComponent<ArticyFlowPlayer>();
+                ArticyFlow af = npc.GetComponent<ArticyFlow>();
+                CharacterActionList cal = npc.GetComponent<CharacterActionList>();
+                af.StopForPuppetShow();
+                afp.StartOn = FlowPauseTarget.GetObject();
+                afp.Play();
+                cal.SetStopped(true);
+            }
+        }
+    }*/
+    // public CharacterActionList debugCAL;
+    /*void OnGUI()
+    {
+        if (GUI.Button(new Rect(0, 0, 100, 100), "stop"))
+        {
+            debugCAL.SetStopped(true);
+        }
+        if (GUI.Button(new Rect(0, 100, 100, 100), "resume"))
+        {
+            debugCAL.SetStopped(false);
+        }
+    }*/
+
 
     // Update is called once per frame
     void Update()
@@ -41,7 +101,7 @@ public class TheCaptainsChair : MonoBehaviour
     {
         SaveDataDic saveData = new SaveDataDic();
         saveData.saveData = ArticyDatabase.DefaultGlobalVariables.Variables;
-
+        
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file;
         if (File.Exists(Application.persistentDataPath + "/globalVars.dat"))
@@ -78,8 +138,8 @@ public class TheCaptainsChair : MonoBehaviour
     }
     #endregion
 
-    private void OnGUI()
-    {
+    //private void OnGUI()
+   // {
         /*if (GUI.Button(new Rect(0, 0, 100, 100), "SaveData"))
         {
             SaveSaveData();
@@ -93,7 +153,7 @@ public class TheCaptainsChair : MonoBehaviour
             DeleteSaveData();
         }*/
 
-    }
+   // }
 
     /* NOT USING THE BELOW STUFF YET BUT I'M KEEPING IT FOR REFERENCE
     [System.Serializable]

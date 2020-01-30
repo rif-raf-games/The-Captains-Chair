@@ -40,7 +40,7 @@ public class ConvoUI : MonoBehaviour
             }
         }
 
-        Player.ToggleMovementBlocked(true);
+        //Player.ToggleMovementBlocked(true);
     }
 
     public void PauseConversation()
@@ -48,13 +48,13 @@ public class ConvoUI : MonoBehaviour
         // conversation isn't over, but we want to temporarily shut it off while a character moves somewhere.
         Debug.Log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ PauseConversation()");
         this.gameObject.SetActive(false);
-        Player.ToggleMovementBlocked(true);
+       // Player.ToggleMovementBlocked(true);
     }
     public void EndConversation()
     { 
         //Debug.Log("----------------------- EndConversation()");
         this.gameObject.SetActive(false);
-        Player.ToggleMovementBlocked(false);        
+        //Player.ToggleMovementBlocked(false);        
     }
     // Start is called before the first frame update
     void Start()

@@ -5,7 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class CutSceneUI : MonoBehaviour
-{    
+{
+#if false
     public Text DescriptionText; 
     public Text NodeText;
 
@@ -37,4 +38,5 @@ public class CutSceneUI : MonoBehaviour
     {
         
     }
+#endif
 }

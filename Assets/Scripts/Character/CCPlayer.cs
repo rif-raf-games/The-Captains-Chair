@@ -7,31 +7,28 @@ using UnityEngine.AI;
 using UnityEngine.UI;
 
 public class CCPlayer : CharacterEntity
-{    
-    
-    ArticyFlow ArticyFlow;               
+{
+
+    ArticyFlow CaptainArticyFlow;           
 
     //private NavMeshAgent NavMeshAgent;
     NavMeshSurface[] FloorNavMeshSurfaces;
     NavMeshSurface[] ElevatorNavMeshSurfaces;
-    bool TurnOnNavMeshes = false;
-    //Vector3 CamOffset;
-    //Animator PlayerAnimator;
-   // ArticyReference ID;
+    bool TurnOnNavMeshes = false;    
 
     Elevator SelectedElevator = null;
 
     private bool MovementBlocked = false;
 
     [Header("CCPlayer")]
-    public GameObject DebugDestPos;
+    public GameObject DebugDestPos;    
 
     // Start is called before the first frame update
     public override void Start()
     {
         base.Start();
-        
-        ArticyFlow = FindObjectOfType<ArticyFlow>();
+
+        CaptainArticyFlow = GetComponent<ArticyFlow>();
         
         GameObject[] floors = GameObject.FindGameObjectsWithTag("FloorNavMesh");
         FloorNavMeshSurfaces = new NavMeshSurface[floors.Length];
@@ -42,51 +39,54 @@ public class CCPlayer : CharacterEntity
         
         ToggleMovementBlocked(false);      
     }
+
     
     private void OnTriggerEnter(Collider other)
     {
-        StaticStuff.PrintTriggerEnter(this.name + " OnTriggerEnter() other: " + other.name + ", layer: " + other.gameObject.layer);       
-        if (other.gameObject.layer == LayerMask.NameToLayer("Location"))
+        StaticStuff.PrintTriggerEnter(this.name + " OnTriggerEnter() other: " + other.name + ", layer: " + other.gameObject.layer);
+        ArticyReference colliderArtRef = other.gameObject.GetComponent<ArticyReference>();
+        if(colliderArtRef != null )
         {
-            ArticyReference colliderArtRef = other.gameObject.GetComponent<ArticyReference>();
-            if (colliderArtRef != null)
+            StaticStuff.PrintTriggerEnter("we collided with something that has an ArticyRef.  Now lets see what it is.");
+            Dialogue dialogue = colliderArtRef.reference.GetObject() as Dialogue;
+            Ambient_Trigger at = colliderArtRef.reference.GetObject() as Ambient_Trigger;
+            //Trigger_Fragment tf = colliderArtRef.reference.GetObject() as Trigger_Fragment;
+            if (dialogue != null)
             {
-                StaticStuff.PrintTriggerEnter("we collided with something that has an ArticyRef.  Now lets see what it is.");
-                Dialogue dialogue = colliderArtRef.reference.GetObject() as Dialogue;
-                if (dialogue != null)
-                {
-                    StaticStuff.PrintTriggerEnter("we have a dialogue, so set the FlowPlayer to start on it and see what happens");
-                    ArticyFlow.StartConvo(dialogue);                    
-                }
-                else
-                {
-                    Debug.LogWarning("not sure what to do with this type yet: " + colliderArtRef.reference.GetObject().GetType());
-                }
+                StaticStuff.PrintTriggerEnter("we have a dialogue, so set the FlowPlayer to start on it and see what happens");                
+                CaptainArticyFlow.StartDialogue(dialogue, other.gameObject);
+            }
+            else if(at != null)
+            {
+                StaticStuff.PrintTriggerEnter("We have an Ambient_Trigger, so lets get that going on the trigger object's Articy Flow stuff");
+                ArticyFlow af = other.GetComponent<ArticyFlow>();
+                if(af == null) { Debug.LogError("ERROR: no ArticyFlow component on this Ambient_Trigger: " + other.name); return; }
+                af.StartAmbientFlow(at);
             }
             else
             {
-                Debug.LogWarning("null ArticyReference on the thing we collided with.");
+                Debug.LogWarning("not sure what to do with this type yet: " + colliderArtRef.reference.GetObject().GetType());
             }
         }
         else if (other.gameObject.layer == LayerMask.NameToLayer("Elevator Collider"))
-        {            
-            if(other.gameObject.GetComponentInParent<Elevator>() == SelectedElevator )
-            {                
-                if(other.gameObject.name.Contains("Start"))
+        {
+            if (other.gameObject.GetComponentInParent<Elevator>() == SelectedElevator)
+            {
+                if (other.gameObject.name.Contains("Start"))
                 {
                     StaticStuff.PrintTriggerEnter("Reached elevator StartPos");
                     //if(SelectedElevator.HasRideBegun() == false)
-                    if(MovementBlocked == false)
+                    if (MovementBlocked == false)
                     {
-                        StaticStuff.PrintTriggerEnter("move player onto elevator");                        
-                        foreach(NavMeshSurface n in FloorNavMeshSurfaces) n.enabled = false;
+                        StaticStuff.PrintTriggerEnter("move player onto elevator");
+                        foreach (NavMeshSurface n in FloorNavMeshSurfaces) n.enabled = false;
                         TurnOnNavMeshes = true;
                         Vector3 dest = other.gameObject.transform.parent.GetChild(1).position;
                         //NavMeshAgent.SetDestination(dest);
                         SetNavMeshDest(dest);
-                        if(DebugDestPos != null ) DebugDestPos.transform.position = dest;
+                        if (DebugDestPos != null) DebugDestPos.transform.position = dest;
                         ToggleMovementBlocked(true);
-                        
+
                     }
                     else
                     {
@@ -96,28 +96,32 @@ public class CCPlayer : CharacterEntity
                         TurnOnNavMeshes = true;
                         SelectedElevator = null;
                         ToggleMovementBlocked(false);
-                    }                    
+                    }
                 }
                 else
                 {
-                    StaticStuff.PrintTriggerEnter("Reached elevator EndPos so start movement");                    
+                    StaticStuff.PrintTriggerEnter("Reached elevator EndPos so start movement");
                     SelectedElevator.transform.GetChild(1).GetComponent<SphereCollider>().enabled = false;
-                    int newFloor = SelectedElevator.BeginMovement();   
-                    foreach(NavMeshSurface n in ElevatorNavMeshSurfaces)
+                    int newFloor = SelectedElevator.BeginMovement();
+                    foreach (NavMeshSurface n in ElevatorNavMeshSurfaces)
                     {
                         Elevator e = n.GetComponent<Elevator>();
-                        if( e != SelectedElevator && e.ShouldMoveAsWell(newFloor) == true )
+                        if (e != SelectedElevator && e.ShouldMoveAsWell(newFloor) == true)
                         {
                             e.BeginMovement();
                         }
                     }
-                }                            
+                }
             }
             else
             {
                 StaticStuff.PrintTriggerEnter("wrong elevator, keep going");
             }
-        }        
+        }
+        else
+        {
+            Debug.LogError("We've collided into something that doesn't have an Articy Ref and isn't an elevator so find out what's up.");
+        }
     }
     
     public void ToggleMovementBlocked(bool val)
@@ -199,8 +203,7 @@ public class CCPlayer : CharacterEntity
     
     
 
-    public Vector3 offset = new Vector3(0f, 0f, 0f);   
-    public Text DebugText;
+    
     void DebugStuff()
     {               
        // Debug.DrawRay(transform.position + offset, m_ForwardDir, Color.blue);        
