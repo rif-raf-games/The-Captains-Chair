@@ -19,6 +19,7 @@ public class CCPlayer : CharacterEntity
     Elevator SelectedElevator = null;
 
     private bool MovementBlocked = false;
+    TheCaptainsChair CaptainsChair;
 
     [Header("CCPlayer")]
     public GameObject DebugDestPos;    
@@ -29,6 +30,7 @@ public class CCPlayer : CharacterEntity
         base.Start();
 
         CaptainArticyFlow = GetComponent<ArticyFlow>();
+        CaptainsChair = FindObjectOfType<TheCaptainsChair>();
         
         GameObject[] floors = GameObject.FindGameObjectsWithTag("FloorNavMesh");
         FloorNavMeshSurfaces = new NavMeshSurface[floors.Length];
@@ -79,10 +81,10 @@ public class CCPlayer : CharacterEntity
                     if (MovementBlocked == false)
                     {
                         StaticStuff.PrintTriggerEnter("move player onto elevator");
+                        CaptainsChair.ToggleNavMeshes(false);
                         foreach (NavMeshSurface n in FloorNavMeshSurfaces) n.enabled = false;
                         TurnOnNavMeshes = true;
-                        Vector3 dest = other.gameObject.transform.parent.GetChild(1).position;
-                        //NavMeshAgent.SetDestination(dest);
+                        Vector3 dest = other.gameObject.transform.parent.GetChild(1).position;                        
                         SetNavMeshDest(dest);
                         if (DebugDestPos != null) DebugDestPos.transform.position = dest;
                         ToggleMovementBlocked(true);
@@ -92,6 +94,7 @@ public class CCPlayer : CharacterEntity
                     {
                         StaticStuff.PrintTriggerEnter("Player moved off elevator, back to normal movement");
                         SelectedElevator.transform.GetChild(1).GetComponent<SphereCollider>().enabled = true;
+                        CaptainsChair.ToggleNavMeshes(false);
                         SelectedElevator.GetComponent<NavMeshSurface>().enabled = false;
                         TurnOnNavMeshes = true;
                         SelectedElevator = null;
@@ -123,7 +126,8 @@ public class CCPlayer : CharacterEntity
             Debug.Log("We've collided into something that doesn't have an Articy Ref and isn't an elevator so find out what's up. " + other.name);
         }
     }
-    
+
+   
     public void ToggleMovementBlocked(bool val)
     {
         //Debug.Log("------------------ - ToggleMovementBlocked() val: " + val);
@@ -159,6 +163,8 @@ public class CCPlayer : CharacterEntity
         {
             foreach (NavMeshSurface n in FloorNavMeshSurfaces) n.enabled = true;
             foreach (NavMeshSurface n in ElevatorNavMeshSurfaces) n.enabled = true;
+            CaptainsChair.ToggleNavMeshes(true);
+            TurnOnNavMeshes = false;   
         }        
     }
 

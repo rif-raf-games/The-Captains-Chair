@@ -27,7 +27,7 @@ public class NPC : CharacterEntity
         {
             Behaviors.Add(child as Character_Action_List_Template);
         }
-        Debug.Log(this.name + " has " + Behaviors.Count + " Behaviors.");
+        //Debug.Log(this.name + " has " + Behaviors.Count + " Behaviors.");
         RestartBehavior();
     }    
 
@@ -105,6 +105,26 @@ public class NPC : CharacterEntity
     public override void Update()
     {
         base.Update();
+        if (DebugText == null) return;
+       /* DebugText.text = this.name + "\n";
+        if (NavMeshAgent.navMeshOwner == null) DebugText.text += "no navMeshOwner\n";
+        else DebugText.text += NavMeshAgent.navMeshOwner.name + "\n";
+        DebugText.text += "autoBraking: " + NavMeshAgent.autoBraking + "\n";
+        DebugText.text += "autoRepath: " + NavMeshAgent.autoRepath + "\n";
+        DebugText.text += "destination: " + NavMeshAgent.destination + "\n";
+        DebugText.text += "hasPath: " + NavMeshAgent.hasPath + "\n";
+        DebugText.text += "isActiveAndEnabled: " + NavMeshAgent.isActiveAndEnabled + "\n";
+        DebugText.text += "isOnNavMesh: " + NavMeshAgent.isOnNavMesh + "\n";
+        DebugText.text += "isPathStale: " + NavMeshAgent.isPathStale + "\n";
+        DebugText.text += "isStopped: " + NavMeshAgent.isStopped + "\n";
+        DebugText.text += "nextPosition: " + NavMeshAgent.nextPosition + "\n";
+        DebugText.text += "pathEndPosition: " + NavMeshAgent.pathEndPosition + "\n";
+        DebugText.text += "pathPending: " + NavMeshAgent.pathPending + "\n";
+        DebugText.text += "pathStatus: " + NavMeshAgent.pathStatus.ToString() + "\n";
+        DebugText.text += "remainingDistance: " + NavMeshAgent.remainingDistance + "\n";
+        DebugText.text += "steeringTarget: " + NavMeshAgent.steeringTarget + "\n";
+        DebugText.text += "stoppingDistance: " + NavMeshAgent.stoppingDistance + "\n";
+        DebugText.text += "updateRotation: " + NavMeshAgent.updateRotation + "\n";*/
     }
     public override void LateUpdate()
     {

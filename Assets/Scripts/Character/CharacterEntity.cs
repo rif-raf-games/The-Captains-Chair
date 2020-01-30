@@ -29,7 +29,10 @@ public class CharacterEntity : MonoBehaviour
     float Speed = 0f;
 
     protected NavMeshAgent NavMeshAgent;
-
+    public void ToggleNavMeshAgent(bool val)
+    {
+        this.NavMeshAgent.enabled = val;
+    }
     public void SetEntityToFollow(GameObject followEntity)
     {
         EntityToFollow = followEntity;
@@ -39,7 +42,7 @@ public class CharacterEntity : MonoBehaviour
 
     // Start is called before the first frame update
     public virtual void Start()
-    {
+    {        
         // Debug.Log("Chracter Entity Start");                       
         Animator = GetComponent<Animator>();
         if (Animator != null)
@@ -55,7 +58,8 @@ public class CharacterEntity : MonoBehaviour
         StartCoroutine(AnimStartDelay());
         LastPos = transform.position;
 
-        NavMeshAgent = this.GetComponent<NavMeshAgent>();      
+        NavMeshAgent = this.GetComponent<NavMeshAgent>();
+        NavMeshAgent.autoRepath = false;
     }
 
     

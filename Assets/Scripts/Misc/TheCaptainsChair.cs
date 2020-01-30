@@ -10,6 +10,7 @@ using System.Linq;
 
 public class TheCaptainsChair : MonoBehaviour
 {
+    public CCPlayer Player;
     public ArticyRef FlowPauseTarget;
     [Header("Debug")]
     public ArticyFlow ArticyFlowToPrint;
@@ -29,13 +30,22 @@ public class TheCaptainsChair : MonoBehaviour
                 continue;                
             }
             ArticyRefNPCs.Add(npc.name, npc);
-        }        
+        }
+        Player = FindObjectOfType<CCPlayer>();
         SoundFX soundFX = FindObjectOfType<SoundFX>();
         SoundFXPlayer.Init(soundFX);
         DeleteSaveData();
        // LoadSaveData();
     }
 
+    public void ToggleNavMeshes(bool val)
+    {        
+        foreach(KeyValuePair<string,NPC> entry in ArticyRefNPCs)
+        {            
+            entry.Value.ToggleNavMeshAgent(val);
+        }
+        //Player.ToggleNavMeshAgent(val);
+    }
     public NPC GetNPCFromActorName(string name)
     {
        // Debug.Log("get npc: " + name);
