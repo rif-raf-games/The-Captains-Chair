@@ -44,6 +44,7 @@ public class TheCaptainsChair : MonoBehaviour
         {            
             entry.Value.ToggleNavMeshAgent(val);
         }
+        
         //Player.ToggleNavMeshAgent(val);
     }
     public NPC GetNPCFromActorName(string name)

@@ -27,11 +27,13 @@ public class CharacterEntity : MonoBehaviour
     float WalkDir = 0f;
     float TurnSpeed = 0f;
     float Speed = 0f;
+    float LastSpeed = 0f;
 
     protected NavMeshAgent NavMeshAgent;
     public void ToggleNavMeshAgent(bool val)
-    {
+    {        
         this.NavMeshAgent.enabled = val;
+        if (val == true) NavMeshAgent.SetDestination(transform.position);
     }
     public void SetEntityToFollow(GameObject followEntity)
     {
@@ -59,7 +61,7 @@ public class CharacterEntity : MonoBehaviour
         LastPos = transform.position;
 
         NavMeshAgent = this.GetComponent<NavMeshAgent>();
-        NavMeshAgent.autoRepath = false;
+        NavMeshAgent.SetDestination(transform.position);
     }
 
     
@@ -94,10 +96,11 @@ public class CharacterEntity : MonoBehaviour
 
             TurnSpeed = Vector3.SignedAngle(LastForwardDir, ForwardDir, Vector3.up);
             TurnSpeed /= 2f;
-            Animator.SetFloat("Turn Speed", TurnSpeed);
+            Animator.SetFloat("Turn Speed", TurnSpeed);                   
 
             LastPos = transform.position;            
             LastForwardDir = ForwardDir;
+            LastSpeed = Speed;
         }
 
         if(EntityToFollow != null && ShouldFollowEntity == true)

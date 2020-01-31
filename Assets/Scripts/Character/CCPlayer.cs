@@ -125,9 +125,20 @@ public class CCPlayer : CharacterEntity
         {
             Debug.Log("We've collided into something that doesn't have an Articy Ref and isn't an elevator so find out what's up. " + other.name);
         }
-    }
+    }    
 
-   
+    public override void LateUpdate()
+    {
+        base.LateUpdate();
+        // Camera.main.transform.position = this.transform.position + CamOffset;
+        if (TurnOnNavMeshes == true)
+        {
+            foreach (NavMeshSurface n in FloorNavMeshSurfaces) n.enabled = true;
+            foreach (NavMeshSurface n in ElevatorNavMeshSurfaces) n.enabled = true;
+            CaptainsChair.ToggleNavMeshes(true);
+            TurnOnNavMeshes = false;
+        }
+    }
     public void ToggleMovementBlocked(bool val)
     {
         //Debug.Log("------------------ - ToggleMovementBlocked() val: " + val);
@@ -155,18 +166,7 @@ public class CCPlayer : CharacterEntity
         }        
     }
     
-    public override void LateUpdate()
-    {
-        base.LateUpdate();
-        // Camera.main.transform.position = this.transform.position + CamOffset;
-        if (TurnOnNavMeshes == true )
-        {
-            foreach (NavMeshSurface n in FloorNavMeshSurfaces) n.enabled = true;
-            foreach (NavMeshSurface n in ElevatorNavMeshSurfaces) n.enabled = true;
-            CaptainsChair.ToggleNavMeshes(true);
-            TurnOnNavMeshes = false;   
-        }        
-    }
+    
 
     // Update is called once per frame
     public override void Update()
@@ -202,7 +202,13 @@ public class CCPlayer : CharacterEntity
                 SetNavMeshDest(dest);
                 if(DebugDestPos != null) DebugDestPos.transform.position = dest;
             }
-        }        
+        } 
+        if(Input.GetKeyDown(KeyCode.S))
+        {
+            //CaptainsChair.ToggleNavMeshes(false);
+            foreach (NavMeshSurface n in FloorNavMeshSurfaces) n.enabled = false;
+            TurnOnNavMeshes = true;
+        }
 
         //DebugStuff();
     }

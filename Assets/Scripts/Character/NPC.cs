@@ -106,7 +106,7 @@ public class NPC : CharacterEntity
     {
         base.Update();
         if (DebugText == null) return;
-       /* DebugText.text = this.name + "\n";
+        /*DebugText.text = this.name + "\n";
         if (NavMeshAgent.navMeshOwner == null) DebugText.text += "no navMeshOwner\n";
         else DebugText.text += NavMeshAgent.navMeshOwner.name + "\n";
         DebugText.text += "autoBraking: " + NavMeshAgent.autoBraking + "\n";
