@@ -25,6 +25,26 @@ public class Elevator : MonoBehaviour
         if (newFloor == BottomFloor && CurrentFloor == TopFloor) return true;
         return false;
     }
+    public int Teleport()
+    {
+        Debug.Log("Elevator Teleport");
+        StartPos = this.transform.localPosition;
+        //IsMoving = true;
+        LerpStartTime = Time.time;
+        if (CurrentFloor == TopFloor)
+        {
+            EndPos = new Vector3(this.transform.localPosition.x, BottomY, this.transform.localPosition.z);
+            NewFloor = BottomFloor;
+        }
+        else
+        {
+            EndPos = new Vector3(this.transform.localPosition.x, TopY, this.transform.localPosition.z);
+            NewFloor = TopFloor;
+        }
+        transform.localPosition = EndPos;
+        CurrentFloor = NewFloor;
+        return NewFloor;
+    }
     public int BeginMovement()
     {
         Debug.Log("Elevator begin movement");

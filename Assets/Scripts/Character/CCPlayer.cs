@@ -22,7 +22,8 @@ public class CCPlayer : CharacterEntity
     TheCaptainsChair CaptainsChair;
 
     [Header("CCPlayer")]
-    public GameObject DebugDestPos;    
+    public GameObject DebugDestPos;
+    CharacterEntity Loop;
 
     // Start is called before the first frame update
     public override void Start()
@@ -39,7 +40,12 @@ public class CCPlayer : CharacterEntity
         ElevatorNavMeshSurfaces = new NavMeshSurface[elevators.Length];
         for (int i = 0; i < elevators.Length; i++) ElevatorNavMeshSurfaces[i] = elevators[i].GetComponent<NavMeshSurface>();               
         
-        ToggleMovementBlocked(false);      
+        ToggleMovementBlocked(false);
+        GameObject go = GameObject.Find("Loop");
+        if(go != null)
+        {
+            Loop = go.GetComponent<CharacterEntity>();
+        }
     }
 
     
@@ -191,13 +197,9 @@ public class CCPlayer : CharacterEntity
                 else if(layerClicked.Equals("Elevator"))
                 {
                     Elevator e = hit.collider.GetComponent<Elevator>();
-                    if(e != SelectedElevator)
-                    {
-                        Debug.Log("clicked on NEW elevator");
-                        dest = hit.collider.transform.GetChild(0).position;
-                        SelectedElevator = hit.collider.GetComponent<Elevator>();
-                        
-                    }                                        
+                    StartCoroutine(FuckElevatorsWithNavMeshes(e));
+                    // transform.position 
+                    //SelectedElevator = null;
                 }                                
                 SetNavMeshDest(dest);
                 if(DebugDestPos != null) DebugDestPos.transform.position = dest;
@@ -214,7 +216,32 @@ public class CCPlayer : CharacterEntity
     }
     
     
-
+    IEnumerator FuckElevatorsWithNavMeshes(Elevator e)
+    {
+        //Elevator e = hit.collider.GetComponent<Elevator>();
+        SelectedElevator = e;
+        int newFloor = SelectedElevator.Teleport();
+        foreach (NavMeshSurface n in ElevatorNavMeshSurfaces)
+        {
+            e = n.GetComponent<Elevator>();
+            if (e != SelectedElevator && e.ShouldMoveAsWell(newFloor) == true)
+            {
+                e.Teleport();
+            }
+        }
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        ToggleNavMeshAgent(false);
+        transform.position = SelectedElevator.transform.GetChild(0).transform.position;
+        ToggleNavMeshAgent(true);
+        if (Loop != null && Loop.IsFollowingCaptain() == true)
+        {
+            Loop.ToggleNavMeshAgent(false);
+            Loop.transform.position = SelectedElevator.transform.GetChild(1).transform.position;
+            Loop.ToggleNavMeshAgent(true);
+        }
+        SelectedElevator = null;
+    }
     
     void DebugStuff()
     {               

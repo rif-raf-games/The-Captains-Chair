@@ -41,6 +41,14 @@ public class CharacterEntity : MonoBehaviour
         ShouldFollowEntity = true;
     }
 
+    public bool IsFollowingCaptain()
+    {
+        if(ShouldFollowEntity == true && EntityToFollow == FindObjectOfType<CCPlayer>().gameObject)
+        {
+            return true;
+        }
+        return false;
+    }
 
     // Start is called before the first frame update
     public virtual void Start()
