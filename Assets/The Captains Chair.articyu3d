@@ -5105,8 +5105,8 @@
             "Text": "",
             "ExternalId": "",
             "Position": {
-              "x": 4100.0,
-              "y": 100.0
+              "x": 4500.0,
+              "y": 25.0
             },
             "ZIndex": 73.0,
             "Size": {
@@ -5125,26 +5125,13 @@
               {
                 "Text": "",
                 "Id": "0x100000300003BB5",
-                "Owner": "0x100000300003BB1",
-                "Connections": [
-                  {
-                    "Color": {
-                      "a": 1.0,
-                      "r": 0.5764706,
-                      "g": 0.75686276,
-                      "b": 0.8
-                    },
-                    "Label": "",
-                    "TargetPin": "0x100000300003612",
-                    "Target": "0x10000030000360F"
-                  }
-                ]
+                "Owner": "0x100000300003BB1"
               }
             ]
           },
           "Template": {
             "Stage_Direction_String_Lists": {
-              "AITurnOff": "Loop",
+              "AITurnOff": "Carver, Stu",
               "AITurnOn": ""
             }
           }
@@ -5694,6 +5681,76 @@
           }
         },
         {
+          "Type": "Stage_Directions",
+          "Properties": {
+            "TechnicalName": "FFr_2BDFB848",
+            "Id": "0x100000300003DC7",
+            "Parent": "0x100000400000F30",
+            "Attachments": [],
+            "DisplayName": "Turn Grunfeld Off",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.7647059,
+              "g": 0.149019614,
+              "b": 0.0
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 800.0,
+              "y": -50.0
+            },
+            "ZIndex": 50.0,
+            "Size": {
+              "w": 275.0,
+              "h": 200.0
+            },
+            "ShortId": 736081992,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300003DCA",
+                "Owner": "0x100000300003DC7"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300003DCB",
+                "Owner": "0x100000300003DC7",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x10000030000388E",
+                    "Target": "0x10000030000388B"
+                  }
+                ]
+              }
+            ]
+          },
+          "Template": {
+            "Stage_Direction_String_Lists": {
+              "AITurnOff": "Grunfeld, Loop",
+              "AITurnOn": ""
+            }
+          }
+        },
+        {
           "Type": "Character_Action_List_Template",
           "Properties": {
             "TechnicalName": "FFr_1A4C7316",
@@ -5881,7 +5938,7 @@
             "ExternalId": "",
             "Position": {
               "x": 1475.0,
-              "y": 575.0
+              "y": 625.0
             },
             "ZIndex": 42.0,
             "Size": {
@@ -8147,7 +8204,7 @@
             "Text": "Captain 'Follows' Loop",
             "ExternalId": "",
             "Position": {
-              "x": 4300.0,
+              "x": 4150.0,
               "y": 400.0
             },
             "ZIndex": 62.0,
@@ -8398,8 +8455,8 @@
             "Text": "",
             "ExternalId": "",
             "Position": {
-              "x": 169.33333333333331,
-              "y": 504.0
+              "x": 175.0,
+              "y": 500.0
             },
             "ZIndex": 0.0,
             "Size": {
@@ -8468,7 +8525,7 @@
             "Text": "",
             "ExternalId": "",
             "Position": {
-              "x": 975.0,
+              "x": 1050.0,
               "y": 250.0
             },
             "ZIndex": 48.0,
@@ -8481,7 +8538,20 @@
               {
                 "Text": "",
                 "Id": "0x10000030000388E",
-                "Owner": "0x10000030000388B"
+                "Owner": "0x10000030000388B",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300003894",
+                    "Target": "0x100000300003891"
+                  }
+                ]
               }
             ],
             "OutputPins": [
@@ -8507,10 +8577,7 @@
           },
           "Template": {
             "Character_Action_List_Feature": {
-              "ActionsStrip": [
-                "0x100000300003891",
-                "0x100000300003899"
-              ],
+              "ActionsStrip": [],
               "PauseFrags": [
                 "0x100000400000F86"
               ]
@@ -9282,6 +9349,76 @@
                     "Target": "0x100000400000879"
                   }
                 ]
+              }
+            ]
+          },
+          "Template": {
+            "Character_Action_List_Feature": {
+              "ActionsStrip": [],
+              "PauseFrags": []
+            }
+          }
+        },
+        {
+          "Type": "Character_Action_List_Template",
+          "Properties": {
+            "TechnicalName": "FFr_BFF76521",
+            "Id": "0x100000300003D6D",
+            "Parent": "0x100000300003D61",
+            "Attachments": [],
+            "DisplayName": "Grunfeld Working",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.215686277,
+              "g": 0.1254902,
+              "b": 0.360784322
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 367.33333333333331,
+              "y": 446.66666666666674
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 275.0,
+              "h": 200.0
+            },
+            "ShortId": 3220661537,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300003D70",
+                "Owner": "0x100000300003D6D",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300003D76",
+                    "Target": "0x100000300003D73"
+                  }
+                ]
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300003D71",
+                "Owner": "0x100000300003D6D"
               }
             ]
           },
@@ -15025,10 +15162,10 @@
           },
           "Template": {
             "Character_Action_Feature": {
-              "Action": 10,
-              "ActionInfo": "",
+              "Action": 3,
+              "ActionInfo": "JUMP01B",
               "ObjectsToAct": "Self",
-              "Delay_Range": ""
+              "Delay_Range": ".3,3"
             }
           }
         },
@@ -15097,10 +15234,10 @@
           },
           "Template": {
             "Character_Action_Feature": {
-              "Action": 10,
-              "ActionInfo": "",
+              "Action": 3,
+              "ActionInfo": "JUMP01B",
               "ObjectsToAct": "Self",
-              "Delay_Range": ""
+              "Delay_Range": ".3,3"
             }
           }
         },
@@ -15109,7 +15246,7 @@
           "Properties": {
             "TechnicalName": "FFr_2244A423",
             "Id": "0x100000300003891",
-            "Parent": "0x100000400000F30",
+            "Parent": "0x10000030000388B",
             "Attachments": [],
             "DisplayName": "Walk into Sickbay",
             "PreviewImage": {
@@ -15150,74 +15287,28 @@
               {
                 "Text": "",
                 "Id": "0x100000300003895",
-                "Owner": "0x100000300003891"
+                "Owner": "0x100000300003891",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x1000003000038A6",
+                    "Target": "0x1000003000038A5"
+                  }
+                ]
               }
             ]
           },
           "Template": {
             "Character_Action_Feature": {
               "Action": 2,
-              "ActionInfo": "sickbay_int",
-              "ObjectsToAct": "Captain",
-              "Delay_Range": ""
-            }
-          }
-        },
-        {
-          "Type": "Character_Action_Template",
-          "Properties": {
-            "TechnicalName": "FFr_B5A793BA",
-            "Id": "0x10000030000389F",
-            "Parent": "0x100000400000F30",
-            "Attachments": [],
-            "DisplayName": "Captain Faces Grunfeld",
-            "PreviewImage": {
-              "ViewBox": {
-                "x": 0.0,
-                "y": 0.0,
-                "w": 0.0,
-                "h": 0.0
-              },
-              "Mode": "FromAsset",
-              "Asset": "0x0"
-            },
-            "Color": {
-              "r": 0.08627451,
-              "g": 0.2627451,
-              "b": 0.654902
-            },
-            "Text": "",
-            "ExternalId": "",
-            "Position": {
-              "x": 1350.0,
-              "y": 875.0
-            },
-            "ZIndex": 51.0,
-            "Size": {
-              "w": 275.0,
-              "h": 200.0
-            },
-            "ShortId": 3047658426,
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x1000003000038A2",
-                "Owner": "0x10000030000389F"
-              }
-            ],
-            "OutputPins": [
-              {
-                "Text": "",
-                "Id": "0x1000003000038A3",
-                "Owner": "0x10000030000389F"
-              }
-            ]
-          },
-          "Template": {
-            "Character_Action_Feature": {
-              "Action": 4,
               "ActionInfo": "Grunfeld",
-              "ObjectsToAct": "Captain",
+              "ObjectsToAct": "Captain, Loop",
               "Delay_Range": ""
             }
           }
@@ -15227,7 +15318,7 @@
           "Properties": {
             "TechnicalName": "FFr_CD94E378",
             "Id": "0x1000003000038A5",
-            "Parent": "0x100000400000F30",
+            "Parent": "0x10000030000388B",
             "Attachments": [],
             "DisplayName": "Grunfeld faces captain",
             "PreviewImage": {
@@ -15248,8 +15339,8 @@
             "Text": "",
             "ExternalId": "",
             "Position": {
-              "x": 1350.0,
-              "y": 1100.0
+              "x": 1700.0,
+              "y": 650.0
             },
             "ZIndex": 51.0,
             "Size": {
@@ -15268,7 +15359,20 @@
               {
                 "Text": "",
                 "Id": "0x1000003000038A7",
-                "Owner": "0x1000003000038A5"
+                "Owner": "0x1000003000038A5",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x10000030000388F",
+                    "Target": "0x10000030000388B"
+                  }
+                ]
               }
             ]
           },
@@ -15276,66 +15380,7 @@
             "Character_Action_Feature": {
               "Action": 4,
               "ActionInfo": "Captain",
-              "ObjectsToAct": "Grunfeld",
-              "Delay_Range": ""
-            }
-          }
-        },
-        {
-          "Type": "Character_Action_Template",
-          "Properties": {
-            "TechnicalName": "FFr_A15E2F27",
-            "Id": "0x1000003000038AB",
-            "Parent": "0x100000400000F30",
-            "Attachments": [],
-            "DisplayName": "Loop faces Grunfeld",
-            "PreviewImage": {
-              "ViewBox": {
-                "x": 0.0,
-                "y": 0.0,
-                "w": 0.0,
-                "h": 0.0
-              },
-              "Mode": "FromAsset",
-              "Asset": "0x0"
-            },
-            "Color": {
-              "r": 0.08627451,
-              "g": 0.2627451,
-              "b": 0.654902
-            },
-            "Text": "",
-            "ExternalId": "",
-            "Position": {
-              "x": 1675.0,
-              "y": 875.0
-            },
-            "ZIndex": 51.0,
-            "Size": {
-              "w": 275.0,
-              "h": 200.0
-            },
-            "ShortId": 2707304231,
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x1000003000038AC",
-                "Owner": "0x1000003000038AB"
-              }
-            ],
-            "OutputPins": [
-              {
-                "Text": "",
-                "Id": "0x1000003000038AD",
-                "Owner": "0x1000003000038AB"
-              }
-            ]
-          },
-          "Template": {
-            "Character_Action_Feature": {
-              "Action": 4,
-              "ActionInfo": "Grunfeld",
-              "ObjectsToAct": "Loop",
+              "ObjectsToAct": "Grunfeld, Loop",
               "Delay_Range": ""
             }
           }
@@ -15406,7 +15451,7 @@
           "Template": {
             "Character_Action_Feature": {
               "Action": 5,
-              "ActionInfo": "0,7,13.5",
+              "ActionInfo": "0,9.5,16.83",
               "ObjectsToAct": "Loop",
               "Delay_Range": ""
             }
@@ -15762,7 +15807,7 @@
           "Template": {
             "Character_Action_Feature": {
               "Action": 5,
-              "ActionInfo": "0,7,13.5",
+              "ActionInfo": "0,9.5,16.83",
               "ObjectsToAct": "Captain",
               "Delay_Range": ""
             }
@@ -16810,6 +16855,78 @@
           }
         },
         {
+          "Type": "Character_Action_Template",
+          "Properties": {
+            "TechnicalName": "FFr_7D30037E",
+            "Id": "0x100000300003D73",
+            "Parent": "0x100000300003D6D",
+            "Attachments": [],
+            "DisplayName": "Grunfeld Working",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.08627451,
+              "g": 0.2627451,
+              "b": 0.654902
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 419.33333333333331,
+              "y": 469.33333333333337
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 275.0,
+              "h": 200.0
+            },
+            "ShortId": 2100298622,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300003D76",
+                "Owner": "0x100000300003D73"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300003D77",
+                "Owner": "0x100000300003D73",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000300003D71",
+                    "Target": "0x100000300003D6D"
+                  }
+                ]
+              }
+            ]
+          },
+          "Template": {
+            "Character_Action_Feature": {
+              "Action": 3,
+              "ActionInfo": "JUMP01B",
+              "ObjectsToAct": "Self",
+              "Delay_Range": ".5,3"
+            }
+          }
+        },
+        {
           "Type": "AI_Template",
           "Properties": {
             "TechnicalName": "FFr_C2B900F4",
@@ -17544,7 +17661,7 @@
             "Id": "0x100000300003B85",
             "Parent": "0x100000400000D1A",
             "Attachments": [],
-            "DisplayName": "Stu AI Ep1.S1",
+            "DisplayName": "Stu AI Bridge Ep1.S1",
             "PreviewImage": {
               "ViewBox": {
                 "x": 0.0,
@@ -17592,11 +17709,63 @@
         {
           "Type": "AI_Template",
           "Properties": {
+            "TechnicalName": "FFr_D90277AC",
+            "Id": "0x100000300003D61",
+            "Parent": "0x100000400000D19",
+            "Attachments": [],
+            "DisplayName": "Grunfeld AI Ep1.S1",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.211764708,
+              "g": 0.211764708,
+              "b": 0.211764708
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": -625.0,
+              "y": 750.0
+            },
+            "ZIndex": 25.0,
+            "Size": {
+              "w": 275.0,
+              "h": 200.0
+            },
+            "ShortId": 3640817580,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300003D64",
+                "Owner": "0x100000300003D61"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000300003D65",
+                "Owner": "0x100000300003D61"
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "AI_Template",
+          "Properties": {
             "TechnicalName": "FFr_6CBCCFFC",
             "Id": "0x100000300003B4C",
             "Parent": "0x100000400000D19",
             "Attachments": [],
-            "DisplayName": "Loop AI",
+            "DisplayName": "Loop AI Ep.1S.1",
             "PreviewImage": {
               "ViewBox": {
                 "x": 0.0,
@@ -18291,66 +18460,6 @@
               "ActionStrip": [
                 "0x10000030000383B",
                 "0x100000300003845"
-              ]
-            }
-          }
-        },
-        {
-          "Type": "Character_Action_Group_Template",
-          "Properties": {
-            "TechnicalName": "FFr_721CA143",
-            "Id": "0x100000300003899",
-            "Parent": "0x100000400000F30",
-            "Attachments": [],
-            "DisplayName": "Characters turn towards each other",
-            "PreviewImage": {
-              "ViewBox": {
-                "x": 0.0,
-                "y": 0.0,
-                "w": 0.0,
-                "h": 0.0
-              },
-              "Mode": "FromAsset",
-              "Asset": "0x0"
-            },
-            "Color": {
-              "r": 0.0470588244,
-              "g": 0.0470588244,
-              "b": 0.0470588244
-            },
-            "Text": "",
-            "ExternalId": "",
-            "Position": {
-              "x": 1350.0,
-              "y": 650.0
-            },
-            "ZIndex": 50.0,
-            "Size": {
-              "w": 275.0,
-              "h": 200.0
-            },
-            "ShortId": 1914478915,
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x10000030000389C",
-                "Owner": "0x100000300003899"
-              }
-            ],
-            "OutputPins": [
-              {
-                "Text": "",
-                "Id": "0x10000030000389D",
-                "Owner": "0x100000300003899"
-              }
-            ]
-          },
-          "Template": {
-            "Character_Action_Group_Feature": {
-              "ActionStrip": [
-                "0x10000030000389F",
-                "0x1000003000038AB",
-                "0x1000003000038A5"
               ]
             }
           }
@@ -20289,7 +20398,7 @@
             "ExternalId": "",
             "Position": {
               "x": -533.0,
-              "y": 400.0
+              "y": 425.0
             },
             "ZIndex": 50.0,
             "Size": {
@@ -43433,8 +43542,8 @@
                       "b": 0.8
                     },
                     "Label": "",
-                    "TargetPin": "0x100000300003BB4",
-                    "Target": "0x100000300003BB1"
+                    "TargetPin": "0x100000300003612",
+                    "Target": "0x10000030000360F"
                   }
                 ]
               }
@@ -45647,7 +45756,7 @@
             "Text": "Brace yourself for this one, Captain. She's... well you'll find out.",
             "ExternalId": "",
             "Position": {
-              "x": 675.0,
+              "x": 525.0,
               "y": 250.0
             },
             "ZIndex": 27.0,
@@ -45677,8 +45786,8 @@
                       "b": 0.8
                     },
                     "Label": "",
-                    "TargetPin": "0x10000030000388E",
-                    "Target": "0x10000030000388B"
+                    "TargetPin": "0x100000300003DCA",
+                    "Target": "0x100000300003DC7"
                   }
                 ]
               }
@@ -54050,8 +54159,8 @@
             "Text": "",
             "ExternalId": "",
             "Position": {
-              "x": 525.0,
-              "y": 75.0
+              "x": 500.0,
+              "y": 0.0
             },
             "ZIndex": 14.0,
             "Size": {
@@ -55930,8 +56039,8 @@
             "Text": "",
             "ExternalId": "",
             "Position": {
-              "x": 300.0,
-              "y": 325.0
+              "x": 100.0,
+              "y": 275.0
             },
             "ZIndex": 15.0,
             "Size": {
@@ -61783,31 +61892,23 @@
                           {
                             "Id": "0x10000030000388B",
                             "TechnicalName": "FFr_1DFA097B",
-                            "Type": "FlowFragment"
+                            "Type": "FlowFragment",
+                            "Children": [
+                              {
+                                "Id": "0x100000300003891",
+                                "TechnicalName": "FFr_2244A423",
+                                "Type": "FlowFragment"
+                              },
+                              {
+                                "Id": "0x1000003000038A5",
+                                "TechnicalName": "FFr_CD94E378",
+                                "Type": "FlowFragment"
+                              }
+                            ]
                           },
                           {
-                            "Id": "0x100000300003891",
-                            "TechnicalName": "FFr_2244A423",
-                            "Type": "FlowFragment"
-                          },
-                          {
-                            "Id": "0x100000300003899",
-                            "TechnicalName": "FFr_721CA143",
-                            "Type": "FlowFragment"
-                          },
-                          {
-                            "Id": "0x10000030000389F",
-                            "TechnicalName": "FFr_B5A793BA",
-                            "Type": "FlowFragment"
-                          },
-                          {
-                            "Id": "0x1000003000038A5",
-                            "TechnicalName": "FFr_CD94E378",
-                            "Type": "FlowFragment"
-                          },
-                          {
-                            "Id": "0x1000003000038AB",
-                            "TechnicalName": "FFr_A15E2F27",
+                            "Id": "0x100000300003DC7",
+                            "TechnicalName": "FFr_2BDFB848",
                             "Type": "FlowFragment"
                           }
                         ]
@@ -62587,6 +62688,25 @@
                               {
                                 "Id": "0x100000300003B76",
                                 "TechnicalName": "FFr_6CD6F757",
+                                "Type": "FlowFragment"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "Id": "0x100000300003D61",
+                        "TechnicalName": "FFr_D90277AC",
+                        "Type": "FlowFragment",
+                        "Children": [
+                          {
+                            "Id": "0x100000300003D6D",
+                            "TechnicalName": "FFr_BFF76521",
+                            "Type": "FlowFragment",
+                            "Children": [
+                              {
+                                "Id": "0x100000300003D73",
+                                "TechnicalName": "FFr_7D30037E",
                                 "Type": "FlowFragment"
                               }
                             ]
