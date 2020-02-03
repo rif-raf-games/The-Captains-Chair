@@ -10,13 +10,13 @@ static public class StaticStuff
         ArticyFlowToPrint = articyFlowToPrint;
     }
     // Start is called before the first frame update
-    static public void PrintFlowPaused( string s, ArticyFlow articyFlowCaller)
+    /*static public void PrintFlowPaused( string s, ArticyFlow articyFlowCaller)
     {
         if (ArticyFlowToPrint != null && (ArticyFlowToPrint == articyFlowCaller))
         {
             Debug.Log("caller: " + articyFlowCaller.name + ": " + s);
         }            
-    }
+    }*/
     static public void PrintFlowBranchesUpdate(string s, ArticyFlow articyFlowCaller)
     {
         if (ArticyFlowToPrint != null && (ArticyFlowToPrint == articyFlowCaller))
@@ -25,6 +25,10 @@ static public class StaticStuff
              Debug.Log("caller: " + articyFlowCaller.name + ": " + s);
         }
 
+    }
+    static public void PrintBehaviorFlow(string s)
+    {
+       // Debug.Log(s);
     }
     static public void PrintUI(string s)
     {

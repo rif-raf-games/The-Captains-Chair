@@ -3,24 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using Articy.The_Captain_s_Chair.Features;
 using Articy.The_Captain_s_Chair;
-using Articy.Unity;
+using UnityEditor.AI;
 using UnityEngine.UI;
+using UnityEngine.AI;
 
 public class BehaviorFlowPlayer : MonoBehaviour
 {
     public Text DebugText;
 
-
+    ArticyFlow CaptainArticyFlow;
     CamFollow CamFollow;
     Dictionary<CharacterEntity, EntitySaveData> CurCALEntitySaveData = new Dictionary<CharacterEntity, EntitySaveData>();
     List<Character_Action_Template> CurActions = new List<Character_Action_Template>();
     List<ActionState> ActionsStates = new List<ActionState>();
     Character_Action_List_Template CurBehavior;
     GameObject CurCallingObject;
+    Coroutine CurBehaviorCoroutine;
+    List<Character_Action_Template> ActionsToTake = new List<Character_Action_Template>();
 
     private void Start()
     {
         CamFollow = FindObjectOfType<CamFollow>();
+        CaptainArticyFlow = FindObjectOfType<CCPlayer>().GetComponent<ArticyFlow>();
     }
 
     public void StartBehaviorFlow(Character_Action_List_Template behavior, GameObject callingObject)
@@ -36,7 +40,7 @@ public class BehaviorFlowPlayer : MonoBehaviour
 
         foreach (OutgoingConnection outCon in firstPin.Connections)
         {
-           // Debug.Log("this outCon has a target type: " + outCon.Target.GetType());
+            StaticStuff.PrintBehaviorFlow("this outCon has a target type: " + outCon.Target.GetType());
             FlowFragment target = outCon.Target as FlowFragment;
             InputPin targetInputPin = target.InputPins[0];
             if (targetInputPin.Text.CallScript() == true)
@@ -45,12 +49,40 @@ public class BehaviorFlowPlayer : MonoBehaviour
             }
         }
 
-        //Debug.Log(this.name + ": we've got " + newValidTargets.Count + " new valid targets to start with");
+        StaticStuff.PrintBehaviorFlow(this.name + ": we've got " + newValidTargets.Count + " new valid targets to start with");
         PrepActions(newValidTargets);
     }
 
-    Coroutine CurBehaviorCoroutine;
-    List<Character_Action_Template> ActionsToTake = new List<Character_Action_Template>();
+    void CurrentActionsDone(Stage_Directions sdToSkipOver = null)
+    {
+        StaticStuff.PrintBehaviorFlow(this.name + ": CurrentActionsDone()");
+        List<FlowFragment> newValidTargets = new List<FlowFragment>();
+
+        if(sdToSkipOver != null)
+        {
+            StaticStuff.PrintBehaviorFlow("we're on a stage direction so get the new stuff from here");
+            OutputPin outputPin = sdToSkipOver.OutputPins[0];
+            AddValidTargetsFromPins(outputPin, newValidTargets);
+        }
+        else
+        {
+            foreach (Character_Action_Template action in ActionsToTake)
+            {                
+                OutputPin outputPin = action.OutputPins[0];
+                outputPin.Text.CallScript();
+                AddValidTargetsFromPins(outputPin, newValidTargets);                
+            }
+        }
+
+        StaticStuff.PrintBehaviorFlow(this.name + ": we've got " + newValidTargets.Count + " new targets after the last set");
+        if (newValidTargets.Count == 0)
+        {
+            Debug.LogError(this.name + ": we should always have at least 1 target, even if it's the end of the flow, so check the flow on this npc please: " + this.name);
+            return;
+        }
+        PrepActions(newValidTargets);
+    }
+        
     void PrepActions(List<FlowFragment> flowList)
     {
         //Debug.Log(this.name + ": PrepActions()");
@@ -61,9 +93,16 @@ public class BehaviorFlowPlayer : MonoBehaviour
             {
                 ActionsToTake.Add(ao as Character_Action_Template);
             }
+            else if(ao as Stage_Directions != null)
+            {
+                Stage_Directions sd = ao as Stage_Directions;
+                CaptainArticyFlow.HandleStageDirections(sd);
+                CurrentActionsDone(sd);
+                return;
+            }
             else if(ao as Character_Action_List_Template != null)
             {
-               // Debug.Log(this.name + ": we've got a Character_Action_List_Template is our fragment, which is the end of the flow so this SHOULD be the only node connected so we should be ending after this");
+                StaticStuff.PrintBehaviorFlow(this.name + ": we've got a Character_Action_List_Template is our fragment, which is the end of the flow so this SHOULD be the only node connected so we should be ending after this");
             }
             else
             {
@@ -73,7 +112,7 @@ public class BehaviorFlowPlayer : MonoBehaviour
 
         if(ActionsToTake.Count == 0)
         {
-            //Debug.Log(this.name + ": we've got no ActionsToTake so bail");
+            StaticStuff.PrintBehaviorFlow(this.name + ": we've got no ActionsToTake so bail");
             foreach (KeyValuePair<CharacterEntity, EntitySaveData> entry in CurCALEntitySaveData)
             {
                 entry.Key.SetStoppingDist(entry.Value.NavMeshStoppingDist);
@@ -90,6 +129,18 @@ public class BehaviorFlowPlayer : MonoBehaviour
         }
 
         CurBehaviorCoroutine = StartCoroutine(ExecuteActions());
+    }
+    void AddValidTargetsFromPins(OutputPin outputPin, List<FlowFragment> newValidTargets)
+    {
+        foreach (OutgoingConnection outCon in outputPin.Connections)
+        {
+            FlowFragment target = outCon.Target as FlowFragment;
+            InputPin targetInputPin = target.InputPins[0];
+            if (targetInputPin.Text.CallScript() == true)
+            {
+                if (newValidTargets.Contains(target) == false) newValidTargets.Add(target);
+            }
+        }
     }
 
     void StopActionState(ActionState actionState)
@@ -139,31 +190,8 @@ public class BehaviorFlowPlayer : MonoBehaviour
         }
     }
 
-    void CurrentActionsDone()
-    {
-        //Debug.Log(this.name + ": CurrentActionsDone()");
-        List<FlowFragment> newValidTargets = new List<FlowFragment>();
-        foreach (Character_Action_Template action in ActionsToTake)
-        {
-            OutputPin outputPin = action.OutputPins[0];
-            foreach(OutgoingConnection outCon in outputPin.Connections)
-            {
-                FlowFragment target = outCon.Target as FlowFragment;
-                InputPin targetInputPin = target.InputPins[0];
-                if(targetInputPin.Text.CallScript() == true)
-                {
-                    if (newValidTargets.Contains(target) == false) newValidTargets.Add(target);
-                }
-            }
-        }
-        //Debug.Log(this.name + ": we've got " + newValidTargets.Count + " new targets after the last set");
-        if(newValidTargets.Count == 0)
-        {
-            Debug.LogError(this.name + "we should always have at least 1 target, even if it's the end of the flow, so check the flow on this npc please: " + this.name);
-            return;
-        }
-        PrepActions(newValidTargets);
-    }
+    
+    
     
     IEnumerator ExecuteActions()
     {        
@@ -187,7 +215,7 @@ public class BehaviorFlowPlayer : MonoBehaviour
                 {
                     actionObject = GameObject.Find(objectName);
                 }
-                if (actionObject == null) { Debug.LogError(this.name + "No object in the scene called: " + objectName); yield break; }
+                if (actionObject == null) { Debug.LogError(this.name + ": No object in the scene called: " + objectName); yield break; }
                 ActionState actionState = new ActionState(curActionData.Action, curActionData.ActionInfo, actionObject);
                 ActionsStates.Add(actionState);
 
@@ -386,7 +414,18 @@ public class BehaviorFlowPlayer : MonoBehaviour
             case Action.Idle:
                 // nothing to do here
                 break;
-            default:
+            case Action.Teleport:
+                Debug.Log("-----------------------------------------------------------------------Teleport"); 
+                actionState.infoObject = GameObject.Find(actionState.actionInfo);
+                if (actionState.infoObject == null) { Debug.LogError("The object to teleport to: " + actionState.actionInfo + " is not in the scene."); return false; }
+                NavMeshAgent agent = actionState.actionObject.GetComponent<NavMeshAgent>();
+                if (agent != null) agent.enabled = false;
+                actionState.actionObject.transform.position = actionState.infoObject.transform.position;
+                if (agent != null) agent.enabled = true;
+                actionState.delayDone = true;
+                actionState.isActionDone = true;                
+                break;
+            default:                
                 Debug.LogError("ERROR: we don't have code for this action: " + actionState.action);
                 return false;
         }

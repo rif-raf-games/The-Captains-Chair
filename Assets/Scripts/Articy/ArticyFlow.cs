@@ -104,21 +104,16 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     /// </summary>    
     public void OnFlowPlayerPaused(IFlowObject aObject)
     {
-        StaticStuff.PrintFlowPaused("************** OnFlowPlayerPaused() START ************* time: " + Time.time, this);
-        if(this.name.Equals("Carver") || this.name.Equals("Grunfeld"))
-        {
-          //  Debug.Log(this.name + " OnFlowPlayerPaused() object type: " + aObject.GetType().ToString() + "num Updates: " + numUpdates);
-        }
-        //Debug.Log("************** OnFlowPlayerPaused() START *************");
+      //  StaticStuff.PrintFlowPaused("************** OnFlowPlayerPaused() START ************* time: " + Time.time, this);        
         CurPauseObject = null;
         if(aObject == null)
         {
             //StaticStuff.PrintFlowPaused("************** OnFlowPlayerPaused() END aObject WAS null***************");
-            StaticStuff.PrintFlowPaused("this: " + this.name + " -************** OnFlowPlayerPaused() END aObject WAS null***************", this);
+           // StaticStuff.PrintFlowPaused("this: " + this.name + " -************** OnFlowPlayerPaused() END aObject WAS null***************", this);
             return;
         }
         CurPauseObject = aObject;        
-        StaticStuff.PrintFlowPaused("OnFlowPlayerPaused() IFlowObject Type: " + aObject.GetType() + ", with TechnicalName: " + ((ArticyObject)aObject).TechnicalName, this);
+       // StaticStuff.PrintFlowPaused("OnFlowPlayerPaused() IFlowObject Type: " + aObject.GetType() + ", with TechnicalName: " + ((ArticyObject)aObject).TechnicalName, this);
         //Debug.Log("OnFlowPlayerPaused() IFlowObject Type: " + aObject.GetType() + ", with TechnicalName: " + ((ArticyObject)aObject).TechnicalName);
         // keep track of the technical names of the nodes we've visited
         if(CurArticyState != eArticyState.FREE_ROAM && CurArticyState != eArticyState.NUM_ARTICY_STATES)
@@ -131,20 +126,51 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             //Debug.Log(s);
             FlowFragsVisited.Add(((ArticyObject)aObject).TechnicalName);
         }                      
-        StaticStuff.PrintFlowPaused("************** OnFlowPlayerPaused() END aObject was NOT null*************** time: " + Time.time, this);
+        //StaticStuff.PrintFlowPaused("************** OnFlowPlayerPaused() END aObject was NOT null*************** time: " + Time.time, this);
         //Debug.Log("************** OnFlowPlayerPaused() END aObject was NOT null***************");
     }
 
-    void StartAIOnNPC(NPC npc)
+    public void StartAIOnNPC(NPC npc, bool removeFromShutOffAis = false)
     {
         npc.RestartBehavior();
+        if (removeFromShutOffAis == true && ShutOffAIs.Contains(npc)) ShutOffAIs.Remove(npc);            
         //ArticyFlowPlayer npcAFP = npc.GetComponent<ArticyFlowPlayer>();
         //npcAFP.StartOn = npc.ArticyAIReference.GetObject();
         // npcAFP.Play();
     }
 
+    public void HandleStageDirections(Stage_Directions sd)
+    {
+        //Stage_Directions sd = CurPauseObject as Stage_Directions;
+        if (sd != null)
+        {
+            if (sd.Template.Stage_Direction_String_Lists.AITurnOff != "")
+            {
+                List<string> aisToShutOff = sd.Template.Stage_Direction_String_Lists.AITurnOff.Split(',').ToList();
+                // Debug.Log("num ai's: " + aisToShutOff.Count);
+                foreach (string s in aisToShutOff)
+                {
+                    NPC npc = CaptainsChair.GetNPCFromActorName(s);
+                    if (npc == null) { Debug.LogError("There's no NPC associated with the provided name. " + s); return; }
+                    StopAIOnNPC(npc);
+                }
+            }
+            if (sd.Template.Stage_Direction_String_Lists.AITurnOn != "")
+            {
+                List<string> aisToTurnOn = sd.Template.Stage_Direction_String_Lists.AITurnOn.Split(',').ToList();
+                // Debug.Log("num ai's: " + aisToTurnOn.Count);
+                foreach (string s in aisToTurnOn)
+                {
+                    NPC npc = CaptainsChair.GetNPCFromActorName(s);
+                    if (npc == null) { Debug.LogError("There's no NPC associated with the provided name. " + s); return; }
+                    StartAIOnNPC(npc, true);
+                }
+            }
+        }
+    }
+
     List<NPC> ShutOffAIs = new List<NPC>();
-    void StopAIOnNPC(NPC npc)
+    public void StopAIOnNPC(NPC npc)
     {
         if(ShutOffAIs.Contains(npc))
         {
@@ -168,10 +194,12 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     /// <summary>
     /// Callback from Articy when it's calculated the available branches
     /// </summary>
- 
+    ArticyScriptInstruction DialogueEndInstruction = null;
     public void OnBranchesUpdated(IList<Branch> aBranches)
     {
-        StaticStuff.PrintFlowBranchesUpdate("************** OnBranchesUpdated() START ************* time: " + Time.time, this);        
+        StaticStuff.PrintFlowBranchesUpdate("************** OnBranchesUpdated() START ************* time: " + Time.time, this);
+        if (CurPauseObject == null) StaticStuff.PrintFlowBranchesUpdate("CurPauseObject is null", this);
+        else StaticStuff.PrintFlowBranchesUpdate("CurPauseObject Type: " + CurPauseObject.GetType() + ", with TechnicalName: " + ((ArticyObject)CurPauseObject).TechnicalName, this);
         StaticStuff.PrintFlowBranchesUpdate("Num branches: " + aBranches.Count, this);
         // Debug.Log("************** OnBranchesUpdated() START *************");
         //Debug.Log("Num branches: " + aBranches.Count);
@@ -217,18 +245,20 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             SetNextBranch(null);
             OutputPin outputPin = (CurPauseObject as FlowFragment).OutputPins[0];
             NextFragment = (outputPin.Connections[0].Target as ArticyObject);
-            Debug.Log(this.name + ": NextFragment: " + NextFragment.TechnicalName);            
+            Debug.Log(this.name + ": NextFragment type: " + outputPin.Connections[0].Target.GetType());
+            Debug.Log(this.name + ": NextFragment: " + NextFragment.TechnicalName);
+            if(outputPin.Connections[0].Target as Dialogue != null)
+            {
+                Debug.Log("next is a dialogue");
+                Dialogue d = outputPin.Connections[0].Target as Dialogue;
+                DialogueEndInstruction = d.OutputPins[0].Text;
+                NextFragment = d.OutputPins[0].Connections[0].Target as ArticyObject;
+            }
+            
             Character_Action_List_Template CurCAL = CurPauseObject as Character_Action_List_Template;
             Character_Action_List_FeatureFeature CurCALObject = CurCAL.Template.Character_Action_List_Feature;
-            ActiveCALPauseObjects = CurCALObject.PauseFrags;
-            //  Debug.Log(this.name + " is about to play it's CAL with a calCount of: " + calCount);
-            // Debug.Log(this.name + " is it's CAL currently active?: " + GetComponent<CharacterActionList>().IsActive);
-            //if(GetComponent<CharacterActionList>().IsActive == true)
-            //  {
-            //     Debug.LogError(this.name + " has a Behavior active and we're trying to start it again before the last one finished");
-            // }
+            ActiveCALPauseObjects = CurCALObject.PauseFrags;            
             Debug.Log(this.name + " is about to start their Behavior.  Time: " + Time.time);
-
             //Debug.LogWarning("time to replace this with a behavior player");
             GetComponent<BehaviorFlowPlayer>().StartBehaviorFlow(CurCAL, this.gameObject/*, DialogueNPC*/);
             calCount++;
@@ -335,32 +365,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             else if(CurPauseObject.GetType().Equals(typeof(Stage_Directions)))
             {
                 Stage_Directions sd = CurPauseObject as Stage_Directions;
-                if (sd != null)
-                {
-                    if (sd.Template.Stage_Direction_String_Lists.AITurnOff != "")
-                    {
-                        List<string> aisToShutOff = sd.Template.Stage_Direction_String_Lists.AITurnOff.Split(',').ToList();
-                        // Debug.Log("num ai's: " + aisToShutOff.Count);
-                        foreach (string s in aisToShutOff)
-                        {
-                            NPC npc = CaptainsChair.GetNPCFromActorName(s);
-                            if (npc == null) { Debug.LogError("There's no NPC associated with the provided name. " + s); return; }
-                            StopAIOnNPC(npc);
-                        }
-                    }
-                    if (sd.Template.Stage_Direction_String_Lists.AITurnOn != "")
-                    {
-                        List<string> aisToTurnOn = sd.Template.Stage_Direction_String_Lists.AITurnOn.Split(',').ToList();
-                        // Debug.Log("num ai's: " + aisToTurnOn.Count);
-                        foreach (string s in aisToTurnOn)
-                        {
-                            NPC npc = CaptainsChair.GetNPCFromActorName(s);
-                            if (npc == null) { Debug.LogError("There's no NPC associated with the provided name. " + s); return; }
-                            StartAIOnNPC(npc);
-                            if (ShutOffAIs.Contains(npc)) ShutOffAIs.Remove(npc);
-                        }
-                    }
-                }
+                HandleStageDirections(sd);
                 SetNextBranch(CurBranches[0]);
             }
             else
@@ -404,7 +409,22 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     {
         CurArticyState = newState;
     }
-
+    /// <summary>
+    /// End the current Character Action List.  This is called from the CharacterActionList component
+    /// </summary>
+    public void EndCAL()
+    {
+        Debug.Log("----------------------------------------------------------------------------- " + this.name + " EndBehavior() with a time of: " + Time.time);
+        Debug.Log("cur pause object type: " + CurPauseObject.GetType().ToString());
+        (CurPauseObject as FlowFragment).OutputPins[0].Text.CallScript();
+        if (DialogueEndInstruction  != null)
+        {
+            Debug.Log("execute dialogue end instructions");
+            DialogueEndInstruction.CallScript();
+            DialogueEndInstruction = null;
+        }
+        ActiveCALPauseObjects.Clear();
+    }
     #endregion
 
     public void StartAmbientFlow(Ambient_Trigger ambientTrigger)
@@ -413,7 +433,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         FlowPlayer.StartOn = ambientTrigger;
     }
     NPC DialogueNPC = null;
-    List<NPC> NPCsToPutOnHold = new List<NPC>();
+    //List<NPC> NPCsToPutOnHold = new List<NPC>();
     List<string> FlowFragsVisited = new List<string>();
     GameObject DialogueStartCollider = null;
     List<ArticyObject> DialogueStartAttachments;
@@ -439,16 +459,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     List<ArticyObject> ActiveCALPauseObjects = new List<ArticyObject>(); 
     #region CHARACTER_ACTION_LIST    
 
-    /// <summary>
-    /// End the current Character Action List.  This is called from the CharacterActionList component
-    /// </summary>
-    public void EndCAL()
-    {
-        Debug.Log(this.name + " EndBehavior() with a time of: " + Time.time);
-        Debug.Log("cur pause object type: " + CurPauseObject.GetType().ToString());
-        ActiveCALPauseObjects.Clear();        
-       // Debug.Log(this.name + " end of EndCal() with a calCount of: " + calCount);
-    }
+    
     #endregion
 
     #region UI
@@ -532,8 +543,9 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             }
         }
         if (NextBranch != null && waitingOnAL == false)
-        {
+        {            
             StaticStuff.PrintFlowBranchesUpdate(this.name + ": going to next branch via Update", this);
+           // Debug.Log(this.name + ": going to next branch via Update");
             Branch b = NextBranch;            
             SetNextBranch(null);                        
             FlowPlayer.Play(b);
@@ -541,6 +553,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         else if(NextFragment != null && waitingOnAL == false)
         {
             StaticStuff.PrintFlowBranchesUpdate(this.name + ": going to next FRAG via Update", this);
+           // Debug.Log(this.name + ": going to next FRAG via Update");
             ArticyObject ff = NextFragment;
             Debug.Log("set NextFragment to null");
             NextFragment = null;

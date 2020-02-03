@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class ConvoUI : MonoBehaviour
 {
+    public GameObject SpeakerPanel;
     public Text SpeakerName;
     public Text SpeakerText;
     public GameObject[] DialogueOptions;
@@ -22,8 +23,11 @@ public class ConvoUI : MonoBehaviour
         DialogueFragment d = dialogueOptions[0].Target as DialogueFragment;
         if(d!=null) StaticStuff.PrintUI(d.MenuText + ", " + d.Text + ", " + d.TechnicalName);
         this.gameObject.SetActive(true);
-        
-        SpeakerName.text = ((Entity)dialogueFrag.Speaker).DisplayName;
+        Entity speaker = ((Entity)dialogueFrag.Speaker);
+
+        if(speaker.DisplayName.Equals("Dialogue Pause")) SpeakerPanel.SetActive(false);        
+        else SpeakerPanel.SetActive(true);        
+        SpeakerName.text = speaker.DisplayName;
         SpeakerText.text = dialogueFrag.Text;
         foreach (GameObject go in DialogueOptions) go.SetActive(false);
         for (int i = 0; i < dialogueOptions.Count; i++)
