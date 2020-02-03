@@ -22,7 +22,7 @@ static public class StaticStuff
         if (ArticyFlowToPrint != null && (ArticyFlowToPrint == articyFlowCaller))
         {
              
-             Debug.Log("caller: " + articyFlowCaller.name + ": " + s);
+           //  Debug.Log("caller: " + articyFlowCaller.name + ": " + s);
         }
 
     }

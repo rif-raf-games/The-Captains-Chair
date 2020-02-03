@@ -49,7 +49,7 @@ public class TheCaptainsChair : MonoBehaviour
     }
     public NPC GetNPCFromActorName(string name)
     {
-       // Debug.Log("get npc: " + name);
+//Debug.Log("get npc: " + name);
         NPC npc = ArticyRefNPCs[name];
         return npc;
     }

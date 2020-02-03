@@ -195,6 +195,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     /// Callback from Articy when it's calculated the available branches
     /// </summary>
     ArticyScriptInstruction DialogueEndInstruction = null;
+    Character_Action_List_Template CurCAL = null;
     public void OnBranchesUpdated(IList<Branch> aBranches)
     {
         StaticStuff.PrintFlowBranchesUpdate("************** OnBranchesUpdated() START ************* time: " + Time.time, this);
@@ -243,6 +244,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             //StaticStuff.PrintFlowBranchesUpdate("-----------------------------------We've arrived at a Character Action List so let's see what's up", this);                
             Debug.Log("-----------------------------------We've arrived at a Character Action List so let's see what's up", this);
             SetNextBranch(null);
+            CurCAL = CurPauseObject as Character_Action_List_Template;
             OutputPin outputPin = (CurPauseObject as FlowFragment).OutputPins[0];
             NextFragment = (outputPin.Connections[0].Target as ArticyObject);
             Debug.Log(this.name + ": NextFragment type: " + outputPin.Connections[0].Target.GetType());
@@ -255,7 +257,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                 NextFragment = d.OutputPins[0].Connections[0].Target as ArticyObject;
             }
             
-            Character_Action_List_Template CurCAL = CurPauseObject as Character_Action_List_Template;
+            //Character_Action_List_Template CurCAL = CurPauseObject as Character_Action_List_Template;
             Character_Action_List_FeatureFeature CurCALObject = CurCAL.Template.Character_Action_List_Feature;
             ActiveCALPauseObjects = CurCALObject.PauseFrags;            
             Debug.Log(this.name + " is about to start their Behavior.  Time: " + Time.time);
@@ -416,7 +418,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     {
         Debug.Log("----------------------------------------------------------------------------- " + this.name + " EndBehavior() with a time of: " + Time.time);
         Debug.Log("cur pause object type: " + CurPauseObject.GetType().ToString());
-        (CurPauseObject as FlowFragment).OutputPins[0].Text.CallScript();
+        CurCAL.OutputPins[0].Text.CallScript();        
         if (DialogueEndInstruction  != null)
         {
             Debug.Log("execute dialogue end instructions");
