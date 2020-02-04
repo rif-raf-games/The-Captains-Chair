@@ -96,12 +96,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         ActiveCALPauseObjects.Clear();
     }
     public void SetNextBranch(Branch nextBranch)
-    {
-        if(nextBranch != null && nextBranch.DefaultDescription.Contains("Jmp"))
-        {
-            int x = 5;
-            x++;
-        }
+    {        
         NextBranch = nextBranch;
     }
 
@@ -373,8 +368,19 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             else if(CurPauseObject.GetType().Equals(typeof(Scene_Jump)))
             {
                 Scene_Jump sj = CurPauseObject as Scene_Jump;
-                SceneManager.LoadScene(sj.Template.Scene_To_Jump_To.SceneToJumpToText);
-                //sj.Template.Scene_To_Jump_To.SceneToJumpToText
+                SceneManager.LoadScene(sj.Template.Next_Game_Scene.Scene_Name);                
+            }
+            else if(CurPauseObject.GetType().Equals(typeof(Mini_Game_Jump)))
+            {
+                Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
+                Mini_Game_Jump curJump = CurPauseObject as Mini_Game_Jump;
+                jumpSave.Template.Mini_Game_Scene.Scene_Name = curJump.Template.Mini_Game_Scene.Scene_Name;
+                jumpSave.Template.Next_Game_Scene.Scene_Name = curJump.Template.Next_Game_Scene.Scene_Name;
+                jumpSave.Template.Flow_Start_Success.ReferenceSlot = curJump.Template.Flow_Start_Success.ReferenceSlot;
+                jumpSave.Template.Flow_Start_Fail.ReferenceSlot = curJump.Template.Flow_Start_Fail.ReferenceSlot;
+                Debug.Log("About to start a mini game: " + curJump.Template.Mini_Game_Scene.Scene_Name);
+                SceneManager.LoadScene(curJump.Template.Mini_Game_Scene.Scene_Name);
+                
             }
             else
             {
@@ -448,8 +454,8 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     public void StartDialogue(Dialogue convoStart, GameObject collider)
     {        
         Debug.Log("************************************ Start Dialogue() with technical name: " + convoStart.TechnicalName + " on GameObject: " + this.gameObject.name + " but DON'T DO ANY CODE STUFF UNTIL WE KNOW WE'RE ACTUALLY COMMITTING  time: " + Time.time);
-        DialogueStartCollider = collider;
-        DialogueStartAttachments = convoStart.Attachments;
+        //DialogueStartCollider = collider;
+        //DialogueStartAttachments = convoStart.Attachments;
        // Player.GetComponent<CapsuleCollider>().enabled = false;
         FlowPlayer.StartOn = convoStart;
         Player.ToggleMovementBlocked(true);        

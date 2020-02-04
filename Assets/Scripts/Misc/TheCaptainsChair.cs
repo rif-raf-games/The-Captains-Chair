@@ -7,11 +7,13 @@ using UnityEngine;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Linq;
+using Articy.The_Captain_s_Chair.GlobalVariables;
 
 public class TheCaptainsChair : MonoBehaviour
 {
-    public CCPlayer Player;
-    public ArticyRef FlowPauseTarget;
+    CCPlayer Player;
+    public ArticyRef DialogueToStartOn;
+   
     [Header("Debug")]
     public ArticyFlow ArticyFlowToPrint;
     Dictionary<string, NPC> ArticyRefNPCs = new Dictionary<string, NPC>();
@@ -33,6 +35,28 @@ public class TheCaptainsChair : MonoBehaviour
             ArticyRefNPCs.Add(npc.name, npc);
         }
         Player = FindObjectOfType<CCPlayer>();
+        if(ArticyGlobalVariables.Default.Mini_Games.Returning_From_Mini_Game == true)
+        {            
+            if(ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success == true)
+            {
+                Debug.Log("set another start thing for the articy flow player");
+                Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
+                ArticyObject flowStartAO = jumpSave.Template.Flow_Start_Success.ReferenceSlot;
+                Debug.Log("flow start: " + flowStartAO.TechnicalName);
+                Player.GetComponent<ArticyFlow>().StartDialogue(flowStartAO as Dialogue, null);
+            }
+            else
+            {
+                Debug.LogWarning("We're coming back from a mini game failure and we haven't supported this yet");
+            }
+            ArticyGlobalVariables.Default.Mini_Games.Returning_From_Mini_Game = false;
+            ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success = false;
+            ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Score = 0;
+        }
+        else
+        {
+            Player.GetComponent<ArticyFlow>().StartDialogue(DialogueToStartOn.GetObject() as Dialogue, null);
+        }
         SoundFX soundFX = FindObjectOfType<SoundFX>();
         SoundFXPlayer.Init(soundFX);
         //DeleteSaveData();
@@ -54,13 +78,13 @@ public class TheCaptainsChair : MonoBehaviour
        // CaptainsChair.SaveSaveData();
     }
 
-   /* private void OnGUI()
+    private void OnGUI()
     {
         if(GUI.Button(new Rect(Screen.width-100, Screen.height-100, 100, 100), "Delete Data"))
         {
-            DeleteSaveData();
+            Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");            
         }
-    }*/
+    }
     public void ToggleNavMeshes(bool val)
     {        
         foreach(KeyValuePair<string,NPC> entry in ArticyRefNPCs)
