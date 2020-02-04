@@ -18,6 +18,7 @@ public class TheCaptainsChair : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        ArticyDatabase.DefaultGlobalVariables.Notifications.AddListener("*.*", MyGameStateVariablesChanged);
         //Debug.Log("Welcome to The Captain's Chair!!");
         StaticStuff.SetCaptainsChair(this.ArticyFlowToPrint);
         // get a list of all the NPC's so that we can search for them quickly via an articy reference
@@ -34,10 +35,32 @@ public class TheCaptainsChair : MonoBehaviour
         Player = FindObjectOfType<CCPlayer>();
         SoundFX soundFX = FindObjectOfType<SoundFX>();
         SoundFXPlayer.Init(soundFX);
-        DeleteSaveData();
+        //DeleteSaveData();
        // LoadSaveData();
     }
 
+    /// <summary>
+    /// Called from Articy when a variable changes
+    /// </summary>    
+    void MyGameStateVariablesChanged(string aVariableName, object aValue)
+    {
+        /*Debug.Log("aVariableName: " + aVariableName + " changed to: " + aValue.ToString());
+        foreach (KeyValuePair<string, NPC> entry in ArticyRefNPCs)
+        {
+            Debug.Log("checking if npc: " + entry.Value.name + " has it's AI changed");
+            bool changed = entry.Value.CheckForAIChange();
+
+        }*/
+       // CaptainsChair.SaveSaveData();
+    }
+
+   /* private void OnGUI()
+    {
+        if(GUI.Button(new Rect(Screen.width-100, Screen.height-100, 100, 100), "Delete Data"))
+        {
+            DeleteSaveData();
+        }
+    }*/
     public void ToggleNavMeshes(bool val)
     {        
         foreach(KeyValuePair<string,NPC> entry in ArticyRefNPCs)

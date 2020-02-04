@@ -26,9 +26,9 @@ static public class StaticStuff
         }
 
     }
-    static public void PrintBehaviorFlow(string s)
+    static public void PrintBehaviorFlow(string s, BehaviorFlowPlayer player)
     {
-       // Debug.Log(s);
+       // if(player.name.Contains("Captain")) Debug.Log(s);
     }
     static public void PrintUI(string s)
     {
