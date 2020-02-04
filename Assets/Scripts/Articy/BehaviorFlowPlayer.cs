@@ -20,27 +20,50 @@ public class BehaviorFlowPlayer : MonoBehaviour
     GameObject CurCallingObject;
     Coroutine CurBehaviorCoroutine;
     List<Character_Action_Template> ActionsToTake = new List<Character_Action_Template>();
-
+    /*public IEnumerator CheckIfAIIsValid()
+    {
+        NumExecuteChecks = 0;
+        while (ExecutingActions == false)
+        {
+            yield return new WaitForEndOfFrame();
+            NumExecuteChecks++;
+            if (NumExecuteChecks > 10)
+            {
+                Debug.LogError("Way too many frames waiting for ExecuteActions to become valid on this npc: " + this.name);
+                yield break;
+            }
+        }
+        Debug.Log(this.name + ": CheckIfAIIsValid()");
+    }*/
     private void Start()
     {
         CamFollow = FindObjectOfType<CamFollow>();
         CaptainArticyFlow = FindObjectOfType<CCPlayer>().GetComponent<ArticyFlow>();
+        //Debug.Log(this.name + ": setting EA to false in Start");
+        ExecutingActions = false;
     }
 
     public void StartBehaviorFlow(Character_Action_List_Template behavior, GameObject callingObject)
     {
-        //Debug.Log(this.name + ": BehaviorFlowPlayer.StartBehaviorFlow(): " + behavior.DisplayName);
+        if(this.name.Contains("Captain")) Debug.Log(this.name + ": BehaviorFlowPlayer.StartBehaviorFlow(): " + behavior.DisplayName);
+        
         CurBehavior = behavior;
         CurCallingObject = callingObject;
         CurActions.Clear();
-        
-        List<InputPin> inputPins = behavior.InputPins;
-        InputPin firstPin = inputPins[0];        
-        List<FlowFragment> newValidTargets = new List<FlowFragment>();        
+        //ThisPath.Clear();
+       
+        List<FlowFragment> newValidTargets = GetInitialActions(CurBehavior.InputPins[0]); // new List<FlowFragment>();                
 
+        StaticStuff.PrintBehaviorFlow(this.name + ": we've got " + newValidTargets.Count + " new valid targets to start with", this);
+        PrepActions(newValidTargets);
+    }    
+
+    List<FlowFragment> GetInitialActions(InputPin firstPin)
+    {
+        List<FlowFragment> newValidTargets = new List<FlowFragment>();
         foreach (OutgoingConnection outCon in firstPin.Connections)
         {
-            StaticStuff.PrintBehaviorFlow("this outCon has a target type: " + outCon.Target.GetType());
+            StaticStuff.PrintBehaviorFlow("this outCon has a target type: " + outCon.Target.GetType(), this);
             FlowFragment target = outCon.Target as FlowFragment;
             InputPin targetInputPin = target.InputPins[0];
             if (targetInputPin.Text.CallScript() == true)
@@ -48,19 +71,19 @@ public class BehaviorFlowPlayer : MonoBehaviour
                 if (newValidTargets.Contains(target) == false) newValidTargets.Add(target);
             }
         }
-
-        StaticStuff.PrintBehaviorFlow(this.name + ": we've got " + newValidTargets.Count + " new valid targets to start with");
-        PrepActions(newValidTargets);
+        return newValidTargets;
     }
-
+    //int NumExecuteChecks = 0;
+    //List<List<Character_Action_Template>> ThisPath = new List<List<Character_Action_Template>>();
+               
     void CurrentActionsDone(Stage_Directions sdToSkipOver = null)
     {
-        StaticStuff.PrintBehaviorFlow(this.name + ": CurrentActionsDone()");
+        StaticStuff.PrintBehaviorFlow(this.name + ": CurrentActionsDone()", this);
         List<FlowFragment> newValidTargets = new List<FlowFragment>();
 
         if(sdToSkipOver != null)
         {
-            StaticStuff.PrintBehaviorFlow("we're on a stage direction so get the new stuff from here");
+            StaticStuff.PrintBehaviorFlow("we're on a stage direction so get the new stuff from here", this);
             OutputPin outputPin = sdToSkipOver.OutputPins[0];
             AddValidTargetsFromPins(outputPin, newValidTargets);
         }
@@ -74,16 +97,17 @@ public class BehaviorFlowPlayer : MonoBehaviour
             }
         }
 
-        StaticStuff.PrintBehaviorFlow(this.name + ": we've got " + newValidTargets.Count + " new targets after the last set");
+        StaticStuff.PrintBehaviorFlow(this.name + ": we've got " + newValidTargets.Count + " new targets after the last set", this);
         if (newValidTargets.Count == 0)
         {
+           // Debug.LogError("no valid targets on behavior: " + CurBehavior.DisplayName);
             Debug.LogError(this.name + ": we should always have at least 1 target, even if it's the end of the flow, so check the flow on this npc please: " + this.name);
             return;
         }
         PrepActions(newValidTargets);
     }
-        
-    void PrepActions(List<FlowFragment> flowList)
+
+    List<Character_Action_Template> PrepActions(List<FlowFragment> flowList)
     {
         //Debug.Log(this.name + ": PrepActions()");
         ActionsToTake.Clear();
@@ -98,11 +122,11 @@ public class BehaviorFlowPlayer : MonoBehaviour
                 Stage_Directions sd = ao as Stage_Directions;
                 CaptainArticyFlow.HandleStageDirections(sd);
                 CurrentActionsDone(sd);
-                return;
+                return null;
             }
             else if(ao as Character_Action_List_Template != null)
             {
-                StaticStuff.PrintBehaviorFlow(this.name + ": we've got a Character_Action_List_Template is our fragment, which is the end of the flow so this SHOULD be the only node connected so we should be ending after this");
+                StaticStuff.PrintBehaviorFlow(this.name + ": we've got a Character_Action_List_Template is our fragment, which is the end of the flow so this SHOULD be the only node connected so we should be ending after this", this);
             }
             else
             {
@@ -112,23 +136,28 @@ public class BehaviorFlowPlayer : MonoBehaviour
 
         if(ActionsToTake.Count == 0)
         {
-            StaticStuff.PrintBehaviorFlow(this.name + ": we've got no ActionsToTake so bail");
+            string displayName = CurBehavior.DisplayName;
+            //StaticStuff.PrintBehaviorFlow(this.name + ": we've got no ActionsToTake so bail", this);
+            if(this.name.Contains("Captain")) Debug.Log(this.name + ": with behavior: " + displayName + ": we've got no ActionsToTake so bail");
             foreach (KeyValuePair<CharacterEntity, EntitySaveData> entry in CurCALEntitySaveData)
             {
                 entry.Key.SetStoppingDist(entry.Value.NavMeshStoppingDist);
                 entry.Key.SetShouldFollowEntity(entry.Value.ShouldFollowEntity);
             }
+            
             CurBehavior.OutputPins[0].Text.CallScript();
             CurBehavior = null;
             CurCallingObject = null;
             CurBehaviorCoroutine = null;
-            if (GetComponent<NPC>() != null) GetComponent<NPC>().EndCAL();
-            if (GetComponent<ArticyFlow>() != null) GetComponent<ArticyFlow>().EndCAL();
+            if (GetComponent<NPC>() != null) GetComponent<NPC>().EndCAL();            
+            if (GetComponent<ArticyFlow>() != null) GetComponent<ArticyFlow>().EndCAL(this.name, displayName);
             
-            return;
+            return null;
         }
 
+       // ThisPath.Add(ActionsToTake);
         CurBehaviorCoroutine = StartCoroutine(ExecuteActions());
+        return ActionsToTake;
     }
     void AddValidTargetsFromPins(OutputPin outputPin, List<FlowFragment> newValidTargets)
     {
@@ -183,7 +212,8 @@ public class BehaviorFlowPlayer : MonoBehaviour
             entry.Key.SetShouldFollowEntity(entry.Value.ShouldFollowEntity);
         }
         CurCallingObject = null;
-
+        //Debug.Log(this.name + ": setting EA to false in StopBehavior");
+        ExecutingActions = false;
         foreach (ActionState actionState in ActionsStates)
         {
             StopActionState(actionState);
@@ -192,10 +222,10 @@ public class BehaviorFlowPlayer : MonoBehaviour
 
     
     
-    
+
+    public bool ExecutingActions = false;
     IEnumerator ExecuteActions()
-    {        
-        //Debug.Log(this.name + ": ExectueActions()");
+    {                
         ActionsStates.Clear();
         foreach (Character_Action_Template actionTemplate in ActionsToTake)
         {   // Set up the initial state of the data             
@@ -205,8 +235,7 @@ public class BehaviorFlowPlayer : MonoBehaviour
             //Debug.Log("num objects to act: " + actionObjects.Count());
             foreach (string objectName in actionObjects)
             {                
-                GameObject actionObject;
-                //if (CurCallingObject.GetComponent<NPC>() != null)
+                GameObject actionObject;                
                 if(objectName.Equals("Self"))
                 {
                     actionObject = this.gameObject;
@@ -226,6 +255,8 @@ public class BehaviorFlowPlayer : MonoBehaviour
                 }
             }            
         }
+        //Debug.Log(this.name + ": setting EA to true in ExecuteActions");
+        ExecutingActions = true;
         while (AllActionsDone(ActionsStates) == false)
         {                        
             foreach (ActionState actionState in ActionsStates)
@@ -235,8 +266,9 @@ public class BehaviorFlowPlayer : MonoBehaviour
                     if (actionState.delayDone == false)
                     {                        
                         if (DebugText != null)
-                        {                            
-                            DebugText.text = CurCallingObject.name + " is delaying for: " + actionState.delayTime.ToString("F2") + ", we're at: " + actionState.timer.ToString("F2");// + ", active?: " + IsActive;
+                        {
+                            DebugText.text = "ExecutingActions: " + ExecutingActions + "\n";
+                            DebugText.text += CurCallingObject.name + " is delaying for: " + actionState.delayTime.ToString("F2") + ", we're at: " + actionState.timer.ToString("F2");// + ", active?: " + IsActive;
                         }                        
                         actionState.timer += Time.deltaTime;
                         if (actionState.timer >= actionState.delayTime)
@@ -250,7 +282,8 @@ public class BehaviorFlowPlayer : MonoBehaviour
                     {                        
                         if (DebugText != null)
                         {
-                            DebugText.text = CurCallingObject.name + " is now on to the action!: " + actionState.action;// + ", active?: " + IsActive;
+                            DebugText.text = "ExecutingActions: " + ExecutingActions + "\n";
+                            DebugText.text += CurCallingObject.name + " is now on to the action!: " + actionState.action;// + ", active?: " + IsActive;
                         }
                     }                    
                     switch (actionState.action)
@@ -299,6 +332,7 @@ public class BehaviorFlowPlayer : MonoBehaviour
                             yield break;
                         case Action.Idle:
                             actionState.isActionDone = true;
+                            actionState.delayDone = true;
                             break;
                     }
                 }
@@ -306,7 +340,8 @@ public class BehaviorFlowPlayer : MonoBehaviour
             
             yield return new WaitForEndOfFrame();
         }
-
+        //Debug.Log(this.name + ": setting EA to false in ExecuteActions");
+        ExecutingActions = false;
         //Debug.Log(this.name + ": all actions are done");
         CurrentActionsDone();
     }

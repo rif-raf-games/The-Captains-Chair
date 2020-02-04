@@ -14,6 +14,7 @@ public class NPC : CharacterEntity
     // Start is called before the first frame update
     public override void Start()
     {
+        //Debug.Log(this.name + " NPC.Start()");
         base.Start();
         
         BarkText = GetComponentInChildren<TextMesh>();
@@ -30,6 +31,23 @@ public class NPC : CharacterEntity
         //Debug.Log(this.name + " has " + Behaviors.Count + " Behaviors.");
         RestartBehavior();
     }    
+
+    public bool CheckForAIChange()
+    {
+        /*Character_Action_List_Template validBehavior = GetValidBehavior();
+        if(validBehavior != CurBehavior)
+        {
+            Debug.Log(this.name + ": CurBehavior " + CurBehavior.DisplayName + " needs to change to this behavior: " + validBehavior.DisplayName);
+            GetComponent<BehaviorFlowPlayer>().StopBehavior();
+            RestartBehavior();
+        }
+        else
+        {
+            Debug.Log(this.name + ": CurBehavior " + CurBehavior.DisplayName + " doesn't need to change but we should check inside it");
+            StartCoroutine(GetComponent<BehaviorFlowPlayer>().CheckIfAIIsValid());            
+        }*/
+        return false;
+    }
 
     public void RestartBehavior()
     {
@@ -64,16 +82,13 @@ public class NPC : CharacterEntity
 
     void StartCurrentBehavior()
     {
-        if(CurBehavior == null) { Debug.LogError("trying to start a null behavior on this npc: " + this.name); return; }
-
-        GetComponent<BehaviorFlowPlayer>().StartBehaviorFlow(CurBehavior, this.gameObject);
-        //Character_Action_List_FeatureFeature actionListToPlay = CurBehavior.Template.Character_Action_List_Feature;
-        //MyActionListPlayer.BeginCAL(actionListToPlay, this.gameObject);       
+        if(CurBehavior == null) { Debug.LogError("trying to start a null behavior on this npc: " + this.name); return; }        
+        GetComponent<BehaviorFlowPlayer>().StartBehaviorFlow(CurBehavior, this.gameObject);               
     }
 
     public void EndCAL()
     {
-        //Debug.Log(this.name + ": NPC EndCAL()");
+        if (this.name.Contains("Idle NPC")) Debug.Log(this.name + ": NPC EndCAL()");
         if (CurBehavior == null) { Debug.LogError("trying to get output pins on a null behavior on this npc: " + this.name); return; }
         List<OutputPin> outputPins = CurBehavior.OutputPins;
         foreach(OutputPin pin in outputPins)
@@ -106,6 +121,8 @@ public class NPC : CharacterEntity
     {
         base.Update();
         if (DebugText == null) return;
+        if (CurBehavior == null) DebugText.text = "null CurBehavior\n";
+        else DebugText.text = "CurBehavior: " + CurBehavior.DisplayName + "\n";
         /*DebugText.text = this.name + "\n";
         if (NavMeshAgent.navMeshOwner == null) DebugText.text += "no navMeshOwner\n";
         else DebugText.text += NavMeshAgent.navMeshOwner.name + "\n";
