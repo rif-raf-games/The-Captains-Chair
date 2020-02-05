@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Articy.The_Captain_s_Chair.Features;
 using Articy.The_Captain_s_Chair;
-using UnityEditor.AI;
+//using UnityEditor.AI;
 using UnityEngine.UI;
 using UnityEngine.AI;
 
