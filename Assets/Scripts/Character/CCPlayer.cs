@@ -147,7 +147,7 @@ public class CCPlayer : CharacterEntity
     }
     public void ToggleMovementBlocked(bool val)
     {
-        //Debug.Log("------------------ - ToggleMovementBlocked() val: " + val);
+        Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ToggleMovementBlocked() val: " + val);
         
         MovementBlocked = val;
     }
