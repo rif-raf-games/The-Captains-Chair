@@ -13,6 +13,8 @@ public class ConvoUI : MonoBehaviour
     public GameObject[] DialogueOptions;
 
     TheCaptainsChair CapChair;
+    //public bool TextTyping = false;
+    //Co
 
     public CCPlayer Player;
 
@@ -28,7 +30,13 @@ public class ConvoUI : MonoBehaviour
         if(speaker.DisplayName.Equals("Dialogue Pause")) SpeakerPanel.SetActive(false);        
         else SpeakerPanel.SetActive(true);        
         SpeakerName.text = speaker.DisplayName;
+
+        Debug.Log("text: " + dialogueFrag.Text);
         SpeakerText.text = dialogueFrag.Text;
+        //SpeakerText.text = "";
+        //StartCoroutine(TypewriterEffect(dialogueFrag.Text));
+
+        
         foreach (GameObject go in DialogueOptions) go.SetActive(false);
         for (int i = 0; i < dialogueOptions.Count; i++)
         {
@@ -42,10 +50,19 @@ public class ConvoUI : MonoBehaviour
             {
                 DialogueOptions[i].GetComponentInChildren<Text>().text = "Continue";                
             }
-        }
-
-        //Player.ToggleMovementBlocked(true);
+        }    
     }
+
+   /* IEnumerator TypewriterEffect(string text)
+    {
+        TextTyping = true;
+        foreach (char character in text.ToCharArray())
+        {
+            SpeakerText.text += character;
+            yield return new WaitForSeconds(0.05f);            
+        }
+        TextTyping = false;
+    }*/
 
     public void PauseConversation()
     {
@@ -71,4 +88,6 @@ public class ConvoUI : MonoBehaviour
     {
         
     }
+
 }
+

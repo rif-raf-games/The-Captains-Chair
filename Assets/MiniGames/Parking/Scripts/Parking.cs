@@ -394,7 +394,7 @@ public class Parking : MonoBehaviour
 
             if(TargetShips.Count == 0)
             {
-                StartCoroutine(ShowResults("There are no TARGET ships defined"));
+                StartCoroutine(ShowResults("There are no TARGET ships defined", false));
                 return;
             }
 
@@ -443,20 +443,23 @@ public class Parking : MonoBehaviour
             string result;
             if(allTargetShipsContainedLiftPad == true) result = "All TARGET ships are on the Lift Pad, so you win";            
             else result = "Not all TARGET ships are on the Lift Pad, so keep trying.";
-            StartCoroutine(ShowResults(result));
+            StartCoroutine(ShowResults(result, allTargetShipsContainedLiftPad));
         }
     }
 
-    IEnumerator ShowResults(string result)
+    IEnumerator ShowResults(string result, bool success)
     {
         ResultsText.gameObject.SetActive(true);
         ResultsText.text = result;
         yield return new WaitForSeconds(3f);
         ResultsText.gameObject.SetActive(false);
-        ArticyGlobalVariables.Default.Mini_Games.Returning_From_Mini_Game = true;
-        ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success = true;
-        Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
-        SceneManager.LoadScene(jumpSave.Template.Next_Game_Scene.Scene_Name);
+        if(success == true)
+        {
+            ArticyGlobalVariables.Default.Mini_Games.Returning_From_Mini_Game = true;
+            ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success = true;
+            Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
+            SceneManager.LoadScene(jumpSave.Template.Next_Game_Scene.Scene_Name);
+        }        
     }
     public Text ResultsText;
     public GameObject LiftPad;
