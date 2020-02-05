@@ -455,6 +455,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     {        
         Debug.Log("************************************ Start Dialogue() with technical name: " + convoStart.TechnicalName + " on GameObject: " + this.gameObject.name + " but DON'T DO ANY CODE STUFF UNTIL WE KNOW WE'RE ACTUALLY COMMITTING  time: " + Time.time);
         DialogueStartCollider = collider;
+        if (convoStart == null) Debug.LogError("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^wtf why is the convoStart null");
         DialogueStartAttachments = convoStart.Attachments;
        // Player.GetComponent<CapsuleCollider>().enabled = false;
         FlowPlayer.StartOn = convoStart;
