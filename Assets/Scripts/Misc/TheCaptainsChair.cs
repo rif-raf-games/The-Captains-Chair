@@ -43,7 +43,7 @@ public class TheCaptainsChair : MonoBehaviour
                 Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
                 ArticyObject flowStartAO = jumpSave.Template.Flow_Start_Success.ReferenceSlot;
                 Debug.Log("flow start: " + flowStartAO.TechnicalName);
-                Player.GetComponent<ArticyFlow>().StartDialogue(flowStartAO as Dialogue, null);
+                Player.GetComponent<ArticyFlow>().StartDialogue(flowStartAO as Dialogue, Player.gameObject);
             }
             else
             {
@@ -55,7 +55,7 @@ public class TheCaptainsChair : MonoBehaviour
         }
         else
         {
-            Player.GetComponent<ArticyFlow>().StartDialogue(DialogueToStartOn.GetObject() as Dialogue, null);
+            Player.GetComponent<ArticyFlow>().StartDialogue(DialogueToStartOn.GetObject() as Dialogue, Player.gameObject);
         }
         SoundFX soundFX = FindObjectOfType<SoundFX>();
         SoundFXPlayer.Init(soundFX);
