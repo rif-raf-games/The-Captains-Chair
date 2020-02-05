@@ -20,6 +20,7 @@ public class TheCaptainsChair : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         ArticyDatabase.DefaultGlobalVariables.Notifications.AddListener("*.*", MyGameStateVariablesChanged);
         //Debug.Log("Welcome to The Captain's Chair!!");
         StaticStuff.SetCaptainsChair(this.ArticyFlowToPrint);
@@ -55,6 +56,18 @@ public class TheCaptainsChair : MonoBehaviour
         }
         else
         {
+            if(DialogueToStartOn == null)
+            {
+                Debug.LogError("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ WTF 1");
+            }
+            if(DialogueToStartOn.GetObject() == null)
+            {
+                Debug.LogError("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ WTF 2");
+            }
+            if(DialogueToStartOn.GetObject() as Dialogue == null)
+            {
+                Debug.LogError("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ WTF 3");
+            }
             Player.GetComponent<ArticyFlow>().StartDialogue(DialogueToStartOn.GetObject() as Dialogue, Player.gameObject);
         }
         SoundFX soundFX = FindObjectOfType<SoundFX>();
