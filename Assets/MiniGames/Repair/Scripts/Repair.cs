@@ -4,6 +4,10 @@ using UnityEngine;
 using System.Linq;
 using UnityEngine.UI;
 using UnityEditor;
+using Articy.The_Captain_s_Chair.GlobalVariables;
+using Articy.The_Captain_s_Chair;
+using UnityEngine.SceneManagement;
+using Articy.Unity;
 
 public class Repair : MonoBehaviour
 {    
@@ -28,7 +32,7 @@ public class Repair : MonoBehaviour
 
     float BeltMoveRange;
 
-    bool PuzzleFinishedTest = false;
+    //bool PuzzleFinishedTest = false;
    
     class PieceConn
     {
@@ -639,7 +643,7 @@ public class Repair : MonoBehaviour
     
     private void OnGUI()
     {
-        if(PuzzleFinishedTest == true)
+        /*if(PuzzleFinishedTest == true)
         {
             if (GUI.Button(new Rect(0, 100, 100, 100), "reset"))
             {
@@ -654,10 +658,10 @@ public class Repair : MonoBehaviour
                 }
             }
             return;
-        }
+        }*/
         if (GUI.Button(new Rect(0,100,100,100), "path test"))
         {
-            foreach (RepairPiece piece in AllPieces) Debug.Log("piece: " + piece.name + " rot: " + piece.transform.eulerAngles.ToString("F2"));
+            //foreach (RepairPiece piece in AllPieces) Debug.Log("piece: " + piece.name + " rot: " + piece.transform.eulerAngles.ToString("F2"));
             foreach (RepairPiece terminal in Terminals) terminal.ReachedOnPath = false;
             bool puzzleSolved = false;
             bool brokenPathFound = false;
@@ -738,7 +742,8 @@ public class Repair : MonoBehaviour
                 Debug.Log("***************************************************************" + s);
                 ResultText.text = s;
             }
-            PuzzleFinishedTest = true;
+            StartCoroutine(EndGame(puzzleSolved));
+            //PuzzleFinishedTest = true;
         }
 
         /*if (GUI.Button(new Rect(0, 200, 100, 100), "p1, p2"))
@@ -770,6 +775,29 @@ public class Repair : MonoBehaviour
         {            
             StartCoroutine(ShowPath());            
         }*/
+    }
+    IEnumerator EndGame(bool success)
+    {
+        yield return new WaitForSeconds(3);
+        if(success == true)
+        {
+            ArticyGlobalVariables.Default.Mini_Games.Returning_From_Mini_Game = true;
+            ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success = true;
+            Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
+            SceneManager.LoadScene(jumpSave.Template.Next_Game_Scene.Scene_Name);
+        }
+        else
+        {
+            ResetPuzzleState(true);
+            //PuzzleFinishedTest = false;
+            ResultText.text = "";
+            PathErrorSphere.transform.position = new Vector3(-9999f, 0f, -9999f);
+            if (EndColPiece != null)
+            {
+                Destroy(EndColPiece);
+                EndColPiece = null;
+            }
+        }
     }
     public GameObject p1, p2, p3;
     void ShowPathIndex()

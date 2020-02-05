@@ -1,6 +1,10 @@
-﻿using System.Collections;
+﻿using Articy.The_Captain_s_Chair;
+using Articy.The_Captain_s_Chair.GlobalVariables;
+using Articy.Unity;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class LockPicking : MonoBehaviour
@@ -79,7 +83,7 @@ public class LockPicking : MonoBehaviour
         if(allGatesFound == true)
         {
             Debug.Log("Found All gates.  start over");
-            EndGame("You Won.");
+            StartCoroutine(EndGame("You Won.", true));
         }
     }
 
@@ -89,24 +93,36 @@ public class LockPicking : MonoBehaviour
         if (DeathNodes.Contains(pathNode))
         {
             Debug.Log("it's a death node!");
-            EndGame("You Lost.");
+            StartCoroutine(EndGame("You Lost.", false));
         }
         else Debug.Log("not a death node");
     }
 
-    void EndGame(string endGameString)
+    IEnumerator EndGame(string endGameString, bool success)
     {
         GameResultText.gameObject.SetActive(true);
         GameResultText.text = endGameString;
         Diode.Moving = false;
-        StartCoroutine(HandleEndGame());
+        yield return new WaitForSeconds(3);
+        if(success == true)
+        {
+            ArticyGlobalVariables.Default.Mini_Games.Returning_From_Mini_Game = true;
+            ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success = true;
+            Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
+            SceneManager.LoadScene(jumpSave.Template.Next_Game_Scene.Scene_Name);
+        }
+        else
+        {
+            StartGame();
+        }
+        //StartCoroutine(HandleEndGame());
     }
 
-    IEnumerator HandleEndGame()
+    /*IEnumerator HandleEndGame()
     {
-        yield return new WaitForSeconds(3);
+        
         StartGame();        
-    }
+    }*/
 
     
                     
