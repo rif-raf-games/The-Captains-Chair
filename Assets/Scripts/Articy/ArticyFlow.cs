@@ -452,13 +452,19 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     GameObject DialogueStartCollider = null;
     List<ArticyObject> DialogueStartAttachments;
     public void StartDialogue(Dialogue convoStart, GameObject collider)
-    {        
-        Debug.Log("************************************ Start Dialogue() with technical name: " + convoStart.TechnicalName + " on GameObject: " + this.gameObject.name + " but DON'T DO ANY CODE STUFF UNTIL WE KNOW WE'RE ACTUALLY COMMITTING  time: " + Time.time);
-        DialogueStartCollider = collider;
+    {
         if (convoStart == null) Debug.LogError("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^wtf why is the convoStart null");
+        else Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Start Dialogue() with technical name: " + convoStart.TechnicalName + " on GameObject: " + this.gameObject.name + " but DON'T DO ANY CODE STUFF UNTIL WE KNOW WE'RE ACTUALLY COMMITTING  time: " + Time.time);
+        if (collider == null) Debug.LogError("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ collider is null");
+        DialogueStartCollider = collider;
+        if (convoStart.Attachments == null) Debug.LogError("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ attachments are null");
         DialogueStartAttachments = convoStart.Attachments;
-       // Player.GetComponent<CapsuleCollider>().enabled = false;
+        // Player.GetComponent<CapsuleCollider>().enabled = false;
+        if (FlowPlayer == null) Debug.LogError("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ FlowPlayer is null");
+        if (FlowPlayer.StartOn == null) Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ FlowPlayer.StartOn is null, which it should be");
         FlowPlayer.StartOn = convoStart;
+        if (FlowPlayer.StartOn == null) Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ we just assigned the StartOn so it should NOT be null");
+        if (Player == null) Debug.LogError("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Player is null");
         Player.ToggleMovementBlocked(true);        
     }
     
