@@ -13,11 +13,17 @@ public class ConvoUI : MonoBehaviour
     public GameObject[] DialogueOptions;
 
     TheCaptainsChair CapChair;
-    //public bool TextTyping = false;
-    //Co
+    public bool TextTyping = false;    
 
     public CCPlayer Player;
+    Coroutine TypewriterCoroutine;
+    string CurDialogueText;
 
+    // Start is called before the first frame update
+    void Start()
+    {
+        CapChair = GameObject.FindObjectOfType<TheCaptainsChair>();
+    }
     public void ShowDialogueFragment(DialogueFragment dialogueFrag, IFlowObject flowObj, IList<Branch> dialogueOptions)
     {
         StaticStuff.PrintUI("going to set up a dialogue fragment with speaker: " + dialogueFrag.Speaker + " with text: " + dialogueFrag.Text + ", tech name: " + dialogueFrag.TechnicalName);
@@ -30,12 +36,11 @@ public class ConvoUI : MonoBehaviour
         if(speaker.DisplayName.Equals("Dialogue Pause")) SpeakerPanel.SetActive(false);        
         else SpeakerPanel.SetActive(true);        
         SpeakerName.text = speaker.DisplayName;
-
-        Debug.Log("text: " + dialogueFrag.Text);
-        SpeakerText.text = dialogueFrag.Text;
-        //SpeakerText.text = "";
-        //StartCoroutine(TypewriterEffect(dialogueFrag.Text));
-
+       
+        SpeakerText.text = "";
+        CurDialogueText = dialogueFrag.Text;
+        if (TypewriterCoroutine != null ) StopCoroutine(TypewriterCoroutine);
+        TypewriterCoroutine = StartCoroutine(TypewriterEffect());
         
         foreach (GameObject go in DialogueOptions) go.SetActive(false);
         for (int i = 0; i < dialogueOptions.Count; i++)
@@ -53,16 +58,32 @@ public class ConvoUI : MonoBehaviour
         }    
     }
 
-   /* IEnumerator TypewriterEffect(string text)
+    IEnumerator TypewriterEffect()
     {
-        TextTyping = true;
-        foreach (char character in text.ToCharArray())
+        //Debug.Log("Start effect");        
+        foreach (GameObject go in DialogueOptions) go.GetComponent<Button>().enabled = false;
+        foreach (char character in CurDialogueText.ToCharArray())
         {
             SpeakerText.text += character;
-            yield return new WaitForSeconds(0.05f);            
+            yield return new WaitForSeconds(0.05f);
+            TextTyping = true; // wait a sec so that the click off via any press on screen 
         }
         TextTyping = false;
-    }*/
+        foreach (GameObject go in DialogueOptions) go.GetComponent<Button>().enabled = true;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if(TextTyping == true && Input.GetMouseButtonUp(0))
+        {
+            //Debug.Log("shut off via button");
+            StopCoroutine(TypewriterCoroutine);
+            SpeakerText.text = CurDialogueText;
+            foreach (GameObject go in DialogueOptions) go.GetComponent<Button>().enabled = true;
+            TextTyping = false;
+        }
+    }
 
     public void PauseConversation()
     {
@@ -77,17 +98,9 @@ public class ConvoUI : MonoBehaviour
         this.gameObject.SetActive(false);
         //Player.ToggleMovementBlocked(false);        
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        CapChair = GameObject.FindObjectOfType<TheCaptainsChair>();
-    }
+    
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    
 
 }
 
