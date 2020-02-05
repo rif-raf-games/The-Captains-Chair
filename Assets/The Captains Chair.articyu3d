@@ -11238,7 +11238,7 @@
             "Character_Action_List_Feature": {
               "ActionsStrip": [],
               "PauseFrags": [
-                "0x100000400001A25"
+                "0x1000004000019FF"
               ]
             }
           }
@@ -11589,7 +11589,7 @@
             "Character_Action_List_Feature": {
               "ActionsStrip": [],
               "PauseFrags": [
-                "0x100000400001A25"
+                "0x1000004000019D9"
               ]
             }
           }
@@ -22972,6 +22972,71 @@
             },
             "Mini_Game_Scene": {
               "Scene_Name": ""
+            }
+          }
+        },
+        {
+          "Type": "Mini_Game_Jump",
+          "Properties": {
+            "TechnicalName": "FFr_31EE5CC8",
+            "Id": "0x1000003000041EF",
+            "Parent": "0x100000400001C33",
+            "Attachments": [],
+            "DisplayName": "LockPicking",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.6901961,
+              "g": 0.3019608,
+              "b": 0.294117659
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 2450.0,
+              "y": 225.0
+            },
+            "ZIndex": 14.0,
+            "Size": {
+              "w": 275.0,
+              "h": 200.0
+            },
+            "ShortId": 837704904,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000041F2",
+                "Owner": "0x1000003000041EF"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x1000003000041F3",
+                "Owner": "0x1000003000041EF"
+              }
+            ]
+          },
+          "Template": {
+            "Flow_Start_Fail": {
+              "ReferenceSlot": "0x0"
+            },
+            "Flow_Start_Success": {
+              "ReferenceSlot": "0x100000400001B17"
+            },
+            "Next_Game_Scene": {
+              "Scene_Name": "Scene 3"
+            },
+            "Mini_Game_Scene": {
+              "Scene_Name": "LockPickingTest"
             }
           }
         },
@@ -54524,8 +54589,8 @@
             "Text": "Setting the bar a bit low there, aren't we?",
             "ExternalId": "",
             "Position": {
-              "x": 3450.0,
-              "y": 925.0
+              "x": 3500.0,
+              "y": 850.0
             },
             "ZIndex": 49.0,
             "Size": {
@@ -54744,8 +54809,8 @@
             "Text": "Looks right to me. I think I should take  a look at your processors, something might have been knocked out.",
             "ExternalId": "",
             "Position": {
-              "x": 3450.0,
-              "y": 550.0
+              "x": 3500.0,
+              "y": 425.0
             },
             "ZIndex": 47.0,
             "Size": {
@@ -58240,20 +58305,7 @@
               {
                 "Text": "",
                 "Id": "0x100000400001C59",
-                "Owner": "0x100000400001C57",
-                "Connections": [
-                  {
-                    "Color": {
-                      "a": 1.0,
-                      "r": 0.5764706,
-                      "g": 0.75686276,
-                      "b": 0.8
-                    },
-                    "Label": "",
-                    "TargetPin": "0x100000400001C67",
-                    "Target": "0x100000400001C33"
-                  }
-                ]
+                "Owner": "0x100000400001C57"
               }
             ]
           }
@@ -62618,8 +62670,8 @@
             "Text": "Lockpicking Game starts here. \r\n\r\nMust Solve\r\n\r\nOn Lose restart Puzzle\r\n\r\nOn 'win' state start next scene.",
             "ExternalId": "",
             "Position": {
-              "x": 2499.833333333333,
-              "y": 250.0
+              "x": 1800.1666666666667,
+              "y": 0.0
             },
             "ZIndex": 14.0,
             "Size": {
@@ -71185,6 +71237,11 @@
                                 "Id": "0x100000300004132",
                                 "TechnicalName": "",
                                 "Type": "Comment"
+                              },
+                              {
+                                "Id": "0x1000003000041EF",
+                                "TechnicalName": "FFr_31EE5CC8",
+                                "Type": "FlowFragment"
                               }
                             ]
                           }
