@@ -6,12 +6,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Linq;
+using UnityEditor;
 
 public class LockPicking : MonoBehaviour
 {
     public Diode Diode;
     public GameObject CenterBlock;
     public List<Ring> Rings;
+    public Gate GatePrefab;
     public List<Gate> Gates;
     public List<PathNode> StartNodes;
     public List<PathNode> DeathNodes;
@@ -21,11 +24,18 @@ public class LockPicking : MonoBehaviour
     float LastCenterToWorldAngle;
     public Text GameResultText;
 
-    public void InitFromProcessing( Diode diode, GameObject centerBlock, List<Ring> rings, List<Gate> gates, List<PathNode> startNodes, List<PathNode> deathNodes )    
+    public void InitFromInitializing(Diode diode, GameObject centerBlock, Gate gatePrefab, List<Ring> rings)
     {
         this.Diode = diode;
         CenterBlock = centerBlock;
+        GatePrefab = gatePrefab;
         Rings = rings;
+    }
+    public void InitFromProcessing( /*Diode diode, GameObject centerBlock, List<Ring> rings,*/ List<Gate> gates, List<PathNode> startNodes, List<PathNode> deathNodes )    
+    {
+        //this.Diode = diode;
+        //CenterBlock = centerBlock;
+        //Rings = rings;
         Gates = gates;
         StartNodes = startNodes;
         DeathNodes = deathNodes;
@@ -203,5 +213,100 @@ public class LockPicking : MonoBehaviour
     private void Awake()
     {
         Physics.autoSimulation = true;
+    }
+
+    public void ProcessBoardSetup()
+    {
+        GameObject go = GameObject.Find("goatfucker");
+        Debug.Log(go == null);
+        Debug.Log("process lockpicking board setup");
+        float nodeRadius = Diode.GetComponent<SphereCollider>().radius / 3f;
+        int ringLayerMask = LayerMask.GetMask("Lockpick Ring");        
+        float gateSize = Diode.GetComponent<SphereCollider>().radius * 2f;
+        Vector3 gateScale = new Vector3(gateSize, gateSize, gateSize);
+        int numGates = 0;
+        List<Gate> gates = new List<Gate>();
+        List<Transform> activeNodes = new List<Transform>();
+        List<PathNode> startNodes = new List<PathNode>();
+        List<PathNode> deathNodes = new List<PathNode>();
+
+        foreach (Ring ring in Rings)
+        {
+            foreach (Transform nodeTransform in ring.transform)
+            {
+                if (nodeTransform == ring.transform.GetChild(0)) continue;
+                nodeTransform.gameObject.SetActive(true);
+                nodeTransform.GetComponent<SphereCollider>().isTrigger = false;
+                if (nodeTransform.childCount != 0)
+                {
+                    foreach (Transform child in nodeTransform)
+                    {
+                        Object.DestroyImmediate(child.gameObject);
+                    }
+                }
+
+                Collider[] colliders = Physics.OverlapSphere(nodeTransform.position, nodeRadius, ringLayerMask);
+                if (nodeTransform.name.Contains("Middle"))
+                {
+                    if (colliders.Length == 0 || colliders.Length == 2)
+                    {
+                        nodeTransform.gameObject.SetActive(false);
+                    }
+                    else
+                    {
+                        Gate g = Object.Instantiate<Gate>(GatePrefab, nodeTransform);
+                        g.transform.localScale = gateScale;
+                        g.name = "Gate " + (numGates++).ToString("D2");
+                        gates.Add(g);
+                    }
+                }
+                foreach (Collider c in colliders)
+                {
+                    //Debug.Log("colliding with: " + c.name);
+                    if (nodeTransform.name.Contains("Start") || nodeTransform.name.Contains("End"))
+                    {
+                        if (c.transform.parent.parent == ring.transform)
+                        {
+                            nodeTransform.gameObject.SetActive(false);
+                            break;
+                        }
+                    }
+                }
+                if (nodeTransform.gameObject.activeSelf == true) activeNodes.Add(nodeTransform);
+            }
+            Debug.Log("****************ring " + ring.name + "'s stats:");
+            Debug.Log("num gates so far: " + numGates);
+            int numPaths = activeNodes.Count / 2;
+            Debug.Log("num active nodes: " + activeNodes.Count + " means " + numPaths + " paths.");
+            List<Transform> sortedList = activeNodes.OrderBy(o => o.name.Substring(o.name.Length - 2)).ToList<Transform>();
+            foreach (Transform node in sortedList)
+            {
+                string subString = node.name.Substring(node.name.Length - 2);
+                Debug.Log("i'm active: " + node.name + " with subString: " + subString);
+            }
+            // setup the paths
+            Ring.LockpickRingPath[] paths = new Ring.LockpickRingPath[numPaths];
+            for (int i = 0; i < numPaths; i++)
+            {
+                paths[i] = new Ring.LockpickRingPath();
+                paths[i].Start = sortedList[(i * 2) + 1].gameObject.GetComponent<PathNode>();
+                paths[i].End = sortedList[(i * 2)].gameObject.GetComponent<PathNode>();
+                paths[i].Init(ring.GetComponent<Ring>());
+
+                if (ring == Rings[0] && paths[i].Start.name.Contains("Start")) startNodes.Add(paths[i].Start);
+                if (ring == Rings[Rings.Count - 1] && paths[i].End.name.Contains("End"))
+                {
+                    paths[i].End.GetComponent<SphereCollider>().isTrigger = true;
+                    deathNodes.Add(paths[i].End);
+                }
+            }
+            ring.GetComponent<Ring>().InitPaths(paths);
+            activeNodes.Clear();
+        }
+        InitFromProcessing(gates, startNodes, deathNodes);
+
+#if UNITY_EDITOR
+        EditorUtility.SetDirty(this);
+#endif
     }
 }

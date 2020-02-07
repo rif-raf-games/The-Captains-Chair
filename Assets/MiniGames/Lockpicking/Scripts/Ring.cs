@@ -9,7 +9,7 @@ public class Ring : MonoBehaviour
     public LockpickRingPath[] Paths;    
     
     public void InitPaths(LockpickRingPath[] paths)
-    {
+    {        
         Paths = paths;
     }
     public void SetDefaultRotateSpeed(float speed)
