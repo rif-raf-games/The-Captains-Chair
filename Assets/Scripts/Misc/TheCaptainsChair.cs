@@ -44,7 +44,7 @@ public class TheCaptainsChair : MonoBehaviour
                 Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
                 ArticyObject flowStartAO = jumpSave.Template.Flow_Start_Success.ReferenceSlot;
                 Debug.Log("flow start: " + flowStartAO.TechnicalName);
-                Player.GetComponent<ArticyFlow>().StartDialogue(flowStartAO as Dialogue, Player.gameObject);
+                Player.GetComponent<ArticyFlow>().CheckDialogue(flowStartAO as Dialogue, Player.gameObject);
             }
             else
             {
@@ -68,7 +68,7 @@ public class TheCaptainsChair : MonoBehaviour
             {
                 Debug.LogError("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ WTF 3");
             }
-            Player.GetComponent<ArticyFlow>().StartDialogue(DialogueToStartOn.GetObject() as Dialogue, Player.gameObject);
+            Player.GetComponent<ArticyFlow>().CheckDialogue(DialogueToStartOn.GetObject() as Dialogue, Player.gameObject);
         }
         SoundFX soundFX = FindObjectOfType<SoundFX>();
         SoundFXPlayer.Init(soundFX);
@@ -76,18 +76,27 @@ public class TheCaptainsChair : MonoBehaviour
        // LoadSaveData();
     }
 
+    bool ShouldCheckAIs = false;
+    private void LateUpdate()
+    {
+        if(ShouldCheckAIs == true)
+        {
+            ShouldCheckAIs = false;
+            foreach (KeyValuePair<string, NPC> entry in ArticyRefNPCs)
+            {
+                if (entry.Value.name.Equals("Carver") || entry.Value.name.Equals("Grunfeld")) continue;
+                Debug.Log("checking if npc: " + entry.Value.name + " has it's AI changed");
+                bool changed = entry.Value.CheckForAIChange();
+            }            
+        }
+    }
     /// <summary>
     /// Called from Articy when a variable changes
     /// </summary>    
     void MyGameStateVariablesChanged(string aVariableName, object aValue)
     {
-        /*Debug.Log("aVariableName: " + aVariableName + " changed to: " + aValue.ToString());
-        foreach (KeyValuePair<string, NPC> entry in ArticyRefNPCs)
-        {
-            Debug.Log("checking if npc: " + entry.Value.name + " has it's AI changed");
-            bool changed = entry.Value.CheckForAIChange();
-
-        }*/
+        Debug.Log("aVariableName: " + aVariableName + " changed to: " + aValue.ToString());
+        ShouldCheckAIs = true;
        // CaptainsChair.SaveSaveData();
     }
 

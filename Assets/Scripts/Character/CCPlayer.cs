@@ -62,14 +62,14 @@ public class CCPlayer : CharacterEntity
             if (dialogue != null)
             {
                 StaticStuff.PrintTriggerEnter("we have a dialogue, so set the FlowPlayer to start on it and see what happens");                
-                CaptainArticyFlow.StartDialogue(dialogue, other.gameObject);
+                CaptainArticyFlow.CheckDialogue(dialogue, other.gameObject);
             }
             else if(at != null)
             {
-                StaticStuff.PrintTriggerEnter("We have an Ambient_Trigger, so lets get that going on the trigger object's Articy Flow stuff");
-                ArticyFlow af = other.GetComponent<ArticyFlow>();
-                if(af == null) { Debug.LogError("ERROR: no ArticyFlow component on this Ambient_Trigger: " + other.name); return; }
-                af.StartAmbientFlow(at);
+                StaticStuff.PrintTriggerEnter("We have an Ambient_Trigger, so lets see if we're going to commit to it or not");
+                AmbientTrigger ambientTrigger = other.GetComponent<AmbientTrigger>();
+                if(ambientTrigger == null) { Debug.LogError("No AmbientTrigger component on this collider: " + other.name); return; }
+                ambientTrigger.ProcessAmbientTrigger(at);                
             }
             else
             {
@@ -147,8 +147,7 @@ public class CCPlayer : CharacterEntity
     }
     public void ToggleMovementBlocked(bool val)
     {
-        Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ToggleMovementBlocked() val: " + val);
-        
+       // Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ToggleMovementBlocked() val: " + val);        
         MovementBlocked = val;
     }
     public bool IsMovementBlocked()

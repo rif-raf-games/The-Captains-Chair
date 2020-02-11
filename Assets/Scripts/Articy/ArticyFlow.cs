@@ -134,15 +134,11 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     public void StartAIOnNPC(NPC npc, bool removeFromShutOffAis = false)
     {
         npc.RestartBehavior();
-        if (removeFromShutOffAis == true && ShutOffAIs.Contains(npc)) ShutOffAIs.Remove(npc);            
-        //ArticyFlowPlayer npcAFP = npc.GetComponent<ArticyFlowPlayer>();
-        //npcAFP.StartOn = npc.ArticyAIReference.GetObject();
-        // npcAFP.Play();
-    }
+        if (removeFromShutOffAis == true && ShutOffAIs.Contains(npc)) ShutOffAIs.Remove(npc);                    
+    }    
 
     public void HandleStageDirections(Stage_Directions sd)
-    {
-        //Stage_Directions sd = CurPauseObject as Stage_Directions;
+    {        
         if (sd != null)
         {
             if (sd.Template.Stage_Direction_String_Lists.AITurnOff != "")
@@ -315,30 +311,11 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                     Debug.Log("We're paused on a hub that has an actual target so for now that means we're in a dialogue that's actually going to play state: " + CurArticyState);
                     if(CurArticyState == eArticyState.DIALOGUE)
                     {
-                        DialogueNPC = null;
-                        if (DialogueStartAttachments.Count != 0)
-                        {
-                            Debug.Log("we've got at least one attachment");
-                            foreach (ArticyObject ao in DialogueStartAttachments)
-                            {
-                                Entity e = ao as Entity;
-                                if (e.DisplayName.Equals("Dialogue_NPC"))
-                                {
-                                    DialogueNPC = DialogueStartCollider.GetComponent<NPC>();
-                                    if (DialogueNPC == null) { Debug.LogError("There's no NPC on the Dialgue_NPC you collided with"); return; }
-                                    StopAIOnNPC(DialogueNPC);
-                                    // DialogueNPC.GetComponent<BoxCollider>().enabled = false;
-                                }
-                                else
-                                {
-                                    Debug.Log("non dialogue NPC: " + e.DisplayName);
-                                }
-                            }
-                        }                        
+                        Debug.Log("Start the DIALOGUE but not sure if we need this with the new determining the dialogue is valid system");                                                
                     }
                     else if(CurArticyState == eArticyState.AMBIENT_TRIGGER)
                     {
-                        Debug.Log("Start the AMBIENT_TRIGGER");
+                        Debug.Log("Start the AMBIENT_TRIGGER but not sure if we need this with the new determining the dialogue is valid system");
                     }
                     FlowFragsVisited.Clear();
                     SetNextBranch(CurBranches[0]);
@@ -444,38 +421,73 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     public void StartAmbientFlow(Ambient_Trigger ambientTrigger)
     {
         Debug.Log("************************************ Want to start an ambient flow: " + ambientTrigger.name);
+        // traverse the Ambient_Trigger until you find out if we're committing to it
         FlowPlayer.StartOn = ambientTrigger;
     }
     NPC DialogueNPC = null;
-    //List<NPC> NPCsToPutOnHold = new List<NPC>();
+    public string GetDialogueNPCName()
+    {
+        if(DialogueNPC == null) { Debug.LogError("Trying to get the DialogueNPC name but the DialogueNPC is null."); return "Null NPC"; }
+        return DialogueNPC.name;
+    }
+    
     List<string> FlowFragsVisited = new List<string>();
     GameObject DialogueStartCollider = null;
     List<ArticyObject> DialogueStartAttachments;
-    public void StartDialogue(Dialogue convoStart, GameObject collider)
-    {
-        if (convoStart == null) Debug.LogError("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^wtf why is the convoStart null");
-        else Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Start Dialogue() with technical name: " + convoStart.TechnicalName + " on GameObject: " + this.gameObject.name + " but DON'T DO ANY CODE STUFF UNTIL WE KNOW WE'RE ACTUALLY COMMITTING  time: " + Time.time);
-        if (collider == null) Debug.LogError("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ collider is null");
+    public void CheckDialogue(Dialogue convoStart, GameObject collider)
+    {        
+        Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ CheckDialogue() with technical name: " + convoStart.TechnicalName + " on GameObject: " + this.gameObject.name + " but DON'T DO ANY CODE STUFF UNTIL WE KNOW WE'RE ACTUALLY COMMITTING  time: " + Time.time);
+        if (CurArticyState == eArticyState.DIALOGUE)
+        {
+            Debug.Log("We're already in a Dialogue so bail on this one");
+            return;
+        }
+        bool o;
+        Condition c = (convoStart.InputPins[0].Connections[0].Target) as Condition;
+        if (c == null) 
+        {
+            // if no conditional just assume we're gonna go through
+            o = false;
+        }
+        else
+        {
+            o = c.Expression.CallScript();
+        }        
+        Debug.Log("Have we done this dialogue?: " + o);
+        if (o == true)
+        {
+            Debug.Log("we've already done this Dialogue so bail");
+            return;
+        }
+        Debug.Log("we've determined that this dialouge is ready to go so rock it");
+        CurArticyState = eArticyState.DIALOGUE;
         DialogueStartCollider = collider;
-        if (convoStart.Attachments == null) Debug.LogError("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ attachments are null");
         DialogueStartAttachments = convoStart.Attachments;
-        // Player.GetComponent<CapsuleCollider>().enabled = false;
-        if (FlowPlayer == null) Debug.LogError("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ FlowPlayer is null");
-        if (FlowPlayer.StartOn == null) Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ FlowPlayer.StartOn is null, which it should be");
+
+        DialogueNPC = null;
+        if (DialogueStartAttachments.Count != 0)
+        {
+            Debug.Log("we've got at least one attachment");
+            foreach (ArticyObject ao in DialogueStartAttachments)
+            {
+                Entity e = ao as Entity;
+                if (e.DisplayName.Equals("Dialogue_NPC"))
+                {
+                    DialogueNPC = DialogueStartCollider.GetComponent<NPC>();
+                    if (DialogueNPC == null) { Debug.LogError("There's no NPC on the Dialgue_NPC you collided with"); return; }
+                    StopAIOnNPC(DialogueNPC);
+                    // DialogueNPC.GetComponent<BoxCollider>().enabled = false;
+                }
+                else
+                {
+                    Debug.Log("non dialogue NPC: " + e.DisplayName);
+                }
+            }
+        }
+
         FlowPlayer.StartOn = convoStart;
-        if (FlowPlayer.StartOn == null) Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ we just assigned the StartOn so it should NOT be null");
-        if (Player == null) Debug.LogError("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Player is null");
         Player.ToggleMovementBlocked(true);        
-    }
-    
-    // monote
-    // have AI Behaviors have their pause frag be blank 
-    // have delay range work if it's just a single 0
-    // move the convo UI stuff out of this and somewhere else because you only need 1
-    // add timer to bark text so it's not always 5 second
-    // add code to places where you don't need to drag references
-    // expansions
-    // have ambient triggers work on a random character
+    }        
 
     List<ArticyObject> ActiveCALPauseObjects = new List<ArticyObject>(); 
     #region CHARACTER_ACTION_LIST    

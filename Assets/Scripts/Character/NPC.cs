@@ -34,7 +34,7 @@ public class NPC : CharacterEntity
 
     public bool CheckForAIChange()
     {
-        /*Character_Action_List_Template validBehavior = GetValidBehavior();
+        Character_Action_List_Template validBehavior = GetValidBehavior();
         if(validBehavior != CurBehavior)
         {
             Debug.Log(this.name + ": CurBehavior " + CurBehavior.DisplayName + " needs to change to this behavior: " + validBehavior.DisplayName);
@@ -44,8 +44,15 @@ public class NPC : CharacterEntity
         else
         {
             Debug.Log(this.name + ": CurBehavior " + CurBehavior.DisplayName + " doesn't need to change but we should check inside it");
-            StartCoroutine(GetComponent<BehaviorFlowPlayer>().CheckIfAIIsValid());            
-        }*/
+            bool shouldChange = GetComponent<BehaviorFlowPlayer>().CheckIfAIShouldChange();
+            if (shouldChange == true)
+            {
+                Debug.Log(this.name + " should change");
+                GetComponent<BehaviorFlowPlayer>().StopBehavior();
+                RestartBehavior();
+            }
+            else Debug.Log(this.name + " should NOT change");
+        }
         return false;
     }
 
@@ -86,9 +93,9 @@ public class NPC : CharacterEntity
         GetComponent<BehaviorFlowPlayer>().StartBehaviorFlow(CurBehavior, this.gameObject);               
     }
 
-    public void EndCAL()
+    public void EndCAL(int numNodes, bool idleOrFollow)
     {
-        if (this.name.Contains("Idle NPC")) Debug.Log(this.name + ": NPC EndCAL()");
+        if (this.name.Contains("Follow Test")) Debug.Log(this.name + ": NPC EndCAL() numNodes: " + numNodes + " idleOrFollow: " + idleOrFollow);
         if (CurBehavior == null) { Debug.LogError("trying to get output pins on a null behavior on this npc: " + this.name); return; }
         List<OutputPin> outputPins = CurBehavior.OutputPins;
         foreach(OutputPin pin in outputPins)
@@ -97,7 +104,14 @@ public class NPC : CharacterEntity
             instructionScrip.CallScript();
             //Debug.Log(pin.Text.RawScript);
         }
-        RestartBehavior();
+        if(numNodes == 1 && idleOrFollow)
+        {
+            if (this.name.Contains("Follow Test"))  Debug.Log(this.name + ": we've got a 1 node Idle or Follow so just bail and don't get into the infinite loop");
+        }
+        else
+        {
+            RestartBehavior();
+        }        
     }
 
     public void SetBarkText(string text)
