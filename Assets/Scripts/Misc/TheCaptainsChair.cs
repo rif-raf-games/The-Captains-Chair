@@ -96,6 +96,7 @@ public class TheCaptainsChair : MonoBehaviour
     void MyGameStateVariablesChanged(string aVariableName, object aValue)
     {
         Debug.Log("aVariableName: " + aVariableName + " changed to: " + aValue.ToString());
+        return;
         ShouldCheckAIs = true;
        // CaptainsChair.SaveSaveData();
     }
