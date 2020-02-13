@@ -9,11 +9,12 @@ using Articy.The_Captain_s_Chair;
 using UnityEngine.SceneManagement;
 using Articy.Unity;
 
-public class Repair : MonoBehaviour
+public class Repair : MiniGame
 {    
     public enum eFluidType { NONE, FUEL, COOLANT }; // two types of fluid are possible in the game
     public enum eRepairPieceType { PIPE, SPLITTER, XOVER, BLOCKER, TERMINAL }; // types of pieces
-
+    enum eGameState { OFF, ON };
+    eGameState CurGameState = eGameState.OFF;
     //public RepairPiece[] Terminals; // the terminals on this puzzle
     public List<RepairPiece> Terminals = new List<RepairPiece>();
 
@@ -32,8 +33,9 @@ public class Repair : MonoBehaviour
 
     float BeltMoveRange;
 
+    public Text ResultsText;
     //bool PuzzleFinishedTest = false;
-   
+
     class PieceConn
     {
         public RepairPiece Cur;
@@ -57,9 +59,27 @@ public class Repair : MonoBehaviour
     int PiecesAndBeltMask;
     // int PiecesAndAnchorMask;
 
-    
+    public override void Init(MiniGameMCP mcp)
+    {
+        Debug.Log("Repair.Init()");
+        base.Init(mcp);
+        if (ResultsText == null) ResultsText = MCP.ResultsText;
+        //if (DebugText == null) DebugText = MCP.DebugText;
+        ResultsText.text = "";
+    }
     private void Start()
     {
+        if (IsSolo == true)
+        {
+            ResultsText.text = "";
+            BeginPuzzle();
+        }
+    }
+
+    public override void BeginPuzzle()
+    {
+        ResultsText.text = "";
+        CurGameState = eGameState.ON;
         AllPieces = GameObject.FindObjectsOfType<RepairPiece>().ToList<RepairPiece>();        
         foreach (RepairPiece terminal in Terminals)
         {
@@ -97,8 +117,9 @@ public class Repair : MonoBehaviour
 
     static float TAP_TIME = .1f;
     private void Update()
-    {        
+    {
         //ResultText.text = "";
+        if (CurGameState == eGameState.OFF) return;
         float deltaZ=0f;
         Vector3 newWorldTouchPos = Vector3.zero;
         if (Input.GetMouseButtonDown(0))
@@ -622,8 +643,7 @@ public class Repair : MonoBehaviour
         }        
         return true;
     }
-
-    public Text ResultText;
+    
     void ResetPuzzleState( bool startOver )
     {
         NumChecks = 0;
@@ -666,7 +686,7 @@ public class Repair : MonoBehaviour
             bool puzzleSolved = false;
             bool brokenPathFound = false;
             string msg = "";
-            ResultText.text = "";
+            ResultsText.text = "";
             foreach ( RepairPiece terminal in Terminals)
             {
                 if (terminal.ReachedOnPath == true) continue;
@@ -734,13 +754,13 @@ public class Repair : MonoBehaviour
             {
                 string s = "epic FAIL because: " + msg + ", took " + NumChecks + " to do it";
                 Debug.Log("***************************************************************" + s);
-                ResultText.text = s;
+                ResultsText.text = s;
             }
             else
             {
                 string s = "epic WIN because: " + msg + ", took " + NumChecks + " to do it";
                 Debug.Log("***************************************************************" + s);
-                ResultText.text = s;
+                ResultsText.text = s;
             }
             StartCoroutine(EndGame(puzzleSolved));
             //PuzzleFinishedTest = true;
@@ -778,19 +798,18 @@ public class Repair : MonoBehaviour
     }
     IEnumerator EndGame(bool success)
     {
+        CurGameState = eGameState.OFF;
         yield return new WaitForSeconds(3);
         if(success == true)
         {
-            ArticyGlobalVariables.Default.Mini_Games.Returning_From_Mini_Game = true;
-            ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success = true;
-            Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
-            SceneManager.LoadScene(jumpSave.Template.Next_Game_Scene.Scene_Name);
+            if (MCP != null) MCP.PuzzleFinished();
+            else Debug.Log("We're not part of an MCP so figure out what next to do");   
         }
         else
         {
-            ResetPuzzleState(true);
-            //PuzzleFinishedTest = false;
-            ResultText.text = "";
+            CurGameState = eGameState.ON;
+            ResetPuzzleState(true);            
+            ResultsText.text = "";
             PathErrorSphere.transform.position = new Vector3(-9999f, 0f, -9999f);
             if (EndColPiece != null)
             {

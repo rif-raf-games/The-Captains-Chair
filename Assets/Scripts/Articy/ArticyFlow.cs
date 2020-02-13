@@ -7,6 +7,7 @@ using Articy.The_Captain_s_Chair.Features;
 using UnityEngine.UI;
 using System.Linq;
 using UnityEngine.SceneManagement;
+using Articy.The_Captain_s_Chair.GlobalVariables;
 
 public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMethodProvider
 {
@@ -180,7 +181,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         ShutOffAIs.Add(npc);
     }
     
-    int numUpdates = 1;
+    //int numUpdates = 1;
     /// <summary>
     /// Callback from Articy when it's calculated the available branches
     /// </summary>
@@ -352,9 +353,11 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                 Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
                 Mini_Game_Jump curJump = CurPauseObject as Mini_Game_Jump;
                 jumpSave.Template.Mini_Game_Scene.Scene_Name = curJump.Template.Mini_Game_Scene.Scene_Name;
+                jumpSave.Template.Mini_Game_Puzzles_To_Play.Puzzle_Numbers = curJump.Template.Mini_Game_Puzzles_To_Play.Puzzle_Numbers;
                 jumpSave.Template.Next_Game_Scene.Scene_Name = curJump.Template.Next_Game_Scene.Scene_Name;
                 jumpSave.Template.Flow_Start_Success.ReferenceSlot = curJump.Template.Flow_Start_Success.ReferenceSlot;
                 jumpSave.Template.Flow_Start_Fail.ReferenceSlot = curJump.Template.Flow_Start_Fail.ReferenceSlot;
+                ArticyGlobalVariables.Default.Mini_Games.Coming_From_Main_Game = true;
                 Debug.Log("About to start a mini game: " + curJump.Template.Mini_Game_Scene.Scene_Name);
                 SceneManager.LoadScene(curJump.Template.Mini_Game_Scene.Scene_Name);
                 

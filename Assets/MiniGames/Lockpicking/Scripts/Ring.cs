@@ -28,6 +28,7 @@ public class Ring : MonoBehaviour
     }
     public void Rotate()
     {
+        //Debug.Log(this.name + ": Rotate(): " + CurRotateSpeed);
         transform.Rotate(new Vector3(0f, CurRotateSpeed * Time.deltaTime, 0f));               
     }
     

@@ -9,8 +9,11 @@ using UnityEngine.UI;
 using System.Linq;
 using UnityEditor;
 
-public class LockPicking : MonoBehaviour
+public class LockPicking : MiniGame
 {
+    enum eGameState { OFF, ON };
+    eGameState CurGameState = eGameState.OFF;
+
     public Diode Diode;
     public GameObject CenterBlock;
     public List<Ring> Rings;
@@ -22,35 +25,40 @@ public class LockPicking : MonoBehaviour
     float LargestRingDiameter;
     Vector3 LastWorldTouchPos = Vector3.zero;
     float LastCenterToWorldAngle;
-    public Text GameResultText;
+    public Text ResultsText;
+    public Text DebugText;
 
-    public void InitFromInitializing(Diode diode, GameObject centerBlock, Gate gatePrefab, List<Ring> rings)
+    public PathNode DebugStartNode;
+
+    public override void Init(MiniGameMCP mcp)
     {
-        this.Diode = diode;
-        CenterBlock = centerBlock;
-        GatePrefab = gatePrefab;
-        Rings = rings;
+        Debug.Log("LockPicking.Init()");
+        base.Init(mcp);
+        if (ResultsText == null) ResultsText = MCP.ResultsText;
+        if (DebugText == null) DebugText = MCP.DebugText;
+        ResultsText.gameObject.SetActive(false);
     }
-    public void InitFromProcessing( /*Diode diode, GameObject centerBlock, List<Ring> rings,*/ List<Gate> gates, List<PathNode> startNodes, List<PathNode> deathNodes )    
-    {
-        //this.Diode = diode;
-        //CenterBlock = centerBlock;
-        //Rings = rings;
-        Gates = gates;
-        StartNodes = startNodes;
-        DeathNodes = deathNodes;
 
-        float speed = 10f;
-        foreach (Ring r in Rings)
+    public override void Awake()
+    {
+        base.Awake();
+        Physics.autoSimulation = true;
+        Diode.SetLockPickingComponent(this);
+    }
+
+    private void Start()
+    {
+        Debug.Log("LockPicking.Start()");
+        if (IsSolo == true)
         {
-            r.SetDefaultRotateSpeed(speed);
-            speed = -speed;
+            ResultsText.gameObject.SetActive(false);
+            BeginPuzzle();
         }
     }
-    public PathNode DebugStartNode;
     // Start is called before the first frame update
-    void Start()
+    public override void BeginPuzzle()
     {
+        Debug.Log("Lockpicking.BeginPuzzle()");        
         CenterBlock.transform.position = new Vector3(CenterBlock.transform.position.x, 0f, CenterBlock.transform.position.z);              
         LargestRingDiameter = Rings[Rings.Count-1].GetComponent<MeshCollider>().bounds.extents.x;
 
@@ -59,8 +67,9 @@ public class LockPicking : MonoBehaviour
     
     void StartGame()
     {
+        CurGameState = eGameState.ON;
         Diode.Moving = true;
-        GameResultText.gameObject.SetActive(false);
+        ResultsText.gameObject.SetActive(false);
         if (DebugStartNode != null)
         {
             Diode.SetStartNode(DebugStartNode);
@@ -82,17 +91,17 @@ public class LockPicking : MonoBehaviour
        // Debug.Log("found gate: " + gate.name);
         gate.gameObject.SetActive(false);
         bool allGatesFound = true;
-        foreach(Gate g in Gates)
+       /* foreach(Gate g in Gates)
         {
             if(g.gameObject.activeSelf == true)
             {
                 allGatesFound = false;
                 break;
             }
-        }
+        }*/
         if(allGatesFound == true)
         {
-            Debug.Log("Found All gates.  start over");
+            
             StartCoroutine(EndGame("You Won.", true));
         }
     }
@@ -110,16 +119,16 @@ public class LockPicking : MonoBehaviour
 
     IEnumerator EndGame(string endGameString, bool success)
     {
-        GameResultText.gameObject.SetActive(true);
-        GameResultText.text = endGameString;
+        CurGameState = eGameState.OFF;
+        ResultsText.gameObject.SetActive(true);
+        ResultsText.text = endGameString;
         Diode.Moving = false;
         yield return new WaitForSeconds(3);
-        if(success == true)
+        ResultsText.gameObject.SetActive(false);
+        if (success == true)
         {
-            ArticyGlobalVariables.Default.Mini_Games.Returning_From_Mini_Game = true;
-            ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success = true;
-            Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
-            SceneManager.LoadScene(jumpSave.Template.Next_Game_Scene.Scene_Name);
+            if (MCP != null) MCP.PuzzleFinished();
+            else Debug.Log("We're not part of an MCP so figure out what next to do");
         }
         else
         {
@@ -127,18 +136,11 @@ public class LockPicking : MonoBehaviour
         }
         //StartCoroutine(HandleEndGame());
     }
-
-    /*IEnumerator HandleEndGame()
-    {
-        
-        StartGame();        
-    }*/
-
-    
-                    
+             
     // Update is called once per frame
     void Update()
     {
+        if (CurGameState == eGameState.OFF) return;
         if (Input.GetMouseButtonDown(0)) // initial press
         {                        
             LayerMask mask = LayerMask.GetMask("Lockpick Touch Control");
@@ -210,9 +212,27 @@ public class LockPicking : MonoBehaviour
         return rot;
     }
 
-    private void Awake()
+    
+
+    public void InitFromInitializing(Diode diode, GameObject centerBlock, Gate gatePrefab, List<Ring> rings)
     {
-        Physics.autoSimulation = true;
+        this.Diode = diode;
+        CenterBlock = centerBlock;
+        GatePrefab = gatePrefab;
+        Rings = rings;
+    }
+    public void InitFromProcessing( /*Diode diode, GameObject centerBlock, List<Ring> rings,*/ List<Gate> gates, List<PathNode> startNodes, List<PathNode> deathNodes)
+    {
+        Gates = gates;
+        StartNodes = startNodes;
+        DeathNodes = deathNodes;
+
+        float speed = 10f;
+        foreach (Ring r in Rings)
+        {
+            r.SetDefaultRotateSpeed(speed);
+            speed = -speed;
+        }
     }
 
     public void ProcessBoardSetup()
