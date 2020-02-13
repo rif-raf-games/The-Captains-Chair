@@ -11,17 +11,21 @@ public class Diode : MonoBehaviour
     public Ring.LockpickRingPath CurPath;
     public GameObject LastPosition;
     SphereCollider SC;
-    LockPicking MCP;
+    LockPicking LockPicking;
     bool IgnoreCollisions = false;
-    public Text DebugText;
+    //public Text DebugText;
 
     public bool Moving = false;
 
     // Start is called before the first frame update
     void Start()
     {                
-        SC = GetComponent<SphereCollider>();
-        MCP = FindObjectOfType<LockPicking>();
+        SC = GetComponent<SphereCollider>();        
+    }
+
+    public void SetLockPickingComponent(LockPicking lp)
+    {
+        this.LockPicking = lp;
     }
 
     void SetNewPath(Ring.LockpickRingPath path)
@@ -89,15 +93,8 @@ public class Diode : MonoBehaviour
                 }
             }            
 
-            MCP.RotateRings();
-            LastPosition.transform.position = transform.position;
-
-            if (DebugText.text != null)
-            {
-                //DebugText.text = transform.parent.name;
-                //DebugText.text = "IgnoreCollisions: " + IgnoreCollisions;
-                DebugText.text = "";
-            }
+            LockPicking.RotateRings();
+            LastPosition.transform.position = transform.position;            
         }
             return;
 
@@ -107,9 +104,9 @@ public class Diode : MonoBehaviour
     {
        // Debug.Log("OnTriggerEnter: " + other.name);
         Gate g = other.GetComponent<Gate>();
-        if (g != null) MCP.CollectGate(g);
+        if (g != null) LockPicking.CollectGate(g);
         PathNode pathNode = other.GetComponent<PathNode>();
-        if (pathNode != null) MCP.CheckDeathNode(pathNode);
+        if (pathNode != null) LockPicking.CheckDeathNode(pathNode);
     }
 
     void ChangeDir()

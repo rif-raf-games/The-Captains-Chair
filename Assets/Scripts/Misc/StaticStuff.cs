@@ -1,9 +1,19 @@
-﻿using System.Collections;
+﻿
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
 static public class StaticStuff 
-{
+{    
+    public const bool USE_DEBUG_MENU = false; // HERE IS WHERE YOU TOGGLE THE DEBUG MENU
+
+
+
+
+
     static ArticyFlow ArticyFlowToPrint;
     static public void SetCaptainsChair(ArticyFlow articyFlowToPrint)
     {
@@ -18,7 +28,7 @@ static public class StaticStuff
         }            
     }*/
     static public void PrintFlowBranchesUpdate(string s, ArticyFlow articyFlowCaller)
-    {
+    {        
        // if (ArticyFlowToPrint != null && (ArticyFlowToPrint == articyFlowCaller))
        if(true)
         {

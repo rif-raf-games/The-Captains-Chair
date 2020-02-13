@@ -48,7 +48,7 @@ public class RifRafGames
         LockPicking lp = rootGO.AddComponent<LockPicking>();
         rootGO.AddComponent<LockpickBoardSetup>();
         GameObject gameResultText = GameObject.Find("GameResultText");          
-        if (gameResultText != null) lp.GameResultText = gameResultText.GetComponent<Text>();
+        if (gameResultText != null) lp.ResultsText = gameResultText.GetComponent<Text>();
         EditorWindow.focusedWindow.SendEvent(e);
 
         GameObject centerBlock = rootGO.transform.GetChild(0).gameObject;
@@ -64,7 +64,7 @@ public class RifRafGames
         rb.isKinematic = true;
         float diodeRadius = diode.GetComponent<SphereCollider>().radius;
         GameObject debugText = GameObject.Find("DebugText");
-        if (debugText != null) diode.DebugText = debugText.GetComponent<Text>();        
+        //if (debugText != null) diode.DebugText = debugText.GetComponent<Text>();        
         diode.LastPosition = new GameObject("Last Position");        
 
         List<GameObject> ringObjectRoots = new List<GameObject>();

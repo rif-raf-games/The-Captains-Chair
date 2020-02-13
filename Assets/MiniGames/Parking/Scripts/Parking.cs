@@ -4,12 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using UnityEditor;
-using Articy.The_Captain_s_Chair;
-using Articy.Unity;
-using UnityEngine.SceneManagement;
-using Articy.The_Captain_s_Chair.GlobalVariables;
 
-public class Parking : MonoBehaviour
+public class Parking : MiniGame
 {    
     enum eTouchState { NONE, CLICK, RELEASE, HOLD };    // available mouse/finger touch states
     eTouchState TouchState; // current touch state
@@ -18,8 +14,8 @@ public class Parking : MonoBehaviour
     public float RaiserLowerTime = .2f;
     public float DirChangeBuffer = .3f;
 
-    enum eGameState { NORMAL, ROTATE_PAD };
-    eGameState CurGameState;
+    enum eGameState { OFF, NORMAL, ROTATE_PAD };
+    eGameState CurGameState = eGameState.OFF;
 
     [Header("Ignore Debug Stuff Below")]
     public ParkingShip ActiveShip = null;
@@ -29,13 +25,32 @@ public class Parking : MonoBehaviour
 
     public List<ParkingShip> TargetShips = new List<ParkingShip>();
 
-    // Start is called before the first frame update
-    void Start()
+    public Text ResultsText;
+    public Text DebugText;
+    public override void Init(MiniGameMCP mcp)
     {
+        Debug.Log("Parking.Init()");
+        base.Init(mcp);
+        if (ResultsText == null) ResultsText = MCP.ResultsText;
+        if (DebugText == null) DebugText = MCP.DebugText;
+        ResultsText.gameObject.SetActive(false);
+    }
+
+    private void Start()
+    {
+        if(IsSolo == true)
+        {
+            ResultsText.gameObject.SetActive(false);
+            BeginPuzzle();
+        }
+    }
+
+    public override void BeginPuzzle()
+    {
+        Debug.Log("Parking.BeginPuzzle()");
         TouchState = eTouchState.NONE;
         CurGameState = eGameState.NORMAL;
-        ContainGO = new GameObject();
-        ResultsText.gameObject.SetActive(false);
+        ContainGO = new GameObject();                  
 
         List<ParkingShip> ships = FindObjectsOfType<ParkingShip>().ToList();
         foreach(ParkingShip ship in ships)
@@ -54,6 +69,9 @@ public class Parking : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Debug.Log("update");
+        if (DebugText != null) DebugText.text = CurGameState.ToString();
+        if (CurGameState == eGameState.OFF) return;
         if(CurGameState == eGameState.ROTATE_PAD)
         {
             float lerpTime = Time.time - LerpStartTime;
@@ -69,7 +87,7 @@ public class Parking : MonoBehaviour
                 //Debug.Log("putting " + ships.Count + " back");
                 foreach(ParkingShip ship in ships)
                 {
-                    ship.transform.parent = null;
+                    ship.transform.parent = this.transform;
                 }
             }
             return;
@@ -84,7 +102,7 @@ public class Parking : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask))
             {
-                Debug.Log("Clicked on a ship.");
+               // Debug.Log("Clicked on a ship.");
                 ParkingShip ship = hit.collider.gameObject.GetComponent<ParkingShip>();
                 if (ship == null) { Debug.LogError("Clicked on a ship with no ParkingShip component: " + hit.collider.name); return; }
                 SetActiveShip(ship);
@@ -123,7 +141,7 @@ public class Parking : MonoBehaviour
                     if (ActiveShip.GetMoveDir() != curMoveDir)
                     {
                         Vector3 closestCenteredPos = GetClosestCenteredPoint(ActiveShip.gameObject);
-                        float dec;
+                        //float dec;
                         // want to change directions of movement eh?
                         if (ActiveShip.GetMoveDir() == ParkingShip.eMoveDir.HORIZONTAL)
                         {   // want to start moving the ship vertically
@@ -190,15 +208,14 @@ public class Parking : MonoBehaviour
 
         if (DebugText != null)
         {
-            DebugText.text = TouchState + "\n";
-
-            //if (CurTouchPos.y > LastTouchPos.y) angle = 360f - angle;
+            //DebugText.text = CurGameState.ToString() + "\n";
+            /*DebugText.text = TouchState + "\n";            
             DebugText.text += "CurTouchPos: " + CurTouchPos.ToString("F2") + "\n";
             DebugText.text += "LastTouchPos: " + LastTouchPos.ToString("F2") + "\n";
             DebugText.text += "mouseMoveAngle: " + mouseMoveAngle.ToString("F2") + "\n";
             DebugText.text += "curMoveDir: " + curMoveDir.ToString() + "\n";
             if (ActiveShip != null) DebugText.text += "Ship Dir: " + ActiveShip.GetMoveDir() + "\n";
-            DebugText.text = "";
+            DebugText.text = "";*/
         }
         LastTouchPos = CurTouchPos;
     }
@@ -206,7 +223,7 @@ public class Parking : MonoBehaviour
     
 
 
-    public Text DebugText;
+    
     void SetActiveShip(ParkingShip ship)
     {
         if (ship == null)
@@ -222,7 +239,7 @@ public class Parking : MonoBehaviour
 
     public void SetBoardPiecesInEditor()
     {
-        float dec;
+       // float dec;
         Debug.Log("Parking.SetBoardPiecesInEditor()");
         //List<ParkingShip> ships = FindObjectsOfType<ParkingShip>().ToList();
         List<GameObject> parkingBoardItems = GameObject.FindGameObjectsWithTag("Parking Board Item").ToList();
@@ -326,7 +343,7 @@ public class Parking : MonoBehaviour
             foreach (ParkingShip ship in RotateShipList)
             {
                 List<Vector3> checkPoints = new List<Vector3>();
-                GameObject go;
+                //GameObject go;
                 Vector3 moveVec;
                 BoxCollider shipBox = ship.GetComponent<BoxCollider>();
                 Bounds b = shipBox.bounds;
@@ -382,6 +399,7 @@ public class Parking : MonoBehaviour
         }
         if(GUI.Button(new Rect(0,100,100,100), "Check Finish"))
         {
+            CurGameState = eGameState.OFF;
             LiftPadShipList.Clear();
             foreach (GameObject sphere in DebugSpheres)
             {
@@ -402,7 +420,7 @@ public class Parking : MonoBehaviour
             foreach (ParkingShip ship in TargetShips)
             {
                 List<Vector3> checkPoints = new List<Vector3>();
-                GameObject go;
+               // GameObject go;
                 Vector3 moveVec;
                 BoxCollider shipBox = ship.GetComponent<BoxCollider>();
                 Bounds b = shipBox.bounds;
@@ -449,19 +467,24 @@ public class Parking : MonoBehaviour
 
     IEnumerator ShowResults(string result, bool success)
     {
+        CurGameState = eGameState.OFF;
         ResultsText.gameObject.SetActive(true);
         ResultsText.text = result;
         yield return new WaitForSeconds(3f);
         ResultsText.gameObject.SetActive(false);
         if(success == true)
+        {            
+            if (MCP != null) MCP.PuzzleFinished();
+            else Debug.Log("We're not part of an MCP so figure out what next to do");
+        }      
+        else
         {
-            ArticyGlobalVariables.Default.Mini_Games.Returning_From_Mini_Game = true;
-            ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success = true;
-            Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
-            SceneManager.LoadScene(jumpSave.Template.Next_Game_Scene.Scene_Name);
-        }        
+            CurGameState = eGameState.NORMAL;
+        }
     }
-    public Text ResultsText;
+
+    
+    
     public GameObject LiftPad;
     Quaternion LerpRotStart, LerpRotEnd;
     float LerpStartTime, LerpDurationTime;
