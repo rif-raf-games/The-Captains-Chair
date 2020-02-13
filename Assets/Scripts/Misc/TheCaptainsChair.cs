@@ -1,6 +1,5 @@
 ﻿using Articy.The_Captain_s_Chair;
 using Articy.Unity;
-//using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -72,8 +71,15 @@ public class TheCaptainsChair : MonoBehaviour
         }
         SoundFX soundFX = FindObjectOfType<SoundFX>();
         SoundFXPlayer.Init(soundFX);
+
+        if(StaticStuff.USE_DEBUG_MENU == true)
+        {
+            Object debugObject = Resources.Load("DebugMenu");
+            Instantiate(debugObject);
+        }
+        
         //DeleteSaveData();
-       // LoadSaveData();
+        // LoadSaveData();
     }
 
     bool ShouldCheckAIs = false;
@@ -100,14 +106,9 @@ public class TheCaptainsChair : MonoBehaviour
         ShouldCheckAIs = true;
        // CaptainsChair.SaveSaveData();
     }
-
-    private void OnGUI()
-    {
-        if(GUI.Button(new Rect(Screen.width-100, Screen.height-100, 100, 100), "Delete Data"))
-        {
-            Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");            
-        }
-    }
+        
+    
+    
     public void ToggleNavMeshes(bool val)
     {        
         foreach(KeyValuePair<string,NPC> entry in ArticyRefNPCs)

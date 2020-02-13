@@ -21,6 +21,17 @@ public class MiniGame : MonoBehaviour
             Debug.Log("we're part of a MCP group");
             IsSolo = false;
         }
+
+        if(StaticStuff.USE_DEBUG_MENU == true)
+        {
+            DebugMenu dm = FindObjectOfType<DebugMenu>();
+            if (dm == null)
+            {
+                Debug.Log("load debug menu");
+                Object debugObject = Resources.Load("DebugMenu");
+                Instantiate(debugObject);
+            }
+        }        
     }
     public virtual void Init(MiniGameMCP mcp)
     {
