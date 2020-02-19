@@ -10,10 +10,11 @@ public class ConvoUI : MonoBehaviour
     public GameObject SpeakerPanel;
     public Text SpeakerName;
     public Text SpeakerText;
+    public float TypewriterSpeed = 20f;
     public GameObject[] DialogueOptions;
 
     TheCaptainsChair CapChair;
-    public bool TextTyping = false;    
+    bool TextTyping = false;    
 
     public CCPlayer Player;
     Coroutine TypewriterCoroutine;
@@ -65,7 +66,7 @@ public class ConvoUI : MonoBehaviour
         foreach (char character in CurDialogueText.ToCharArray())
         {
             SpeakerText.text += character;
-            yield return new WaitForSeconds(0.05f);
+            yield return new WaitForSeconds(1f / TypewriterSpeed);
             TextTyping = true; // wait a sec so that the click off via any press on screen 
         }
         TextTyping = false;
