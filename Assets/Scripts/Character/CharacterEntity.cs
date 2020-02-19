@@ -175,7 +175,7 @@ public class CharacterEntity : MonoBehaviour
 
     public bool NavMeshDone()
     {
-        if (!NavMeshAgent.pathPending)
+        if (NavMeshAgent.enabled == true && !NavMeshAgent.pathPending)
         {
             if (NavMeshAgent.remainingDistance <= NavMeshAgent.stoppingDistance)
             {

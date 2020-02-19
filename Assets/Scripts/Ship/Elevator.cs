@@ -47,7 +47,7 @@ public class Elevator : MonoBehaviour
     }
     public int BeginMovement()
     {
-        Debug.Log("Elevator begin movement");
+        //Debug.Log("Elevator begin movement");
         StartPos = this.transform.localPosition;        
         IsMoving = true;
         LerpStartTime = Time.time;
@@ -71,7 +71,7 @@ public class Elevator : MonoBehaviour
             float lerpTime = Time.time - LerpStartTime;
             float lerpPercentage = lerpTime / 2f;
             transform.localPosition = Vector3.Lerp(StartPos, EndPos, lerpPercentage);
-            Player.ElevatorUpdate(this);
+           // Player.ElevatorUpdate(this);
             if (lerpPercentage >= 1f)
             {                
                 transform.localPosition = EndPos;             

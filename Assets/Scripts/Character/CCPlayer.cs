@@ -10,15 +10,14 @@ public class CCPlayer : CharacterEntity
 {
 
     ArticyFlow CaptainArticyFlow;           
+    
+    public Elevator[] Elevators;
+   // bool TurnOnNavMeshes = false;    
 
-    //private NavMeshAgent NavMeshAgent;
-    NavMeshSurface[] FloorNavMeshSurfaces;
-    NavMeshSurface[] ElevatorNavMeshSurfaces;
-    bool TurnOnNavMeshes = false;    
-
-    Elevator SelectedElevator = null;
+    public Elevator SelectedElevator = null;
 
     private bool MovementBlocked = false;
+    private bool WaitingForFollowersOnElevator = false;
     TheCaptainsChair CaptainsChair;
 
     [Header("CCPlayer")]
@@ -33,13 +32,7 @@ public class CCPlayer : CharacterEntity
         CaptainArticyFlow = GetComponent<ArticyFlow>();
         CaptainsChair = FindObjectOfType<TheCaptainsChair>();
         
-        GameObject[] floors = GameObject.FindGameObjectsWithTag("FloorNavMesh");
-        FloorNavMeshSurfaces = new NavMeshSurface[floors.Length];
-        for (int i = 0; i < floors.Length; i++) FloorNavMeshSurfaces[i] = floors[i].GetComponent<NavMeshSurface>();
-        GameObject[] elevators = GameObject.FindGameObjectsWithTag("ElevatorNavMesh");
-        ElevatorNavMeshSurfaces = new NavMeshSurface[elevators.Length];
-        for (int i = 0; i < elevators.Length; i++) ElevatorNavMeshSurfaces[i] = elevators[i].GetComponent<NavMeshSurface>();               
-        
+        Elevators = FindObjectsOfType<Elevator>();
         ToggleMovementBlocked(false);
         GameObject go = GameObject.Find("Loop");
         if(go != null)
@@ -48,6 +41,10 @@ public class CCPlayer : CharacterEntity
         }
     }
 
+    bool IsLoopFollowing()
+    {
+        return (Loop != null && Loop.IsFollowingCaptain() == true);
+    }
     
     private void OnTriggerEnter(Collider other)
     {
@@ -82,44 +79,42 @@ public class CCPlayer : CharacterEntity
             {
                 if (other.gameObject.name.Contains("Start"))
                 {
-                    StaticStuff.PrintTriggerEnter("Reached elevator StartPos");
-                    //if(SelectedElevator.HasRideBegun() == false)
+                    StaticStuff.PrintTriggerEnter("Reached elevator StartPos");                    
                     if (MovementBlocked == false)
                     {
-                        StaticStuff.PrintTriggerEnter("move player onto elevator");
-                        CaptainsChair.ToggleNavMeshes(false);
-                        foreach (NavMeshSurface n in FloorNavMeshSurfaces) n.enabled = false;
-                        TurnOnNavMeshes = true;
-                        Vector3 dest = other.gameObject.transform.parent.GetChild(1).position;                        
+                        StaticStuff.PrintTriggerEnter("move player onto elevator");                        
+                        Vector3 dest = other.gameObject.transform.parent.GetChild(0).position;                        
                         SetNavMeshDest(dest);
                         if (DebugDestPos != null) DebugDestPos.transform.position = dest;
                         ToggleMovementBlocked(true);
-
+                        if(IsLoopFollowing() == true)
+                        {
+                            WaitingForFollowersOnElevator = true;
+                            Loop.SetShouldFollowEntity(false);
+                            Loop.SetNavMeshDest(other.gameObject.transform.parent.GetChild(1).position);
+                        }
                     }
                     else
                     {
                         StaticStuff.PrintTriggerEnter("Player moved off elevator, back to normal movement");
-                        SelectedElevator.transform.GetChild(1).GetComponent<SphereCollider>().enabled = true;
-                        CaptainsChair.ToggleNavMeshes(false);
-                        SelectedElevator.GetComponent<NavMeshSurface>().enabled = false;
-                        TurnOnNavMeshes = true;
+                        SelectedElevator.transform.GetChild(0).GetComponent<SphereCollider>().enabled = true;
+                        //CaptainsChair.ToggleNavMeshes(false);                    
                         SelectedElevator = null;
                         ToggleMovementBlocked(false);
                     }
                 }
                 else
                 {
-                    StaticStuff.PrintTriggerEnter("Reached elevator EndPos so start movement");
-                    SelectedElevator.transform.GetChild(1).GetComponent<SphereCollider>().enabled = false;
-                    int newFloor = SelectedElevator.BeginMovement();
-                    foreach (NavMeshSurface n in ElevatorNavMeshSurfaces)
+                    StaticStuff.PrintTriggerEnter("Reached elevator EndPos so start movement");                                        
+                    if(WaitingForFollowersOnElevator == true)
                     {
-                        Elevator e = n.GetComponent<Elevator>();
-                        if (e != SelectedElevator && e.ShouldMoveAsWell(newFloor) == true)
-                        {
-                            e.BeginMovement();
-                        }
+                        //Debug.Log("We're ready to ride the elevator but we're still waiting for Loop");
+                        return;
                     }
+                    else
+                    {
+                        StartElevatorRide();
+                    }                            
                 }
             }
             else
@@ -133,17 +128,46 @@ public class CCPlayer : CharacterEntity
         }
     }    
 
+    void StartElevatorRide()
+    {
+        ToggleNavMeshAgent(false);
+        transform.parent = SelectedElevator.transform;
+        if (WaitingForFollowersOnElevator == true)
+        {
+            //WaitingForFollowersOnElevator = false;
+            Loop.ToggleNavMeshAgent(false);
+            Loop.transform.parent = SelectedElevator.transform;            
+        }
+        SelectedElevator.transform.GetChild(0).GetComponent<SphereCollider>().enabled = false;
+        int newFloor = SelectedElevator.BeginMovement();
+        foreach (Elevator e in Elevators)
+        {
+            if (e != SelectedElevator && e.ShouldMoveAsWell(newFloor) == true)
+            {
+                e.BeginMovement();
+            }
+        }
+    }
+
+    public void ElevatorDoneMoving(Elevator caller)
+    {
+        if (caller == SelectedElevator)
+        {
+           // Debug.Log("Elevator done moving, so move player back to entrance");
+            ToggleNavMeshAgent(true);
+            SetNavMeshDest(SelectedElevator.transform.GetChild(2).transform.position);
+            if(WaitingForFollowersOnElevator == true)
+            {
+                WaitingForFollowersOnElevator = false;
+                Loop.ToggleNavMeshAgent(true);
+                Loop.SetShouldFollowEntity(true);
+            }
+        }
+    }
+
     public override void LateUpdate()
     {
-        base.LateUpdate();
-        // Camera.main.transform.position = this.transform.position + CamOffset;
-        if (TurnOnNavMeshes == true)
-        {
-            foreach (NavMeshSurface n in FloorNavMeshSurfaces) n.enabled = true;
-            foreach (NavMeshSurface n in ElevatorNavMeshSurfaces) n.enabled = true;
-            CaptainsChair.ToggleNavMeshes(true);
-            TurnOnNavMeshes = false;
-        }
+        base.LateUpdate();       
     }
     public void ToggleMovementBlocked(bool val)
     {
@@ -162,14 +186,7 @@ public class CCPlayer : CharacterEntity
             StopNavMeshMovement();
         }        
     }
-    public void ElevatorDoneMoving(Elevator caller)
-    {        
-        if(caller == SelectedElevator)
-        {
-            Debug.Log("Elevator done moving, so move player back to entrance");            
-            SetNavMeshDest(SelectedElevator.transform.GetChild(0).transform.position);            
-        }        
-    }
+    
     
     
 
@@ -188,59 +205,34 @@ public class CCPlayer : CharacterEntity
                 Vector3 dest = Vector3.zero;
                 string layerClicked = LayerMask.LayerToName(hit.collider.gameObject.layer);
                 if(layerClicked.Equals("Floor"))
-                {                    
-                    dest = hit.point;
-                    //Debug.Log("go to this spot: " + dest.ToString("F3"));
+                {
+                   // Debug.Log("layerClicked: " + layerClicked + " hit: " + hit.collider.gameObject.name);
+                    dest = hit.point;                                        
                     SelectedElevator = null;
                 }
                 else if(layerClicked.Equals("Elevator"))
                 {
-                    Elevator e = hit.collider.GetComponent<Elevator>();
-                    StartCoroutine(FuckElevatorsWithNavMeshes(e));
-                    // transform.position 
-                    //SelectedElevator = null;
+                   //s Debug.Log("layerClicked: " + layerClicked + " hit: " + hit.collider.gameObject.name);
+                    dest = hit.point;
+                    if (hit.collider.gameObject.name.Contains("Lift")) SelectedElevator = hit.collider.GetComponent<Elevator>();
+                    else SelectedElevator = hit.collider.GetComponentInParent<Elevator>();
+                    if (SelectedElevator == null) Debug.LogError("Clicked on an Elevator with no Elevator component.");                    
                 }                                
                 SetNavMeshDest(dest);
                 if(DebugDestPos != null) DebugDestPos.transform.position = dest;
             }
-        } 
-        if(Input.GetKeyDown(KeyCode.S))
+        }                 
+        DebugStuff();
+        if(WaitingForFollowersOnElevator == true)
         {
-            //CaptainsChair.ToggleNavMeshes(false);
-            foreach (NavMeshSurface n in FloorNavMeshSurfaces) n.enabled = false;
-            TurnOnNavMeshes = true;
-        }
-
-        //DebugStuff();
-    }
-    
-    
-    IEnumerator FuckElevatorsWithNavMeshes(Elevator e)
-    {
-        //Elevator e = hit.collider.GetComponent<Elevator>();
-        SelectedElevator = e;
-        int newFloor = SelectedElevator.Teleport();
-        foreach (NavMeshSurface n in ElevatorNavMeshSurfaces)
-        {
-            e = n.GetComponent<Elevator>();
-            if (e != SelectedElevator && e.ShouldMoveAsWell(newFloor) == true)
+            if(Loop.NavMeshDone())
             {
-                e.Teleport();
+               // Debug.Log("Loop is ready to rock");
+                StartElevatorRide();
             }
         }
-        yield return new WaitForEndOfFrame();
-        yield return new WaitForEndOfFrame();
-        ToggleNavMeshAgent(false);
-        transform.position = SelectedElevator.transform.GetChild(0).transform.position;
-        ToggleNavMeshAgent(true);
-        if (Loop != null && Loop.IsFollowingCaptain() == true)
-        {
-            Loop.ToggleNavMeshAgent(false);
-            Loop.transform.position = SelectedElevator.transform.GetChild(1).transform.position;
-            Loop.ToggleNavMeshAgent(true);
-        }
-        SelectedElevator = null;
     }
+    
     
     void DebugStuff()
     {               
@@ -250,6 +242,10 @@ public class CCPlayer : CharacterEntity
         {
                         
             DebugText.text = "";
+            DebugText.text += "MovementBlocked: " + MovementBlocked.ToString() + "\n";
+            DebugText.text += "Loop following? " + IsLoopFollowing() + "\n";
+            DebugText.text += "WaitingForFollowersOnElevator: " + WaitingForFollowersOnElevator + "\n";
+
             /*DebugText.text += "m_DeltaPos: " + m_DeltaPos.ToString("F3") + "\n";
             DebugText.text += "m_Speed: " + m_Speed + "\n";
             DebugText.text += "m_ForwardDir: " + m_ForwardDir.ToString("F3") + "\n";
@@ -262,12 +258,11 @@ public class CCPlayer : CharacterEntity
             else DebugText.text += "no turn" + "\n";
             DebugText.text += "num clips: " + m_Anim.GetCurrentAnimatorClipInfoCount(0) + "\n";*/
 
-            DebugText.text += "remainingDistance: " + NavMeshAgent.remainingDistance + "\n";
+            /*DebugText.text += "remainingDistance: " + NavMeshAgent.remainingDistance + "\n";
             DebugText.text += "stoppingDistance: " + NavMeshAgent.stoppingDistance + "\n";
             DebugText.text += "hasPath: " + NavMeshAgent.hasPath + "\n";
             DebugText.text += "velocity: " + NavMeshAgent.velocity.sqrMagnitude + "\n";
-
-            DebugText.text = "MovementBlocked: " + MovementBlocked.ToString();
+            DebugText.text = "MovementBlocked: " + MovementBlocked.ToString();*/
 
             /*DebugText.text += NavMeshAgent.navMeshOwner.name + "\n";            
             DebugText.text += "autoBraking: " + NavMeshAgent.autoBraking + "\n";

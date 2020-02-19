@@ -109,7 +109,7 @@ public class TheCaptainsChair : MonoBehaviour
         
     
     
-    public void ToggleNavMeshes(bool val)
+   /* public void ToggleNavMeshes(bool val)
     {        
         foreach(KeyValuePair<string,NPC> entry in ArticyRefNPCs)
         {            
@@ -117,7 +117,7 @@ public class TheCaptainsChair : MonoBehaviour
         }
         
         //Player.ToggleNavMeshAgent(val);
-    }
+    }*/
     public NPC GetNPCFromActorName(string name)
     {
 //Debug.Log("get npc: " + name);
