@@ -124,7 +124,7 @@ public class CCPlayer : CharacterEntity
         }
         else
         {
-            Debug.Log("We've collided into something that doesn't have an Articy Ref and isn't an elevator so find out what's up. " + other.name);
+            StaticStuff.PrintTriggerEnter("We've collided into something that doesn't have an Articy Ref and isn't an elevator so find out what's up. " + other.name);
         }
     }    
 
