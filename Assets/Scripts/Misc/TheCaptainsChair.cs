@@ -17,6 +17,7 @@ public class TheCaptainsChair : MonoBehaviour
     public ArticyFlow ArticyFlowToPrint;
     Dictionary<string, NPC> ArticyRefNPCs = new Dictionary<string, NPC>();
     // Start is called before the first frame update
+        
     void Start()
     {
 
@@ -71,6 +72,8 @@ public class TheCaptainsChair : MonoBehaviour
         }
         SoundFX soundFX = FindObjectOfType<SoundFX>();
         SoundFXPlayer.Init(soundFX);
+        BackgroundMusic bgMusic = FindObjectOfType<BackgroundMusic>();
+        BackgroundMusicPlayer.Init(bgMusic);          
 
         if(StaticStuff.USE_DEBUG_MENU == true)
         {
@@ -120,7 +123,12 @@ public class TheCaptainsChair : MonoBehaviour
     }*/
     public NPC GetNPCFromActorName(string name)
     {
-//Debug.Log("get npc: " + name);
+        //Debug.Log("get npc: " + name);
+        if (ArticyRefNPCs.ContainsKey(name) == false)
+        {
+            Debug.LogError("Trying to get an NPC of name: " + name + " but it is not in the scene.");
+            return null;
+        }
         NPC npc = ArticyRefNPCs[name];
         return npc;
     }

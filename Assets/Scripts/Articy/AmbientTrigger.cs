@@ -4,6 +4,7 @@ using UnityEngine;
 using Articy.The_Captain_s_Chair;
 using Articy.Unity;
 using System.Linq;
+using Articy.The_Captain_s_Chair.Features;
 
 public class AmbientTrigger : MonoBehaviour
 {
@@ -47,14 +48,19 @@ public class AmbientTrigger : MonoBehaviour
         }
 
         ArticyObject target = c.OutputPins[1].Connections[0].Target;
-        Stage_Directions sd = target as Stage_Directions;
+        Stage_Directions_Container sdc = target as Stage_Directions_Container;
         Behavior = target as Character_Action_List_Template;
 
-        if (sd != null)
+        if (sdc != null)
         {
-            Debug.Log("this ambient trigger is starting off with Stage_Directions");
-            HandleStageDirections(sd);
-            target = sd.OutputPins[0].Connections[0].Target;
+            Debug.Log("this ambient trigger is starting off with Stage_Directions_Container");
+            foreach (OutgoingConnection oc in sdc.InputPins[0].Connections)
+            {
+                Stage_Directions sd = oc.Target as Stage_Directions;
+                if (sd == null) { Debug.LogError("We're expecting a Stage_Directions here: " + oc.Target.GetType()); continue; }
+                HandleStageDirections(sd);
+            }
+            target = sdc.OutputPins[0].Connections[0].Target;
             Debug.Log("next target is: " + target.GetType());
             Behavior = target as Character_Action_List_Template;
         }
@@ -80,27 +86,35 @@ public class AmbientTrigger : MonoBehaviour
     {
         if (sd != null)
         {
-            if (sd.Template.Stage_Direction_String_Lists.AITurnOff != "")
+            Stage_DirectionFeature sdf = sd.Template.Stage_Direction;
+            switch (sdf.Direction)
             {
-                List<string> aisToShutOff = sd.Template.Stage_Direction_String_Lists.AITurnOff.Split(',').ToList();
-                // Debug.Log("num ai's: " + aisToShutOff.Count);
-                foreach (string s in aisToShutOff)
-                {
-                    NPC npc = CaptainsChair.GetNPCFromActorName(s);
-                    if (npc == null) { Debug.LogError("There's no NPC associated with the provided name. " + s); return; }
-                    StopAIOnNPC(npc);
-                }
-            }
-            if (sd.Template.Stage_Direction_String_Lists.AITurnOn != "")
-            {
-                List<string> aisToTurnOn = sd.Template.Stage_Direction_String_Lists.AITurnOn.Split(',').ToList();
-                // Debug.Log("num ai's: " + aisToTurnOn.Count);
-                foreach (string s in aisToTurnOn)
-                {
-                    NPC npc = CaptainsChair.GetNPCFromActorName(s);
-                    if (npc == null) { Debug.LogError("There's no NPC associated with the provided name. " + s); return; }
-                    StartAIOnNPC(npc, true);
-                }
+                case Direction.AI_Off:
+                    List<string> aisToShutOff = sdf.DirectionTargets.Split(',').ToList();
+                    Debug.Log("num ai's to turn off: " + aisToShutOff.Count);
+                    foreach (string s in aisToShutOff)
+                    {
+                        NPC npc = CaptainsChair.GetNPCFromActorName(s);
+                        if (npc == null) { Debug.LogError("There's no NPC associated with the provided name. " + s); continue; }
+                        StopAIOnNPC(npc);
+                    }
+                    break;
+                case Direction.AI_On:
+                    List<string> aisToTurnOn = sdf.DirectionTargets.Split(',').ToList();
+                    Debug.Log("num ai's to turn on: " + aisToTurnOn.Count);
+                    foreach (string s in aisToTurnOn)
+                    {
+                        NPC npc = CaptainsChair.GetNPCFromActorName(s);
+                        if (npc == null) { Debug.LogError("There's no NPC associated with the provided name. " + s); return; }
+                        StartAIOnNPC(npc, true);
+                    }
+                    break;
+                case Direction.SFX:
+                    SoundFXPlayer.Play(sdf.Direction_Info);
+                    break;
+                default:
+                    Debug.LogError("Unknown how to handle this direction: " + sdf.Direction + " on an Ambient Trigger");
+                    break;
             }
         }
     }

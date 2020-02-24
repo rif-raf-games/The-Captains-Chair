@@ -131,15 +131,15 @@ public class BehaviorFlowPlayer : MonoBehaviour
         return false;
     }
 
-    void CurrentActionsDone(Stage_Directions sdToSkipOver = null)
+    void CurrentActionsDone(Stage_Directions_Container sdcToSkipOver = null)
     {
         StaticStuff.PrintBehaviorFlow(this.name + ": CurrentActionsDone()", this);
         List<FlowFragment> newValidTargets = new List<FlowFragment>();
 
-        if (sdToSkipOver != null)
+        if (sdcToSkipOver != null)
         {
-            StaticStuff.PrintBehaviorFlow("we're on a stage direction so get the new stuff from here", this);
-            OutputPin outputPin = sdToSkipOver.OutputPins[0];
+            StaticStuff.PrintBehaviorFlow("we're on a Stage_Directions_Container so get the new stuff from here", this);
+            OutputPin outputPin = sdcToSkipOver.OutputPins[0];
             AddValidTargetsFromPins(outputPin, newValidTargets);
         }
         else
@@ -173,11 +173,25 @@ public class BehaviorFlowPlayer : MonoBehaviour
             {
                 ActionsToTake.Add(ao as Character_Action_Template);
             }
+            else if(ao as Stage_Directions_Container != null)
+            {
+                StaticStuff.PrintBehaviorFlow("We've got a Stage_Directions_Container to deal with during a BehavirFlowPlayer", this);
+                Stage_Directions_Container sdc = ao as Stage_Directions_Container;                
+                foreach(OutgoingConnection oc in sdc.InputPins[0].Connections)
+                {
+                    Stage_Directions sd = oc.Target as Stage_Directions;
+                    if(sd == null) { Debug.LogError("We're expecting a Stage_Directions here: " + oc.Target.GetType()); continue; }
+                    CaptainArticyFlow.HandleStageDirections(sd);
+                }
+                CurrentActionsDone(sdc);
+                return null;
+            }
             else if (ao as Stage_Directions != null)
             {
-                Stage_Directions sd = ao as Stage_Directions;
-                CaptainArticyFlow.HandleStageDirections(sd);
-                CurrentActionsDone(sd);
+                Debug.LogError("Got a stage direction during a behavior flow, please update to a Stage_Directions_Container");
+                //Stage_Directions sd = ao as Stage_Directions;
+                //CaptainArticyFlow.HandleStageDirections(sd);
+                //CurrentActionsDone(sd);
                 return null;
             }
             else if (ao as Character_Action_List_Template != null)

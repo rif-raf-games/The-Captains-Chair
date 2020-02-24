@@ -10,58 +10,70 @@ public class ConvoUI : MonoBehaviour
     public GameObject SpeakerPanel;
     public Text SpeakerName;
     public Text SpeakerText;
-    public float TypewriterSpeed = 20f;
+    public float DefaultTypewriterSpeed = 20f;
+    float TypewriterSpeed;
     public GameObject[] DialogueOptions;
 
-    TheCaptainsChair CapChair;
-    bool TextTyping = false;    
+    ArticyFlow ArticyFlow;
+    bool TextTyping = false;
+    bool IsInteractive = true;
 
     public CCPlayer Player;
     Coroutine TypewriterCoroutine;
     string CurDialogueText;
 
+    private void Awake()
+    {
+        TypewriterSpeed = DefaultTypewriterSpeed;
+        Debug.Log(TypewriterSpeed);
+    }
     // Start is called before the first frame update
     void Start()
     {
-        CapChair = GameObject.FindObjectOfType<TheCaptainsChair>();
+        ArticyFlow = GameObject.FindObjectOfType<ArticyFlow>();                
     }
-    public void ShowDialogueFragment(DialogueFragment dialogueFrag, IFlowObject flowObj, IList<Branch> dialogueOptions)
+    public void ShowDialogueFragment(DialogueFragment dialogueFrag, IFlowObject flowObj, IList<Branch> dialogueOptions, bool isInteractive, float typewriterSpeed)
     {
         StaticStuff.PrintUI("going to set up a dialogue fragment with speaker: " + dialogueFrag.Speaker + " with text: " + dialogueFrag.Text + ", tech name: " + dialogueFrag.TechnicalName);
         StaticStuff.PrintUI("this dialogue fragment has: " + dialogueOptions.Count + " options");
         DialogueFragment d = dialogueOptions[0].Target as DialogueFragment;
         if(d!=null) StaticStuff.PrintUI(d.MenuText + ", " + d.Text + ", " + d.TechnicalName);
         this.gameObject.SetActive(true);
+        
         Entity speaker = ((Entity)dialogueFrag.Speaker);
-
         if(speaker.DisplayName.Equals("Dialogue Pause")) SpeakerPanel.SetActive(false);        
         else SpeakerPanel.SetActive(true);        
         SpeakerName.text = speaker.DisplayName;
-       
+
+        IsInteractive = isInteractive;
+        TypewriterSpeed = typewriterSpeed;
         SpeakerText.text = "";
         CurDialogueText = dialogueFrag.Text;
         if (TypewriterCoroutine != null ) StopCoroutine(TypewriterCoroutine);
         TypewriterCoroutine = StartCoroutine(TypewriterEffect());
         
         foreach (GameObject go in DialogueOptions) go.SetActive(false);
-        for (int i = 0; i < dialogueOptions.Count; i++)
+        if(IsInteractive == true)
         {
-            DialogueOptions[i].SetActive(true);
-            DialogueFragment df = dialogueOptions[i].Target as DialogueFragment;
-            if (df != null)
-            {                
-                DialogueOptions[i].GetComponentInChildren<Text>().text = df.MenuText;
-            }
-            else
+            for (int i = 0; i < dialogueOptions.Count; i++)
             {
-                DialogueOptions[i].GetComponentInChildren<Text>().text = "Continue";                
+                DialogueOptions[i].SetActive(true);
+                DialogueFragment df = dialogueOptions[i].Target as DialogueFragment;
+                if (df != null)
+                {
+                    DialogueOptions[i].GetComponentInChildren<Text>().text = df.MenuText;
+                }
+                else
+                {
+                    DialogueOptions[i].GetComponentInChildren<Text>().text = "Continue";
+                }
             }
-        }    
+        }            
     }
 
     IEnumerator TypewriterEffect()
     {
-        //Debug.Log("Start effect");        
+        Debug.Log("Start effect: " + TypewriterSpeed);        
         foreach (GameObject go in DialogueOptions) go.GetComponent<Button>().enabled = false;
         foreach (char character in CurDialogueText.ToCharArray())
         {
@@ -70,13 +82,30 @@ public class ConvoUI : MonoBehaviour
             TextTyping = true; // wait a sec so that the click off via any press on screen 
         }
         TextTyping = false;
+        Debug.Log("TypewriterEffect end: " + IsInteractive);
+        if(IsInteractive == false)
+        {
+            StartCoroutine(NextDialogueFragmentDelay());
+        }
+        else
+        {
+            foreach (GameObject go in DialogueOptions) go.GetComponent<Button>().enabled = true;
+        }        
+    }
+
+    IEnumerator NextDialogueFragmentDelay()
+    {
+        Debug.Log("NextDialogueFragmentDelay() a");
+        yield return new WaitForSeconds(2);
         foreach (GameObject go in DialogueOptions) go.GetComponent<Button>().enabled = true;
+        Debug.Log("NextDialogueFragmentDelay() b");
+        ArticyFlow.UIButtonCallback(0);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(TextTyping == true && Input.GetMouseButtonUp(0))
+        if(TextTyping == true && IsInteractive == true && Input.GetMouseButtonUp(0))
         {
             //Debug.Log("shut off via button");
             StopCoroutine(TypewriterCoroutine);

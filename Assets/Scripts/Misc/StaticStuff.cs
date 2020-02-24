@@ -33,7 +33,7 @@ static public class StaticStuff
        if(true)
         {
              
-            // Debug.Log("caller: " + articyFlowCaller.name + ": " + s);
+             Debug.Log("caller: " + articyFlowCaller.name + ": " + s);
         }
 
     }
@@ -43,7 +43,7 @@ static public class StaticStuff
     }
     static public void PrintUI(string s)
     {
-       // Debug.Log(s);
+        Debug.Log(s);
     }
 
     static public void PrintTriggerEnter(string s)

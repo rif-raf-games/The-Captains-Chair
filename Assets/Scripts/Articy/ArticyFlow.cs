@@ -22,17 +22,12 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     // flow stuff
     IFlowObject CurPauseObject = null;
     List<Branch> CurBranches = new List<Branch>();
-    //DialogueFragment LastDFPlayed;
+    bool IsDialogueFragmentsInteractive = true;
+    float TypewriterSpeed;
     Branch NextBranch = null;
     ArticyObject NextFragment = null;
-    //Character_Movement_FeatureFeature CurCMFeature = null;
-
-    // list of characters in the scene for quick reference
-   /* List<CharacterEntity> CharacterEntities = new List<CharacterEntity>(); // this is temp until I update the scripts    
-    public List<CharacterEntity> GetCharacterEntities() { return CharacterEntities; }*/
-
-    // UI's for cutscenes and conversations
-   // public CutSceneUI CutSceneUI;
+    
+    // UI's for cutscenes and conversations   
     public ConvoUI ConvoUI;
 
     // Articy stuff
@@ -48,7 +43,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         Player = GameObject.FindObjectOfType<CCPlayer>();
         CaptainsChair = GameObject.FindObjectOfType<TheCaptainsChair>();
         FlowPlayer = this.GetComponent<ArticyFlowPlayer>();
-        //CharacterEntities = GameObject.FindObjectsOfType<CharacterEntity>().ToList();
+        TypewriterSpeed = ConvoUI.DefaultTypewriterSpeed;
 
         ArticyDatabase.DefaultGlobalVariables.Notifications.AddListener("*.*", MyGameStateVariablesChanged);
 
@@ -139,31 +134,54 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     }    
 
     public void HandleStageDirections(Stage_Directions sd)
-    {        
+    {       
         if (sd != null)
         {
-            if (sd.Template.Stage_Direction_String_Lists.AITurnOff != "")
+            Stage_DirectionFeature sdf = sd.Template.Stage_Direction;            
+            switch (sdf.Direction)
             {
-                List<string> aisToShutOff = sd.Template.Stage_Direction_String_Lists.AITurnOff.Split(',').ToList();
-                // Debug.Log("num ai's: " + aisToShutOff.Count);
-                foreach (string s in aisToShutOff)
-                {
-                    NPC npc = CaptainsChair.GetNPCFromActorName(s);
-                    if (npc == null) { Debug.LogError("There's no NPC associated with the provided name. " + s); return; }
-                    StopAIOnNPC(npc);
-                }
-            }
-            if (sd.Template.Stage_Direction_String_Lists.AITurnOn != "")
-            {
-                List<string> aisToTurnOn = sd.Template.Stage_Direction_String_Lists.AITurnOn.Split(',').ToList();
-                // Debug.Log("num ai's: " + aisToTurnOn.Count);
-                foreach (string s in aisToTurnOn)
-                {
-                    NPC npc = CaptainsChair.GetNPCFromActorName(s);
-                    if (npc == null) { Debug.LogError("There's no NPC associated with the provided name. " + s); return; }
-                    StartAIOnNPC(npc, true);
-                }
-            }
+                case Direction.AI_Off:
+                    List<string> aisToShutOff = sdf.DirectionTargets.Split(',').ToList();
+                    Debug.Log("num ai's to turn off: " + aisToShutOff.Count);
+                    foreach (string s in aisToShutOff)
+                    {
+                        NPC npc = CaptainsChair.GetNPCFromActorName(s);
+                        if (npc == null) { Debug.LogError("There's no NPC associated with the provided name. " + s); continue; }
+                        StopAIOnNPC(npc);
+                    }
+                    break;
+                case Direction.AI_On:
+                    List<string> aisToTurnOn = sdf.DirectionTargets.Split(',').ToList();
+                    Debug.Log("num ai's to turn on: " + aisToTurnOn.Count);
+                    foreach (string s in aisToTurnOn)
+                    {
+                        NPC npc = CaptainsChair.GetNPCFromActorName(s);
+                        if (npc == null) { Debug.LogError("There's no NPC associated with the provided name. " + s); return; }
+                        StartAIOnNPC(npc, true);
+                    }
+                    break;
+                case Direction.Dialogue_Interact_On:
+                    IsDialogueFragmentsInteractive = true;
+                    break;
+                case Direction.Dialogue_Interact_Off:
+                    IsDialogueFragmentsInteractive = false;
+                    break;
+                case Direction.Music_Change:
+                    BackgroundMusicPlayer.Play(sdf.Direction_Info);
+                    break;
+                case Direction.SFX:
+                    SoundFXPlayer.Play(sdf.Direction_Info);
+                    break;
+                case Direction.Dialogue_Text_Speed:
+                    if (sdf.Direction_Info.Equals("Default")) TypewriterSpeed = ConvoUI.DefaultTypewriterSpeed;
+                    else TypewriterSpeed = float.Parse(sdf.Direction_Info);
+                    Debug.Log("TypewriterSpeed: " + TypewriterSpeed);
+                    break;
+
+                default:
+                    Debug.LogError("Unknown how to handle this Stage_Direction type: " + sdf.Direction);
+                    break;
+            }            
         }
     }
 
@@ -223,7 +241,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                     {
                         df.Speaker = DialogueNPC.ArticyEntityReference.GetObject();
                     }
-                    ConvoUI.ShowDialogueFragment(df, CurPauseObject, CurBranches);
+                    ConvoUI.ShowDialogueFragment(df, CurPauseObject, CurBranches, IsDialogueFragmentsInteractive, TypewriterSpeed);
                     break;
                 default:
                     Debug.LogError("In invalid state for DialogueFragment: " + CurArticyState);
@@ -256,6 +274,24 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             GetComponent<BehaviorFlowPlayer>().StartBehaviorFlow(CurCAL, this.gameObject/*, DialogueNPC*/);
             
             // Debug.Log(this.name + " now has a calCount of: " + calCount);
+        }
+        else if(CurPauseObject.GetType().Equals(typeof(Stage_Directions_Container)))
+        {
+            //NextFragment = (outputPin.Connections[0].Target as ArticyObject);
+            Stage_Directions_Container sdc = CurPauseObject as Stage_Directions_Container;
+            NextFragment = (sdc.OutputPins[0].Connections[0].Target as ArticyObject);
+            // all of the branches are the stage directions we need to implement
+            Debug.Log("Have a Stage_Directions_Container so all the branches are the stage directions.  Num: " + CurBranches.Count);
+            foreach(Branch b in CurBranches)
+            {                
+                Stage_Directions sd = b.Target as Stage_Directions;                
+                if(sd == null)
+                {
+                    Debug.LogError("There's something other than a Stage_Directions linked on this Stage_Directions_Container.");
+                    continue;
+                }                                               
+                HandleStageDirections(sd);
+            }            
         }
         else if (CurBranches.Count == 1)
         {   // We're paused and there's only one valid branch available. This is common so have it's own section                 
@@ -336,12 +372,13 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                 StaticStuff.PrintFlowBranchesUpdate("We're about to get an Ambient_Trigger going", this);
                 CurArticyState = eArticyState.AMBIENT_TRIGGER;
                 SetNextBranch(CurBranches[0]);
-            }
+            }            
             else if(CurPauseObject.GetType().Equals(typeof(Stage_Directions)))
             {
-                Stage_Directions sd = CurPauseObject as Stage_Directions;
-                HandleStageDirections(sd);
-                SetNextBranch(CurBranches[0]);
+                Debug.LogError("We should not be seeing a Stage_Directions element at this point here.");
+                //Stage_Directions sd = CurPauseObject as Stage_Directions;
+                //HandleStageDirections(sd);
+                //SetNextBranch(CurBranches[0]);
             }
             else if(CurPauseObject.GetType().Equals(typeof(Scene_Jump)))
             {
@@ -391,8 +428,17 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             SetNextBranch(null);
         }
         else
-        {   
-            Debug.LogWarning("this: " + this.name + " - We haven't supported this case yet.");
+        {
+            string s = "this: " + this.name + " - We haven't supported this case yet:\n";
+            if (CurPauseObject == null) s += "NULL CurPauseObject\n";
+            else s += "CurPauseObject type: " + CurPauseObject.GetType().ToString() + "\n";
+            s += "num branches: " + CurBranches.Count + "\n";
+            foreach(Branch b in CurBranches)
+            {
+                s += "/t" + b.Target.GetType() + "\n";
+            }
+            Debug.LogWarning(s);
+            //Debug.LogWarning("this: " + this.name + " - We haven't supported this case yet.");
         }
 
         StaticStuff.PrintFlowBranchesUpdate("************** OnBranchesUpdated() END *************** time: " + Time.time, this);
@@ -488,6 +534,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             }
         }
 
+        IsDialogueFragmentsInteractive = true;
         FlowPlayer.StartOn = convoStart;
         Player.ToggleMovementBlocked(true);        
     }        

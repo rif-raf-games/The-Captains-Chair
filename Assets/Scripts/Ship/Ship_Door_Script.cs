@@ -39,7 +39,7 @@ public class Ship_Door_Script : MonoBehaviour {
         if(colliders.Length == 0 || colliders.Length == 1 && colliders[0] == coll)
         {   // if there's nothing within the trigger's collider box other than the object colliding with it
             // then the doors are ready to be opened
-            Debug.Log("no collisions other than self so call OpenDoor()");
+            //Debug.Log("no collisions other than self so call OpenDoor()");
             OpenDoor();
         }        
        // Debug.Log("********************" + this.name + " door OnTriggerEnter() END: " + coll.name);              
