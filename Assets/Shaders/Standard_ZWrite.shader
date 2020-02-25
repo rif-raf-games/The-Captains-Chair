@@ -1,4 +1,4 @@
-﻿Shader "Custom/FadeOutShader"
+﻿Shader "Custom/NewSurfaceShader"
 {
     Properties
     {
