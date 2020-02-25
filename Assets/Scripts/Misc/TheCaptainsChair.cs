@@ -15,11 +15,37 @@ public class TheCaptainsChair : MonoBehaviour
    
     [Header("Debug")]
     public ArticyFlow ArticyFlowToPrint;
-    Dictionary<string, NPC> ArticyRefNPCs = new Dictionary<string, NPC>();
-    // Start is called before the first frame update
+    Dictionary<string, NPC> ArticyRefNPCs = new Dictionary<string, NPC>();    
+
+    //  just acessing renderer.material instead of sharedMaterial will create a material clone for you.
+    //public GameObject Wall;
+   // List<Material> WallMaterials = new List<Material>();
+   // float alpha = 1f;
+
+   /* private void OnGUI()
+    {
+        alpha = GUI.VerticalSlider(new Rect(Screen.width / 2, 0, 50, Screen.height), alpha, 1f, 0f);
+        foreach(Material m in WallMaterials)
+        {
+            if(m.name.Contains("Wall")) m.color = new Color(m.color.r, m.color.g, m.color.b, alpha);
+        }
+
+    }*/
+    // Update is called once per frame
+    void Update()
+    {
         
+    }
     void Start()
     {
+      /*  MeshRenderer mr = Wall.GetComponent<MeshRenderer>();
+        mr.GetMaterials(WallMaterials);
+        //WallMaterials = Wall.GetComponentsInChildren<Material>().ToList<Material>();
+        Debug.Log("num materials: " + WallMaterials.Count);
+        foreach (Material m in WallMaterials)
+        {
+            Debug.Log(m.color);            
+        }*/
 
         ArticyDatabase.DefaultGlobalVariables.Notifications.AddListener("*.*", MyGameStateVariablesChanged);
         //Debug.Log("Welcome to The Captain's Chair!!");
@@ -168,12 +194,7 @@ public class TheCaptainsChair : MonoBehaviour
         }
     }*/
 
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
+    
 
     #region SAVE_DATA
     [System.Serializable]
