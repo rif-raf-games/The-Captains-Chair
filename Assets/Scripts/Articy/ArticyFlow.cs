@@ -480,12 +480,16 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         return DialogueNPC.name;
     }
     
+    public bool IsInFreeRoam()
+    {
+        return (CurArticyState == eArticyState.FREE_ROAM);
+    }
     List<string> FlowFragsVisited = new List<string>();
     GameObject DialogueStartCollider = null;
     List<ArticyObject> DialogueStartAttachments;
     public void CheckDialogue(Dialogue convoStart, GameObject collider)
     {        
-        Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ CheckDialogue() with technical name: " + convoStart.TechnicalName + " on GameObject: " + this.gameObject.name + " but DON'T DO ANY CODE STUFF UNTIL WE KNOW WE'RE ACTUALLY COMMITTING  time: " + Time.time);
+        //Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ CheckDialogue() with technical name: " + convoStart.TechnicalName + " on GameObject: " + this.gameObject.name + " but DON'T DO ANY CODE STUFF UNTIL WE KNOW WE'RE ACTUALLY COMMITTING  time: " + Time.time);
         if (CurArticyState == eArticyState.DIALOGUE)
         {
             Debug.Log("We're already in a Dialogue so bail on this one");
@@ -502,13 +506,13 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         {
             o = c.Expression.CallScript();
         }        
-        Debug.Log("Have we done this dialogue?: " + o);
+        //Debug.Log("Have we done this dialogue?: " + o);
         if (o == true)
         {
             Debug.Log("we've already done this Dialogue so bail");
             return;
         }
-        Debug.Log("we've determined that this dialouge is ready to go so rock it");
+       // Debug.Log("we've determined that this dialouge is ready to go so rock it");
         CurArticyState = eArticyState.DIALOGUE;
         DialogueStartCollider = collider;
         DialogueStartAttachments = convoStart.Attachments;

@@ -50,7 +50,7 @@ public class Ship_Door_Script : MonoBehaviour {
         Collider[] colliders = GetColliders();
         if (colliders.Length == 0)
         {   // If there's nothing within the trigger's collision box then go ahead and close
-            Debug.Log("no collisions so call CloseDoor()");
+           // Debug.Log("no collisions so call CloseDoor()");
             CloseDoor();            
         }        
       //  Debug.Log("********************" + this.name + " door OnTriggerExit(): END" + coll.name);
@@ -105,7 +105,7 @@ public class Ship_Door_Script : MonoBehaviour {
         if (Mathf.Abs(curTime) < .5f)
         {
             startTime = .5f - Mathf.Abs(curTime);
-            Debug.LogWarning("redoing close startTime to " + startTime);
+           // Debug.LogWarning("redoing close startTime to " + startTime);
         }
 
         SoundFXPlayer.Play("Door_Close");

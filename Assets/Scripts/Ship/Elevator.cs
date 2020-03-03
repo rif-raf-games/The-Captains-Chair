@@ -10,7 +10,7 @@ public class Elevator : MonoBehaviour
     int CurrentFloor;
 
     Vector3 StartPos, EndPos;
-    bool IsMoving = false;
+    bool IsMoving = false;    
     float LerpStartTime;
     int NewFloor;    
 
@@ -25,7 +25,7 @@ public class Elevator : MonoBehaviour
         if (newFloor == BottomFloor && CurrentFloor == TopFloor) return true;
         return false;
     }
-    public int Teleport()
+    /*public int Teleport()
     {
         Debug.Log("Elevator Teleport");
         StartPos = this.transform.localPosition;
@@ -44,12 +44,12 @@ public class Elevator : MonoBehaviour
         transform.localPosition = EndPos;
         CurrentFloor = NewFloor;
         return NewFloor;
-    }
+    }*/
     public int BeginMovement()
     {
         //Debug.Log("Elevator begin movement");
         StartPos = this.transform.localPosition;        
-        IsMoving = true;
+        IsMoving = true;        
         LerpStartTime = Time.time;
         if (CurrentFloor == TopFloor)
         {            
@@ -70,8 +70,7 @@ public class Elevator : MonoBehaviour
         {            
             float lerpTime = Time.time - LerpStartTime;
             float lerpPercentage = lerpTime / 2f;
-            transform.localPosition = Vector3.Lerp(StartPos, EndPos, lerpPercentage);
-           // Player.ElevatorUpdate(this);
+            transform.localPosition = Vector3.Lerp(StartPos, EndPos, lerpPercentage);            
             if (lerpPercentage >= 1f)
             {                
                 transform.localPosition = EndPos;             

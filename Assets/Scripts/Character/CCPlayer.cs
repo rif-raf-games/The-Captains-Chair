@@ -48,7 +48,8 @@ public class CCPlayer : CharacterEntity
     
     private void OnTriggerEnter(Collider other)
     {
-        StaticStuff.PrintTriggerEnter(this.name + " OnTriggerEnter() other: " + other.name + ", layer: " + other.gameObject.layer);
+        if (other.gameObject.layer == LayerMask.NameToLayer("Room")) { StaticStuff.PrintTriggerEnter(this.name + " This is a Room collider " + other.name + " on the Player, so bail and let the RoomCollider.cs handle it"); return; }
+        StaticStuff.PrintTriggerEnter(this.name + " CCPlayer.OnTriggerEnter() other: " + other.name + ", layer: " + other.gameObject.layer);        
         ArticyReference colliderArtRef = other.gameObject.GetComponent<ArticyReference>();
         if(colliderArtRef != null )
         {
@@ -97,8 +98,7 @@ public class CCPlayer : CharacterEntity
                     else
                     {
                         StaticStuff.PrintTriggerEnter("Player moved off elevator, back to normal movement");
-                        SelectedElevator.transform.GetChild(0).GetComponent<SphereCollider>().enabled = true;
-                        //CaptainsChair.ToggleNavMeshes(false);                    
+                        SelectedElevator.transform.GetChild(0).GetComponent<SphereCollider>().enabled = true;                                    
                         SelectedElevator = null;
                         ToggleMovementBlocked(false);
                     }
@@ -165,6 +165,11 @@ public class CCPlayer : CharacterEntity
         }
     }
 
+    public bool IsInFreeRoam()
+    {
+        return (CaptainArticyFlow.IsInFreeRoam());
+    }
+
     public override void LateUpdate()
     {
         base.LateUpdate();       
@@ -179,6 +184,10 @@ public class CCPlayer : CharacterEntity
         return MovementBlocked;
     }
 
+    public bool IsSelectedElevator(Elevator caller)
+    {
+        return caller == SelectedElevator;
+    }
     public void ElevatorUpdate(Elevator caller)
     {
         if(caller == SelectedElevator)

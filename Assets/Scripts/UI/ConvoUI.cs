@@ -25,7 +25,7 @@ public class ConvoUI : MonoBehaviour
     private void Awake()
     {
         TypewriterSpeed = DefaultTypewriterSpeed;
-        Debug.Log(TypewriterSpeed);
+        //Debug.Log(TypewriterSpeed);
     }
     // Start is called before the first frame update
     void Start()
@@ -73,7 +73,7 @@ public class ConvoUI : MonoBehaviour
 
     IEnumerator TypewriterEffect()
     {
-        Debug.Log("Start effect: " + TypewriterSpeed);        
+        //Debug.Log("Start effect: " + TypewriterSpeed);        
         foreach (GameObject go in DialogueOptions) go.GetComponent<Button>().enabled = false;
         foreach (char character in CurDialogueText.ToCharArray())
         {
@@ -82,7 +82,7 @@ public class ConvoUI : MonoBehaviour
             TextTyping = true; // wait a sec so that the click off via any press on screen 
         }
         TextTyping = false;
-        Debug.Log("TypewriterEffect end: " + IsInteractive);
+       // Debug.Log("TypewriterEffect end: " + IsInteractive);
         if(IsInteractive == false)
         {
             StartCoroutine(NextDialogueFragmentDelay());

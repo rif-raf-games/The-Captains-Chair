@@ -33,17 +33,17 @@ static public class StaticStuff
        if(true)
         {
              
-             Debug.Log("caller: " + articyFlowCaller.name + ": " + s);
+            // Debug.Log("caller: " + articyFlowCaller.name + ": " + s);
         }
 
     }
     static public void PrintBehaviorFlow(string s, BehaviorFlowPlayer player)
     {
-        if(player.name.Contains("Captain")) Debug.Log(s);
+       // if(player.name.Contains("Captain")) Debug.Log(s);
     }
     static public void PrintUI(string s)
     {
-        Debug.Log(s);
+      //  Debug.Log(s);
     }
 
     static public void PrintTriggerEnter(string s)
