@@ -39,4 +39,41 @@ public class ShipLevel : MonoBehaviour
             else room.ToggleAlpha(alpha, skipLerp);
         }
     }
+
+    public void DEBUG_SetAlpha(float alpha)
+    {
+        foreach (Room room in LevelRooms)
+        {
+            room.ToggleAlpha(alpha, true);
+        }
+    }
+    public void DEBUG_SetTransparent()
+    {
+        foreach (Room room in LevelRooms)
+        {
+            room.DEBUG_SetTransparent();
+        }
+    }
+    public void DEBUG_SetFade()
+    {
+        foreach (Room room in LevelRooms)
+        {
+            room.DEBUG_SetFade();
+        }
+    }
+    public void DEBUG_SetOpaque()
+    {
+        foreach (Room room in LevelRooms)
+        {
+            room.DEBUG_SetOpaque();
+        }
+    }
+    public void DEBUG_SetShader(string shader)
+    {
+        Debug.Log("------ShipLevel.DEBUG_SetShader(): " + shader);
+        foreach (Room room in LevelRooms)
+        {
+            room.DEBUG_SetShader(shader);
+        }
+    }
 }

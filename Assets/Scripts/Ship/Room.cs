@@ -11,8 +11,38 @@ public class Room : MonoBehaviour
     List<Material> ChildMaterials = new List<Material>();
 
     float RoomFadeTime;
-   // float RoomFadeOpacity;
-   // float FloorFadeOpacity;
+
+
+    public void DEBUG_SetShader(string shader)
+    {
+        foreach(Material material in ChildMaterials)
+        {
+            material.shader = UnityEngine.Shader.Find(shader);
+        }
+    }
+
+    public void DEBUG_SetOpaque()
+    {
+        foreach (Material material in ChildMaterials)
+        {
+            SetOpaque(material);
+        }
+    }
+    public void DEBUG_SetFade()
+    {
+        foreach (Material material in ChildMaterials)
+        {
+            SetFade(material);
+        }
+    }
+    public void DEBUG_SetTransparent()
+    {
+        foreach (Material material in ChildMaterials)
+        {
+            SetTransparent(material);
+        }
+    }
+
     private void Awake()
     {
         TheCaptainsChair cChair = FindObjectOfType<TheCaptainsChair>();
@@ -35,7 +65,7 @@ public class Room : MonoBehaviour
             foreach (Material material in mrMaterials)            
             {               
                 ChildMaterials.Add(material);
-               // material.shader = UnityEngine.Shader.Find("RifRafStandard");
+                material.shader = UnityEngine.Shader.Find("RifRafStandard");
             }
         }       
     }    
@@ -56,8 +86,7 @@ public class Room : MonoBehaviour
     private void LateUpdate()
     {
         if(CurMode == eRenderMode.TRANSITION)
-        {
-            //Debug.Log("CurMode: " + CurMode.ToString());
+        {    
             float lerpTime = Time.time - LerpStartTime;
             float lerpPercentage = lerpTime / LerpDurationTime;
             float alpha;
@@ -90,21 +119,20 @@ public class Room : MonoBehaviour
     
     float ToggleTime, ToggleValue;
     int NumToggles = 0;
-    bool InterruptToggle = false;
+    //bool InterruptToggle = false;
     string Result;    
     public void ToggleAlpha(float alpha, bool skipLerp = false/*, eCollisionType collisionType = eCollisionType.SHIP_COLLIDER*/)
     {
         NumToggles++;
-        ToggleTime = Time.time;
-        ToggleValue = alpha;
-        InterruptToggle = false;
-        //if (collisionType == eCollisionType.RAYCAST && CurCollisionType == eCollisionType.RAYCAST 
-          //  && CurMode == eRenderMode.TRANSITION) InterruptToggle = true;
-       // Debug.Log("---------------------------------------ToggleAlpha from: " + ChildMaterials[0].color.a + " to: " + alpha + " skipLerp: " + skipLerp);
-        if (ChildMaterials[0].color.a != alpha && InterruptToggle == false)
+        if(name.Contains("Quarters_01") && NumToggles == 6)
         {
-            Result = "lerp happened";
-            //CurCollisionType = collisionType;
+            Debug.Log("ok see what's calling this");
+        }
+        ToggleTime = Time.time;
+        ToggleValue = alpha;        
+       // Debug.Log("---------------------------------------ToggleAlpha from: " + ChildMaterials[0].color.a + " to: " + alpha + " skipLerp: " + skipLerp);
+        if (ChildMaterials[0].color.a != alpha)
+        {                       
             if(skipLerp == false ) CurMode = eRenderMode.TRANSITION;
             SetupLerp(ChildMaterials[0].color.a, alpha);
             
@@ -112,19 +140,21 @@ public class Room : MonoBehaviour
             {
                 if (skipLerp == true)
                 {
+                    Result = "lerp DID NOT happen";
                     material.color = new Color(material.color.r, material.color.g, material.color.b, alpha);
                     if (alpha > .999f) SetOpaque(material);                    
                     else SetFade(material);                    
                 } 
                 else
                 {
+                    Result = "lerp happened";
                     SetFade(material);
                 }
             }            
-        }
+        } 
         else
         {
-            Result = "lerp DID NOT happen";
+            Result = "skipped Toggle.  alpha: " + alpha.ToString("F2");
         }
         if(DebugText != null)
         {
@@ -137,7 +167,7 @@ public class Room : MonoBehaviour
     }    
 
     void SetOpaque(Material material)
-    {       
+    {
         material.SetOverrideTag("RenderType", "");
         material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
         material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
@@ -148,7 +178,7 @@ public class Room : MonoBehaviour
         material.renderQueue = -1;
     }
     void SetFade(Material material)
-    {        
+    {
         material.SetOverrideTag("RenderType", "Transparent");
         material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
         material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
@@ -158,4 +188,17 @@ public class Room : MonoBehaviour
         material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
         material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
     }
+    void SetTransparent(Material material)
+    {
+        material.SetOverrideTag("RenderType", "Transparent");
+        material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+        material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+        material.SetInt("_ZWrite", 0);
+        material.DisableKeyword("_ALPHATEST_ON");
+        material.DisableKeyword("_ALPHABLEND_ON");
+        material.EnableKeyword("_ALPHAPREMULTIPLY_ON");
+        material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+    }
+
+
 }

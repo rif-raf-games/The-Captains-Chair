@@ -20,7 +20,60 @@ public class ShipAreasCollider : MonoBehaviour
         RoomFadeOpacity = cChair.RoomFadeOpacity;
         FloorFadeOpacity = cChair.FloorFadeOpacity;
     }
-   
+
+    //public Shader RifRaf;
+    //public GUIStyle SliderStyle;
+    int LevelSelect = 3;
+    float DBGAlpha = 1f;
+    public Texture BlackBG;
+    private void OnGUI()
+    {
+        string[] levels = new string[] { "Floor 1", "Floor 2", "Floor 3", "Floor 4" };
+        LevelSelect = GUI.SelectionGrid(new Rect(600,0,400,100), LevelSelect, levels, 4);
+        float oldAlpha = DBGAlpha;
+        DBGAlpha = GUI.VerticalSlider(new Rect(250, 10, 100, Screen.height - 20), DBGAlpha, 1f, 0f);
+        if(oldAlpha != DBGAlpha) ShipLevels[LevelSelect].DEBUG_SetAlpha(DBGAlpha);
+        if(BlackBG != null) GUI.DrawTexture(new Rect(275, 0, 100, 100), BlackBG);
+        GUI.TextArea(new Rect(290, 0, 85, 100), DBGAlpha.ToString("F3"));
+
+        if(GUI.Button(new Rect(0,0,100,100), "RifRaf Shader"))
+        {
+            ShipLevels[LevelSelect].DEBUG_SetShader("RifRafStandard");
+        }
+        if (GUI.Button(new Rect(0, 100, 100, 100), "Standard Shader"))
+        {
+            ShipLevels[LevelSelect].DEBUG_SetShader("Standard");
+        }
+        if (GUI.Button(new Rect(0, 200, 100, 100), "Leg Spec"))
+        {
+            ShipLevels[LevelSelect].DEBUG_SetShader("Legacy Shaders/Transparent/Specular");
+        }
+        if (GUI.Button(new Rect(0, 300, 100, 100), "Leg VLit"))
+        {
+            ShipLevels[LevelSelect].DEBUG_SetShader("Legacy Shaders/Transparent/VertexLit");
+        }
+        if (GUI.Button(new Rect(0, 400, 100, 100), "Leg Diffuse"))
+        {
+            ShipLevels[LevelSelect].DEBUG_SetShader("Legacy Shaders/Transparent/Diffuse");
+        }
+        if (GUI.Button(new Rect(0, 500, 100, 100), "Custom NewSurf"))
+        {
+            ShipLevels[LevelSelect].DEBUG_SetShader("Custom/NewSurfaceShader");
+        }
+        if (GUI.Button(new Rect(120, 0, 100,100), "Opaque"))
+        {
+            ShipLevels[LevelSelect].DEBUG_SetOpaque();
+        }
+        if (GUI.Button(new Rect(120, 100, 100, 100), "Fade"))
+        {
+            ShipLevels[LevelSelect].DEBUG_SetFade();
+        }
+        if (GUI.Button(new Rect(120, 200, 100, 100), "Transparent"))
+        {
+            ShipLevels[LevelSelect].DEBUG_SetTransparent();
+        }
+    }
+
     private void Start()
     {        
         ShipLevels = FindObjectsOfType<ShipLevel>().ToList<ShipLevel>();
@@ -106,11 +159,11 @@ public class ShipAreasCollider : MonoBehaviour
                 room.ToggleAlpha(RoomFadeOpacity, false/*, Room.eCollisionType.RAYCAST*/);
             }            
         }                
-        string t = "Dimmed: ";
+        /*string t = "Dimmed: ";
         foreach (GameObject hit in DimmedRoomsViaRaycast) t += hit.name + ",";
         t += "\nhits: ";
         foreach (RaycastHit hit in hits) t += hit.collider.name + ",";
-        Debug.Log(t);
+        Debug.Log(t);*/
 
         List<GameObject> hitsToRemove = new List<GameObject>();
         foreach (GameObject hit in DimmedRoomsViaRaycast)
@@ -118,7 +171,7 @@ public class ShipAreasCollider : MonoBehaviour
             //Debug.Log("num hits: " + hits.Count);
             if(hitsGOs.Contains(hit) == false)
             {
-                Debug.Log("turn room back on via raycast leaving");
+                Debug.Log("turn room back on via raycast leaving:"+ hit.name);
                 hitsToRemove.Add(hit);
                 Room room = hit.GetComponent<Room>();
                 room.ToggleAlpha(1f, false);
@@ -141,16 +194,6 @@ public class ShipAreasCollider : MonoBehaviour
         }
     }
 
-    void CheckFloorColliders()
-    {
-        Debug.Log("Check Colliders");
-        for (int level = 1; level <= ShipLevels.Count; level++)
-        {
-            if (ShipLevels[level - 1].Level > PlayerFloor) FloorColliders[level - 1].GetComponent<MeshCollider>().enabled = false;
-            else FloorColliders[level - 1].GetComponent<MeshCollider>().enabled = true;
-        }
-    }
-
     private void OnTriggerEnter(Collider other)
     {//StaticStuff.PrintTriggerEnter(this.name + " We only want to handle Room colliders here.  other: " + other.name);
         if ( !(other.gameObject.layer == LayerMask.NameToLayer("Room") || other.gameObject.layer == LayerMask.NameToLayer("Ship Level"))) { Debug.LogError("RoomCollider.OnTriggerEnter() we should NOT be colliding with this " + other.name + " that has a layer OTHER than Room and Ship Level " + LayerMask.LayerToName(other.gameObject.layer)); return; }
@@ -162,17 +205,24 @@ public class ShipAreasCollider : MonoBehaviour
         {                        
             if(room.GetComponentInParent<ShipLevel>().Level == PlayerFloor)
             {
-                Debug.LogWarning(this.name + " OK, we've just collided with a room " + other.name + " and it's on our floor so change opacity to 1f");
-                room.ToggleAlpha(1f);
+                if(DimmedRoomsViaRaycast.Contains(room.gameObject))
+                {
+                    Debug.LogWarning("ok we were going to make " + room.name + " opaque but it's on the DimmedRoomsViaRaycast so don't do it");
+                }
+                else
+                {
+                    StaticStuff.PrintTriggerEnter(this.name + " OK, we've just collided with a room " + other.name + " and it's on our floor so change opacity to 1f");
+                    room.ToggleAlpha(1f);
+                }                
             }            
             else
             {
-                Debug.LogWarning(this.name + " collided with a room " + other.name + " but it's not on the same floor so bail");
+                StaticStuff.PrintTriggerEnter(this.name + " collided with a room " + other.name + " but it's not on the same floor so bail");
             }
         }        
         else if(shipLevel != null)
         {
-            Debug.LogWarning("collided with a shiplevel: " + other.name);            
+            StaticStuff.PrintTriggerEnter("collided with a shiplevel: " + other.name);            
             PlayerFloor = shipLevel.Level;
             CheckFloorColliders();
             shipLevel.SetPlayerLevelRoomsAlpha(RoomFadeOpacity);
@@ -183,7 +233,16 @@ public class ShipAreasCollider : MonoBehaviour
         }        
     }
 
-    
+    void CheckFloorColliders()
+    {
+        Debug.Log("Check Colliders");
+        for (int level = 1; level <= ShipLevels.Count; level++)
+        {
+            if (ShipLevels[level - 1].Level > PlayerFloor) FloorColliders[level - 1].GetComponent<MeshCollider>().enabled = false;
+            else FloorColliders[level - 1].GetComponent<MeshCollider>().enabled = true;
+        }
+    }
+
     private void OnTriggerExit(Collider other)
     {
         if ( !(other.gameObject.layer == LayerMask.NameToLayer("Room") || other.gameObject.layer == LayerMask.NameToLayer("Ship Level"))) { Debug.LogError("RoomCollider.OnTriggerExit() we should NOT be colliding with this " + other.name + " that has a layer OTHER than Room and Ship Level " + LayerMask.LayerToName(other.gameObject.layer)); return; }
@@ -195,17 +254,17 @@ public class ShipAreasCollider : MonoBehaviour
         {                                    
             if (room.GetComponentInParent<ShipLevel>().Level == PlayerFloor)
             {
-                Debug.LogWarning(this.name + " OK, we've just left a collision with a room " + other.name + " and it's on the player floor so set it to RoomFadeOpacity");
+                StaticStuff.PrintTriggerEnter(this.name + " OK, we've just left a collision with a room " + other.name + " and it's on the player floor so set it to RoomFadeOpacity");
                 room.ToggleAlpha(RoomFadeOpacity);
             }
             else
             {
-                Debug.LogWarning(this.name + " left a collision with a room " + other.name + " but it's not on our floor so bail");
+                StaticStuff.PrintTriggerEnter(this.name + " left a collision with a room " + other.name + " but it's not on our floor so bail");
             }
         }
         else if (shipLevel != null)
         {
-            Debug.LogWarning("left floor collider: " + other.name);
+            StaticStuff.PrintTriggerEnter("left floor collider: " + other.name);
             if (shipLevel.Level > PlayerFloor) shipLevel.SetRoomsAlpha(FloorFadeOpacity);
             else shipLevel.SetRoomsAlpha(RoomFadeOpacity);
         }
