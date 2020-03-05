@@ -33,7 +33,7 @@ public class ShipAreasCollider : MonoBehaviour
     int SortModeIndex = 0;  
    Vector3 SortAxis = new Vector3(0f, 0f, 1f);
 
-#if false
+#if true              
     private void OnGUI()
     {
         int buttonW = 100;
