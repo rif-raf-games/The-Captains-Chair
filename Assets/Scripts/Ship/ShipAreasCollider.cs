@@ -40,10 +40,10 @@ public class ShipAreasCollider : MonoBehaviour
         int buttonH = 50;
         
         // shaders
-        List<Shader> shaderList = new List<Shader>() { RifRaf, Standard, LegSpec, LegVLit, LegDiff, NewSurface, RifRafNewSurface };
-        string[] shaders = { "RifRaf Standard", "Standard", "Leg Spec", "Leg VLit", "Leg Diffuse", "Custom NewSurf", "RifRafNewSurf" };
+        List<Shader> shaderList = new List<Shader>() { RifRaf, Standard, LegSpec, LegVLit, LegDiff/*, NewSurface, RifRafNewSurface*/ };
+        string[] shaders = { "RifRaf Standard", "Standard", "Leg Spec", "Leg VLit", "Leg Diffuse"/*, "Custom NewSurf", "RifRafNewSurf"*/ };
         string[] shaderNames = { "RifRafStandard", "Standard", "Legacy Shaders/Transparent/Specular", "Legacy Shaders/Transparent/VertexLit",
-                               "Legacy Shaders/Transparent/Diffuse", "Custom/NewSurfaceShader",  "Custom/RifRafNewSurfaceShader"};
+                               "Legacy Shaders/Transparent/Diffuse"/*, "Custom/NewSurfaceShader",  "Custom/RifRafNewSurfaceShader"*/ };
         float oldShaderIndex = ShaderIndex;
         ShaderIndex = GUI.SelectionGrid(new Rect(0, 0, buttonW, shaders.Length * buttonH), ShaderIndex, shaders, 1);
         if (oldShaderIndex != ShaderIndex) ShipLevels[LevelSelect].DEBUG_SetShader(shaderNames[ShaderIndex], shaderList[ShaderIndex]);
@@ -104,16 +104,13 @@ public class ShipAreasCollider : MonoBehaviour
         if (oldSortAxis != SortAxis) Camera.main.transparencySortAxis = SortAxis;
         GUI.TextField(new Rect(760, (buttonH * 2) + 20, 125, 20), SortAxis.ToString("F1"));
     }
-
-    // public Material MaterialWithRifRaf;
+    
     public Material SampleMaterial;
     public Shader RifRaf;
     public Shader Standard;    
     public Shader LegSpec;
     public Shader LegVLit;
-    public Shader LegDiff;    
-    public Shader NewSurface;
-    public Shader RifRafNewSurface;
+    public Shader LegDiff;       
 #endif
 
     private void Start()

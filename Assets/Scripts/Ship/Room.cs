@@ -17,8 +17,8 @@ public class Room : MonoBehaviour
     {
         foreach(Material material in ChildMaterials)
         {
-           // material.shader = UnityEngine.Shader.Find(shaderName);
-            material.shader = shader;
+            material.shader = UnityEngine.Shader.Find(shaderName);
+            //material.shader = shader;
         }
     }
 
