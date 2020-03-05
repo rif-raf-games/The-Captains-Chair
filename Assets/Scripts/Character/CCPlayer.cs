@@ -196,14 +196,7 @@ public class CCPlayer : CharacterEntity
         }        
     }
 
-    bool DEBUG_BlockMovement = false;
-    private void OnGUI()
-    {
-        if (GUI.Button(new Rect(400, 0, 100, 100), "blocked: " + DEBUG_BlockMovement))
-        {
-            DEBUG_BlockMovement = !DEBUG_BlockMovement;
-        }
-    }
+    public bool DEBUG_BlockMovement = false;        
 
     // Update is called once per frame
     public override void Update()

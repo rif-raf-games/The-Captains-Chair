@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.UI;
+using System;
 
 public class ShipAreasCollider : MonoBehaviour
 {
@@ -19,71 +20,108 @@ public class ShipAreasCollider : MonoBehaviour
         TheCaptainsChair cChair = FindObjectOfType<TheCaptainsChair>();
         RoomFadeOpacity = cChair.RoomFadeOpacity;
         FloorFadeOpacity = cChair.FloorFadeOpacity;
+
+        QualityIndex = QualitySettings.GetQualityLevel();
+        SortModeIndex = (int)Camera.main.transparencySortMode;
     }
 
-    //public Shader RifRaf;
-    //public GUIStyle SliderStyle;
+    int ShaderIndex = 0;
+    int RenderModeIndex = 0;
     int LevelSelect = 3;
+    int QualityIndex = 0;
     float DBGAlpha = 1f;
-    public Texture BlackBG;
+    int SortModeIndex = 0;  
+   Vector3 SortAxis = new Vector3(0f, 0f, 1f);
+
+#if false
     private void OnGUI()
     {
-        string[] levels = new string[] { "Floor 1", "Floor 2", "Floor 3", "Floor 4" };
-        LevelSelect = GUI.SelectionGrid(new Rect(600,0,400,100), LevelSelect, levels, 4);
-        float oldAlpha = DBGAlpha;
-        DBGAlpha = GUI.VerticalSlider(new Rect(250, 10, 100, Screen.height - 20), DBGAlpha, 1f, 0f);
-        if(oldAlpha != DBGAlpha) ShipLevels[LevelSelect].DEBUG_SetAlpha(DBGAlpha);
-        if(BlackBG != null) GUI.DrawTexture(new Rect(275, 0, 100, 100), BlackBG);
-        GUI.TextArea(new Rect(290, 0, 85, 100), DBGAlpha.ToString("F3"));
+        int buttonW = 100;
+        int buttonH = 50;
+        
+        // shaders
+        List<Shader> shaderList = new List<Shader>() { RifRaf, Standard, LegSpec, LegVLit, LegDiff, NewSurface, RifRafNewSurface };
+        string[] shaders = { "RifRaf Standard", "Standard", "Leg Spec", "Leg VLit", "Leg Diffuse", "Custom NewSurf", "RifRafNewSurf" };
+        string[] shaderNames = { "RifRafStandard", "Standard", "Legacy Shaders/Transparent/Specular", "Legacy Shaders/Transparent/VertexLit",
+                               "Legacy Shaders/Transparent/Diffuse", "Custom/NewSurfaceShader",  "Custom/RifRafNewSurfaceShader"};
+        float oldShaderIndex = ShaderIndex;
+        ShaderIndex = GUI.SelectionGrid(new Rect(0, 0, buttonW, shaders.Length * buttonH), ShaderIndex, shaders, 1);
+        if (oldShaderIndex != ShaderIndex) ShipLevels[LevelSelect].DEBUG_SetShader(shaderNames[ShaderIndex], shaderList[ShaderIndex]);
 
-        if(GUI.Button(new Rect(0,0,100,100), "RifRaf Shader"))
+        // Render mode
+        string[] renderModes = { "Opaque", "Fade", "Transparent" };
+        int oldRenderIndex = RenderModeIndex;
+        RenderModeIndex = GUI.SelectionGrid(new Rect(110, 0, buttonW, renderModes.Length * buttonH), RenderModeIndex, renderModes, 1);
+        if(oldRenderIndex != RenderModeIndex)
         {
-            ShipLevels[LevelSelect].DEBUG_SetShader("RifRafStandard");
-        }
-        if (GUI.Button(new Rect(0, 100, 100, 100), "Standard Shader"))
+            Debug.Log("setting render mode: " + renderModes[RenderModeIndex]);
+            if(RenderModeIndex == 0) ShipLevels[LevelSelect].DEBUG_SetOpaque();
+            if(RenderModeIndex == 1) ShipLevels[LevelSelect].DEBUG_SetFade();
+            if(RenderModeIndex == 2) ShipLevels[LevelSelect].DEBUG_SetTransparent();
+        }        
+
+        // alpha
+        float oldAlpha = DBGAlpha;
+        DBGAlpha = GUI.VerticalSlider(new Rect(220, 10, 100, Screen.height - 20), DBGAlpha, 1f, 0f);
+        if (oldAlpha != DBGAlpha) ShipLevels[LevelSelect].DEBUG_SetAlpha(DBGAlpha);        
+        GUI.TextField(new Rect(235, 0, 85, 20), DBGAlpha.ToString("F3"));
+
+        // level
+        string[] levels = new string[] { "Floor 1", "Floor 2", "Floor 3", "Floor 4" };
+        LevelSelect = GUI.SelectionGrid(new Rect(350,0,levels.Length*buttonW,buttonH), LevelSelect, levels, 4);
+
+        CCPlayer player = GetComponentInParent<CCPlayer>();
+        if(GUI.Button(new Rect(350 + levels.Length * buttonW + 20, 0, buttonW, buttonH), "Moveable: " + !player.DEBUG_BlockMovement))
         {
-            ShipLevels[LevelSelect].DEBUG_SetShader("Standard");
+            player.DEBUG_BlockMovement = !player.DEBUG_BlockMovement;
         }
-        if (GUI.Button(new Rect(0, 200, 100, 100), "Leg Spec"))
+
+        // Quality
+        int oldQuality = QualityIndex;
+        int numQualities = QualitySettings.names.Length;
+        QualityIndex = GUI.SelectionGrid(new Rect(350, buttonH+10, numQualities*buttonW, buttonH), QualityIndex, QualitySettings.names, numQualities);
+        if (oldQuality != QualityIndex) QualitySettings.SetQualityLevel(QualityIndex);
+
+        // sort index
+        int oldSortIndex = SortModeIndex;
+        string[] enumNames = Enum.GetNames(typeof(TransparencySortMode));        
+        SortModeIndex = GUI.SelectionGrid(new Rect(350, (buttonH*2) + 20, enumNames.Length * buttonW, buttonH), SortModeIndex, enumNames, enumNames.Length);
+        if (oldSortIndex != SortModeIndex) Camera.main.transparencySortMode = (TransparencySortMode)SortModeIndex;               
+
+        Vector3 oldSortAxis = SortAxis;
+        SortAxis.x = GUI.HorizontalSlider(new Rect(890, (buttonH * 2) + 20, Screen.width - 10 - 890, 20), SortAxis.x, -180f, 180f);
+        SortAxis.y = GUI.HorizontalSlider(new Rect(890, (buttonH * 2) + 50, Screen.width - 10 - 890, 20), SortAxis.y, -180f, 180f);
+        SortAxis.z = GUI.HorizontalSlider(new Rect(890, (buttonH * 2) + 80, Screen.width - 10 - 890, 20), SortAxis.z, -180f, 180f);        
+        if(GUI.Button(new Rect(1070, buttonH + 10, buttonW, buttonH), "Cap-Cam"))
+        {            
+            SortAxis = GetComponentInParent<CCPlayer>().transform.position - Camera.main.transform.position;
+        }
+        if (GUI.Button(new Rect(1170, buttonH + 10, buttonW, buttonH), "Cam-Camp"))
         {
-            ShipLevels[LevelSelect].DEBUG_SetShader("Legacy Shaders/Transparent/Specular");
+            SortAxis = Camera.main.transform.position - GetComponentInParent<CCPlayer>().transform.position;
         }
-        if (GUI.Button(new Rect(0, 300, 100, 100), "Leg VLit"))
-        {
-            ShipLevels[LevelSelect].DEBUG_SetShader("Legacy Shaders/Transparent/VertexLit");
-        }
-        if (GUI.Button(new Rect(0, 400, 100, 100), "Leg Diffuse"))
-        {
-            ShipLevels[LevelSelect].DEBUG_SetShader("Legacy Shaders/Transparent/Diffuse");
-        }
-        if (GUI.Button(new Rect(0, 500, 100, 100), "Custom NewSurf"))
-        {
-            ShipLevels[LevelSelect].DEBUG_SetShader("Custom/NewSurfaceShader");
-        }
-        if (GUI.Button(new Rect(120, 0, 100,100), "Opaque"))
-        {
-            ShipLevels[LevelSelect].DEBUG_SetOpaque();
-        }
-        if (GUI.Button(new Rect(120, 100, 100, 100), "Fade"))
-        {
-            ShipLevels[LevelSelect].DEBUG_SetFade();
-        }
-        if (GUI.Button(new Rect(120, 200, 100, 100), "Transparent"))
-        {
-            ShipLevels[LevelSelect].DEBUG_SetTransparent();
-        }
+
+        if (oldSortAxis != SortAxis) Camera.main.transparencySortAxis = SortAxis;
+        GUI.TextField(new Rect(760, (buttonH * 2) + 20, 125, 20), SortAxis.ToString("F1"));
     }
+
+    // public Material MaterialWithRifRaf;
+    public Material SampleMaterial;
+    public Shader RifRaf;
+    public Shader Standard;    
+    public Shader LegSpec;
+    public Shader LegVLit;
+    public Shader LegDiff;    
+    public Shader NewSurface;
+    public Shader RifRafNewSurface;
+#endif
 
     private void Start()
     {        
         ShipLevels = FindObjectsOfType<ShipLevel>().ToList<ShipLevel>();
         ShipLevels = ShipLevels.OrderBy(o => o.name).ToList<ShipLevel>();
         GameObject[] floors = GameObject.FindGameObjectsWithTag("FloorNavMesh");
-        FloorColliders = floors.ToList<GameObject>().OrderBy(o => o.name).ToList<GameObject>();
-        /*foreach(GameObject go in FloorColliders)
-        {
-            go.GetComponent<MeshRenderer>().material.shader = UnityEngine.Shader.Find("RifRafStandard");
-        }*/
+        FloorColliders = floors.ToList<GameObject>().OrderBy(o => o.name).ToList<GameObject>();        
 
         int layerMask = LayerMask.GetMask("Ship Area Collider");
         foreach (ShipLevel level in ShipLevels)

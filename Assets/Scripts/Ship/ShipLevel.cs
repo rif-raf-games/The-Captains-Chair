@@ -68,12 +68,12 @@ public class ShipLevel : MonoBehaviour
             room.DEBUG_SetOpaque();
         }
     }
-    public void DEBUG_SetShader(string shader)
+    public void DEBUG_SetShader(string shaderName, Shader shader)
     {
-        Debug.Log("------ShipLevel.DEBUG_SetShader(): " + shader);
+        Debug.Log("------ShipLevel.DEBUG_SetShader(): " + shaderName);
         foreach (Room room in LevelRooms)
         {
-            room.DEBUG_SetShader(shader);
+            room.DEBUG_SetShader(shaderName, shader);
         }
     }
 }

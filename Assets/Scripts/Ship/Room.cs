@@ -13,11 +13,12 @@ public class Room : MonoBehaviour
     float RoomFadeTime;
 
 
-    public void DEBUG_SetShader(string shader)
+    public void DEBUG_SetShader(string shaderName, Shader shader)
     {
         foreach(Material material in ChildMaterials)
         {
-            material.shader = UnityEngine.Shader.Find(shader);
+           // material.shader = UnityEngine.Shader.Find(shaderName);
+            material.shader = shader;
         }
     }
 

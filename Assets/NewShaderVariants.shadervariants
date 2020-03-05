@@ -31,6 +31,10 @@ ShaderVariantCollection:
         passType: 4
       - keywords: DIRECTIONAL LIGHTPROBE_SH SHADOWS_SCREEN _EMISSION
         passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH VERTEXLIGHT_ON
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH SHADOWS_SCREEN VERTEXLIGHT_ON
+        passType: 4
       - keywords: DIRECTIONAL LIGHTPROBE_SH _ALPHATEST_ON
         passType: 4
       - keywords: DIRECTIONAL LIGHTPROBE_SH _ALPHABLEND_ON
@@ -42,6 +46,8 @@ ShaderVariantCollection:
       - keywords: DIRECTIONAL LIGHTPROBE_SH SHADOWS_SCREEN _ALPHAPREMULTIPLY_ON
         passType: 4
       - keywords: DIRECTIONAL LIGHTPROBE_SH _ALPHAPREMULTIPLY_ON _EMISSION
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH VERTEXLIGHT_ON _ALPHAPREMULTIPLY_ON
         passType: 4
       - keywords: DIRECTIONAL LIGHTPROBE_SH _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
         passType: 4
@@ -117,11 +123,15 @@ ShaderVariantCollection:
         passType: 5
       - keywords: POINT _ALPHABLEND_ON
         passType: 5
+      - keywords: POINT SHADOWS_CUBE _ALPHABLEND_ON
+        passType: 5
       - keywords: POINT SHADOWS_CUBE SHADOWS_SOFT _ALPHABLEND_ON
         passType: 5
       - keywords: DIRECTIONAL _ALPHAPREMULTIPLY_ON
         passType: 5
       - keywords: POINT _ALPHAPREMULTIPLY_ON
+        passType: 5
+      - keywords: POINT SHADOWS_CUBE _ALPHAPREMULTIPLY_ON
         passType: 5
       - keywords: POINT SHADOWS_CUBE SHADOWS_SOFT _ALPHAPREMULTIPLY_ON
         passType: 5
@@ -139,6 +149,8 @@ ShaderVariantCollection:
         passType: 5
       - keywords: SHADOWS_DEPTH SPOT _SPECULARHIGHLIGHTS_OFF
         passType: 5
+      - keywords: POINT SHADOWS_CUBE _SPECULARHIGHLIGHTS_OFF
+        passType: 5
       - keywords: SHADOWS_DEPTH SHADOWS_SOFT SPOT _SPECULARHIGHLIGHTS_OFF
         passType: 5
       - keywords: POINT SHADOWS_CUBE SHADOWS_SOFT _SPECULARHIGHLIGHTS_OFF
@@ -146,6 +158,8 @@ ShaderVariantCollection:
       - keywords: DIRECTIONAL _ALPHABLEND_ON _SPECULARHIGHLIGHTS_OFF
         passType: 5
       - keywords: POINT _ALPHABLEND_ON _SPECULARHIGHLIGHTS_OFF
+        passType: 5
+      - keywords: POINT SHADOWS_CUBE _ALPHABLEND_ON _SPECULARHIGHLIGHTS_OFF
         passType: 5
       - keywords: POINT SHADOWS_CUBE SHADOWS_SOFT _ALPHABLEND_ON _SPECULARHIGHLIGHTS_OFF
         passType: 5
@@ -155,6 +169,8 @@ ShaderVariantCollection:
         passType: 5
       - keywords: POINT _ALPHAPREMULTIPLY_ON _SPECULARHIGHLIGHTS_OFF
         passType: 5
+      - keywords: POINT SHADOWS_CUBE _ALPHAPREMULTIPLY_ON _SPECULARHIGHLIGHTS_OFF
+        passType: 5
       - keywords: POINT SHADOWS_CUBE SHADOWS_SOFT _ALPHAPREMULTIPLY_ON _SPECULARHIGHLIGHTS_OFF
         passType: 5
       - keywords: DIRECTIONAL _DETAIL_MULX2 _SPECULARHIGHLIGHTS_OFF
@@ -162,6 +178,8 @@ ShaderVariantCollection:
       - keywords: DIRECTIONAL _ALPHAPREMULTIPLY_ON _DETAIL_MULX2 _SPECULARHIGHLIGHTS_OFF
         passType: 5
       - keywords: DIRECTIONAL _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A _SPECULARHIGHLIGHTS_OFF
+        passType: 5
+      - keywords: POINT SHADOWS_CUBE _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A _SPECULARHIGHLIGHTS_OFF
         passType: 5
       - keywords: POINT SHADOWS_CUBE SHADOWS_SOFT _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
           _SPECULARHIGHLIGHTS_OFF
@@ -227,6 +245,10 @@ ShaderVariantCollection:
   - first: {fileID: 69, guid: 0000000000000000f000000000000000, type: 0}
     second:
       variants:
+      - keywords: 
+        passType: 0
+      - keywords: POINT
+        passType: 0
       - keywords: POINT SHADOWS_CUBE SHADOWS_SOFT UNITY_HDR_ON
         passType: 0
   - first: {fileID: 7, guid: 0000000000000000f000000000000000, type: 0}
@@ -338,6 +360,19 @@ ShaderVariantCollection:
       variants:
       - keywords: 
         passType: 0
+  - first: {fileID: 4800000, guid: 520053c30866b4648aedd2cc789c5205, type: 3}
+    second:
+      variants:
+      - keywords: DIRECTIONAL LIGHTPROBE_SH
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH SHADOWS_SCREEN
+        passType: 4
+      - keywords: DIRECTIONAL
+        passType: 5
+      - keywords: POINT
+        passType: 5
+      - keywords: POINT SHADOWS_CUBE SHADOWS_SOFT
+        passType: 5
   - first: {fileID: 4800000, guid: afa45d48d8ea44dd89fe59de8abb864a, type: 3}
     second:
       variants:
@@ -347,9 +382,19 @@ ShaderVariantCollection:
         passType: 4
       - keywords: DIRECTIONAL LIGHTPROBE_SH _EMISSION
         passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH SHADOWS_SCREEN _EMISSION
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH VERTEXLIGHT_ON
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH SHADOWS_SCREEN VERTEXLIGHT_ON
+        passType: 4
       - keywords: DIRECTIONAL LIGHTPROBE_SH _ALPHABLEND_ON
         passType: 4
       - keywords: DIRECTIONAL LIGHTPROBE_SH SHADOWS_SCREEN _ALPHABLEND_ON
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH _ALPHABLEND_ON _EMISSION
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH VERTEXLIGHT_ON _ALPHABLEND_ON
         passType: 4
       - keywords: DIRECTIONAL LIGHTPROBE_SH _ALPHAPREMULTIPLY_ON
         passType: 4
@@ -374,10 +419,19 @@ ShaderVariantCollection:
         passType: 4
       - keywords: DIRECTIONAL LIGHTPROBE_SH _EMISSION _GLOSSYREFLECTIONS_OFF _SPECULARHIGHLIGHTS_OFF
         passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH VERTEXLIGHT_ON _GLOSSYREFLECTIONS_OFF
+          _SPECULARHIGHLIGHTS_OFF
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH SHADOWS_SCREEN VERTEXLIGHT_ON _GLOSSYREFLECTIONS_OFF
+          _SPECULARHIGHLIGHTS_OFF
+        passType: 4
       - keywords: DIRECTIONAL LIGHTPROBE_SH _ALPHABLEND_ON _GLOSSYREFLECTIONS_OFF
           _SPECULARHIGHLIGHTS_OFF
         passType: 4
       - keywords: DIRECTIONAL LIGHTPROBE_SH SHADOWS_SCREEN _ALPHABLEND_ON _GLOSSYREFLECTIONS_OFF
+          _SPECULARHIGHLIGHTS_OFF
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH VERTEXLIGHT_ON _ALPHABLEND_ON _GLOSSYREFLECTIONS_OFF
           _SPECULARHIGHLIGHTS_OFF
         passType: 4
       - keywords: DIRECTIONAL LIGHTPROBE_SH _ALPHAPREMULTIPLY_ON _GLOSSYREFLECTIONS_OFF
@@ -405,17 +459,23 @@ ShaderVariantCollection:
         passType: 5
       - keywords: POINT
         passType: 5
+      - keywords: POINT SHADOWS_CUBE
+        passType: 5
       - keywords: POINT SHADOWS_CUBE SHADOWS_SOFT
         passType: 5
       - keywords: DIRECTIONAL _ALPHABLEND_ON
         passType: 5
       - keywords: POINT _ALPHABLEND_ON
         passType: 5
+      - keywords: POINT SHADOWS_CUBE _ALPHABLEND_ON
+        passType: 5
       - keywords: POINT SHADOWS_CUBE SHADOWS_SOFT _ALPHABLEND_ON
         passType: 5
       - keywords: DIRECTIONAL _ALPHAPREMULTIPLY_ON
         passType: 5
       - keywords: POINT _ALPHAPREMULTIPLY_ON
+        passType: 5
+      - keywords: POINT SHADOWS_CUBE _ALPHAPREMULTIPLY_ON
         passType: 5
       - keywords: POINT SHADOWS_CUBE SHADOWS_SOFT _ALPHAPREMULTIPLY_ON
         passType: 5
@@ -427,11 +487,15 @@ ShaderVariantCollection:
         passType: 5
       - keywords: POINT _SPECULARHIGHLIGHTS_OFF
         passType: 5
+      - keywords: POINT SHADOWS_CUBE _SPECULARHIGHLIGHTS_OFF
+        passType: 5
       - keywords: POINT SHADOWS_CUBE SHADOWS_SOFT _SPECULARHIGHLIGHTS_OFF
         passType: 5
       - keywords: DIRECTIONAL _ALPHABLEND_ON _SPECULARHIGHLIGHTS_OFF
         passType: 5
       - keywords: POINT _ALPHABLEND_ON _SPECULARHIGHLIGHTS_OFF
+        passType: 5
+      - keywords: POINT SHADOWS_CUBE _ALPHABLEND_ON _SPECULARHIGHLIGHTS_OFF
         passType: 5
       - keywords: POINT SHADOWS_CUBE SHADOWS_SOFT _ALPHABLEND_ON _SPECULARHIGHLIGHTS_OFF
         passType: 5
@@ -439,11 +503,15 @@ ShaderVariantCollection:
         passType: 5
       - keywords: POINT _ALPHAPREMULTIPLY_ON _SPECULARHIGHLIGHTS_OFF
         passType: 5
+      - keywords: POINT SHADOWS_CUBE _ALPHAPREMULTIPLY_ON _SPECULARHIGHLIGHTS_OFF
+        passType: 5
       - keywords: POINT SHADOWS_CUBE SHADOWS_SOFT _ALPHAPREMULTIPLY_ON _SPECULARHIGHLIGHTS_OFF
         passType: 5
       - keywords: DIRECTIONAL _DETAIL_MULX2 _SPECULARHIGHLIGHTS_OFF
         passType: 5
       - keywords: DIRECTIONAL _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A _SPECULARHIGHLIGHTS_OFF
+        passType: 5
+      - keywords: POINT SHADOWS_CUBE _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A _SPECULARHIGHLIGHTS_OFF
         passType: 5
       - keywords: POINT SHADOWS_CUBE SHADOWS_SOFT _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
           _SPECULARHIGHLIGHTS_OFF
@@ -491,4 +559,133 @@ ShaderVariantCollection:
       - keywords: DIRECTIONAL
         passType: 5
       - keywords: POINT
+        passType: 5
+  - first: {fileID: 4800000, guid: 4a9e25d906b98d24fa300da20107fcae, type: 3}
+    second:
+      variants:
+      - keywords: DIRECTIONAL LIGHTPROBE_SH SHADOWS_SCREEN
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH SHADOWS_SCREEN _EMISSION
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH _ALPHABLEND_ON
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH SHADOWS_SCREEN _ALPHABLEND_ON
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH _ALPHABLEND_ON _EMISSION
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH _GLOSSYREFLECTIONS_OFF _SPECULARHIGHLIGHTS_OFF
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH SHADOWS_SCREEN _GLOSSYREFLECTIONS_OFF
+          _SPECULARHIGHLIGHTS_OFF
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH _ALPHABLEND_ON _GLOSSYREFLECTIONS_OFF
+          _SPECULARHIGHLIGHTS_OFF
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH SHADOWS_SCREEN _ALPHABLEND_ON _GLOSSYREFLECTIONS_OFF
+          _SPECULARHIGHLIGHTS_OFF
+        passType: 4
+      - keywords: POINT SHADOWS_CUBE
+        passType: 5
+      - keywords: POINT SHADOWS_CUBE SHADOWS_SOFT
+        passType: 5
+      - keywords: POINT _ALPHABLEND_ON
+        passType: 5
+      - keywords: POINT SHADOWS_CUBE _ALPHABLEND_ON
+        passType: 5
+      - keywords: POINT SHADOWS_CUBE SHADOWS_SOFT _ALPHABLEND_ON
+        passType: 5
+      - keywords: DIRECTIONAL _SPECULARHIGHLIGHTS_OFF
+        passType: 5
+      - keywords: POINT SHADOWS_CUBE _SPECULARHIGHLIGHTS_OFF
+        passType: 5
+      - keywords: POINT SHADOWS_CUBE SHADOWS_SOFT _SPECULARHIGHLIGHTS_OFF
+        passType: 5
+      - keywords: DIRECTIONAL _ALPHABLEND_ON _SPECULARHIGHLIGHTS_OFF
+        passType: 5
+      - keywords: POINT _ALPHABLEND_ON _SPECULARHIGHLIGHTS_OFF
+        passType: 5
+      - keywords: POINT SHADOWS_CUBE _ALPHABLEND_ON _SPECULARHIGHLIGHTS_OFF
+        passType: 5
+      - keywords: POINT SHADOWS_CUBE SHADOWS_SOFT _ALPHABLEND_ON _SPECULARHIGHLIGHTS_OFF
+        passType: 5
+      - keywords: SHADOWS_DEPTH
+        passType: 8
+      - keywords: SHADOWS_CUBE
+        passType: 8
+      - keywords: SHADOWS_DEPTH _ALPHABLEND_ON
+        passType: 8
+      - keywords: SHADOWS_CUBE _ALPHABLEND_ON
+        passType: 8
+  - first: {fileID: 4800000, guid: 5a2782c780df2a34d93215dc9017d6ad, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 1
+      - keywords: POINT
+        passType: 1
+  - first: {fileID: 4800000, guid: 5cd0eaea047965a4bbe8c6a94a49baca, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: 636f87296b7956048b2f294d1f67bfdd, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: 66180c0a329b8df4693632aeef28d2aa, type: 3}
+    second:
+      variants:
+      - keywords: DIRECTIONAL LIGHTPROBE_SH
+        passType: 4
+      - keywords: DIRECTIONAL
+        passType: 5
+      - keywords: POINT
+        passType: 5
+  - first: {fileID: 4800000, guid: 7bc385dd5879ac4439128c49b9b35123, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: 8ad34a644a8af2d46a7e819b1219ed1e, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: a655f0d684906ac4292cc4d7a9fbaf3b, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: c7285f695f918d44085c9b3d6a2a30df, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: c8839916a1f644242a8b541a7a353185, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: f854df84abcd9864fa3d5acee8fd8ecf, type: 3}
+    second:
+      variants:
+      - keywords: DIRECTIONAL LIGHTPROBE_SH
+        passType: 4
+      - keywords: DIRECTIONAL
+        passType: 5
+      - keywords: POINT
+        passType: 5
+  - first: {fileID: 4800000, guid: 89e52e921442cf84cbfb3c1396af2a11, type: 3}
+    second:
+      variants:
+      - keywords: DIRECTIONAL LIGHTPROBE_SH
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH SHADOWS_SCREEN
+        passType: 4
+      - keywords: DIRECTIONAL
+        passType: 5
+      - keywords: POINT
+        passType: 5
+      - keywords: POINT SHADOWS_CUBE SHADOWS_SOFT
         passType: 5
