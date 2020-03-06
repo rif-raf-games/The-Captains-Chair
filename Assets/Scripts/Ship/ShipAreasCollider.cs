@@ -8,7 +8,7 @@ using System;
 public class ShipAreasCollider : MonoBehaviour
 {
     float RoomFadeOpacity;
-    float FloorFadeOpacity;
+   // float FloorFadeOpacity;
     public List<ShipLevel> ShipLevels = new List<ShipLevel>();
     public List<GameObject> FloorColliders = new List<GameObject>();
     public int PlayerFloor = 0;
@@ -19,7 +19,7 @@ public class ShipAreasCollider : MonoBehaviour
     {
         TheCaptainsChair cChair = FindObjectOfType<TheCaptainsChair>();
         RoomFadeOpacity = cChair.RoomFadeOpacity;
-        FloorFadeOpacity = cChair.FloorFadeOpacity;
+      //  FloorFadeOpacity = cChair.FloorFadeOpacity;
 
         QualityIndex = QualitySettings.GetQualityLevel();
         SortModeIndex = (int)Camera.main.transparencySortMode;
@@ -33,7 +33,7 @@ public class ShipAreasCollider : MonoBehaviour
     int SortModeIndex = 0;  
    Vector3 SortAxis = new Vector3(0f, 0f, 1f);
 
-#if true              
+#if false              
     private void OnGUI()
     {
         int buttonW = 100;
@@ -137,19 +137,19 @@ public class ShipAreasCollider : MonoBehaviour
         {
             if (level == PlayerFloor)
             {
-                Debug.Log("set player's room opacity: " + level);
-                ShipLevels[level - 1].SetPlayerLevelRoomsAlpha(RoomFadeOpacity, true);
+                Debug.Log("set player's floor opacity: " + level);
+                ShipLevels[level - 1].SetPlayerLevelRoomsAlpha(/*1f,*/ true);
             }
-            else if (level < PlayerFloor)
+            else //if (level < PlayerFloor)
             {
-                Debug.Log("turn level " + level + " to 20%");
-                ShipLevels[level - 1].SetRoomsAlpha(RoomFadeOpacity, true);
+                Debug.Log("turn level " + level + " to 0%");
+                ShipLevels[level - 1].SetRoomsAlpha(0f, true);
             }
-            else
+            /*else
             {
                 Debug.Log("turn level " + level + " totally transparent");
-                ShipLevels[level - 1].SetRoomsAlpha(FloorFadeOpacity, true);
-            }
+                ShipLevels[level - 1].SetRoomsAlpha(0f, true);
+            }*/
         }
     }
 
@@ -176,46 +176,76 @@ public class ShipAreasCollider : MonoBehaviour
     private void Update()
     {
         //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Room room;
         string s = "Raycast hits:\n";
         Ray ray = new Ray(transform.parent.position + new Vector3(0f, 4f, 0f), Vector3.forward * 1f);        
         int layerMask = LayerMask.GetMask("Room");
         List<RaycastHit> hits = Physics.RaycastAll(ray, Mathf.Infinity, layerMask).ToList<RaycastHit>();
         List<GameObject> hitsGOs = new List<GameObject>();
-
+        
         foreach(RaycastHit hit in hits )
         {
-            hitsGOs.Add(hit.collider.gameObject);
+            room = hit.collider.GetComponent<Room>();
+            if (room == null)
+            {
+                // if we're here then we should be in a 3 layers of rooms in a hallway situation.  For those rooms, put the Room on a child component 
+                // so that when the Room shuts itself off the trigger on the object above will stay around
+                room = hit.collider.GetComponentInChildren<Room>();
+            }
+            if( room == null)
+            {
+                // if we're here then we should be in a situation where the raycast is hitting against a collider who has it's Room on a child object that's
+                // been shut off so look for a room in the DimmedRooms that has it's active flag set to false
+                foreach(GameObject go in DimmedRoomsViaRaycast)
+                {
+                    if(go.transform.parent.gameObject == hit.collider.gameObject)
+                    {
+                        //Debug.Log("we've found the room in the list that should not be active: " + go.name + ": " + go.activeSelf);
+                        room = go.GetComponent<Room>();
+                    }
+                }
+
+            }
+            hitsGOs.Add(room.gameObject);
             s += hit.collider.name + "\n";
-            if(DimmedRoomsViaRaycast.Contains(hit.collider.gameObject) == false)
+            if(DimmedRoomsViaRaycast.Contains(room.gameObject) == false)
             {
                 Debug.Log("dim room via raycast: " + hit.collider.name);
-                DimmedRoomsViaRaycast.Add(hit.collider.gameObject);
-                Room room = hit.collider.GetComponent<Room>();
+                if(DimmedRoomsViaRaycast.Count == 1 )
+                {
+                    Debug.Log("dim the front room down to zero");
+                    DimmedRoomsViaRaycast[0].GetComponent<Room>().ToggleAlpha(0f, false);                    
+                }
+                
                 room.ToggleAlpha(RoomFadeOpacity, false/*, Room.eCollisionType.RAYCAST*/);
+                DimmedRoomsViaRaycast.Add(room.gameObject);
+                
             }            
-        }                
-        /*string t = "Dimmed: ";
-        foreach (GameObject hit in DimmedRoomsViaRaycast) t += hit.name + ",";
-        t += "\nhits: ";
-        foreach (RaycastHit hit in hits) t += hit.collider.name + ",";
-        Debug.Log(t);*/
+        }                       
 
         List<GameObject> hitsToRemove = new List<GameObject>();
+        bool removedRoomFromList = false;
         foreach (GameObject hit in DimmedRoomsViaRaycast)
-        {
-            //Debug.Log("num hits: " + hits.Count);
+        {            
             if(hitsGOs.Contains(hit) == false)
             {
-                Debug.Log("turn room back on via raycast leaving:"+ hit.name);
+                Debug.Log("turn room back on via raycast leaving: "+ hit.name);
                 hitsToRemove.Add(hit);
-                Room room = hit.GetComponent<Room>();
+                room = hit.GetComponent<Room>();
                 room.ToggleAlpha(1f, false);
+                removedRoomFromList = true;
             }
         }
         foreach(GameObject hit in hitsToRemove)
         {
             Debug.Log("remove this: " + hit.name + " from dimmed list");
             DimmedRoomsViaRaycast.Remove(hit);
+        }
+        if(removedRoomFromList == true && DimmedRoomsViaRaycast.Count == 1)
+        {
+            room = DimmedRoomsViaRaycast[0].GetComponent<Room>();
+            Debug.Log("turn transparent room " + room.name + " back to 20%");
+            room.ToggleAlpha(RoomFadeOpacity, false);
         }
 
         if(DebugText != null)
@@ -231,12 +261,13 @@ public class ShipAreasCollider : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {//StaticStuff.PrintTriggerEnter(this.name + " We only want to handle Room colliders here.  other: " + other.name);
-        if ( !(other.gameObject.layer == LayerMask.NameToLayer("Room") || other.gameObject.layer == LayerMask.NameToLayer("Ship Level"))) { Debug.LogError("RoomCollider.OnTriggerEnter() we should NOT be colliding with this " + other.name + " that has a layer OTHER than Room and Ship Level " + LayerMask.LayerToName(other.gameObject.layer)); return; }
+        //if ( !(other.gameObject.layer == LayerMask.NameToLayer("Room") || other.gameObject.layer == LayerMask.NameToLayer("Ship Level"))) { Debug.LogError("RoomCollider.OnTriggerEnter() we should NOT be colliding with this " + other.name + " that has a layer OTHER than Room and Ship Level " + LayerMask.LayerToName(other.gameObject.layer)); return; }
+        if (other.gameObject.layer != LayerMask.NameToLayer("Ship Level")) { Debug.LogError("RoomCollider.OnTriggerEnter() we should NOT be colliding with this " + other.name + " that has a layer OTHER than Ship Level " + LayerMask.LayerToName(other.gameObject.layer)); return; }
         StaticStuff.PrintTriggerEnter(this.name + " RoomCollider.OnTriggerEnter() other: " + other.name + ", layer: " + other.gameObject.layer);        
                 
-        Room room = other.GetComponent<Room>();
+        //Room room = other.GetComponent<Room>();
         ShipLevel shipLevel = other.GetComponent<ShipLevel>();
-        if (room != null) //{ Debug.LogError("No Room component on the thing we collided with: " + this.name + " , Collider other: " + other.name); return; }
+        /*if (room != null) //{ Debug.LogError("No Room component on the thing we collided with: " + this.name + " , Collider other: " + other.name); return; }
         {                        
             if(room.GetComponentInParent<ShipLevel>().Level == PlayerFloor)
             {
@@ -254,13 +285,14 @@ public class ShipAreasCollider : MonoBehaviour
             {
                 StaticStuff.PrintTriggerEnter(this.name + " collided with a room " + other.name + " but it's not on the same floor so bail");
             }
-        }        
-        else if(shipLevel != null)
+        }  */      
+        //else 
+        if(shipLevel != null)
         {
             StaticStuff.PrintTriggerEnter("collided with a shiplevel: " + other.name);            
             PlayerFloor = shipLevel.Level;
             CheckFloorColliders();
-            shipLevel.SetPlayerLevelRoomsAlpha(RoomFadeOpacity);
+            shipLevel.SetPlayerLevelRoomsAlpha(/*RoomFadeOpacity*/);
         }
         else
         {
@@ -280,12 +312,12 @@ public class ShipAreasCollider : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if ( !(other.gameObject.layer == LayerMask.NameToLayer("Room") || other.gameObject.layer == LayerMask.NameToLayer("Ship Level"))) { Debug.LogError("RoomCollider.OnTriggerExit() we should NOT be colliding with this " + other.name + " that has a layer OTHER than Room and Ship Level " + LayerMask.LayerToName(other.gameObject.layer)); return; }
+        if (other.gameObject.layer != LayerMask.NameToLayer("Ship Level")) { Debug.LogError("RoomCollider.OnTriggerExit() we should NOT be colliding with this " + other.name + " that has a layer OTHER than Ship Level " + LayerMask.LayerToName(other.gameObject.layer)); return; }
         StaticStuff.PrintTriggerEnter(this.name + " RoomCollider.OnTriggerExit() other: " + other.name + ", layer: " + other.gameObject.layer);
         
-        Room room = other.GetComponent<Room>();
+        //Room room = other.GetComponent<Room>();
         ShipLevel shipLevel = other.GetComponent<ShipLevel>();
-        if (room != null) 
+        /*if (room != null) 
         {                                    
             if (room.GetComponentInParent<ShipLevel>().Level == PlayerFloor)
             {
@@ -296,12 +328,14 @@ public class ShipAreasCollider : MonoBehaviour
             {
                 StaticStuff.PrintTriggerEnter(this.name + " left a collision with a room " + other.name + " but it's not on our floor so bail");
             }
-        }
-        else if (shipLevel != null)
+        }*/
+        //else 
+        if (shipLevel != null)
         {
             StaticStuff.PrintTriggerEnter("left floor collider: " + other.name);
-            if (shipLevel.Level > PlayerFloor) shipLevel.SetRoomsAlpha(FloorFadeOpacity);
-            else shipLevel.SetRoomsAlpha(RoomFadeOpacity);
+            shipLevel.SetRoomsAlpha(0f);
+            //if (shipLevel.Level > PlayerFloor) shipLevel.SetRoomsAlpha(FloorFadeOpacity);
+            //else shipLevel.SetRoomsAlpha(RoomFadeOpacity);
         }
         else
         {

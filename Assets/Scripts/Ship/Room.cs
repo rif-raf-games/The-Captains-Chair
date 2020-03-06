@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,7 +9,7 @@ public class Room : MonoBehaviour
     MeshRenderer[] ChildMeshRenderers;
     List<Material> ChildMaterials = new List<Material>();
 
-    float RoomFadeTime;
+    float FadeTime;
 
 
     public void DEBUG_SetShader(string shaderName, Shader shader)
@@ -47,7 +46,7 @@ public class Room : MonoBehaviour
     private void Awake()
     {
         TheCaptainsChair cChair = FindObjectOfType<TheCaptainsChair>();
-        RoomFadeTime = cChair.RoomFadeTime;
+        FadeTime = cChair.FadeTime;
      //   RoomFadeOpacity = cChair.RoomFadeOpacity;
      //   FloorFadeOpacity = cChair.FloorFadeOpacity;
     }
@@ -78,7 +77,7 @@ public class Room : MonoBehaviour
         LerpStart = start;
         LerpEnd = end;
         LerpStartTime = Time.time;
-        LerpDurationTime = RoomFadeTime;
+        LerpDurationTime = FadeTime;
     }
     
     enum eRenderMode { IDLE, TRANSITION };
@@ -103,6 +102,7 @@ public class Room : MonoBehaviour
                 if (CurMode == eRenderMode.IDLE)
                 {
                     if (LerpEnd > .99f) SetOpaque(material);
+                    if (LerpEnd < .01f) this.gameObject.SetActive(false);
                 }
             }            
         }
@@ -136,6 +136,7 @@ public class Room : MonoBehaviour
         {                       
             if(skipLerp == false ) CurMode = eRenderMode.TRANSITION;
             SetupLerp(ChildMaterials[0].color.a, alpha);
+            this.gameObject.SetActive(true);
             
             foreach (Material material in ChildMaterials)
             {
@@ -144,7 +145,8 @@ public class Room : MonoBehaviour
                     Result = "lerp DID NOT happen";
                     material.color = new Color(material.color.r, material.color.g, material.color.b, alpha);
                     if (alpha > .999f) SetOpaque(material);                    
-                    else SetFade(material);                    
+                    else SetFade(material);
+                    if (alpha < .01f) this.gameObject.SetActive(false);
                 } 
                 else
                 {
