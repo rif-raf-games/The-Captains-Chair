@@ -14,7 +14,7 @@ public class TheCaptainsChair : MonoBehaviour
     public ArticyRef DialogueToStartOn;
 
     [Header("Room And Floor Settings")]
-    public float RoomFadeTime = 2f;
+    public float FadeTime = 1f;
     public float RoomFadeOpacity = .2f;
     public float FloorFadeOpacity = 0f;
 

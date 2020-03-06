@@ -27,16 +27,17 @@ public class ShipLevel : MonoBehaviour
             room.ToggleAlpha(alpha, skipLerp);
         }
     }
-    public void SetPlayerLevelRoomsAlpha(float alpha, bool skipLerp = false)
+    public void SetPlayerLevelRoomsAlpha(/*float alpha,*/ bool skipLerp = false)
     {
-        Debug.Log("---------------------------------SetPlayerLevelRoomsAlpha() alpha: " + alpha);
+        Debug.Log("---------------------------------SetPlayerLevelRoomsAlpha()");
         int layerMask = LayerMask.GetMask("Ship Area Collider");
         foreach (Room room in LevelRooms)
         {
-            BoxCollider box = room.gameObject.GetComponent<BoxCollider>();
+            room.ToggleAlpha(1f, skipLerp);
+            /*BoxCollider box = room.gameObject.GetComponent<BoxCollider>();
             Collider[] colliders = Physics.OverlapBox(box.bounds.center, box.size / 2, transform.rotation, layerMask);
             if (colliders.Length == 1) room.ToggleAlpha(1f, skipLerp);
-            else room.ToggleAlpha(alpha, skipLerp);
+            else room.ToggleAlpha(alpha, skipLerp);*/
         }
     }
 
