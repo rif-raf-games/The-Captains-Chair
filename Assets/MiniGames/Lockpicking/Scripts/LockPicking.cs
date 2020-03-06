@@ -91,14 +91,14 @@ public class LockPicking : MiniGame
        // Debug.Log("found gate: " + gate.name);
         gate.gameObject.SetActive(false);
         bool allGatesFound = true;
-       /* foreach(Gate g in Gates)
+        foreach(Gate g in Gates)
         {
             if(g.gameObject.activeSelf == true)
             {
                 allGatesFound = false;
                 break;
             }
-        }*/
+        }
         if(allGatesFound == true)
         {
             
