@@ -31,10 +31,10 @@ public class CamFollow : MonoBehaviour
         {
             transform.position = EntityToFollow.transform.position + CamOffset;
         }   
-        if(DebugText != null)
+        /*if(DebugText != null)
         {
             DebugText.text = CurCamState.ToString();
-        }
+        }*/
     }
 
     public void SetupNewCamFollow(CharacterEntity newEntityToFollow, Vector3 newCamOffset)
@@ -46,25 +46,96 @@ public class CamFollow : MonoBehaviour
     }
 
     Vector3 PrevMousePos;
+    bool PinchActive = false;
+    Vector3[] StartTouchPos = new Vector3[2];
+    Vector2[] LastFingerPos = new Vector2[2];   // these values are used for determining control based on finger gestures
+    Vector2[] CurFingerPos = new Vector2[2];
+    Vector2[] CurFingerDelt = new Vector2[2];
+    float[] FingerMag = new float[2];
+    float[] FingerDir = new float[2];
+    public Text DebugText;
+    float TapTimer = 0f;
+    int TapCount = 0;
     private void Update()
     {
-        if(CurCamState == eCamState.SHIP_VIEW)
+        if(CurCamState == eCamState.FOLLOW)
+        {
+            if (Input.touchCount != 0)
+            {
+                for(int i=0; i<Input.touchCount; i++)
+                {
+                    if (i >= 2) break; // only deal with 2 fingers
+                    if (Input.touches[i].phase == TouchPhase.Began) StartTouchPos[i] = Input.touches[i].position;
+                }
+            }
+            if (Input.touchCount == 2)
+            {
+                for (int i = 0; i < 2; i++)
+                {
+                    LastFingerPos[i] = CurFingerPos[i];
+                    CurFingerPos[i] = Input.touches[i].position;
+                    CurFingerDelt[i] = Input.touches[i].deltaPosition;
+                    FingerMag[i] = Vector2.SqrMagnitude(CurFingerDelt[i]);
+                    FingerDir[i] = Vector2.Angle(CurFingerDelt[i], Vector3.right);
+                }
+                if (FingerDir[1] > 90f && Player.IsInFreeRoam() == true)
+                {
+                    BeginZoomOut();
+                }
+            }
+        }
+        else if(CurCamState == eCamState.SHIP_VIEW)
         {
             if(Input.GetMouseButtonDown(0))
             {
                 PrevMousePos = Input.mousePosition;
+                TapTimer = 0f;
             }
             else if(Input.GetMouseButton(0))
             {
                 Vector3 diff = (Input.mousePosition - PrevMousePos) * ShipZoomedMoveSpeed;
                 PrevMousePos = Input.mousePosition;
-
                 Camera.main.transform.position += new Vector3(diff.x, -diff.y, 0f);
+
+                TapTimer += Time.deltaTime;
             }
+            else if(Input.GetMouseButtonUp(0))
+            {
+                if (TapTimer < .2f)
+                {
+                    TapCount++;
+                    if(TapCount == 2 )
+                    {
+                        BeginZoomIn();
+                        TapCount = 0;
+                    }
+                }
+                else TapCount = 0;
+                TapTimer = 0f;
+            }
+        }
+
+        if(DebugText != null)
+        {
+            DebugText.text = "Cam state: " + CurCamState.ToString() + "\n";
+            if (Input.touchCount == 0) DebugText.text += "no fingers";
+            else if (Input.touchCount > 2) DebugText.text += "too many fingers";
+            else
+            {
+                // DebugText.text += "finger 1: " + Input.touches[0].phase + ", delt: " + CurFingerDelt[0].ToString("F2") + ", Mag: " + FingerMag[0].ToString("F2") + ", Dir: " + FingerDir[0].ToString("F2") + "\n";
+                DebugText.text += "finger 1 dir: " + FingerDir[0].ToString("F2") + "\n";
+                if (Input.touchCount == 2)
+                {
+                    // DebugText.text += "finger 2: " + Input.touches[1].phase + ", delt: " + CurFingerDelt[1].ToString("F2") + ", Mag: " + FingerMag[1].ToString("F2") + ", Dir: " + FingerDir[1].ToString("F2") + "\n";
+                    DebugText.text += "finger 2 dir: " + FingerDir[1].ToString("F2") + "\n";
+                    
+                }
+            }
+
         }
     }
 
-    private void OnGUI()
+    /*private void OnGUI()
     {
         switch(CurCamState)
         {
@@ -84,7 +155,7 @@ public class CamFollow : MonoBehaviour
                 }
                 break;
         }        
-    }
+    }*/
     
     void BeginZoomIn()
     {
@@ -106,7 +177,7 @@ public class CamFollow : MonoBehaviour
 
     public float CamTransitionTime = 3f;
     public float ShipZoomedMoveSpeed = .1f;
-    public Text DebugText;
+   // public Text DebugText;
     IEnumerator LerpCamZoom(Vector3 lerpPosStart, Vector3 lerpPosEnd, float lerpRotStart, float lerpRotEnd, eCamState lerpEndState)
     {
         Debug.Log("LerpCamZoom() lerpPosStart: " + lerpPosStart.ToString("F2") + ", lerpPosEnd: " + lerpPosEnd.ToString("F2"));
