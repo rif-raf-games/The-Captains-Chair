@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.3731193, g: 0.38073996, b: 0.35872698, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311947, g: 0.38074, b: 0.35872698, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -303,6 +303,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Parking_Tutorial_Tiles_000
       objectReference: {fileID: 0}
+    - target: {fileID: 3286217600316939873, guid: 1e2b7716c030e4239952e3764a867939,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 1e2b7716c030e4239952e3764a867939,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -357,11 +362,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3286217600316939873, guid: 1e2b7716c030e4239952e3764a867939,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1e2b7716c030e4239952e3764a867939, type: 3}
@@ -1213,6 +1213,11 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 4294967295
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 0d4c8da59afdd40e1b23f85a4dcfe7fc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 0d4c8da59afdd40e1b23f85a4dcfe7fc,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1795,6 +1800,7 @@ MonoBehaviour:
   DirChangeBuffer: 0.2
   ActiveShip: {fileID: 0}
   TargetShips: []
+  ResultsText: {fileID: 748055420}
   DebugText: {fileID: 1308687120}
   RotatePlatform: {fileID: 0}
   RotateBox01: {fileID: 0}
@@ -1802,7 +1808,6 @@ MonoBehaviour:
   RotateParent: {fileID: 0}
   RotateShipList: []
   LiftPadShipList: []
-  ResultsText: {fileID: 748055420}
   LiftPad: {fileID: 8296172667882724149}
 --- !u!114 &1580447752
 MonoBehaviour:
