@@ -113,6 +113,23 @@ public class ShipAreasCollider : MonoBehaviour
     public Shader LegDiff;       
 #endif
 
+    public void ToggleShipFloors(bool val)
+    {
+        float alpha = (val == true ? 1f : 0f);
+        for (int level = 1; level <= ShipLevels.Count; level++)
+        {
+            if (level == PlayerFloor)
+            {
+                Debug.Log("set player's floor opacity: " + level);
+                ShipLevels[level - 1].SetPlayerLevelRoomsAlpha(/*1f,*/ true);
+            }
+            else
+            {
+                Debug.Log("turn level " + level + " to 0%");
+                ShipLevels[level - 1].SetRoomsAlpha(alpha, true);
+            }            
+        }
+    }
     private void Start()
     {        
         ShipLevels = FindObjectsOfType<ShipLevel>().ToList<ShipLevel>();
@@ -144,12 +161,7 @@ public class ShipAreasCollider : MonoBehaviour
             {
                 Debug.Log("turn level " + level + " to 0%");
                 ShipLevels[level - 1].SetRoomsAlpha(0f, true);
-            }
-            /*else
-            {
-                Debug.Log("turn level " + level + " totally transparent");
-                ShipLevels[level - 1].SetRoomsAlpha(0f, true);
-            }*/
+            }           
         }
     }
 

@@ -16,13 +16,16 @@ public class CamFollow : MonoBehaviour
     float PrevCamRot;
     public Vector3 CamOffset;
 
-    Vector3 ShipViewCamPos = new Vector3(-28.7f, 40f, 263f);
+    Vector3 ShipViewCamPos = new Vector3(-23.7f, 40f, 295f);
     
     Vector3 LerpStart, LerpEnd;
+
+    ShipAreasCollider ShipAreasCollider;
 
     private void Start()
     {
         Player = FindObjectOfType<CCPlayer>();
+        this.ShipAreasCollider = FindObjectOfType<ShipAreasCollider>();
     }
     private void LateUpdate()
     {
@@ -135,7 +138,7 @@ public class CamFollow : MonoBehaviour
         }
     }
 
-    /*private void OnGUI()
+    private void OnGUI()
     {
         switch(CurCamState)
         {
@@ -155,18 +158,20 @@ public class CamFollow : MonoBehaviour
                 }
                 break;
         }        
-    }*/
+    }
     
     void BeginZoomIn()
     {
-        CurCamState = eCamState.TRANSITION;
+         CurCamState = eCamState.TRANSITION;Camera.main.orthographic = false;
         StartCoroutine(LerpCamZoom(Camera.main.transform.position, PrevCamPos, Camera.main.transform.eulerAngles.x, PrevCamRot, eCamState.FOLLOW));
     }
     void BeginZoomOut()
     {
         CurCamState = eCamState.TRANSITION;
         Player.SetNavMeshDest(Player.transform.position);
-        Player.ToggleMovementBlocked(true);        
+        Player.ToggleMovementBlocked(true);
+
+        this.ShipAreasCollider.ToggleShipFloors(true);
 
         EntityWasFollowing = EntityToFollow;
         EntityToFollow = null;
@@ -203,7 +208,8 @@ public class CamFollow : MonoBehaviour
         {
             EntityToFollow = EntityWasFollowing;
             Player.ToggleMovementBlocked(false);
-        }
+            this.ShipAreasCollider.ToggleShipFloors(false);            
+        }        
     }
 
     IEnumerator LerpCamFollow(Vector3 newCamOffset)

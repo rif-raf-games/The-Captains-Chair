@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Articy.Unity;
 using Articy.The_Captain_s_Chair.GlobalVariables;
 using Articy.The_Captain_s_Chair;
+using System.Collections.Generic;
 
 public class MiniGameMCP : MonoBehaviour
 {
@@ -16,16 +17,35 @@ public class MiniGameMCP : MonoBehaviour
     public MiniGame[] Puzzles;
     public int CurPuzzle;
 
+    // UI
+    ArticyFlow MiniGameArticyFlow;
+
     [Header("Misc Stuff")]
     public Text ResultsText;
     public Text DebugText;
 
+
+    public virtual void Awake()
+    {
+        Debug.Log("MiniGameMCP.Awake(): " + this.name);
+        if (this.name.Contains("Parking"))
+        {
+            //StaticStuff.SetOrientation(StaticStuff.eOrientation.PORTRAIT);
+        }
+        else
+        {
+            //StaticStuff.SetOrientation(StaticStuff.eOrientation.LANDSCAPE);
+        }
+    }
     // Start is called before the first frame update
     public virtual void Start()
     {
-        Debug.Log("MiniGameMCP.Start()");
+        //Debug.Log("MiniGameMCP.Start()");
         GameState = eGameState.NONE;
         FadeImage.gameObject.SetActive(true);
+        MiniGameArticyFlow = GetComponent<ArticyFlow>();
+        if (MiniGameArticyFlow == null) Debug.LogError("There's no ArticyFlow component on this mini game MCP: " + this.name);
+        else MiniGameArticyFlow.ConvoUI.gameObject.SetActive(false);
         StartCoroutine(LoadPuzzleScenes());
     }
 
@@ -134,9 +154,22 @@ public class MiniGameMCP : MonoBehaviour
     {
         Puzzles[CurPuzzle].BeginPuzzle();
         GameState = eGameState.PLAYING;
+        // UI
+        Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
+        List<ArticyObject> dialogues = jumpSave.Template.Dialogue_List.DialoguesToPlay;
+        if(dialogues == null || dialogues.Count == 0 || dialogues.Count-1 < CurPuzzle)
+        {
+           // Debug.LogError("You don't have the Mini_Game_Jump set up properly because there's no entry in the Dialogues To Play list for this puzzle");
+        }
+        else
+        {
+            Dialogue d = jumpSave.Template.Dialogue_List.DialoguesToPlay[CurPuzzle] as Dialogue;
+            if (d != null) MiniGameArticyFlow.CheckDialogue(d, null);
+        }        
     }
     public void PuzzleFinished()
     {
+        MiniGameArticyFlow.QuitCurDialogue();
         GameState = eGameState.FADE_OUT;
         SetupLerpFade(0f, 1f, 1.5f);
     }

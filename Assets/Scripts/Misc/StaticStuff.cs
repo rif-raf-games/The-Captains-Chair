@@ -10,8 +10,35 @@ static public class StaticStuff
 {    
     public const bool USE_DEBUG_MENU = false; // HERE IS WHERE YOU TOGGLE THE DEBUG MENU
 
+    public enum eOrientation { LANDSCAPE, PORTRAIT };
 
+    static public void SetOrientation(eOrientation orientation)
+    {
+        if(orientation == eOrientation.LANDSCAPE)
+        {   // landscape
+            Screen.autorotateToPortrait = false;
+            Screen.autorotateToPortraitUpsideDown = false;
+            Screen.autorotateToLandscapeLeft = true;
+            Screen.autorotateToLandscapeRight = true;
 
+            if (Input.deviceOrientation == DeviceOrientation.Portrait || Input.deviceOrientation == DeviceOrientation.PortraitUpsideDown)
+            {
+                Screen.orientation = ScreenOrientation.LandscapeLeft;
+            }
+        }
+        else
+        {   // portrait            
+            Screen.autorotateToPortrait = true;
+            Screen.autorotateToPortraitUpsideDown = true;         
+            Screen.autorotateToLandscapeLeft = false;
+            Screen.autorotateToLandscapeRight = false;
+
+            if(Input.deviceOrientation == DeviceOrientation.LandscapeLeft || Input.deviceOrientation == DeviceOrientation.LandscapeRight)
+            {
+                Screen.orientation = ScreenOrientation.Portrait;
+            }
+        }
+    }        
 
 
     static ArticyFlow ArticyFlowToPrint;

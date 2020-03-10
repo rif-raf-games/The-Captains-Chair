@@ -27,7 +27,7 @@ public class MiniGame : MonoBehaviour
             DebugMenu dm = FindObjectOfType<DebugMenu>();
             if (dm == null)
             {
-                Debug.Log("load debug menu");
+                Debug.Log("-----------------------------------------------------------------------------------------------load debug menu " + this.name);
                 Object debugObject = Resources.Load("DebugMenu");
                 Instantiate(debugObject);
             }

@@ -57,7 +57,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     void MyGameStateVariablesChanged(string aVariableName, object aValue)
     {
         //Debug.Log("aVariableName: " + aVariableName + " changed to: " + aValue.ToString());
-        CaptainsChair.SaveSaveData();
+        if(CaptainsChair != null) CaptainsChair.SaveSaveData();
     }
 
     /// <summary>
@@ -210,16 +210,12 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         StaticStuff.PrintFlowBranchesUpdate("************** OnBranchesUpdated() START ************* time: " + Time.time, this);
         if (CurPauseObject == null) StaticStuff.PrintFlowBranchesUpdate("CurPauseObject is null", this);
         else StaticStuff.PrintFlowBranchesUpdate("CurPauseObject Type: " + CurPauseObject.GetType() + ", with TechnicalName: " + ((ArticyObject)CurPauseObject).TechnicalName, this);
-        StaticStuff.PrintFlowBranchesUpdate("Num branches: " + aBranches.Count, this);
-        // Debug.Log("************** OnBranchesUpdated() START *************");
-        //Debug.Log("Num branches: " + aBranches.Count);
-        if (this.name.Equals("Carver") || this.name.Equals("Grunfeld"))
-        {
-           // Debug.Log(this.name + " OnBranchesUpdated() first branch : " + aBranches[0].Target.GetType().ToString());
-        }
+        StaticStuff.PrintFlowBranchesUpdate("Num branches: " + aBranches.Count, this);        
 
         CurBranches.Clear();
-        
+
+        if (CurPauseObject == null)
+            Debug.LogError("Null CurPauseObject we must be in a mini game");
         int i = 0;
         foreach (Branch b in aBranches)
         {
@@ -236,7 +232,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             switch (CurArticyState)
             {               
                 case eArticyState.DIALOGUE:
-                    if (ActiveCALPauseObjects.Count == 0) Player.StopNavMeshMovement();
+                    if (ActiveCALPauseObjects.Count == 0 && Player != null) Player.StopNavMeshMovement();
                     if(DialogueNPC != null && df.Speaker == null)
                     {
                         df.Speaker = DialogueNPC.ArticyEntityReference.GetObject();
@@ -317,7 +313,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                     if (CurArticyState == eArticyState.DIALOGUE)
                     {
                        // Debug.LogWarning("Coming out of a dialogue");
-                        Player.ToggleMovementBlocked(false);
+                        if(Player != null ) Player.ToggleMovementBlocked(false);
                        // Player.GetComponent<CapsuleCollider>().enabled = true;
                         if (DialogueNPC != null)
                         {
@@ -391,6 +387,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                 Mini_Game_Jump curJump = CurPauseObject as Mini_Game_Jump;
                 jumpSave.Template.Mini_Game_Scene.Scene_Name = curJump.Template.Mini_Game_Scene.Scene_Name;
                 jumpSave.Template.Mini_Game_Puzzles_To_Play.Puzzle_Numbers = curJump.Template.Mini_Game_Puzzles_To_Play.Puzzle_Numbers;
+                jumpSave.Template.Dialogue_List.DialoguesToPlay = curJump.Template.Dialogue_List.DialoguesToPlay;
                 jumpSave.Template.Next_Game_Scene.Scene_Name = curJump.Template.Next_Game_Scene.Scene_Name;
                 jumpSave.Template.Flow_Start_Success.ReferenceSlot = curJump.Template.Flow_Start_Success.ReferenceSlot;
                 jumpSave.Template.Flow_Start_Fail.ReferenceSlot = curJump.Template.Flow_Start_Fail.ReferenceSlot;
@@ -484,12 +481,25 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     {
         return (CurArticyState == eArticyState.FREE_ROAM);
     }
+
+    public void QuitCurDialogue()
+    {
+        CurArticyState = eArticyState.FREE_ROAM;
+        CurPauseObject = null;
+        NextFragment = null;
+        NextBranch = null;
+        FlowFragsVisited.Clear();
+        ActiveCALPauseObjects.Clear();
+        if (Player != null) Player.ToggleMovementBlocked(false);
+        ConvoUI.EndConversation();
+    }
+
     List<string> FlowFragsVisited = new List<string>();
     GameObject DialogueStartCollider = null;
     List<ArticyObject> DialogueStartAttachments;
     public void CheckDialogue(Dialogue convoStart, GameObject collider)
     {        
-        //Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ CheckDialogue() with technical name: " + convoStart.TechnicalName + " on GameObject: " + this.gameObject.name + " but DON'T DO ANY CODE STUFF UNTIL WE KNOW WE'RE ACTUALLY COMMITTING  time: " + Time.time);
+        Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ CheckDialogue() with technical name: " + convoStart.TechnicalName + " on GameObject: " + this.gameObject.name + " but DON'T DO ANY CODE STUFF UNTIL WE KNOW WE'RE ACTUALLY COMMITTING  time: " + Time.time);
         if (CurArticyState == eArticyState.DIALOGUE)
         {
             Debug.Log("We're already in a Dialogue so bail on this one");
@@ -540,7 +550,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
 
         IsDialogueFragmentsInteractive = true;
         FlowPlayer.StartOn = convoStart;
-        Player.ToggleMovementBlocked(true);        
+        if(Player != null) Player.ToggleMovementBlocked(true); // mini games now have an articy flow player but not a CCplayer
     }        
 
     List<ArticyObject> ActiveCALPauseObjects = new List<ArticyObject>(); 
@@ -648,3 +658,4 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         }
     }
 }
+

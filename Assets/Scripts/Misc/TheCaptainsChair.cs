@@ -66,15 +66,15 @@ public class TheCaptainsChair : MonoBehaviour
         {
             if(DialogueToStartOn == null)
             {
-                Debug.LogError("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ WTF 1");
+                Debug.LogError("There's no dialogue defined to start on in this scene");
             }
             if(DialogueToStartOn.GetObject() == null)
             {
-                Debug.LogError("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ WTF 2");
+                Debug.LogError("There's no dialogue defined to start on in this scene");
             }
             if(DialogueToStartOn.GetObject() as Dialogue == null)
             {
-                Debug.LogError("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ WTF 3");
+                Debug.LogError("The starting Articy element is not a Dialogue");
             }
             Player.GetComponent<ArticyFlow>().CheckDialogue(DialogueToStartOn.GetObject() as Dialogue, Player.gameObject);
         }

@@ -461,7 +461,8 @@ public class Parking : MiniGame
             string result;
             if(allTargetShipsContainedLiftPad == true) result = "All TARGET ships are on the Lift Pad, so you win";            
             else result = "Not all TARGET ships are on the Lift Pad, so keep trying.";
-            StartCoroutine(ShowResults(result, allTargetShipsContainedLiftPad));
+            //StartCoroutine(ShowResults(result, allTargetShipsContainedLiftPad));
+            StartCoroutine(ShowResults("FIX THIS IT'S AN ENDGAME HACK", true));
         }
     }
 
