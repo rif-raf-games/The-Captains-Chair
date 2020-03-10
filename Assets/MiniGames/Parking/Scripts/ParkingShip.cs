@@ -95,7 +95,7 @@ public class ParkingShip : MonoBehaviour
                 {
 
                     closestPoint = c.ClosestPoint(transform.position);
-                    Debug.Log("collision: " + c.name + ", closestPoint: " + closestPoint.ToString("F2") + ", center: " + transform.position.ToString("F2"));                        
+                   // Debug.Log("collision: " + c.name + ", closestPoint: " + closestPoint.ToString("F2") + ", center: " + transform.position.ToString("F2"));                        
                     break;
                 }                
             }

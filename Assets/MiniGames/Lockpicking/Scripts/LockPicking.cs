@@ -17,6 +17,7 @@ public class LockPicking : MiniGame
     public Diode Diode;
     public GameObject CenterBlock;
     public List<Ring> Rings;
+    public List<float> RingCamYs = new List<float>();
     public Gate GatePrefab;
     public List<Gate> Gates;
     public List<PathNode> StartNodes;
@@ -32,7 +33,7 @@ public class LockPicking : MiniGame
 
     public override void Init(MiniGameMCP mcp)
     {
-        Debug.Log("LockPicking.Init()");
+        //Debug.Log("LockPicking.Init()");
         base.Init(mcp);
         if (ResultsText == null) ResultsText = MCP.ResultsText;
         if (DebugText == null) DebugText = MCP.DebugText;
@@ -48,17 +49,28 @@ public class LockPicking : MiniGame
 
     private void Start()
     {
-        Debug.Log("LockPicking.Start()");
+        for (int i = 0; i < Rings.Count; i++)
+        {
+            Ring r = Rings[i];
+            MeshCollider mc = r.transform.parent.transform.parent.GetComponent<MeshCollider>();
+            Bounds b = mc.bounds;
+            Vector3 brWorld = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, Camera.main.transform.position.y));
+            Vector3 size = brWorld * 2f;
+            float ratio = size.x / b.size.x;
+            float newY = Camera.main.transform.position.y / ratio;
+            //Debug.Log(i);
+            RingCamYs.Add(newY);
+        }
         if (IsSolo == true)
         {
             ResultsText.gameObject.SetActive(false);
             BeginPuzzle();
-        }
+        }                
     }
     // Start is called before the first frame update
     public override void BeginPuzzle()
     {
-        Debug.Log("Lockpicking.BeginPuzzle()");        
+        //Debug.Log("Lockpicking.BeginPuzzle()");        
         CenterBlock.transform.position = new Vector3(CenterBlock.transform.position.x, 0f, CenterBlock.transform.position.z);              
         LargestRingDiameter = Rings[Rings.Count-1].GetComponent<MeshCollider>().bounds.extents.x;
 
@@ -111,10 +123,10 @@ public class LockPicking : MiniGame
        // Debug.Log("CheckDeathNode: " + pathNode.name);
         if (DeathNodes.Contains(pathNode))
         {
-            Debug.Log("it's a death node!");
+            //Debug.Log("it's a death node!");
             StartCoroutine(EndGame("You Lost.", false));
         }
-        else Debug.Log("not a death node");
+       // else Debug.Log("not a death node");
     }
 
     IEnumerator EndGame(string endGameString, bool success)
@@ -136,7 +148,9 @@ public class LockPicking : MiniGame
         }
         //StartCoroutine(HandleEndGame());
     }
-             
+
+    
+
     // Update is called once per frame
     void Update()
     {

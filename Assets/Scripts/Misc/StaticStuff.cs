@@ -12,19 +12,20 @@ static public class StaticStuff
 
     public enum eOrientation { LANDSCAPE, PORTRAIT };
 
-    static public void SetOrientation(eOrientation orientation)
+    static public void SetOrientation(eOrientation orientation, string screenName)
     {
+        Debug.Log("=============================================== SetOrientation(): " + orientation.ToString() + " from: " + screenName);
         if(orientation == eOrientation.LANDSCAPE)
         {   // landscape
             Screen.autorotateToPortrait = false;
             Screen.autorotateToPortraitUpsideDown = false;
             Screen.autorotateToLandscapeLeft = true;
             Screen.autorotateToLandscapeRight = true;
-
-            if (Input.deviceOrientation == DeviceOrientation.Portrait || Input.deviceOrientation == DeviceOrientation.PortraitUpsideDown)
+            Screen.orientation = ScreenOrientation.LandscapeLeft;
+            /*if (Input.deviceOrientation == DeviceOrientation.Portrait || Input.deviceOrientation == DeviceOrientation.PortraitUpsideDown)
             {
                 Screen.orientation = ScreenOrientation.LandscapeLeft;
-            }
+            }*/
         }
         else
         {   // portrait            
@@ -32,12 +33,12 @@ static public class StaticStuff
             Screen.autorotateToPortraitUpsideDown = true;         
             Screen.autorotateToLandscapeLeft = false;
             Screen.autorotateToLandscapeRight = false;
-
-            if(Input.deviceOrientation == DeviceOrientation.LandscapeLeft || Input.deviceOrientation == DeviceOrientation.LandscapeRight)
+            Screen.orientation = ScreenOrientation.Portrait;
+            /*if (Input.deviceOrientation == DeviceOrientation.LandscapeLeft || Input.deviceOrientation == DeviceOrientation.LandscapeRight)
             {
                 Screen.orientation = ScreenOrientation.Portrait;
-            }
-        }
+            }*/
+        }        
     }        
 
 

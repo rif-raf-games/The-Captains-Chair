@@ -24,17 +24,22 @@ public class MiniGameMCP : MonoBehaviour
     public Text ResultsText;
     public Text DebugText;
 
+    public Text OrientationText;
 
     public virtual void Awake()
     {
         Debug.Log("MiniGameMCP.Awake(): " + this.name);
-        if (this.name.Contains("Parking"))
+        if (this.name.Contains("LockPick")) StaticStuff.SetOrientation(StaticStuff.eOrientation.PORTRAIT, this.name);        
+        else StaticStuff.SetOrientation(StaticStuff.eOrientation.LANDSCAPE, this.name);        
+        if (StaticStuff.USE_DEBUG_MENU == true)
         {
-            //StaticStuff.SetOrientation(StaticStuff.eOrientation.PORTRAIT);
-        }
-        else
-        {
-            //StaticStuff.SetOrientation(StaticStuff.eOrientation.LANDSCAPE);
+            DebugMenu dm = FindObjectOfType<DebugMenu>();
+            if (dm == null)
+            {
+                Debug.Log("-----------------------------------------------------------------------------------------------load debug menu " + this.name);
+                Object debugObject = Resources.Load("DebugMenu");
+                Instantiate(debugObject);
+            }
         }
     }
     // Start is called before the first frame update
@@ -78,13 +83,13 @@ public class MiniGameMCP : MonoBehaviour
             {
                 puzzleName = PuzzleNameRoot + PuzzlesToLoad[i].ToString("D3");
             }            
-            Debug.Log("load puzzle: " + puzzleName);
+           // Debug.Log("load puzzle: " + puzzleName);
             AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(puzzleName, LoadSceneMode.Additive);
             while (!asyncLoad.isDone)
             {
                 yield return null;
             }
-            Debug.Log("Load Done: " + puzzleName);            
+            //Debug.Log("Load Done: " + puzzleName);            
             UnityEngine.SceneManagement.Scene puzzleScene = SceneManager.GetSceneAt(1);
             MiniGame newPuzzle = null;
             GameObject[] newPuzzleObjs = puzzleScene.GetRootGameObjects();
@@ -100,7 +105,7 @@ public class MiniGameMCP : MonoBehaviour
             {
                 yield return null;
             }
-            Debug.Log("Unload Done: " + puzzleScene);
+           // Debug.Log("Unload Done: " + puzzleScene);
             Puzzles[i].Init(this);                        
         }
 
@@ -174,6 +179,15 @@ public class MiniGameMCP : MonoBehaviour
         SetupLerpFade(0f, 1f, 1.5f);
     }
 
+    private void Update()
+    {
+        if(OrientationText != null)
+        {
+            OrientationText.text = "Input: " + Input.deviceOrientation.ToString() + "\n";
+            OrientationText.text += "Screen: " + Screen.orientation.ToString() + "\n";
+           // OrientationText.text = "";
+        }
+    }
     private void FixedUpdate()
     {
         if (GameState == eGameState.FADE_IN || GameState == eGameState.FADE_OUT)
@@ -205,5 +219,5 @@ public class MiniGameMCP : MonoBehaviour
         LerpFadeEnd = end;
         LerpStartTime = Time.time;
         LerpDurationTime = time;
-    }
+    }    
 }

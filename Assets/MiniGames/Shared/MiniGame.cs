@@ -22,20 +22,25 @@ public class MiniGame : MonoBehaviour
             IsSolo = false;
         }
 
-        if(StaticStuff.USE_DEBUG_MENU == true)
+        if(IsSolo == true)
         {
-            DebugMenu dm = FindObjectOfType<DebugMenu>();
-            if (dm == null)
+            if (this.name.Contains("LockPick")) StaticStuff.SetOrientation(StaticStuff.eOrientation.PORTRAIT, this.name);
+            else StaticStuff.SetOrientation(StaticStuff.eOrientation.LANDSCAPE, this.name);
+            if( StaticStuff.USE_DEBUG_MENU == true)
             {
-                Debug.Log("-----------------------------------------------------------------------------------------------load debug menu " + this.name);
-                Object debugObject = Resources.Load("DebugMenu");
-                Instantiate(debugObject);
-            }
+                DebugMenu dm = FindObjectOfType<DebugMenu>();
+                if (dm == null)
+                {
+                    //Debug.Log("-----------------------------------------------------------------------------------------------load debug menu " + this.name);
+                    Object debugObject = Resources.Load("DebugMenu");
+                    Instantiate(debugObject);
+                }
+            }            
         }        
     }
     public virtual void Init(MiniGameMCP mcp)
     {
-        Debug.Log("MiniGame.Init()");
+        //Debug.Log("MiniGame.Init()");
         this.MCP = mcp;
     }
     

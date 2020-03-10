@@ -28,11 +28,52 @@ public class Diode : MonoBehaviour
         this.LockPicking = lp;
     }
 
+    Coroutine CamLerpRoutine;
     void SetNewPath(Ring.LockpickRingPath path)
     {
+        Debug.Log("SetNewPath: " + path.Ring.name);
         CurPath = path;
         this.transform.parent = CurPath.Ring.transform;
         LastPosition.transform.parent = CurPath.Ring.transform;
+
+        if(CurPath.Ring != LockPicking.Rings[LockPicking.Rings.Count-1])
+        {
+            /*string sub = CurPath.Ring.name.Substring(CurPath.Ring.name.Length - 2, 2);
+            int index = int.Parse(sub);
+            Debug.Log("index: " + index);
+            Camera.main.transform.position = new Vector3(0f, LockPicking.RingCamYs[index], 0f);*/
+            if(CamLerpRoutine != null)
+            {
+                StopCoroutine(CamLerpRoutine);
+                CamLerpRoutine = null;                
+            }
+            StartCoroutine(LerpCamPos());
+        }             
+    }
+
+    IEnumerator LerpCamPos()
+    {        
+        string sub = CurPath.Ring.name.Substring(CurPath.Ring.name.Length - 2, 2);
+        int index = int.Parse(sub);        
+        float startY = Camera.main.transform.position.y;
+        float endY = LockPicking.RingCamYs[index];        
+        float lerpStartTime = Time.time;
+        float lerpPercentage = 0f;
+        yield return new WaitForEndOfFrame();
+        while(lerpPercentage < 1f)
+        {
+            float lerpTime = Time.time - lerpStartTime;
+            lerpPercentage = lerpTime / 1f;
+           // Debug.Log(startY + " , " + endY + ",  " + lerpPercentage);
+            float latestY = Mathf.Lerp(startY, endY, lerpPercentage);
+            if(lerpPercentage >= 1f)
+            {
+                latestY = endY;
+            }
+           // Debug.Log(latestY);
+            Camera.main.transform.position = new Vector3(0f, latestY, 0f);
+            yield return new WaitForEndOfFrame();
+        }
     }
 
     public void SetStartNode(PathNode startNode)

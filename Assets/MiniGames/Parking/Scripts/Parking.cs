@@ -29,7 +29,7 @@ public class Parking : MiniGame
     public Text DebugText;
     public override void Init(MiniGameMCP mcp)
     {
-        Debug.Log("Parking.Init()");
+        //Debug.Log("Parking.Init()");
         base.Init(mcp);
         if (ResultsText == null) ResultsText = MCP.ResultsText;
         if (DebugText == null) DebugText = MCP.DebugText;
@@ -47,7 +47,7 @@ public class Parking : MiniGame
 
     public override void BeginPuzzle()
     {        
-        Debug.Log("Parking.BeginPuzzle()");
+       // Debug.Log("Parking.BeginPuzzle()");
         TouchState = eTouchState.NONE;
         CurGameState = eGameState.NORMAL;
         ContainGO = new GameObject();                  
@@ -465,8 +465,8 @@ public class Parking : MiniGame
         //StartCoroutine(ShowResults("FIX THIS IT'S AN ENDGAME HACK", true));
     }
     private void OnGUI()
-    {
-        Debug.Log("OnGUI(): " + this.name);
+    {        
+        //Debug.Log("OnGUI(): " + this.name);
         if(GUI.Button(new Rect(0,0,100,100), "Rotate Platform"))
         {
             RotateGridPlatform();

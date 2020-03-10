@@ -20,12 +20,12 @@ public class TheCaptainsChair : MonoBehaviour
 
     [Header("Debug")]
     public ArticyFlow ArticyFlowToPrint;
-    Dictionary<string, NPC> ArticyRefNPCs = new Dictionary<string, NPC>();    
-   
-    // Update is called once per frame
-    void Update()
+    Dictionary<string, NPC> ArticyRefNPCs = new Dictionary<string, NPC>();
+
+
+    private void Awake()
     {
-        
+        StaticStuff.SetOrientation(StaticStuff.eOrientation.LANDSCAPE, this.name);
     }
     void Start()
     {      
