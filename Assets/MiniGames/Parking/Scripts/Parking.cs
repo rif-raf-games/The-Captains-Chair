@@ -46,7 +46,7 @@ public class Parking : MiniGame
     }
 
     public override void BeginPuzzle()
-    {
+    {        
         Debug.Log("Parking.BeginPuzzle()");
         TouchState = eTouchState.NONE;
         CurGameState = eGameState.NORMAL;
@@ -313,156 +313,167 @@ public class Parking : MiniGame
     public List<ParkingShip> RotateShipList = new List<ParkingShip>();
     public List<ParkingShip> LiftPadShipList = new List<ParkingShip>();
     GameObject ContainGO;    
-    private void OnGUI()
+
+    public void RotateGridPlatform()
     {
-        if(GUI.Button(new Rect(0,0,100,100), "Rotate Platform"))
+        RotateShipList.Clear();
+        foreach (GameObject sphere in DebugSpheres)
         {
-            RotateShipList.Clear();
-            foreach(GameObject sphere in DebugSpheres)
+            Destroy(sphere);
+        }
+        DebugSpheres.Clear();
+        //Debug.Log("check rot platform");
+        BoxCollider box = RotatePlatform.GetComponent<BoxCollider>();
+        Vector3 size = box.size;
+        //Debug.Log("before size: " + size.ToString("F2"));
+        size -= new Vector3(.1f, 0f, .1f);
+        //Debug.Log("after size: " + size.ToString("F2"));
+        Collider[] colliders = Physics.OverlapBox(RotatePlatform.transform.position, size / 2, RotatePlatform.transform.rotation);
+        if (colliders != null && colliders.Length > 0)
+        {
+            foreach (Collider c in colliders)
             {
-                Destroy(sphere);
+                //Debug.Log("collided with: " + c.name);                                
+                if (c.GetComponent<ParkingShip>() != null) RotateShipList.Add(c.GetComponent<ParkingShip>());
             }
-            DebugSpheres.Clear();
-            //Debug.Log("check rot platform");
-            BoxCollider box = RotatePlatform.GetComponent<BoxCollider>();
-            Vector3 size = box.size;
-            //Debug.Log("before size: " + size.ToString("F2"));
-            size -= new Vector3(.1f, 0f, .1f);
-            //Debug.Log("after size: " + size.ToString("F2"));
-            Collider[] colliders = Physics.OverlapBox(RotatePlatform.transform.position, size / 2, RotatePlatform.transform.rotation);
-            if(colliders != null && colliders.Length > 0)
+        }
+
+        bool allShipsContained = true;
+        foreach (ParkingShip ship in RotateShipList)
+        {
+            List<Vector3> checkPoints = new List<Vector3>();
+            //GameObject go;
+            Vector3 moveVec;
+            BoxCollider shipBox = ship.GetComponent<BoxCollider>();
+            Bounds b = shipBox.bounds;
+            Vector3 shipMax = b.max;
+            Vector3 shipMin = b.min;
+
+            // min check spot                
+            ContainGO.transform.position = shipMin;
+            moveVec = shipBox.bounds.center - shipMin;
+            ContainGO.transform.Translate(moveVec * .1f);
+            //CreateSphere(ContainGO.transform, "_rawMin", Color.red);
+            ContainGO.transform.position = new Vector3(ContainGO.transform.position.x, RotateBox01.bounds.center.y, ContainGO.transform.position.z);
+            // CreateSphere(ContainGO.transform, "_checkMin", Color.blue);
+            checkPoints.Add(ContainGO.transform.position);
+
+            // max check spot                
+            ContainGO.transform.position = shipMax;
+            moveVec = shipBox.bounds.center - shipMax;
+            ContainGO.transform.Translate(moveVec * .1f);
+            // CreateSphere(ContainGO.transform, "_rawMax", Color.red);
+            ContainGO.transform.position = new Vector3(ContainGO.transform.position.x, RotateBox01.bounds.center.y, ContainGO.transform.position.z);
+            //  CreateSphere(ContainGO.transform, "_checkMax", Color.blue);
+            checkPoints.Add(ContainGO.transform.position);
+
+            bool inBox01 = RotateBox01.bounds.Contains(checkPoints[0]) && RotateBox01.bounds.Contains(checkPoints[1]);
+            bool inBox02 = RotateBox02.bounds.Contains(checkPoints[0]) && RotateBox02.bounds.Contains(checkPoints[1]);
+            if (inBox01 || inBox02)
             {
-                foreach(Collider c in colliders)
-                {
-                    //Debug.Log("collided with: " + c.name);                                
-                    if (c.GetComponent<ParkingShip>() != null) RotateShipList.Add(c.GetComponent<ParkingShip>());
-                }
+                Debug.Log("ship: " + ship.name + " is fully contained within one of the rotate boxes");
             }
-            
-            bool allShipsContained = true;
+            else
+            {
+                Debug.Log("ship: " + ship.name + " is NOT fully contained within any of the rotate boxes so can't rotate");
+                allShipsContained = false;
+                break;
+            }
+        }
+        Debug.Log("are all ships contained?: " + allShipsContained.ToString());
+        if (allShipsContained == true || RotateShipList.Count == 0)
+        {
             foreach (ParkingShip ship in RotateShipList)
             {
-                List<Vector3> checkPoints = new List<Vector3>();
-                //GameObject go;
-                Vector3 moveVec;
-                BoxCollider shipBox = ship.GetComponent<BoxCollider>();
-                Bounds b = shipBox.bounds;
-                Vector3 shipMax = b.max;
-                Vector3 shipMin = b.min;
-
-                // min check spot                
-                ContainGO.transform.position = shipMin;
-                moveVec = shipBox.bounds.center - shipMin;
-                ContainGO.transform.Translate(moveVec * .1f);
-                //CreateSphere(ContainGO.transform, "_rawMin", Color.red);
-                ContainGO.transform.position = new Vector3(ContainGO.transform.position.x, RotateBox01.bounds.center.y, ContainGO.transform.position.z);
-               // CreateSphere(ContainGO.transform, "_checkMin", Color.blue);
-                checkPoints.Add(ContainGO.transform.position);
-
-                // max check spot                
-                ContainGO.transform.position = shipMax;
-                moveVec = shipBox.bounds.center - shipMax;
-                ContainGO.transform.Translate(moveVec * .1f);
-               // CreateSphere(ContainGO.transform, "_rawMax", Color.red);
-                ContainGO.transform.position = new Vector3(ContainGO.transform.position.x, RotateBox01.bounds.center.y, ContainGO.transform.position.z);
-              //  CreateSphere(ContainGO.transform, "_checkMax", Color.blue);
-                checkPoints.Add(ContainGO.transform.position);
-
-                bool inBox01 = RotateBox01.bounds.Contains(checkPoints[0]) && RotateBox01.bounds.Contains(checkPoints[1]);
-                bool inBox02 = RotateBox02.bounds.Contains(checkPoints[0]) && RotateBox02.bounds.Contains(checkPoints[1]);
-                if (inBox01 || inBox02)
-                {
-                    Debug.Log("ship: " + ship.name + " is fully contained within one of the rotate boxes");
-                }
-                else
-                {
-                    Debug.Log("ship: " + ship.name + " is NOT fully contained within any of the rotate boxes so can't rotate");
-                    allShipsContained = false;
-                    break;
-                }
+                ship.transform.parent = RotateParent.transform;
             }
-            Debug.Log("are all ships contained?: " + allShipsContained.ToString());
-            if(allShipsContained == true || RotateShipList.Count == 0)
+            LerpRotStart = RotateParent.transform.rotation;
+            RotateParent.transform.Rotate(0f, 90f, 0f);
+            LerpRotEnd = RotateParent.transform.rotation;
+            RotateParent.transform.Rotate(0f, -90f, 0f);
+            LerpStartTime = Time.time;
+            LerpDurationTime = .5f;
+            CurGameState = eGameState.ROTATE_PAD;
+        }
+    }
+
+    public void CheckGameFinish()
+    {
+        CurGameState = eGameState.OFF;
+        LiftPadShipList.Clear();
+        foreach (GameObject sphere in DebugSpheres)
+        {
+            Destroy(sphere);
+        }
+        DebugSpheres.Clear();
+
+        BoxCollider box = LiftPad.GetComponent<BoxCollider>();
+        Vector3 size = box.size;
+
+        if (TargetShips.Count == 0)
+        {
+            StartCoroutine(ShowResults("There are no TARGET ships defined", false));
+            return;
+        }
+
+        bool allTargetShipsContainedLiftPad = true;
+        foreach (ParkingShip ship in TargetShips)
+        {
+            List<Vector3> checkPoints = new List<Vector3>();
+            // GameObject go;
+            Vector3 moveVec;
+            BoxCollider shipBox = ship.GetComponent<BoxCollider>();
+            Bounds b = shipBox.bounds;
+            Vector3 shipMax = b.max;
+            Vector3 shipMin = b.min;
+
+            // min check spot                
+            ContainGO.transform.position = shipMin;
+            moveVec = shipBox.bounds.center - shipMin;
+            ContainGO.transform.Translate(moveVec * .1f);
+            //CreateSphere(ContainGO.transform, "_rawMin", Color.red);
+            ContainGO.transform.position = new Vector3(ContainGO.transform.position.x, RotateBox01.bounds.center.y, ContainGO.transform.position.z);
+            //CreateSphere(ContainGO.transform, "_checkMin", Color.blue);
+            checkPoints.Add(ContainGO.transform.position);
+
+            // max check spot                
+            ContainGO.transform.position = shipMax;
+            moveVec = shipBox.bounds.center - shipMax;
+            ContainGO.transform.Translate(moveVec * .1f);
+            // CreateSphere(ContainGO.transform, "_rawMax", Color.red);
+            ContainGO.transform.position = new Vector3(ContainGO.transform.position.x, RotateBox01.bounds.center.y, ContainGO.transform.position.z);
+            //CreateSphere(ContainGO.transform, "_checkMax", Color.blue);
+            checkPoints.Add(ContainGO.transform.position);
+
+            bool inLiftPad = box.bounds.Contains(checkPoints[0]) && box.bounds.Contains(checkPoints[1]);
+            if (inLiftPad)
             {
-                foreach (ParkingShip ship in RotateShipList)
-                {
-                    ship.transform.parent = RotateParent.transform;
-                }
-                LerpRotStart = RotateParent.transform.rotation;
-                RotateParent.transform.Rotate(0f, 90f, 0f);
-                LerpRotEnd = RotateParent.transform.rotation;
-                RotateParent.transform.Rotate(0f, -90f, 0f);
-                LerpStartTime = Time.time;
-                LerpDurationTime = .5f;
-                CurGameState = eGameState.ROTATE_PAD;
+                Debug.Log("ship: " + ship.name + " is fully contained within the lift pad");
             }
+            else
+            {
+                Debug.Log("ship: " + ship.name + " is NOT fully contained within the lift pad so can't lift no matter what");
+                allTargetShipsContainedLiftPad = false;
+                break;
+            }
+        }
+        Debug.Log("are all TARGET ships contained in the lift?: " + allTargetShipsContainedLiftPad);
+        string result;
+        if (allTargetShipsContainedLiftPad == true) result = "All TARGET ships are on the Lift Pad, so you win";
+        else result = "Not all TARGET ships are on the Lift Pad, so keep trying.";
+        StartCoroutine(ShowResults(result, allTargetShipsContainedLiftPad));
+        //StartCoroutine(ShowResults("FIX THIS IT'S AN ENDGAME HACK", true));
+    }
+    private void OnGUI()
+    {
+        Debug.Log("OnGUI(): " + this.name);
+        if(GUI.Button(new Rect(0,0,100,100), "Rotate Platform"))
+        {
+            RotateGridPlatform();
         }
         if(GUI.Button(new Rect(0,100,100,100), "Check Finish"))
         {
-            CurGameState = eGameState.OFF;
-            LiftPadShipList.Clear();
-            foreach (GameObject sphere in DebugSpheres)
-            {
-                Destroy(sphere);
-            }
-            DebugSpheres.Clear();
-
-            BoxCollider box = LiftPad.GetComponent<BoxCollider>();
-            Vector3 size = box.size;            
-
-            if(TargetShips.Count == 0)
-            {
-                StartCoroutine(ShowResults("There are no TARGET ships defined", false));
-                return;
-            }
-
-            bool allTargetShipsContainedLiftPad = true;
-            foreach (ParkingShip ship in TargetShips)
-            {
-                List<Vector3> checkPoints = new List<Vector3>();
-               // GameObject go;
-                Vector3 moveVec;
-                BoxCollider shipBox = ship.GetComponent<BoxCollider>();
-                Bounds b = shipBox.bounds;
-                Vector3 shipMax = b.max;
-                Vector3 shipMin = b.min;
-
-                // min check spot                
-                ContainGO.transform.position = shipMin;
-                moveVec = shipBox.bounds.center - shipMin;
-                ContainGO.transform.Translate(moveVec * .1f);
-                //CreateSphere(ContainGO.transform, "_rawMin", Color.red);
-                ContainGO.transform.position = new Vector3(ContainGO.transform.position.x, RotateBox01.bounds.center.y, ContainGO.transform.position.z);
-                //CreateSphere(ContainGO.transform, "_checkMin", Color.blue);
-                checkPoints.Add(ContainGO.transform.position);
-
-                // max check spot                
-                ContainGO.transform.position = shipMax;
-                moveVec = shipBox.bounds.center - shipMax;
-                ContainGO.transform.Translate(moveVec * .1f);
-               // CreateSphere(ContainGO.transform, "_rawMax", Color.red);
-                ContainGO.transform.position = new Vector3(ContainGO.transform.position.x, RotateBox01.bounds.center.y, ContainGO.transform.position.z);
-                //CreateSphere(ContainGO.transform, "_checkMax", Color.blue);
-                checkPoints.Add(ContainGO.transform.position);
-
-                bool inLiftPad = box.bounds.Contains(checkPoints[0]) && box.bounds.Contains(checkPoints[1]);
-                if(inLiftPad)
-                {
-                    Debug.Log("ship: " + ship.name + " is fully contained within the lift pad");
-                }
-                else
-                {
-                    Debug.Log("ship: " + ship.name + " is NOT fully contained within the lift pad so can't lift no matter what");
-                    allTargetShipsContainedLiftPad = false;
-                    break;
-                }
-            }
-            Debug.Log("are all TARGET ships contained in the lift?: " + allTargetShipsContainedLiftPad);
-            string result;
-            if(allTargetShipsContainedLiftPad == true) result = "All TARGET ships are on the Lift Pad, so you win";            
-            else result = "Not all TARGET ships are on the Lift Pad, so keep trying.";
-            //StartCoroutine(ShowResults(result, allTargetShipsContainedLiftPad));
-            StartCoroutine(ShowResults("FIX THIS IT'S AN ENDGAME HACK", true));
+            CheckGameFinish();
         }
     }
 
