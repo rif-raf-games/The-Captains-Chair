@@ -9,16 +9,16 @@ public class MiniGame : MonoBehaviour
 
     public virtual void Awake()
     {
-        Debug.Log("MiniGame.Awake()");
+        //Debug.Log("MiniGame.Awake()");
         MiniGameMCP mcp = FindObjectOfType<MiniGameMCP>();
         if(mcp == null)
         {
-            Debug.Log("we're running solo");
+            //Debug.Log("we're running solo");
             IsSolo = true;
         }
         else
         {
-            Debug.Log("we're part of a MCP group");
+            //Debug.Log("we're part of a MCP group");
             IsSolo = false;
         }
 

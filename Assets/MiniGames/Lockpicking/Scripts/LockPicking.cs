@@ -20,6 +20,7 @@ public class LockPicking : MiniGame
     public List<float> RingCamYs = new List<float>();
     public Gate GatePrefab;
     public List<Gate> Gates;
+    public List<Gate> GatesThisGame = new List<Gate>();
     public List<PathNode> StartNodes;
     public List<PathNode> DeathNodes;
     public Ring CurTouchedRing = null;
@@ -29,7 +30,50 @@ public class LockPicking : MiniGame
     public Text ResultsText;
     public Text DebugText;
 
-    public PathNode DebugStartNode;
+    Diode EvilDiodePrefab;
+    float GameTime;
+    [Header("Evil Diode Tuning")]
+    public List<Diode> EvilDiodes = new List<Diode>();
+    public int MaxEvilDiodes = 5;               // Number of enemy diodes (0-x) max in the game
+    public List<float> EvilDiodeSpeeds = new List<float>(); // starting speed of each evil diode
+    public float TimeBeforeEvilSpawn = 3f;      // Time since game start for enemy diode to appear
+    public float TimeBetweenEvilSpawns = 2f;    // Time between enemy diodes spawning
+    public float EvilRespawnTime = 1f;              // Delay time between an enemy diode falling out of the board and it spawning again from the first ring
+    public float NumSpawnAtATime = 2f;          // Number of enemy diodes that spawn at a time
+    [Header("Diode Speed Tuning")]
+    public float MAX_DIODE_SPEED = 40f;         // Maximum speed a Diode can go
+    public float SpeedAdjTime = 0f;             // Time goes on
+    public float SpeedAdjNumGates = 1f;         // Number of gates collected        
+    
+    public float AdjustDiodeSpeed(float startSpeed)
+    {
+        // time adjustment
+        float timeAdj = SpeedAdjTime * GameTime * .01f;   
+        // num gates collected adjustment
+        float gatesAdj = SpeedAdjNumGates * (Gates.Count - GatesThisGame.Count);        
+
+        float newSpeed = startSpeed + timeAdj + gatesAdj;
+        if (newSpeed > MAX_DIODE_SPEED) newSpeed = MAX_DIODE_SPEED;
+        return newSpeed;
+    }
+    public void CheckDeathNode(Diode diode, PathNode pathNode)
+    {
+        if (IsDeathNode(pathNode))
+        {
+            if (diode.Evil == false) StartCoroutine(EndGame("You Lost.", false));
+            else StartCoroutine(EvilDiodeRespawn(diode));
+        }
+    }
+    IEnumerator EvilDiodeRespawn(Diode evilDiode)
+    {
+        yield return new WaitForSeconds(EvilRespawnTime);
+        bool startNodeFound = false;
+        while (startNodeFound == false)
+        {
+            yield return new WaitForEndOfFrame();
+            startNodeFound = SpawnEvilDiodes(evilDiode);
+        }
+    }
 
     public override void Init(MiniGameMCP mcp)
     {
@@ -45,6 +89,17 @@ public class LockPicking : MiniGame
         base.Awake();
         Physics.autoSimulation = true;
         Diode.SetLockPickingComponent(this);
+        EvilDiodePrefab = Resources.Load<Diode>("LockPicking/Evil Diode");
+
+        List<Diode> diodes = FindObjectsOfType<Diode>().ToList();
+        foreach(Diode d in diodes)
+        {
+            if (d.Evil == true) EvilDiodes.Add(d);
+        }
+        foreach(Diode d in EvilDiodes)
+        {
+            d.SetLockPickingComponent(this);
+        }
     }
 
     private void Start()
@@ -75,22 +130,36 @@ public class LockPicking : MiniGame
         LargestRingDiameter = Rings[Rings.Count-1].GetComponent<MeshCollider>().bounds.extents.x;
 
         StartGame();
-    }
-    
+    }    
+
     void StartGame()
-    {
+    {        
         CurGameState = eGameState.ON;
         Diode.Moving = true;
         ResultsText.gameObject.SetActive(false);
-        if (DebugStartNode != null)
+        GameTime = 0f;
+        // Diode tuning stuff
+        EvilSpawnBegan = false;
+        EvilDiodeTimer = 0f;
+        foreach(Diode d in EvilDiodes)
         {
-            Diode.SetStartNode(DebugStartNode);
+            Destroy(d.gameObject);
+        }
+        EvilDiodes.Clear();
+
+        //List<PathNode> availStartNodes = new List<PathNode>(StartNodes);
+        GatesThisGame.Clear();
+        GatesThisGame = new List<Gate>(Gates);
+        if (Diode.DebugStartNode != null)
+        {
+            Diode.ResetDiodeForGame(Diode.DebugStartNode);
         }
         else
         {
             int startIndex = Random.Range(0, StartNodes.Count);
-            Diode.SetStartNode(StartNodes[startIndex]);
-        }
+            Diode.ResetDiodeForGame(StartNodes[startIndex]);
+           // usedPathNodes.Add(StartNodes[startIndex]);
+        }        
 
         foreach(Gate g in Gates)
         {
@@ -100,34 +169,24 @@ public class LockPicking : MiniGame
 
     public void CollectGate(Gate gate)
     {
-       // Debug.Log("found gate: " + gate.name);
+        // Debug.Log("found gate: " + gate.name);
+        GatesThisGame.Remove(gate);
         gate.gameObject.SetActive(false);
-        bool allGatesFound = true;
-        foreach(Gate g in Gates)
+        if(GatesThisGame.Count == 0)
         {
-            if(g.gameObject.activeSelf == true)
-            {
-                allGatesFound = false;
-                break;
-            }
-        }
-        if(allGatesFound == true)
-        {
-            
             StartCoroutine(EndGame("You Won.", true));
-        }
+        }        
     }
 
-    public void CheckDeathNode(PathNode pathNode)
+    public void HitEvilDiode(Diode evilDiode)        
     {
-       // Debug.Log("CheckDeathNode: " + pathNode.name);
-        if (DeathNodes.Contains(pathNode))
-        {
-            //Debug.Log("it's a death node!");
-            StartCoroutine(EndGame("You Lost.", false));
-        }
-       // else Debug.Log("not a death node");
+        StartCoroutine(EndGame("You were killed by an evil diode.", false));
     }
+    public bool IsDeathNode(PathNode pathNode)
+    {
+        return DeathNodes.Contains(pathNode);
+    }
+           
 
     IEnumerator EndGame(string endGameString, bool success)
     {
@@ -135,6 +194,7 @@ public class LockPicking : MiniGame
         ResultsText.gameObject.SetActive(true);
         ResultsText.text = endGameString;
         Diode.Moving = false;
+        foreach (Diode d in EvilDiodes) d.Moving = false;
         yield return new WaitForSeconds(3);
         ResultsText.gameObject.SetActive(false);
         if (success == true)
@@ -149,12 +209,22 @@ public class LockPicking : MiniGame
         //StartCoroutine(HandleEndGame());
     }
 
-    
+    private void FixedUpdate()
+    {
+        foreach (Diode d in EvilDiodes)
+        {
+            d.DiodeFixedUpdate();
+        }
+        Diode.DiodeFixedUpdate();
+        RotateRings();
+    }
 
     // Update is called once per frame
     void Update()
     {
+        //Debug.Log(this.name + " Update()");
         if (CurGameState == eGameState.OFF) return;
+        GameTime += Time.deltaTime;
         if (Input.GetMouseButtonDown(0)) // initial press
         {                        
             LayerMask mask = LayerMask.GetMask("Lockpick Touch Control");
@@ -199,8 +269,105 @@ public class LockPicking : MiniGame
                 CurTouchedRing = null;
             }            
         }
+
+        // evil diode stuff
+        if(EvilDiodes.Count < MaxEvilDiodes)
+        {
+            if (EvilSpawnBegan == false)
+            {
+                EvilDiodeTimer += Time.deltaTime;
+                if (EvilDiodeTimer >= TimeBeforeEvilSpawn)
+                {
+                    EvilSpawnBegan = true;
+                    EvilDiodeTimer = 0f;
+                    SpawnEvilDiodes();
+                }
+            }
+            else if (EvilSpawnBegan == true)
+            {
+                EvilDiodeTimer += Time.deltaTime;
+                if (EvilDiodeTimer >= TimeBetweenEvilSpawns)
+                {
+                    EvilDiodeTimer = 0f;
+                    SpawnEvilDiodes();
+                }
+            }
+        }        
+        if(DebugText != null)
+        {
+            DebugText.text = "";
+            DebugText.text = "GameTime: " + GameTime.ToString("F2") + "\n";
+            DebugText.text += "\n";
+            DebugText.text += "EvilSpanBegan: " + EvilSpawnBegan + "\n";
+            DebugText.text += "Num Evil Diodes: " + EvilDiodes.Count + "\n";
+            DebugText.text += "MaxEvilDiodes: " + MaxEvilDiodes + "\n";
+            DebugText.text += "EvilDiodeTimer: " + EvilDiodeTimer.ToString("F2") + "\n";
+            DebugText.text += "\n";
+            DebugText.text += "Diode speed: " + Diode.CurSpeed.ToString("F2") + "\n";
+        }
     }
-   // ou can rotate a direction Vector3 with a Quaternion by multiplying the quaternion with the direction(in that order)
+    bool SpawnEvilDiodes(Diode respawnDiode = null)
+    {
+        //int numToSpawn = (int)Mathf.Min((float)NumSpawnAtATime, (float)(MaxEvilDiodes - EvilDiodes.Count));
+        int numToSpawn;
+        if (respawnDiode == null) numToSpawn = (int)Mathf.Min((float)NumSpawnAtATime, (float)(MaxEvilDiodes - EvilDiodes.Count));
+        else numToSpawn = 1;
+        Debug.Log("SpawnEvilDiodes() numToSpawn: " + numToSpawn);
+        if(numToSpawn == 0)
+        {
+            Debug.Log("there's no room to spawn any more evil nodes");
+            return false;
+        }
+        List<PathNode> availStartNodes = new List<PathNode>(StartNodes);
+        if (StartNodes.Contains(Diode.CurPath.Start)) availStartNodes.Remove(Diode.CurPath.Start);
+        foreach(Diode d in EvilDiodes) if(StartNodes.Contains(d.CurPath.Start)) availStartNodes.Remove(d.CurPath.Start);
+        Debug.Log("num avail start Nodes: " + availStartNodes.Count);        
+        for (int i=0; i<numToSpawn; i++)
+        {
+            if(availStartNodes.Count == 0)
+            {
+                Debug.Log("No more available nodes to spawn an evil diode");
+                return false;
+            }
+            Diode d;
+            if (respawnDiode == null )
+            {
+                d = Object.Instantiate(EvilDiodePrefab, this.transform.parent);
+                EvilDiodes.Add(d);
+                d.SetLockPickingComponent(this);
+                d.StartSpeed = EvilDiodeSpeeds[EvilDiodes.Count - 1];
+            }
+            else
+            {
+                d = respawnDiode;
+            }
+            //Diode d = Object.Instantiate(EvilDiodePrefab, this.transform.parent);
+            //EvilDiodes.Add(d);
+            //d.SetLockPickingComponent(this);
+            //d.StartSpeed = EvilDiodeSpeeds[EvilDiodes.Count - 1];
+            d.CurSpeed = d.StartSpeed;
+            d.Moving = true;
+            if (d.DebugStartNode != null)
+            {
+                d.ResetDiodeForGame(d.DebugStartNode);
+            }
+            else
+            {
+                int startIndex = Random.Range(0, availStartNodes.Count);
+                PathNode evilNode = availStartNodes[startIndex];
+                availStartNodes.Remove(evilNode);
+                d.ResetDiodeForGame(evilNode);
+            }
+        }
+        return true;
+    }
+
+    
+
+    bool EvilSpawnBegan;
+    float EvilDiodeTimer;
+    
+    // ou can rotate a direction Vector3 with a Quaternion by multiplying the quaternion with the direction(in that order)
     //    Then you just use Quaternion.AngleAxis to create the rotation
 
     public void RotateRings()

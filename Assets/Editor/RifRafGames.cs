@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -65,7 +66,7 @@ public class RifRafGames
         float diodeRadius = diode.GetComponent<SphereCollider>().radius;
         GameObject debugText = GameObject.Find("DebugText");
         //if (debugText != null) diode.DebugText = debugText.GetComponent<Text>();        
-        diode.LastPosition = new GameObject("Last Position");        
+        //diode.LastPosition = new GameObject("Last Position");        
 
         List<GameObject> ringObjectRoots = new List<GameObject>();
         for(int i=3; i<rootGO.transform.childCount; i++)
@@ -77,7 +78,7 @@ public class RifRafGames
         List<Ring> rings = new List<Ring>();        
         float gateSize = diode.GetComponent<SphereCollider>().radius * 2f;
         Vector3 gateScale = new Vector3(gateSize, gateSize, gateSize);
-        Gate gate = Resources.Load<Gate>("Gate");
+        Gate gate = Resources.Load<Gate>("LockPicking/Gate");
         gate.name = "GetPrefab";
 
         foreach (GameObject touchControl in ringObjectRoots)
@@ -125,7 +126,7 @@ public class RifRafGames
             }                        
         }        
         lp.InitFromInitializing(diode, centerBlock, gate, rings);        
-        diode.LastPosition.transform.parent = diode.transform.parent;       
+       // diode.LastPosition.transform.parent = diode.transform.parent;       
         
         // not sure why we need this but for some reason the last expand event we try to send on the ring doesn't work
         Selection.activeObject = ringObjectRoots[ringObjectRoots.Count-1].gameObject;

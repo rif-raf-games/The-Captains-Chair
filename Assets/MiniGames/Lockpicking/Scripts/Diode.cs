@@ -7,7 +7,9 @@ public class Diode : MonoBehaviour
 {
     enum eMoveDir { FORWARD, BACKWARD, NUM_DIRS };
     eMoveDir m_MoveDir = eMoveDir.FORWARD;
-    
+
+    public float StartSpeed = 1f;
+    public float CurSpeed; 
     public Ring.LockpickRingPath CurPath;
     public GameObject LastPosition;
     SphereCollider SC;
@@ -16,11 +18,20 @@ public class Diode : MonoBehaviour
     //public Text DebugText;
 
     public bool Moving = false;
+    public bool Evil = false;
 
+    [Header("Debug")]
+    public PathNode DebugStartNode;
+
+    private void Awake()
+    {
+        LastPosition = new GameObject("Last Position_" + this.GetHashCode());            ;
+        LastPosition.transform.parent = this.transform.parent;
+    }
     // Start is called before the first frame update
     void Start()
     {                
-        SC = GetComponent<SphereCollider>();        
+        SC = GetComponent<SphereCollider>();                
     }
 
     public void SetLockPickingComponent(LockPicking lp)
@@ -31,24 +42,23 @@ public class Diode : MonoBehaviour
     Coroutine CamLerpRoutine;
     void SetNewPath(Ring.LockpickRingPath path)
     {
-        Debug.Log("SetNewPath: " + path.Ring.name);
+       // Debug.Log("SetNewPath: " + path.Ring.name);
         CurPath = path;
         this.transform.parent = CurPath.Ring.transform;
         LastPosition.transform.parent = CurPath.Ring.transform;
 
-        if(CurPath.Ring != LockPicking.Rings[LockPicking.Rings.Count-1])
+        if(Evil == false)
         {
-            /*string sub = CurPath.Ring.name.Substring(CurPath.Ring.name.Length - 2, 2);
-            int index = int.Parse(sub);
-            Debug.Log("index: " + index);
-            Camera.main.transform.position = new Vector3(0f, LockPicking.RingCamYs[index], 0f);*/
-            if(CamLerpRoutine != null)
+            if (CurPath.Ring != LockPicking.Rings[LockPicking.Rings.Count - 1])
             {
-                StopCoroutine(CamLerpRoutine);
-                CamLerpRoutine = null;                
+                if (CamLerpRoutine != null)
+                {
+                    StopCoroutine(CamLerpRoutine);
+                    CamLerpRoutine = null;
+                }
+                StartCoroutine(LerpCamPos());
             }
-            StartCoroutine(LerpCamPos());
-        }             
+        }                     
     }
 
     IEnumerator LerpCamPos()
@@ -76,31 +86,53 @@ public class Diode : MonoBehaviour
         }
     }
 
-    public void SetStartNode(PathNode startNode)
+    public void ResetDiodeForGame(PathNode startNode)
     {
-        Moving = true;
+        CurSpeed = StartSpeed;
+        Moving = true;        
         m_MoveDir = eMoveDir.FORWARD;
+        //Debug.Log("a set m_MoveDir to Forward SetStartNode()");
         SetNewPath(startNode.Path);
-        transform.position = startNode.transform.position + .01f * startNode.transform.forward;
-
+        transform.position = startNode.transform.position + .05f * startNode.transform.forward;
         transform.LookAt(CurPath.End.transform);
-    }    
+    }   
     
-    void FixedUpdate()
-    {
+    
+    public void DiodeFixedUpdate()
+    {       
+        //Debug.Log(this.name + " FixedUpdate()");
         if (Moving == true )
-        {                        
+        {            
             CurPath.Start.transform.LookAt(CurPath.End.transform);
             CurPath.End.transform.LookAt(CurPath.Start.transform);
             Vector3 moveDir;
-            if (m_MoveDir == eMoveDir.FORWARD) moveDir = CurPath.Start.transform.forward;
-            else moveDir = CurPath.End.transform.forward;
-            transform.position = transform.position + (moveDir * Time.deltaTime / 2f);
-            Collider[] colliders;
+            if (m_MoveDir == eMoveDir.FORWARD)
+            {                
+                moveDir = CurPath.Start.transform.forward;                
+            }
+            else
+            {
+                moveDir = CurPath.End.transform.forward;
+            }
+            CurSpeed = LockPicking.AdjustDiodeSpeed(StartSpeed);
+            transform.position = transform.position + (moveDir * Time.deltaTime * (CurSpeed / 10f));
+            Collider[] colliders = Physics.OverlapSphere(transform.position, SC.radius);
+            if(Evil==false)
+            {
+                foreach(Collider c in colliders)
+                {
+                    Diode d = c.gameObject.GetComponent<Diode>();
+                    if(d != null && d.Evil == true)
+                    {
+                        Debug.Log("you hit an evil diode");
+                        LockPicking.HitEvilDiode(d);
+                    }
+                }
+            }
 
             if (IgnoreCollisions == true)
             {                
-                colliders = Physics.OverlapSphere(transform.position, SC.radius);               
+               // colliders = Physics.OverlapSphere(transform.position, SC.radius);               
                 if (colliders.Length == 1 && colliders[0].gameObject == this.gameObject) IgnoreCollisions = false;
             }
 
@@ -109,9 +141,9 @@ public class Diode : MonoBehaviour
                 int layerMask = LayerMask.GetMask("Lockpick Ring");
                 colliders = Physics.OverlapSphere(transform.position, SC.radius, layerMask);
                 if (colliders.Length != 0)
-                {
+                {                    
                     transform.position = LastPosition.transform.position;                   
-                    IgnoreCollisions = true;
+                    IgnoreCollisions = true;                    
                     ChangeDir();
                 }
             }
@@ -132,27 +164,41 @@ public class Diode : MonoBehaviour
                         break;
                     }
                 }
-            }            
-
-            LockPicking.RotateRings();
+            }                        
             LastPosition.transform.position = transform.position;            
-        }
-            return;
-
+        }       
     }
 
     private void OnTriggerEnter(Collider other)
     {
-       // Debug.Log("OnTriggerEnter: " + other.name);
-        Gate g = other.GetComponent<Gate>();
-        if (g != null) LockPicking.CollectGate(g);
+        //Debug.Log("Diode: " + this.name + " OnTriggerEnter(): " + other.name);
         PathNode pathNode = other.GetComponent<PathNode>();
-        if (pathNode != null) LockPicking.CheckDeathNode(pathNode);
-    }
+        if (pathNode != null) LockPicking.CheckDeathNode(this, pathNode);
+        if(Evil == false)
+        {
+            Gate g = other.GetComponent<Gate>();
+            if (g != null) LockPicking.CollectGate(g);
+        }
+        /*if (Evil == true)
+        {
+            //Debug.LogError("evil diode collided with a trigger: " + other.name);
+            if(pathNode != null && LockPicking.IsDeathNode(pathNode) == true)
+            {
+                ResetDiodeForGame(DebugStartNode);
+            }                        
+        }
+        else
+        {
+            if (pathNode != null) LockPicking.CheckDeathNode(pathNode);
+            Gate g = other.GetComponent<Gate>();
+            if (g != null) LockPicking.CollectGate(g);            
+        }        */
+    }    
 
     void ChangeDir()
     {
-        m_MoveDir = (m_MoveDir == eMoveDir.FORWARD ? eMoveDir.BACKWARD : eMoveDir.FORWARD);     
+        m_MoveDir = (m_MoveDir == eMoveDir.FORWARD ? eMoveDir.BACKWARD : eMoveDir.FORWARD);
+        Debug.Log(this.name + " ChangeDir() to " + m_MoveDir);
     }
 
     public void OnDrawGizmos()
