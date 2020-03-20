@@ -38,8 +38,8 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
 
     void Start()
     {
-        CurArticyState = eArticyState.NUM_ARTICY_STATES;
-
+        //CurArticyState = eArticyState.NUM_ARTICY_STATES;
+        SetArticyState(eArticyState.NUM_ARTICY_STATES);
         Player = GameObject.FindObjectOfType<CCPlayer>();
         CaptainsChair = GameObject.FindObjectOfType<TheCaptainsChair>();
         FlowPlayer = this.GetComponent<ArticyFlowPlayer>();
@@ -295,7 +295,8 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             {
                 StaticStuff.PrintFlowBranchesUpdate("We're about to start a Dialogue but it may NOT always start with a dialogue fragment.", this);
                 //Debug.LogWarning("We're about to start a Dialogue but it may NOT always start with a dialogue fragment.");
-                CurArticyState = eArticyState.DIALOGUE;
+                //CurArticyState = eArticyState.DIALOGUE;
+                SetArticyState(eArticyState.DIALOGUE);
                 SetNextBranch(CurBranches[0]);
             }
             else if(CurPauseObject.GetType().Equals(typeof(Jump)))
@@ -336,7 +337,8 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                         }
                         ShutOffAIs.Clear();
                     }
-                    CurArticyState = eArticyState.FREE_ROAM;
+                    //CurArticyState = eArticyState.FREE_ROAM;
+                    SetArticyState(eArticyState.FREE_ROAM);
                     FlowFragsVisited.Clear();
                 }
                 else
@@ -359,14 +361,16 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             else if(CurPauseObject.GetType().Equals(typeof(AI_Template)))
             {
                 StaticStuff.PrintFlowBranchesUpdate("We're starting an AI to get it going", this);
-                CurArticyState = eArticyState.AI;                
+                //CurArticyState = eArticyState.AI;                
+                SetArticyState(eArticyState.AI);
                 SetNextBranch(CurBranches[0]);
                 FlowFragsVisited.Clear();
             }
             else if(CurPauseObject.GetType().Equals(typeof(Ambient_Trigger)))
             {
                 StaticStuff.PrintFlowBranchesUpdate("We're about to get an Ambient_Trigger going", this);
-                CurArticyState = eArticyState.AMBIENT_TRIGGER;
+                //CurArticyState = eArticyState.AMBIENT_TRIGGER;
+                SetArticyState(eArticyState.AMBIENT_TRIGGER);
                 SetNextBranch(CurBranches[0]);
             }            
             else if(CurPauseObject.GetType().Equals(typeof(Stage_Directions)))
@@ -445,6 +449,14 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     void SetArticyState(eArticyState newState)
     {
         CurArticyState = newState;
+        if(Player != null && newState == eArticyState.DIALOGUE)
+        {
+            Player.StartDialogue();
+        }
+        else if (Player != null && newState == eArticyState.FREE_ROAM)
+        {
+            Player.EndDialogue();
+        }
     }
     /// <summary>
     /// End the current Character Action List.  This is called from the CharacterActionList component
@@ -484,7 +496,8 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
 
     public void QuitCurDialogue()
     {
-        CurArticyState = eArticyState.FREE_ROAM;
+        //CurArticyState = eArticyState.FREE_ROAM;
+        SetArticyState(eArticyState.FREE_ROAM);
         CurPauseObject = null;
         NextFragment = null;
         NextBranch = null;
@@ -523,7 +536,8 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             return;
         }
        // Debug.Log("we've determined that this dialouge is ready to go so rock it");
-        CurArticyState = eArticyState.DIALOGUE;
+        //CurArticyState = eArticyState.DIALOGUE;
+        SetArticyState(eArticyState.DIALOGUE);
         DialogueStartCollider = collider;
         DialogueStartAttachments = convoStart.Attachments;
 

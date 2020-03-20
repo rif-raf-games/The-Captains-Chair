@@ -138,7 +138,7 @@ public class CamFollow : MonoBehaviour
         }
     }
 
-    private void OnGUI()
+    /*private void OnGUI()
     {
         switch(CurCamState)
         {
@@ -158,7 +158,7 @@ public class CamFollow : MonoBehaviour
                 }
                 break;
         }        
-    }
+    }*/
     
     void BeginZoomIn()
     {

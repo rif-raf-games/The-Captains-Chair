@@ -8,7 +8,7 @@ using UnityEngine;
 
 static public class StaticStuff 
 {    
-    public const bool USE_DEBUG_MENU = false; // HERE IS WHERE YOU TOGGLE THE DEBUG MENU
+    public const bool USE_DEBUG_MENU = true; // HERE IS WHERE YOU TOGGLE THE DEBUG MENU
 
     public enum eOrientation { LANDSCAPE, PORTRAIT };
 
@@ -76,7 +76,7 @@ static public class StaticStuff
 
     static public void PrintTriggerEnter(string s)
     {
-       // Debug.Log(s);
+        Debug.Log(s);
     }
 
     static public void PrintRepairPath(string s)

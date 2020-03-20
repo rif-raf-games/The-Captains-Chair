@@ -11,7 +11,7 @@ public class CharacterEntity : MonoBehaviour
     // Animation stuff    
     public ArticyRef ArticyEntityReference;
     public ArticyRef ArticyAIReference;
-    Animator Animator;
+    protected Animator Animator;
     [Header("Debug")]
     public Text DebugText;
   
@@ -31,7 +31,8 @@ public class CharacterEntity : MonoBehaviour
 
     protected NavMeshAgent NavMeshAgent;
     public void ToggleNavMeshAgent(bool val)
-    {        
+    {
+        Debug.Log("ToggleNavMeshAgent(): " + val);
         this.NavMeshAgent.enabled = val;
         if (val == true) NavMeshAgent.SetDestination(transform.position);
     }
@@ -69,7 +70,7 @@ public class CharacterEntity : MonoBehaviour
         LastPos = transform.position;
 
         NavMeshAgent = this.GetComponent<NavMeshAgent>();
-        NavMeshAgent.SetDestination(transform.position);
+        NavMeshAgent.SetDestination(transform.position); // mostick01
     }
 
     
@@ -85,7 +86,7 @@ public class CharacterEntity : MonoBehaviour
     }
 
     public virtual void LateUpdate()
-    {
+    {   // this should only be called when the CE is under NavMesh control        
         if (Animator != null)
         {   // This section handles the walking/turning            
             DeltaPos = transform.position - LastPos;
@@ -115,7 +116,7 @@ public class CharacterEntity : MonoBehaviour
         {
             NavMeshAgent.SetDestination(EntityToFollow.transform.position);
         }
-    }
+    }    
 
     public float PlayAnim(string anim)
     {       

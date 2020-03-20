@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class DebugMenu : MonoBehaviour
 {
-    enum eDebugState { OFF, ROOT, TYPE };
+    enum eDebugState { OFF, ROOT, TYPE, OPTIONS };
     eDebugState CurDebugState;
 
     public Texture Black;
@@ -54,7 +54,7 @@ public class DebugMenu : MonoBehaviour
                 {                    
                     CurDebugState = eDebugState.OFF;
                 }
-                height = Screen.height / 4;
+                height = Screen.height / 5;
                 if (GUI.Button(new Rect(0, 0, Screen.width - 200, height), "Main", ButtonStyle))
                 {
                     CurScenesList = MainScenes;
@@ -75,6 +75,10 @@ public class DebugMenu : MonoBehaviour
                     CurScenesList = LockpickScenes;
                     CurDebugState = eDebugState.TYPE;
                 }
+                if (GUI.Button(new Rect(0, height * 4, Screen.width - 200, height), "Options", ButtonStyle))
+                {
+                    CurDebugState = eDebugState.OPTIONS;
+                }
                 break;
             case eDebugState.TYPE:
                 GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), Black);
@@ -88,6 +92,22 @@ public class DebugMenu : MonoBehaviour
                     if (GUI.Button(new Rect(0, height*i, Screen.width-200, height), CurScenesList[i], ButtonStyle))
                     {
                         SceneManager.LoadScene(CurScenesList[i]);
+                    }
+                }
+                break;
+            case eDebugState.OPTIONS:
+                GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), Black);
+                if (GUI.Button(new Rect(Screen.width - 100, 0, 100, 100), "Root", ButtonStyle))
+                {
+                    CurDebugState = eDebugState.ROOT;
+                }
+                CCPlayer Player = GameObject.FindObjectOfType<CCPlayer>();
+                if(Player != null)
+                {
+                    if(GUI.Button(new Rect(0, Screen.height/2, Screen.width-200, 200), Player.GetControlType().ToString(), ButtonStyle))
+                    {
+                        CCPlayer.eControlType newType = (Player.GetControlType() == CCPlayer.eControlType.POINT_CLICK ? CCPlayer.eControlType.STICK : CCPlayer.eControlType.POINT_CLICK);
+                        Player.ToggleControlType(newType);
                     }
                 }
                 break;

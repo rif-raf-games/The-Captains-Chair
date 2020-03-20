@@ -8,30 +8,39 @@ using UnityEngine.UI;
 
 public class CCPlayer : CharacterEntity
 {
+    public enum eControlType { POINT_CLICK, STICK };
+    eControlType CurControlType;
 
     ArticyFlow CaptainArticyFlow;           
     
     public Elevator[] Elevators;
-   // bool TurnOnNavMeshes = false;    
 
     public Elevator SelectedElevator = null;
 
     private bool MovementBlocked = false;
+    private bool DealingWithElevator = false;
     private bool WaitingForFollowersOnElevator = false;
     TheCaptainsChair CaptainsChair;
+    Rigidbody RigidBody;
 
     [Header("CCPlayer")]
     public GameObject DebugDestPos;
     CharacterEntity Loop;
+    public float MoveSpeed = 1f;
+    public float TurnSpeedNew = 20f;
+
+    [Header("Debug")]
+    public bool DEBUG_BlockMovement = false;
 
     // Start is called before the first frame update
     public override void Start()
     {
-        base.Start();
+        base.Start();        
 
         CaptainArticyFlow = GetComponent<ArticyFlow>();
         CaptainsChair = FindObjectOfType<TheCaptainsChair>();
-        
+        RigidBody = GetComponent<Rigidbody>();
+
         Elevators = FindObjectsOfType<Elevator>();
         ToggleMovementBlocked(false);
         GameObject go = GameObject.Find("Loop");
@@ -39,19 +48,148 @@ public class CCPlayer : CharacterEntity
         {
             Loop = go.GetComponent<CharacterEntity>();
         }
+        ToggleControlType(eControlType.POINT_CLICK);
     }
 
-    bool IsLoopFollowing()
+    public void ToggleControlType(eControlType newType)
     {
-        return (Loop != null && Loop.IsFollowingCaptain() == true);
+        CurControlType = newType;
+        SetupForControlType(CurControlType);
+    }
+
+    public eControlType GetControlType() { return CurControlType; }
+    void SetupForControlType(eControlType controlType)
+    {
+        switch (controlType)
+        {
+            case eControlType.POINT_CLICK:
+                ToggleNavMeshAgent(true);
+                RigidBody.isKinematic = true;
+                Animator.SetFloat("Vertical", 0f);
+                Animator.SetFloat("Horizontal", 0f);
+                break;
+            case eControlType.STICK:
+                ToggleNavMeshAgent(false);
+                RigidBody.isKinematic = false;
+                Animator.SetFloat("Speed", 0f);
+                Animator.SetFloat("Walk Dir", 0f);
+                Animator.SetFloat("Turn Speed", 0f);
+                break;
+        }
     }
     
+    
+    public void StartDialogue()
+    {
+        Debug.Log("CCPlayer.StartDialogue()");
+        SetupForControlType(eControlType.POINT_CLICK);
+    }
+    public void EndDialogue()
+    {
+        Debug.Log("CCPlayer.EndDialogue()");
+        if (CurControlType == eControlType.STICK)
+        {
+            SetupForControlType(eControlType.STICK);
+        }
+    }
+    
+    
+    public override void LateUpdate()
+    {
+        if(CurControlType == eControlType.POINT_CLICK || DealingWithElevator == true ||
+            CaptainArticyFlow.CurArticyState == ArticyFlow.eArticyState.DIALOGUE)
+        {
+            base.LateUpdate();
+        }        
+    }
+    // Update is called once per frame
+    public override void Update()
+    {
+        base.Update();        
+        if (MovementBlocked == false && DEBUG_BlockMovement == false)
+        {
+            if (CurControlType == eControlType.STICK)
+            {   // thumbstick control
+                float moveX, moveZ;
+                float inputH = Input.GetAxis("Horizontal");
+                float inputV = Input.GetAxis("Vertical");
+
+                if (inputV < 0f)
+                {
+                    inputV = 0f;
+                }
+
+                Animator.SetFloat("Vertical", inputV);
+                Animator.SetFloat("Horizontal", inputH);
+
+                moveX = inputH * Time.deltaTime;
+                float rot = moveX * TurnSpeedNew;
+                transform.Rotate(0, rot, 0);
+
+                Rigidbody rbody = GetComponent<Rigidbody>();
+                moveZ = inputV * Time.deltaTime;
+                rbody.velocity = moveZ * transform.forward * MoveSpeed;
+            }
+            else
+            {   // point 'n click
+                if ( Input.GetMouseButtonDown(0) )
+                {
+                    int maskk = 1 << LayerMask.NameToLayer("Floor");
+                    maskk |= (1 << LayerMask.NameToLayer("Elevator"));
+                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    RaycastHit hit;
+                    if (Physics.Raycast(ray, out hit, Mathf.Infinity, maskk))
+                    {
+                        Vector3 dest = Vector3.zero;
+                        string layerClicked = LayerMask.LayerToName(hit.collider.gameObject.layer);
+                        if (layerClicked.Equals("Floor"))
+                        {
+                            // Debug.Log("layerClicked: " + layerClicked + " hit: " + hit.collider.gameObject.name);
+                            dest = hit.point;
+                            SelectedElevator = null;
+                        }
+                        else if (layerClicked.Equals("Elevator"))
+                        {
+                            //s Debug.Log("layerClicked: " + layerClicked + " hit: " + hit.collider.gameObject.name);
+                            dest = hit.point;
+                            if (hit.collider.gameObject.name.Contains("Lift")) SelectedElevator = hit.collider.GetComponent<Elevator>();
+                            else SelectedElevator = hit.collider.GetComponentInParent<Elevator>();
+                            if (SelectedElevator == null) Debug.LogError("Clicked on an Elevator with no Elevator component.");
+                        }
+                        SetNavMeshDest(dest);
+                        if (DebugDestPos != null) DebugDestPos.transform.position = dest;
+                    }
+                }
+            }
+        }        
+               
+        if (WaitingForFollowersOnElevator == true)
+        {
+            if(Loop.NavMeshDone())
+            {
+               // Debug.Log("Loop is ready to rock");
+                StartElevatorRide();
+            }
+        }
+
+        if (DebugText != null)
+        {
+            DebugText.text = "CurControlType: " + CurControlType.ToString() + "\n";
+            DebugText.text += "Flow state: " + CaptainArticyFlow.CurArticyState.ToString() + "\n";
+            DebugText.text += "NavMeshAgent: " + NavMeshAgent.enabled + "\n";
+            /*DebugText.text = "input: " + inputH.ToString("F2") + "," + inputV.ToString("F2") + "\n";
+            DebugText.text += "move: " + moveX.ToString("F2") + "," + moveZ.ToString("F2") + "\n";
+            DebugText.text += "velocity: " + rbody.velocity.ToString("F2") + "\n";
+            DebugText.text += "rot: " + rot.ToString("F2") + "\n";*/
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Room")) { StaticStuff.PrintTriggerEnter(this.name + " This is a Room collider " + other.name + " on the Player, so bail and let the RoomCollider.cs handle it"); return; }
-        StaticStuff.PrintTriggerEnter(this.name + " CCPlayer.OnTriggerEnter() other: " + other.name + ", layer: " + other.gameObject.layer);        
+        StaticStuff.PrintTriggerEnter(this.name + " CCPlayer.OnTriggerEnter() other: " + other.name + ", layer: " + other.gameObject.layer);
         ArticyReference colliderArtRef = other.gameObject.GetComponent<ArticyReference>();
-        if(colliderArtRef != null )
+        if (colliderArtRef != null)
         {
             StaticStuff.PrintTriggerEnter("we collided with something that has an ArticyRef.  Now lets see what it is.");
             Dialogue dialogue = colliderArtRef.reference.GetObject() as Dialogue;
@@ -59,15 +197,15 @@ public class CCPlayer : CharacterEntity
             //Trigger_Fragment tf = colliderArtRef.reference.GetObject() as Trigger_Fragment;
             if (dialogue != null)
             {
-                StaticStuff.PrintTriggerEnter("we have a dialogue, so set the FlowPlayer to start on it and see what happens");                
+                StaticStuff.PrintTriggerEnter("we have a dialogue, so set the FlowPlayer to start on it and see what happens");
                 CaptainArticyFlow.CheckDialogue(dialogue, other.gameObject);
             }
-            else if(at != null)
+            else if (at != null)
             {
                 StaticStuff.PrintTriggerEnter("We have an Ambient_Trigger, so lets see if we're going to commit to it or not");
                 AmbientTrigger ambientTrigger = other.GetComponent<AmbientTrigger>();
-                if(ambientTrigger == null) { Debug.LogError("No AmbientTrigger component on this collider: " + other.name); return; }
-                ambientTrigger.ProcessAmbientTrigger(at);                
+                if (ambientTrigger == null) { Debug.LogError("No AmbientTrigger component on this collider: " + other.name); return; }
+                ambientTrigger.ProcessAmbientTrigger(at);
             }
             else
             {
@@ -76,19 +214,25 @@ public class CCPlayer : CharacterEntity
         }
         else if (other.gameObject.layer == LayerMask.NameToLayer("Elevator Collider"))
         {
-            if (other.gameObject.GetComponentInParent<Elevator>() == SelectedElevator)
-            {
+            if (CurControlType == eControlType.STICK || other.gameObject.GetComponentInParent<Elevator>() == SelectedElevator)
+            {                
                 if (other.gameObject.name.Contains("Start"))
                 {
                     StaticStuff.PrintTriggerEnter("Reached elevator StartPos");                    
                     if (MovementBlocked == false)
                     {
-                        StaticStuff.PrintTriggerEnter("move player onto elevator");                        
-                        Vector3 dest = other.gameObject.transform.parent.GetChild(0).position;                        
+                        StaticStuff.PrintTriggerEnter("move player onto elevator");
+                        DealingWithElevator = true;
+                        if (CurControlType == eControlType.STICK)
+                        {
+                            SelectedElevator = other.gameObject.GetComponentInParent<Elevator>();
+                            SetupForControlType(eControlType.POINT_CLICK);
+                        }
+                        Vector3 dest = other.gameObject.transform.parent.GetChild(0).position;
                         SetNavMeshDest(dest);
                         if (DebugDestPos != null) DebugDestPos.transform.position = dest;
                         ToggleMovementBlocked(true);
-                        if(IsLoopFollowing() == true)
+                        if (IsLoopFollowing() == true)
                         {
                             WaitingForFollowersOnElevator = true;
                             Loop.SetShouldFollowEntity(false);
@@ -98,15 +242,17 @@ public class CCPlayer : CharacterEntity
                     else
                     {
                         StaticStuff.PrintTriggerEnter("Player moved off elevator, back to normal movement");
-                        SelectedElevator.transform.GetChild(0).GetComponent<SphereCollider>().enabled = true;                                    
+                        DealingWithElevator = false;
+                        SetupForControlType(CurControlType);
+                        SelectedElevator.transform.GetChild(0).GetComponent<SphereCollider>().enabled = true;
                         SelectedElevator = null;
-                        ToggleMovementBlocked(false);
+                        ToggleMovementBlocked(false);                        
                     }
                 }
                 else
                 {
-                    StaticStuff.PrintTriggerEnter("Reached elevator EndPos so start movement");                                        
-                    if(WaitingForFollowersOnElevator == true)
+                    StaticStuff.PrintTriggerEnter("Reached elevator EndPos so start movement");
+                    if (WaitingForFollowersOnElevator == true)
                     {
                         //Debug.Log("We're ready to ride the elevator but we're still waiting for Loop");
                         return;
@@ -114,7 +260,7 @@ public class CCPlayer : CharacterEntity
                     else
                     {
                         StartElevatorRide();
-                    }                            
+                    }
                 }
             }
             else
@@ -126,7 +272,7 @@ public class CCPlayer : CharacterEntity
         {
             StaticStuff.PrintTriggerEnter("We've collided into something that doesn't have an Articy Ref and isn't an elevator so find out what's up. " + other.name);
         }
-    }    
+    }
 
     void StartElevatorRide()
     {
@@ -136,7 +282,7 @@ public class CCPlayer : CharacterEntity
         {
             //WaitingForFollowersOnElevator = false;
             Loop.ToggleNavMeshAgent(false);
-            Loop.transform.parent = SelectedElevator.transform;            
+            Loop.transform.parent = SelectedElevator.transform;
         }
         SelectedElevator.transform.GetChild(0).GetComponent<SphereCollider>().enabled = false;
         int newFloor = SelectedElevator.BeginMovement();
@@ -153,10 +299,10 @@ public class CCPlayer : CharacterEntity
     {
         if (caller == SelectedElevator)
         {
-           // Debug.Log("Elevator done moving, so move player back to entrance");
+            // Debug.Log("Elevator done moving, so move player back to entrance");
             ToggleNavMeshAgent(true);
             SetNavMeshDest(SelectedElevator.transform.GetChild(2).transform.position);
-            if(WaitingForFollowersOnElevator == true)
+            if (WaitingForFollowersOnElevator == true)
             {
                 WaitingForFollowersOnElevator = false;
                 Loop.ToggleNavMeshAgent(true);
@@ -169,14 +315,14 @@ public class CCPlayer : CharacterEntity
     {
         return (CaptainArticyFlow.IsInFreeRoam());
     }
-
-    public override void LateUpdate()
+    bool IsLoopFollowing()
     {
-        base.LateUpdate();       
+        return (Loop != null && Loop.IsFollowingCaptain() == true);
     }
+
     public void ToggleMovementBlocked(bool val)
     {
-       // Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ToggleMovementBlocked() val: " + val);        
+        // Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ToggleMovementBlocked() val: " + val);        
         MovementBlocked = val;
     }
     public bool IsMovementBlocked()
@@ -190,58 +336,11 @@ public class CCPlayer : CharacterEntity
     }
     public void ElevatorUpdate(Elevator caller)
     {
-        if(caller == SelectedElevator)
+        if (caller == SelectedElevator)
         {
             StopNavMeshMovement();
-        }        
-    }
-
-    public bool DEBUG_BlockMovement = false;        
-
-    // Update is called once per frame
-    public override void Update()
-    {
-        base.Update();
-        if (MovementBlocked == false && Input.GetMouseButtonDown(0) && DEBUG_BlockMovement == false)
-        {            
-            int maskk = 1 << LayerMask.NameToLayer("Floor");            
-            maskk |= (1 << LayerMask.NameToLayer("Elevator"));            
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity, maskk))
-            {
-                Vector3 dest = Vector3.zero;
-                string layerClicked = LayerMask.LayerToName(hit.collider.gameObject.layer);
-                if(layerClicked.Equals("Floor"))
-                {
-                   // Debug.Log("layerClicked: " + layerClicked + " hit: " + hit.collider.gameObject.name);
-                    dest = hit.point;                                        
-                    SelectedElevator = null;
-                }
-                else if(layerClicked.Equals("Elevator"))
-                {
-                   //s Debug.Log("layerClicked: " + layerClicked + " hit: " + hit.collider.gameObject.name);
-                    dest = hit.point;
-                    if (hit.collider.gameObject.name.Contains("Lift")) SelectedElevator = hit.collider.GetComponent<Elevator>();
-                    else SelectedElevator = hit.collider.GetComponentInParent<Elevator>();
-                    if (SelectedElevator == null) Debug.LogError("Clicked on an Elevator with no Elevator component.");                    
-                }                                
-                SetNavMeshDest(dest);
-                if(DebugDestPos != null) DebugDestPos.transform.position = dest;
-            }
-        }                 
-        DebugStuff();
-        if(WaitingForFollowersOnElevator == true)
-        {
-            if(Loop.NavMeshDone())
-            {
-               // Debug.Log("Loop is ready to rock");
-                StartElevatorRide();
-            }
         }
     }
-    
-    
     void DebugStuff()
     {               
        // Debug.DrawRay(transform.position + offset, m_ForwardDir, Color.blue);        
