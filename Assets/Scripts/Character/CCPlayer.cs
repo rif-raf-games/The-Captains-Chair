@@ -25,6 +25,7 @@ public class CCPlayer : CharacterEntity
     [Header("CCPlayer")]
     public float MoveSpeed = 650f;
     public float RotSpeed = 3f;
+    public FixedJoystick Joystick;
     CharacterEntity Loop;    
 
     [Header("Player Debug")]
@@ -112,15 +113,21 @@ public class CCPlayer : CharacterEntity
             {   // thumbstick control
                 Rigidbody rbody = GetComponent<Rigidbody>();
                 float moveX, moveZ;
-                float inputH = Input.GetAxis("Horizontal");
-                float inputV = Input.GetAxis("Vertical");
-
+                float inputH, inputV;
+                
+                if(Joystick != null)
+                {
+                    inputH = Joystick.Horizontal;
+                    inputV = Joystick.Vertical;
+                }
+                else
+                {
+                    inputH = Input.GetAxis("Horizontal");
+                    inputV = Input.GetAxis("Vertical");                    
+                }
                 inputH = -inputH;
                 inputV = -inputV;
-                if (inputV < 0f)
-                {
-                   // inputV = 0f;
-                }
+
                 float val = new Vector3(Mathf.Abs(inputH), Mathf.Abs(inputV)).magnitude;
                 Animator.SetFloat("Vertical", val);
                 Animator.SetFloat("Horizontal", inputH);
