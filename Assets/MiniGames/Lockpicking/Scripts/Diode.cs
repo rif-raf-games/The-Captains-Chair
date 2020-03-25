@@ -114,7 +114,8 @@ public class Diode : MonoBehaviour
             {
                 moveDir = CurPath.End.transform.forward;
             }
-            CurSpeed = LockPicking.AdjustDiodeSpeed(StartSpeed);
+            CurSpeed = (Evil == false ? LockPicking.AdjustDiodeSpeed(StartSpeed) : StartSpeed);
+            //CurSpeed = LockPicking.AdjustDiodeSpeed(StartSpeed);
             transform.position = transform.position + (moveDir * Time.deltaTime * (CurSpeed / 10f));
             Collider[] colliders = Physics.OverlapSphere(transform.position, SC.radius);
             if(Evil==false)
