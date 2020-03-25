@@ -132,6 +132,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: RifRaf UI - SideBar
       objectReference: {fileID: 0}
+    - target: {fileID: 6245075026641128363, guid: 96762a900473f43e488d4c87fcb01ece,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2012616020436007028, guid: 96762a900473f43e488d4c87fcb01ece,
         type: 3}
       propertyPath: Player
@@ -275,87 +280,87 @@ PrefabInstance:
     - target: {fileID: 6718051426038185646, guid: 96762a900473f43e488d4c87fcb01ece,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6718051426038185646, guid: 96762a900473f43e488d4c87fcb01ece,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6718051426038185646, guid: 96762a900473f43e488d4c87fcb01ece,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 140
       objectReference: {fileID: 0}
     - target: {fileID: 6718051426038185646, guid: 96762a900473f43e488d4c87fcb01ece,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -80.236115
       objectReference: {fileID: 0}
     - target: {fileID: 6718051426038185646, guid: 96762a900473f43e488d4c87fcb01ece,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 248
       objectReference: {fileID: 0}
     - target: {fileID: 6718051426038185646, guid: 96762a900473f43e488d4c87fcb01ece,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 28.472221
       objectReference: {fileID: 0}
     - target: {fileID: 6718051426037965738, guid: 96762a900473f43e488d4c87fcb01ece,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6718051426037965738, guid: 96762a900473f43e488d4c87fcb01ece,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6718051426037965738, guid: 96762a900473f43e488d4c87fcb01ece,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -80
       objectReference: {fileID: 0}
     - target: {fileID: 6718051426037965738, guid: 96762a900473f43e488d4c87fcb01ece,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 280
       objectReference: {fileID: 0}
     - target: {fileID: 6718051426037965738, guid: 96762a900473f43e488d4c87fcb01ece,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 6718051426037927486, guid: 96762a900473f43e488d4c87fcb01ece,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6718051426037927486, guid: 96762a900473f43e488d4c87fcb01ece,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6718051426037927486, guid: 96762a900473f43e488d4c87fcb01ece,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 140
       objectReference: {fileID: 0}
     - target: {fileID: 6718051426037927486, guid: 96762a900473f43e488d4c87fcb01ece,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -39
       objectReference: {fileID: 0}
     - target: {fileID: 6718051426037927486, guid: 96762a900473f43e488d4c87fcb01ece,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 248
       objectReference: {fileID: 0}
     - target: {fileID: 6718051426037927486, guid: 96762a900473f43e488d4c87fcb01ece,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 46
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 96762a900473f43e488d4c87fcb01ece, type: 3}
@@ -1104,6 +1109,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EntityToFollow: {fileID: 699060826}
   CamOffset: {x: -10.5, y: 21, z: 36.62}
+  DebugText: {fileID: 0}
+  CamTransitionTime: 3
+  ShipZoomedMoveSpeed: 0.1
 --- !u!1001 &1291273892
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1400,8 +1408,11 @@ MonoBehaviour:
   DialogueToStartOn:
     instanceId: 0
     referencingMode: 0
-    lowId: 25233
-    highId: 16777219
+    lowId: 6839
+    highId: 16777222
+  FadeTime: 1
+  RoomFadeOpacity: 0.2
+  FloorFadeOpacity: 0
   ArticyFlowToPrint: {fileID: 0}
 --- !u!114 &4271362027647796028
 MonoBehaviour:

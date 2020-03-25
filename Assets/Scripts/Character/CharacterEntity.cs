@@ -12,12 +12,11 @@ public class CharacterEntity : MonoBehaviour
     public ArticyRef ArticyEntityReference;
     public ArticyRef ArticyAIReference;
     protected Animator Animator;
-    [Header("Debug")]
-    public Text DebugText;
-  
-    GameObject EntityToFollow;
-    bool ShouldFollowEntity = false;
+    public int CurFloor = 0;
 
+    GameObject EntityToFollow;
+    bool ShouldFollowEntity = false;    
+          
     Dictionary<string, float> AnimClipInfo = new Dictionary<string, float>();
     Vector3 LastPos = Vector3.zero;
     Vector3 DeltaPos = Vector3.zero;
@@ -30,9 +29,12 @@ public class CharacterEntity : MonoBehaviour
     float LastSpeed = 0f;
 
     protected NavMeshAgent NavMeshAgent;
+
+    [Header("Debug")]
+    public Text DebugText;
     public void ToggleNavMeshAgent(bool val)
     {
-        Debug.Log("ToggleNavMeshAgent(): " + val);
+       // Debug.Log("ToggleNavMeshAgent(): " + val);
         this.NavMeshAgent.enabled = val;
         if (val == true) NavMeshAgent.SetDestination(transform.position);
     }
@@ -49,7 +51,7 @@ public class CharacterEntity : MonoBehaviour
             return true;
         }
         return false;
-    }
+    }    
 
     // Start is called before the first frame update
     public virtual void Start()
@@ -70,10 +72,37 @@ public class CharacterEntity : MonoBehaviour
         LastPos = transform.position;
 
         NavMeshAgent = this.GetComponent<NavMeshAgent>();
-        NavMeshAgent.SetDestination(transform.position); // mostick01
+        NavMeshAgent.SetDestination(transform.position);
+
+        // get the floor if necessary
+        CalcCurrentFloor();
     }
 
-    
+    void CalcCurrentFloor()
+    {
+        if (GetComponent<CapsuleCollider>() != null)
+        {
+            Vector3 center = GetComponent<CapsuleCollider>().bounds.center;
+            Vector3 rayPos = center + new Vector3(0f, 0f, 1000f);
+            int layerMask = LayerMask.GetMask("Ship Level");
+            RaycastHit hit;
+            Physics.Raycast(rayPos, center - rayPos, out hit, Mathf.Infinity, layerMask);
+            if (hit.collider != null)
+            {                
+                SetFloor(hit.collider.GetComponent<ShipLevel>().Level);
+            }
+        }
+    }
+
+    public int GetCurFloor()
+    {
+        return CurFloor;
+    }
+    public void SetFloor(int newFloor)
+    {
+        CurFloor = newFloor;
+        //Debug.Log("setting " + this.name + "'s floor to: " + CurFloor);
+    }
 
     IEnumerator AnimStartDelay()
     {

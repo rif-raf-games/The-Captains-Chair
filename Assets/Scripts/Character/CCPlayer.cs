@@ -13,9 +13,8 @@ public class CCPlayer : CharacterEntity
 
     ArticyFlow CaptainArticyFlow;           
     
-    public Elevator[] Elevators;
-
-    public Elevator SelectedElevator = null;
+    Elevator[] Elevators;
+    Elevator SelectedElevator = null;
 
     private bool MovementBlocked = false;
     private bool DealingWithElevator = false;
@@ -24,13 +23,13 @@ public class CCPlayer : CharacterEntity
     Rigidbody RigidBody;
 
     [Header("CCPlayer")]
-    public GameObject DebugDestPos;
-    CharacterEntity Loop;
-    public float MoveSpeed = 1f;
-    public float TurnSpeedNew = 20f;
+    public float MoveSpeed = 650f;
+    public float RotSpeed = 3f;
+    CharacterEntity Loop;    
 
-    [Header("Debug")]
+    [Header("Player Debug")]
     public bool DEBUG_BlockMovement = false;
+    public GameObject DebugDestPos;
 
     // Start is called before the first frame update
     public override void Start()
@@ -48,7 +47,7 @@ public class CCPlayer : CharacterEntity
         {
             Loop = go.GetComponent<CharacterEntity>();
         }
-        ToggleControlType(eControlType.POINT_CLICK);
+        ToggleControlType(eControlType.STICK);
     }
 
     public void ToggleControlType(eControlType newType)
@@ -81,12 +80,12 @@ public class CCPlayer : CharacterEntity
     
     public void StartDialogue()
     {
-        Debug.Log("CCPlayer.StartDialogue()");
+        //Debug.Log("CCPlayer.StartDialogue()");
         SetupForControlType(eControlType.POINT_CLICK);
     }
     public void EndDialogue()
     {
-        Debug.Log("CCPlayer.EndDialogue()");
+       // Debug.Log("CCPlayer.EndDialogue()");
         if (CurControlType == eControlType.STICK)
         {
             SetupForControlType(eControlType.STICK);
@@ -102,6 +101,7 @@ public class CCPlayer : CharacterEntity
             base.LateUpdate();
         }        
     }
+    
     // Update is called once per frame
     public override void Update()
     {
@@ -110,78 +110,96 @@ public class CCPlayer : CharacterEntity
         {
             if (CurControlType == eControlType.STICK)
             {   // thumbstick control
+                Rigidbody rbody = GetComponent<Rigidbody>();
                 float moveX, moveZ;
                 float inputH = Input.GetAxis("Horizontal");
                 float inputV = Input.GetAxis("Vertical");
 
+                inputH = -inputH;
+                inputV = -inputV;
                 if (inputV < 0f)
                 {
-                    inputV = 0f;
+                   // inputV = 0f;
                 }
-
-                Animator.SetFloat("Vertical", inputV);
+                float val = new Vector3(Mathf.Abs(inputH), Mathf.Abs(inputV)).magnitude;
+                Animator.SetFloat("Vertical", val);
                 Animator.SetFloat("Horizontal", inputH);
 
-                moveX = inputH * Time.deltaTime;
-                float rot = moveX * TurnSpeedNew;
-                transform.Rotate(0, rot, 0);
+                moveX = inputH * MoveSpeed * Time.deltaTime;
+                moveZ = inputV * MoveSpeed * Time.deltaTime;
+                rbody.velocity = new Vector3(moveX, 0, moveZ);
 
-                Rigidbody rbody = GetComponent<Rigidbody>();
-                moveZ = inputV * Time.deltaTime;
-                rbody.velocity = moveZ * transform.forward * MoveSpeed;
-            }
-            else
-            {   // point 'n click
-                if ( Input.GetMouseButtonDown(0) )
+                /*Vector3 forwardDir = transform.forward;
+                Vector3 moveDir = rbody.velocity;
+                float dirDiff = Vector3.Angle(forwardDir, moveDir);
+                float rot = dirDiff * RotSpeed * Time.deltaTime;
+                transform.Rotate(0f, rot, 0f);*/
+
+                Vector3 direction = rbody.velocity;
+                Vector3 newDir = Vector3.RotateTowards(transform.forward, direction, RotSpeed * Time.deltaTime, 0.0f);
+                Quaternion newRot = Quaternion.LookRotation(newDir);
+                transform.rotation = newRot;
+                //transform.rotation = Quaternion.Slerp(transform.rotation, newRot, Time.deltaTime * 2f);
+
+                if (DebugText != null)
                 {
-                    int maskk = 1 << LayerMask.NameToLayer("Floor");
-                    maskk |= (1 << LayerMask.NameToLayer("Elevator"));
-                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                    RaycastHit hit;
-                    if (Physics.Raycast(ray, out hit, Mathf.Infinity, maskk))
-                    {
-                        Vector3 dest = Vector3.zero;
-                        string layerClicked = LayerMask.LayerToName(hit.collider.gameObject.layer);
-                        if (layerClicked.Equals("Floor"))
-                        {
-                            // Debug.Log("layerClicked: " + layerClicked + " hit: " + hit.collider.gameObject.name);
-                            dest = hit.point;
-                            SelectedElevator = null;
-                        }
-                        else if (layerClicked.Equals("Elevator"))
-                        {
-                            //s Debug.Log("layerClicked: " + layerClicked + " hit: " + hit.collider.gameObject.name);
-                            dest = hit.point;
-                            if (hit.collider.gameObject.name.Contains("Lift")) SelectedElevator = hit.collider.GetComponent<Elevator>();
-                            else SelectedElevator = hit.collider.GetComponentInParent<Elevator>();
-                            if (SelectedElevator == null) Debug.LogError("Clicked on an Elevator with no Elevator component.");
-                        }
-                        SetNavMeshDest(dest);
-                        if (DebugDestPos != null) DebugDestPos.transform.position = dest;
-                    }
+                    DebugText.text = "vel: " + rbody.velocity.ToString("F2") + "\n";
+                    DebugText.text = "velMag: " + rbody.velocity.magnitude.ToString("F2") + "\n";
+                   /* DebugText.text += "forwardDir: " + forwardDir.ToString("F2") + "\n";
+                    DebugText.text += "moveDir: " + moveDir.ToString("F2") + "\n";
+                    DebugText.text += "dirDiff: " + dirDiff.ToString("F2") + "\n";
+                    DebugText.text += "rot: " + rot.ToString("F2") + "\n";*/
                 }
-            }
-        }        
-               
-        if (WaitingForFollowersOnElevator == true)
-        {
-            if(Loop.NavMeshDone())
-            {
-               // Debug.Log("Loop is ready to rock");
-                StartElevatorRide();
-            }
-        }
 
-        if (DebugText != null)
-        {
-            DebugText.text = "CurControlType: " + CurControlType.ToString() + "\n";
-            DebugText.text += "Flow state: " + CaptainArticyFlow.CurArticyState.ToString() + "\n";
-            DebugText.text += "NavMeshAgent: " + NavMeshAgent.enabled + "\n";
-            /*DebugText.text = "input: " + inputH.ToString("F2") + "," + inputV.ToString("F2") + "\n";
-            DebugText.text += "move: " + moveX.ToString("F2") + "," + moveZ.ToString("F2") + "\n";
-            DebugText.text += "velocity: " + rbody.velocity.ToString("F2") + "\n";
-            DebugText.text += "rot: " + rot.ToString("F2") + "\n";*/
-        }
+                /*  moveX = inputH * Time.deltaTime;
+                  float rot = moveX * TurnSpeedNew;
+                  transform.Rotate(0, rot, 0);
+
+                  Rigidbody rbody = GetComponent<Rigidbody>();
+                  moveZ = inputV * Time.deltaTime;
+                  rbody.velocity = moveZ * transform.forward * MoveSpeed;*/
+            }
+              else
+              {   // point 'n click
+                  if ( Input.GetMouseButtonDown(0) )
+                  {
+                      int maskk = 1 << LayerMask.NameToLayer("Floor");
+                      maskk |= (1 << LayerMask.NameToLayer("Elevator"));
+                      Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                      RaycastHit hit;
+                      if (Physics.Raycast(ray, out hit, Mathf.Infinity, maskk))
+                      {
+                          Vector3 dest = Vector3.zero;
+                          string layerClicked = LayerMask.LayerToName(hit.collider.gameObject.layer);
+                          if (layerClicked.Equals("Floor"))
+                          {
+                              // Debug.Log("layerClicked: " + layerClicked + " hit: " + hit.collider.gameObject.name);
+                              dest = hit.point;
+                              SelectedElevator = null;
+                          }
+                          else if (layerClicked.Equals("Elevator"))
+                          {
+                              //s Debug.Log("layerClicked: " + layerClicked + " hit: " + hit.collider.gameObject.name);
+                              dest = hit.point;
+                              if (hit.collider.gameObject.name.Contains("Lift")) SelectedElevator = hit.collider.GetComponent<Elevator>();
+                              else SelectedElevator = hit.collider.GetComponentInParent<Elevator>();
+                              if (SelectedElevator == null) Debug.LogError("Clicked on an Elevator with no Elevator component.");
+                          }
+                          SetNavMeshDest(dest);
+                          if (DebugDestPos != null) DebugDestPos.transform.position = dest;
+                      }
+                  }
+              }
+          }        
+
+          if (WaitingForFollowersOnElevator == true)
+          {
+              if(Loop.NavMeshDone())
+              {
+                 // Debug.Log("Loop is ready to rock");
+                  StartElevatorRide();
+              }
+          }          
     }
 
     private void OnTriggerEnter(Collider other)

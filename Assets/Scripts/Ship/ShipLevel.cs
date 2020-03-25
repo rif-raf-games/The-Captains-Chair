@@ -18,28 +18,40 @@ public class ShipLevel : MonoBehaviour
         LevelRooms = GetComponentsInChildren<Room>().ToList<Room>();
     }   
 
+    List<Elevator> GatherElevators()
+    {
+        List<Elevator> elevatorsToChangeAlpha = new List<Elevator>();
+        Elevator[] allElevators = FindObjectsOfType<Elevator>();
+        foreach(Elevator e in allElevators)
+        {
+            if (e.CheckIfSameFloor(Level)) elevatorsToChangeAlpha.Add(e);
+        }
+        return elevatorsToChangeAlpha;
+    }
     
     public void SetRoomsAlpha(float alpha, bool skipLerp = false)
     {
-        Debug.Log("---------------------------SetRoomsAlpha() alpha: " + alpha);
+        //Debug.Log("---------------------------SetRoomsAlpha() alpha: " + alpha);
         foreach (Room room in LevelRooms)
         {
             room.ToggleAlpha(alpha, skipLerp);
         }
+
+        List<Elevator> elevatorsToChangeAlpha = GatherElevators();
+        foreach(Elevator e in elevatorsToChangeAlpha)
+        {
+            e.SetupAlphaLerp(alpha, skipLerp);
+        }
     }
-    public void SetPlayerLevelRoomsAlpha(/*float alpha,*/ bool skipLerp = false)
+   /* public void SetPlayerLevelRoomsAlpha( bool skipLerp = false)
     {
-        Debug.Log("---------------------------------SetPlayerLevelRoomsAlpha()");
-        int layerMask = LayerMask.GetMask("Ship Area Collider");
+       // Debug.Log("---------------------------------SetPlayerLevelRoomsAlpha()");
+        //int layerMask = LayerMask.GetMask("Ship Area Collider");
         foreach (Room room in LevelRooms)
         {
             room.ToggleAlpha(1f, skipLerp);
-            /*BoxCollider box = room.gameObject.GetComponent<BoxCollider>();
-            Collider[] colliders = Physics.OverlapBox(box.bounds.center, box.size / 2, transform.rotation, layerMask);
-            if (colliders.Length == 1) room.ToggleAlpha(1f, skipLerp);
-            else room.ToggleAlpha(alpha, skipLerp);*/
         }
-    }
+    }*/
 
     public void DEBUG_SetAlpha(float alpha)
     {
