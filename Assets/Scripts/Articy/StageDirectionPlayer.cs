@@ -20,26 +20,22 @@ public class StageDirectionPlayer : MonoBehaviour
 
     public void HandleStangeDirectionContainer(Stage_Directions_Container sdc)
     {
+        List<ArticyScriptInstruction> outputsToExecute = new List<ArticyScriptInstruction>();
         foreach (OutgoingConnection oc in sdc.InputPins[0].Connections)
         {
-            Stage_Directions sd = oc.Target as Stage_Directions;
-            Condition c = oc.Target as Condition;
-            if(c != null)
+            Stage_Directions sd = oc.Target as Stage_Directions;              
+            if (sd == null) { Debug.LogError("We're expecting a Stage_Directions here: " + oc.Target.GetType()); continue; }           
+            if (sd.InputPins[0].Text.CallScript() == true && HandleStageDirection(sd) == true)
             {
-               // Debug.Log("We need to eval this condition");
-                bool val = c.Expression.CallScript();
-                if (val == false) continue;
-                sd = c.OutputPins[0].Connections[0].Target as Stage_Directions;
-            }
-            if (sd == null) { Debug.LogError("We're expecting a Stage_Directions here: " + oc.Target.GetType()); continue; }
-            if( HandleStageDirection(sd) == true) 
-            {
-                ArticyScriptInstruction instruction = sd.OutputPins[0].Text;
-                if(instruction != null) instruction.CallScript();
-            }
+                outputsToExecute.Add(sd.OutputPins[0].Text);
+            }                        
+        }
+        foreach(ArticyScriptInstruction i in outputsToExecute)
+        {
+            i.CallScript();
         }
     }
-
+    
     public bool HandleStageDirection(Stage_Directions sd) 
     {        
         if (sd != null)
