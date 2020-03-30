@@ -72,7 +72,7 @@ public class Room : MonoBehaviour
                 Debug.Log(rq);*/
             }
         }
-        Debug.Log("Room " + this.name + ", num child materials:  " + ChildMaterials.Count + " num never opaque: " + NeverOpaqueMaterials.Count);
+        //Debug.Log("Room " + this.name + ", num child materials:  " + ChildMaterials.Count + " num never opaque: " + NeverOpaqueMaterials.Count);
     }    
 
     float LerpStart, LerpEnd;

@@ -14488,6 +14488,7 @@ MonoBehaviour:
   - {fileID: 568139368}
   - {fileID: 1097199406}
   - {fileID: 522267104}
+  GatesThisGame: []
   StartNodes:
   - {fileID: 5057512005982025067}
   - {fileID: 1639518143147651427}
@@ -14499,7 +14500,17 @@ MonoBehaviour:
   CurTouchedRing: {fileID: 0}
   ResultsText: {fileID: 1992280551}
   DebugText: {fileID: 1598353273}
-  DebugStartNode: {fileID: 0}
+  EvilDiodes: []
+  MaxEvilDiodes: 1
+  EvilDiodeSpeeds:
+  - 5
+  TimeBeforeEvilSpawn: 20
+  TimeBetweenEvilSpawns: 0
+  EvilRespawnTime: 1
+  NumSpawnAtATime: 1
+  MAX_DIODE_SPEED: 40
+  SpeedAdjTime: 1
+  SpeedAdjNumGates: 1
 --- !u!23 &2194249739126665591
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -36501,12 +36512,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d5f6829d7cb93d488d06dab9dbc52ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  StartSpeed: 5
+  CurSpeed: 0
   CurPath:
     Start: {fileID: 0}
     End: {fileID: 0}
     Ring: {fileID: 0}
   LastPosition: {fileID: 1087048891}
   Moving: 0
+  Evil: 0
+  DebugStartNode: {fileID: 0}
 --- !u!54 &5851130552999056193
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -36547,7 +36562,7 @@ Halo:
   m_Color:
     serializedVersion: 2
     rgba: 4278255455
-  m_Size: 0.2
+  m_Size: 0.22
 --- !u!33 &5851754429920753515
 MeshFilter:
   m_ObjectHideFlags: 0
