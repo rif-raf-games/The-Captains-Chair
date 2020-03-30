@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class ConvoUI : MonoBehaviour
 {
+    public const float TYPE_SPEED = 30f;
     public GameObject SpeakerPanel;
     public Text SpeakerName;
     public Text SpeakerText;

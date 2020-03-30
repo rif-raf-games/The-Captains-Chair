@@ -80,6 +80,8 @@ public class TheCaptainsChair : MonoBehaviour
         }
         SoundFX soundFX = FindObjectOfType<SoundFX>();
         SoundFXPlayer.Init(soundFX);
+        VisualFX visualFX = FindObjectOfType<VisualFX>();
+        VisualFXPlayer.Init(visualFX);
         BackgroundMusic bgMusic = FindObjectOfType<BackgroundMusic>();
         BackgroundMusicPlayer.Init(bgMusic);          
 
@@ -112,7 +114,7 @@ public class TheCaptainsChair : MonoBehaviour
     /// </summary>    
     void MyGameStateVariablesChanged(string aVariableName, object aValue)
     {
-        Debug.Log("aVariableName: " + aVariableName + " changed to: " + aValue.ToString());
+        //Debug.Log("aVariableName: " + aVariableName + " changed to: " + aValue.ToString());
         return;
         ShouldCheckAIs = true;
        // CaptainsChair.SaveSaveData();

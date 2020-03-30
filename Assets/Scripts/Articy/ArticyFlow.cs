@@ -18,17 +18,22 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     TheCaptainsChair CaptainsChair;
     CCPlayer Player;
     ArticyFlowPlayer FlowPlayer;
+    StageDirectionPlayer StageDirectionPlayer;
 
     // flow stuff
     IFlowObject CurPauseObject = null;
-    List<Branch> CurBranches = new List<Branch>();
-    bool IsDialogueFragmentsInteractive = true;
-    float TypewriterSpeed;
+    List<Branch> CurBranches = new List<Branch>();    
+    public bool IsDialogueFragmentsInteractive { get; set; }
+    public float TypewriterSpeed { get; set; }        
+    bool IsMoAMoron { get; set; }
+
     Branch NextBranch = null;
     ArticyObject NextFragment = null;
-    
+
+    public bool MoTest1 = false;
+    public bool MoTest2 { get; set; }
     // UI's for cutscenes and conversations   
-    public ConvoUI ConvoUI;
+    public ConvoUI ConvoUI; public float GetDefaultTypewriterSpeed() { return ConvoUI.DefaultTypewriterSpeed; }
 
     // Articy stuff
     public bool IsCalledInForecast { get; set; }
@@ -43,6 +48,8 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         Player = GameObject.FindObjectOfType<CCPlayer>();
         CaptainsChair = GameObject.FindObjectOfType<TheCaptainsChair>();
         FlowPlayer = this.GetComponent<ArticyFlowPlayer>();
+        StageDirectionPlayer = FindObjectOfType<StageDirectionPlayer>();
+
         TypewriterSpeed = ConvoUI.DefaultTypewriterSpeed;
 
         ArticyDatabase.DefaultGlobalVariables.Notifications.AddListener("*.*", MyGameStateVariablesChanged);
@@ -127,79 +134,11 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         //Debug.Log("************** OnFlowPlayerPaused() END aObject was NOT null***************");
     }
 
-    public void StartAIOnNPC(NPC npc, bool removeFromShutOffAis = false)
+    public void SendToStageDirections(Stage_Directions_Container sdc)
     {
-        npc.RestartBehavior();
-        if (removeFromShutOffAis == true && ShutOffAIs.Contains(npc)) ShutOffAIs.Remove(npc);                    
-    }    
-
-    public void HandleStageDirections(Stage_Directions sd)
-    {       
-        if (sd != null)
-        {
-            Stage_DirectionFeature sdf = sd.Template.Stage_Direction;            
-            switch (sdf.Direction)
-            {
-                case Direction.AI_Off:
-                    List<string> aisToShutOff = sdf.DirectionTargets.Split(',').ToList();
-                    Debug.Log("num ai's to turn off: " + aisToShutOff.Count);
-                    foreach (string s in aisToShutOff)
-                    {
-                        NPC npc = CaptainsChair.GetNPCFromActorName(s);
-                        if (npc == null) { Debug.LogError("There's no NPC associated with the provided name. " + s); continue; }
-                        StopAIOnNPC(npc);
-                    }
-                    break;
-                case Direction.AI_On:
-                    List<string> aisToTurnOn = sdf.DirectionTargets.Split(',').ToList();
-                    Debug.Log("num ai's to turn on: " + aisToTurnOn.Count);
-                    foreach (string s in aisToTurnOn)
-                    {
-                        NPC npc = CaptainsChair.GetNPCFromActorName(s);
-                        if (npc == null) { Debug.LogError("There's no NPC associated with the provided name. " + s); return; }
-                        StartAIOnNPC(npc, true);
-                    }
-                    break;
-                case Direction.Dialogue_Interact_On:
-                    IsDialogueFragmentsInteractive = true;
-                    break;
-                case Direction.Dialogue_Interact_Off:
-                    IsDialogueFragmentsInteractive = false;
-                    break;
-                case Direction.Music_Change:
-                    BackgroundMusicPlayer.Play(sdf.Direction_Info);
-                    break;
-                case Direction.SFX:
-                    SoundFXPlayer.Play(sdf.Direction_Info);
-                    break;
-                case Direction.Dialogue_Text_Speed:
-                    if (sdf.Direction_Info.Equals("Default")) TypewriterSpeed = ConvoUI.DefaultTypewriterSpeed;
-                    else TypewriterSpeed = float.Parse(sdf.Direction_Info);
-                    Debug.Log("TypewriterSpeed: " + TypewriterSpeed);
-                    break;
-
-                default:
-                    Debug.LogError("Unknown how to handle this Stage_Direction type: " + sdf.Direction);
-                    break;
-            }            
-        }
-    }
-
-    List<NPC> ShutOffAIs = new List<NPC>();
-    public void StopAIOnNPC(NPC npc)
-    {
-        if(ShutOffAIs.Contains(npc))
-        {
-            Debug.LogWarning("This npc is already on the list so we're bailing: " + npc.name);
-            return;
-        }
-        BehaviorFlowPlayer bfp = npc.GetComponent<BehaviorFlowPlayer>();
-        bfp.StopBehavior();       
-        Debug.Log("adding this to the shut off list: " + npc.name);
-        ShutOffAIs.Add(npc);
-    }
-    
-    //int numUpdates = 1;
+        StageDirectionPlayer.HandleStangeDirectionContainer(sdc);
+    }   
+                
     /// <summary>
     /// Callback from Articy when it's calculated the available branches
     /// </summary>
@@ -267,9 +206,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             ActiveCALPauseObjects = CurCALObject.PauseFrags;
             StaticStuff.PrintFlowBranchesUpdate(this.name + " is about to start their Behavior.  Time: " + Time.time, this);
             //Debug.LogWarning("time to replace this with a behavior player");
-            GetComponent<BehaviorFlowPlayer>().StartBehaviorFlow(CurCAL, this.gameObject/*, DialogueNPC*/);
-            
-            // Debug.Log(this.name + " now has a calCount of: " + calCount);
+            GetComponent<BehaviorFlowPlayer>().StartBehaviorFlow(CurCAL, this.gameObject);            
         }
         else if(CurPauseObject.GetType().Equals(typeof(Stage_Directions_Container)))
         {
@@ -285,8 +222,8 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                 {
                     Debug.LogError("There's something other than a Stage_Directions linked on this Stage_Directions_Container.");
                     continue;
-                }                                               
-                HandleStageDirections(sd);
+                }
+                StageDirectionPlayer.HandleStageDirection(sd); //mosd - ArticyFlow.cs OnBranchesUpdated(), CurPauseObject == Stage_Directions_Container
             }            
         }
         else if (CurBranches.Count == 1)
@@ -318,24 +255,16 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                        // Player.GetComponent<CapsuleCollider>().enabled = true;
                         if (DialogueNPC != null)
                         {
-                            StartAIOnNPC(DialogueNPC);
-                            //DialogueNPC.GetComponent<BoxCollider>().enabled = true;
+                            StageDirectionPlayer.StartAIOnNPC(DialogueNPC);                            
                             DialogueNPC = null;
                         }
-                        foreach (NPC npc in ShutOffAIs)
-                        {
-                            StartAIOnNPC(npc);
-                        }
-                        ShutOffAIs.Clear();
+                        StageDirectionPlayer.ShutOnAllAIs();                        
                     }
                     else if(CurArticyState == eArticyState.AMBIENT_TRIGGER)
                     {
                         //Debug.LogWarning("Coming out of an ambient trigger");
-                        foreach (NPC npc in ShutOffAIs)
-                        {
-                            StartAIOnNPC(npc);
-                        }
-                        ShutOffAIs.Clear();
+                        // monote - this could be a problem because you might not want all AI's shut on after an Ambient Trigger because a Dialogue might be going on. REDO AMBIENT_TRIGGERS
+                        StageDirectionPlayer.ShutOnAllAIs(); 
                     }
                     //CurArticyState = eArticyState.FREE_ROAM;
                     SetArticyState(eArticyState.FREE_ROAM);
@@ -414,12 +343,8 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             }
             else if(CurArticyState == eArticyState.AMBIENT_TRIGGER)
             {
-                s += "We're ending an Ambient_Trigger, so get the AI's back to normal";                
-                foreach(NPC npc in ShutOffAIs)
-                {
-                    StartAIOnNPC(npc);
-                }
-                ShutOffAIs.Clear();                
+                s += "We're ending an Ambient_Trigger, so get the AI's back to normal";
+                StageDirectionPlayer.ShutOnAllAIs();                            
             } 
             else
             {
@@ -552,7 +477,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                 {
                     DialogueNPC = DialogueStartCollider.GetComponent<NPC>();
                     if (DialogueNPC == null) { Debug.LogError("There's no NPC on the Dialgue_NPC you collided with"); return; }
-                    StopAIOnNPC(DialogueNPC);
+                    StageDirectionPlayer.StopAIOnNPC(DialogueNPC);
                     // DialogueNPC.GetComponent<BoxCollider>().enabled = false;
                 }
                 else
@@ -648,10 +573,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                // DebugText.text += s + "\n";
             }
             DebugText.text += "ShutOffAI's:\n";
-            foreach (NPC npc in ShutOffAIs)
-            {
-                DebugText.text += "\t" + npc.name + "\n";
-            }
+            DebugText.text += StageDirectionPlayer.GetShutOffAINames();
         }
         if (NextBranch != null && waitingOnAL == false)
         {            

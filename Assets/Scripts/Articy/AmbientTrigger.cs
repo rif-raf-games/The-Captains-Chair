@@ -6,6 +6,7 @@ using Articy.Unity;
 using System.Linq;
 using Articy.The_Captain_s_Chair.Features;
 
+// NOTE: THIS SHOULD BE REDONE!!!  This is using a lot of crap shared with ArticyFlow so figure it out (create an NPC AI pool you can use anywhere, etc)
 public class AmbientTrigger : MonoBehaviour
 {
     List<NPC> ShutOffAIs = new List<NPC>();

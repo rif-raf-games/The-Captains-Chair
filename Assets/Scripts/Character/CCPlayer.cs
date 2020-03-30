@@ -219,7 +219,7 @@ public class CCPlayer : CharacterEntity
             StaticStuff.PrintTriggerEnter("we collided with something that has an ArticyRef.  Now lets see what it is.");
             Dialogue dialogue = colliderArtRef.reference.GetObject() as Dialogue;
             Ambient_Trigger at = colliderArtRef.reference.GetObject() as Ambient_Trigger;
-            //Trigger_Fragment tf = colliderArtRef.reference.GetObject() as Trigger_Fragment;
+            Stage_Directions_Container sdc = colliderArtRef.reference.GetObject() as Stage_Directions_Container;
             if (dialogue != null)
             {
                 StaticStuff.PrintTriggerEnter("we have a dialogue, so set the FlowPlayer to start on it and see what happens");
@@ -231,6 +231,11 @@ public class CCPlayer : CharacterEntity
                 AmbientTrigger ambientTrigger = other.GetComponent<AmbientTrigger>();
                 if (ambientTrigger == null) { Debug.LogError("No AmbientTrigger component on this collider: " + other.name); return; }
                 ambientTrigger.ProcessAmbientTrigger(at);
+            }
+            else if(sdc != null)
+            {
+                StaticStuff.PrintTriggerEnter("We have a Stage_Directions_Container, so lets see which of those we're gonna play");
+                CaptainArticyFlow.SendToStageDirections(sdc);
             }
             else
             {

@@ -32,7 +32,7 @@ public class Elevator : MonoBehaviour
             ChildMaterials.Add(material);
             material.shader = UnityEngine.Shader.Find("RifRafStandard");
         }
-        Debug.Log("num materials: " + ChildMaterials.Count);
+       // Debug.Log("num materials: " + ChildMaterials.Count);
     }
     private void Start()
     {

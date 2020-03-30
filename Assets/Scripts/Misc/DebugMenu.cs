@@ -20,7 +20,7 @@ public class DebugMenu : MonoBehaviour
     {        
         CurDebugState = eDebugState.OFF;
         int numScenes = SceneManager.sceneCountInBuildSettings;
-        Debug.Log("num scenes in Build Settings: " + numScenes);
+        //Debug.Log("num scenes in Build Settings: " + numScenes);
         for (int i = 0; i < numScenes; i++)
         {
             string scenePath = SceneUtility.GetScenePathByBuildIndex(i);

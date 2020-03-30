@@ -5439,10 +5439,10 @@ GameObject:
   - component: {fileID: 503849595924545999}
   - component: {fileID: 503849595924545998}
   - component: {fileID: 503849595924545995}
-  - component: {fileID: 503849595924545992}
-  - component: {fileID: 503849595924545993}
-  - component: {fileID: 503849595924545989}
   - component: {fileID: 503849595924545994}
+  - component: {fileID: 503849595924545989}
+  - component: {fileID: 503849595924545993}
+  - component: {fileID: 503849595924545992}
   m_Layer: 27
   m_Name: Captain
   m_TagString: Player
@@ -5549,61 +5549,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &503849595924545992
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8493759897226156722}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73535c48d37bc344e8f2cef25d7180ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DebugText: {fileID: 0}
-  DebugText2: {fileID: 0}
-  ExecutingActions: 0
---- !u!114 &503849595924545993
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8493759897226156722}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7eb883fbc972bed42b89bd626b21da6e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CurArticyState: 0
-  ConvoUI: {fileID: 0}
-  DebugText: {fileID: 0}
---- !u!114 &503849595924545989
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8493759897226156722}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 149237616, guid: df2ec02f61e861546b9427c26ccacb8d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  useDefaultGlobalVariables: 1
-  globalVariables: {fileID: 0}
-  overwriteMethodProvider: 0
-  overwrittenMethodProvider: {fileID: 0}
-  startOn:
-    instanceId: 0
-    referencingMode: 0
-    lowId: 0
-    highId: 0
-  pauseOn: 31
-  ignoreInvalidBranches: 1
-  continuouslyRecalculateBranches: 0
-  continouslyRecalculateInterval: 1
 --- !u!114 &503849595924545994
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5630,8 +5575,64 @@ MonoBehaviour:
   DebugText: {fileID: 0}
   MoveSpeed: 225
   RotSpeed: 6
+  Joystick: {fileID: 0}
   DEBUG_BlockMovement: 0
   DebugDestPos: {fileID: 0}
+--- !u!114 &503849595924545989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8493759897226156722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 149237616, guid: df2ec02f61e861546b9427c26ccacb8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  useDefaultGlobalVariables: 1
+  globalVariables: {fileID: 0}
+  overwriteMethodProvider: 0
+  overwrittenMethodProvider: {fileID: 0}
+  startOn:
+    instanceId: 0
+    referencingMode: 0
+    lowId: 0
+    highId: 0
+  pauseOn: 31
+  ignoreInvalidBranches: 1
+  continuouslyRecalculateBranches: 0
+  continouslyRecalculateInterval: 1
+--- !u!114 &503849595924545993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8493759897226156722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7eb883fbc972bed42b89bd626b21da6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CurArticyState: 0
+  ConvoUI: {fileID: 0}
+  DebugText: {fileID: 0}
+--- !u!114 &503849595924545992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8493759897226156722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73535c48d37bc344e8f2cef25d7180ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DebugText: {fileID: 0}
+  DebugText2: {fileID: 0}
+  ExecutingActions: 0
 --- !u!1 &8676799450779151386
 GameObject:
   m_ObjectHideFlags: 0

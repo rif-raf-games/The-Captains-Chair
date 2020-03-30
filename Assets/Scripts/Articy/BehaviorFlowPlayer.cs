@@ -12,7 +12,8 @@ public class BehaviorFlowPlayer : MonoBehaviour
     public Text DebugText;
     public Text DebugText2;
 
-    ArticyFlow CaptainArticyFlow;
+    //ArticyFlow CaptainArticyFlow;
+    StageDirectionPlayer StageDirectionPlayer;
     CamFollow CamFollow;
     Dictionary<CharacterEntity, EntitySaveData> CurCALEntitySaveData = new Dictionary<CharacterEntity, EntitySaveData>();
     List<Character_Action_Template> CurActions = new List<Character_Action_Template>();
@@ -25,7 +26,7 @@ public class BehaviorFlowPlayer : MonoBehaviour
     private void Start()
     {
         CamFollow = FindObjectOfType<CamFollow>();
-        CaptainArticyFlow = FindObjectOfType<CCPlayer>().GetComponent<ArticyFlow>();
+        StageDirectionPlayer = FindObjectOfType<StageDirectionPlayer>();
         //Debug.Log(this.name + ": setting EA to false in Start");
         ExecutingActions = false;
     }
@@ -176,13 +177,14 @@ public class BehaviorFlowPlayer : MonoBehaviour
             else if(ao as Stage_Directions_Container != null)
             {
                 StaticStuff.PrintBehaviorFlow("We've got a Stage_Directions_Container to deal with during a BehavirFlowPlayer", this);
-                Stage_Directions_Container sdc = ao as Stage_Directions_Container;                
-                foreach(OutgoingConnection oc in sdc.InputPins[0].Connections)
+                Stage_Directions_Container sdc = ao as Stage_Directions_Container;
+                StageDirectionPlayer.HandleStangeDirectionContainer(sdc);
+                /*foreach(OutgoingConnection oc in sdc.InputPins[0].Connections)
                 {
                     Stage_Directions sd = oc.Target as Stage_Directions;
                     if(sd == null) { Debug.LogError("We're expecting a Stage_Directions here: " + oc.Target.GetType()); continue; }
-                    CaptainArticyFlow.HandleStageDirections(sd);
-                }
+                    StageDirectionPlayer.HandleStageDirection(sd); // mosd - BehaviorFlowPlayer.PrepActions() FlowFragment is Stage_Directions_Container
+                }*/
                 CurrentActionsDone(sdc);
                 return null;
             }

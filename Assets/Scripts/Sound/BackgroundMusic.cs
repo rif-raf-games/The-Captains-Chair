@@ -18,7 +18,11 @@ public class BackgroundMusic : MonoBehaviour
         this.AudioSource.Stop();
         this.AudioSource.clip = clip;
         this.AudioSource.Play();
-    }    
+    }
+    public void StopMusic()
+    {
+        this.AudioSource.Stop();            
+    }
 }
 
 public static class BackgroundMusicPlayer
@@ -33,7 +37,7 @@ public static class BackgroundMusicPlayer
     public static void Play(string musicName)
     {
         if (BGMusic == null) { Debug.LogError("Trying to play music with no music player"); return; }
-        BGMusic.PlayMusic(musicName);
-
+        if (musicName.Equals("Off")) BGMusic.StopMusic();
+        else BGMusic.PlayMusic(musicName);
     }
 }
