@@ -52,7 +52,7 @@ public class TheCaptainsChair : MonoBehaviour
                 Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
                 ArticyObject flowStartAO = jumpSave.Template.Flow_Start_Success.ReferenceSlot;
                 Debug.Log("flow start: " + flowStartAO.TechnicalName);
-                Player.GetComponent<ArticyFlow>().CheckDialogue(flowStartAO as Dialogue, Player.gameObject);
+                Player.GetComponent<ArticyFlow>().CheckIfDialogueShouldStart(flowStartAO as Dialogue, Player.gameObject);
             }
             else
             {
@@ -76,7 +76,7 @@ public class TheCaptainsChair : MonoBehaviour
             {
                 Debug.LogError("The starting Articy element is not a Dialogue");
             }
-            Player.GetComponent<ArticyFlow>().CheckDialogue(DialogueToStartOn.GetObject() as Dialogue, Player.gameObject);
+            Player.GetComponent<ArticyFlow>().CheckIfDialogueShouldStart(DialogueToStartOn.GetObject() as Dialogue, Player.gameObject);
         }
         SoundFX soundFX = FindObjectOfType<SoundFX>();
         SoundFXPlayer.Init(soundFX);

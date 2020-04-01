@@ -79,12 +79,12 @@ public class CCPlayer : CharacterEntity
     }
     
     
-    public void StartDialogue()
+    public void SetPlayerControlStartDialogue()
     {
         //Debug.Log("CCPlayer.StartDialogue()");
         SetupForControlType(eControlType.POINT_CLICK);
     }
-    public void EndDialogue()
+    public void SetPlayerControlEndDialogue()
     {
        // Debug.Log("CCPlayer.EndDialogue()");
         if (CurControlType == eControlType.STICK)
@@ -223,7 +223,7 @@ public class CCPlayer : CharacterEntity
             if (dialogue != null)
             {
                 StaticStuff.PrintTriggerEnter("we have a dialogue, so set the FlowPlayer to start on it and see what happens");
-                CaptainArticyFlow.CheckDialogue(dialogue, other.gameObject);
+                CaptainArticyFlow.CheckIfDialogueShouldStart(dialogue, other.gameObject);
             }
             else if (at != null)
             {

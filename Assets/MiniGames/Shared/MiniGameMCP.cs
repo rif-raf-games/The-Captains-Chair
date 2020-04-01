@@ -169,7 +169,7 @@ public class MiniGameMCP : MonoBehaviour
         else
         {
             Dialogue d = jumpSave.Template.Dialogue_List.DialoguesToPlay[CurPuzzle] as Dialogue;
-            if (d != null) MiniGameArticyFlow.CheckDialogue(d, null);
+            if (d != null) MiniGameArticyFlow.CheckIfDialogueShouldStart(d, null);
         }        
     }
     public void PuzzleFinished()

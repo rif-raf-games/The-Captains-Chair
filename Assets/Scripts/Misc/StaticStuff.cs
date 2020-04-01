@@ -1,10 +1,10 @@
 ﻿
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-
+using UnityEngine.Analytics;
 
 static public class StaticStuff 
 {    
@@ -123,4 +123,14 @@ static public class StaticStuff
         material.EnableKeyword("_ALPHAPREMULTIPLY_ON");
         material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
     }
+    public static void TrackEvent(string e, Dictionary<string, object> parameters = null)
+    {
+        if (parameters == null) parameters = new Dictionary<string, object>();
+        
+        parameters.Add("stack", Environment.StackTrace);
+        AnalyticsResult ar = Analytics.CustomEvent(e, parameters);
+        Debug.Log("Analytic: " + e + " has result: " + ar.ToString());
+        if (ar != AnalyticsResult.Ok) Debug.LogError("ERROR: we have a screwed up analytics event tracking: " + ar.ToString());
+    }
+
 }
