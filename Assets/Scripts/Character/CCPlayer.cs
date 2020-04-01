@@ -102,13 +102,81 @@ public class CCPlayer : CharacterEntity
             base.LateUpdate();
         }        
     }
-    
+
+    /*public CapsuleCollider testCap;
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Debug.Log(testCap.center);
+        Vector3 center = testCap.transform.TransformPoint(testCap.center);
+        Gizmos.DrawWireSphere(center, .5f);
+        Vector3 start = center + testCap.height / 2 * testCap.transform.forward;
+        Gizmos.DrawWireSphere(start, .5f);
+        Vector3 end = center - testCap.height / 2 * testCap.transform.forward;
+        Gizmos.DrawWireSphere(end, .5f);
+    }*/
     // Update is called once per frame
     public override void Update()
     {
-        base.Update();        
+        base.Update();                
         if (MovementBlocked == false && DEBUG_BlockMovement == false)
         {
+            Ray ray;
+            RaycastHit hit;
+            int mask;
+            
+            // first check to see if we have clicked on an interactive triggers
+            if (Input.GetMouseButtonDown(0))
+            {
+                mask = LayerMask.GetMask("ITrigger");
+                ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask))
+                {
+                    // we clicked on an ITrigger, so figure out which collider we need to check, then check if the Player is inside
+                    mask = LayerMask.GetMask("Player");
+                    GameObject container = hit.collider.transform.GetChild(0).gameObject;
+                    Collider[] colliders = null;                
+                    if(container.GetComponent<BoxCollider>() != null)
+                    {                        
+                        BoxCollider box = container.GetComponent<BoxCollider>();
+                        colliders = Physics.OverlapBox(box.bounds.center, box.size / 2, container.transform.rotation, mask);
+                    }
+                    else if(container.GetComponent<SphereCollider>() != null)
+                    {
+                        SphereCollider sc = container.GetComponent<SphereCollider>();
+                        colliders = Physics.OverlapSphere(sc.bounds.center, sc.radius, mask);
+                    }
+                    else if(container.GetComponent<CapsuleCollider>() != null)
+                    {
+                        CapsuleCollider cc = container.GetComponent<CapsuleCollider>();
+                        Vector3 center = cc.transform.TransformPoint(cc.center);
+                        Vector3 start = center + cc.height / 2 * cc.transform.forward;
+                        Vector3 end = center - cc.height / 2 * cc.transform.forward;
+                        colliders = Physics.OverlapCapsule(start, end, cc.radius, mask);
+                    }
+                    if(colliders == null) { Debug.LogError("You have the wrong kind of collider on the child of this ITrigger: " + hit.collider.name); return; }
+                    //Debug.Log("num colliders within the ITrigger captain area: " + colliders.Length);
+                    if(colliders.Length == 1)
+                    {   // one collider means the Player is within, so get the fragment going
+                        ArticyReference triggerArtRef = hit.collider.GetComponent<ArticyReference>();
+                        Dialogue dialogue = triggerArtRef.reference.GetObject() as Dialogue;                        
+                        Stage_Directions_Container sdc = triggerArtRef.reference.GetObject() as Stage_Directions_Container;
+                        if (dialogue != null)
+                        {                            
+                            CaptainArticyFlow.CheckIfDialogueShouldStart(dialogue, container.gameObject);
+                        }
+                        else if(sdc != null)
+                        {
+                            CaptainArticyFlow.SendToStageDirections(sdc);
+                        }
+                    }
+                    else if(colliders.Length > 1)
+                    {
+                        Debug.LogError("Why do we have more than one collider on this ITrigger thing: " + hit.collider.name);
+                    }
+                }
+            }
+                        
             if (CurControlType == eControlType.STICK)
             {   // thumbstick control
                 Rigidbody rbody = GetComponent<Rigidbody>();
@@ -136,45 +204,23 @@ public class CCPlayer : CharacterEntity
                 moveZ = inputV * MoveSpeed * Time.deltaTime;
                 rbody.velocity = new Vector3(moveX, 0, moveZ);
 
-                /*Vector3 forwardDir = transform.forward;
-                Vector3 moveDir = rbody.velocity;
-                float dirDiff = Vector3.Angle(forwardDir, moveDir);
-                float rot = dirDiff * RotSpeed * Time.deltaTime;
-                transform.Rotate(0f, rot, 0f);*/
+                // note - some old stuff is copied below
 
                 Vector3 direction = rbody.velocity;
                 Vector3 newDir = Vector3.RotateTowards(transform.forward, direction, RotSpeed * Time.deltaTime, 0.0f);
                 Quaternion newRot = Quaternion.LookRotation(newDir);
                 transform.rotation = newRot;
-                //transform.rotation = Quaternion.Slerp(transform.rotation, newRot, Time.deltaTime * 2f);
 
-                if (DebugText != null)
-                {
-                    DebugText.text = "vel: " + rbody.velocity.ToString("F2") + "\n";
-                    DebugText.text = "velMag: " + rbody.velocity.magnitude.ToString("F2") + "\n";
-                   /* DebugText.text += "forwardDir: " + forwardDir.ToString("F2") + "\n";
-                    DebugText.text += "moveDir: " + moveDir.ToString("F2") + "\n";
-                    DebugText.text += "dirDiff: " + dirDiff.ToString("F2") + "\n";
-                    DebugText.text += "rot: " + rot.ToString("F2") + "\n";*/
-                }
-
-                /*  moveX = inputH * Time.deltaTime;
-                  float rot = moveX * TurnSpeedNew;
-                  transform.Rotate(0, rot, 0);
-
-                  Rigidbody rbody = GetComponent<Rigidbody>();
-                  moveZ = inputV * Time.deltaTime;
-                  rbody.velocity = moveZ * transform.forward * MoveSpeed;*/
+                
             }
-              else
+            else
               {   // point 'n click
                   if ( Input.GetMouseButtonDown(0) )
                   {
-                      int maskk = 1 << LayerMask.NameToLayer("Floor");
-                      maskk |= (1 << LayerMask.NameToLayer("Elevator"));
-                      Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                      RaycastHit hit;
-                      if (Physics.Raycast(ray, out hit, Mathf.Infinity, maskk))
+                      mask = 1 << LayerMask.NameToLayer("Floor");
+                      mask |= (1 << LayerMask.NameToLayer("Elevator"));
+                      ray = Camera.main.ScreenPointToRay(Input.mousePosition);                      
+                      if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask))
                       {
                           Vector3 dest = Vector3.zero;
                           string layerClicked = LayerMask.LayerToName(hit.collider.gameObject.layer);
@@ -211,6 +257,7 @@ public class CCPlayer : CharacterEntity
 
     private void OnTriggerEnter(Collider other)
     {
+        if(other.gameObject.CompareTag("Ignore Trigger")) { StaticStuff.PrintTriggerEnter(this.name + "Collided with an Ignore Trigger trigger, so bail"); return; }
         if (other.gameObject.layer == LayerMask.NameToLayer("Room")) { StaticStuff.PrintTriggerEnter(this.name + " This is a Room collider " + other.name + " on the Player, so bail and let the RoomCollider.cs handle it"); return; }
         StaticStuff.PrintTriggerEnter(this.name + " CCPlayer.OnTriggerEnter() other: " + other.name + ", layer: " + other.gameObject.layer);
         ArticyReference colliderArtRef = other.gameObject.GetComponent<ArticyReference>();
@@ -426,6 +473,19 @@ public class CCPlayer : CharacterEntity
         }
     }
 }
+/*Vector3 forwardDir = transform.forward;
+                Vector3 moveDir = rbody.velocity;
+                float dirDiff = Vector3.Angle(forwardDir, moveDir);
+                float rot = dirDiff * RotSpeed * Time.deltaTime;
+                transform.Rotate(0f, rot, 0f);*/
+
+/*  moveX = inputH * Time.deltaTime;
+  float rot = moveX * TurnSpeedNew;
+  transform.Rotate(0, rot, 0);
+
+  Rigidbody rbody = GetComponent<Rigidbody>();
+  moveZ = inputV * Time.deltaTime;
+  rbody.velocity = moveZ * transform.forward * MoveSpeed;*/
 
 /*
  * bool lastPath = false;
