@@ -132,6 +132,7 @@ public class CCPlayer : CharacterEntity
                 ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask))
                 {
+                   // Debug.Log("clicked a trigger");
                     // we clicked on an ITrigger, so figure out which collider we need to check, then check if the Player is inside
                     mask = LayerMask.GetMask("Player");
                     GameObject container = hit.collider.transform.GetChild(0).gameObject;
@@ -155,7 +156,7 @@ public class CCPlayer : CharacterEntity
                         colliders = Physics.OverlapCapsule(start, end, cc.radius, mask);
                     }
                     if(colliders == null) { Debug.LogError("You have the wrong kind of collider on the child of this ITrigger: " + hit.collider.name); return; }
-                    //Debug.Log("num colliders within the ITrigger captain area: " + colliders.Length);
+                  //  Debug.Log("num colliders within the ITrigger captain area: " + colliders.Length);
                     if(colliders.Length == 1)
                     {   // one collider means the Player is within, so get the fragment going
                         ArticyReference triggerArtRef = hit.collider.GetComponent<ArticyReference>();
