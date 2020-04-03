@@ -142,7 +142,8 @@ public class MiniGameMCP : MonoBehaviour
             ArticyGlobalVariables.Default.Mini_Games.Returning_From_Mini_Game = true;
             ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success = true;
             Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
-            SceneManager.LoadScene(jumpSave.Template.Next_Game_Scene.Scene_Name);
+            //SceneManager.LoadScene(jumpSave.Template.Next_Game_Scene.Scene_Name);
+            SceneManager.LoadScene("ParkingDemo");
             
         }
         else

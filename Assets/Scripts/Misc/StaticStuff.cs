@@ -8,7 +8,7 @@ using UnityEngine.Analytics;
 
 static public class StaticStuff 
 {    
-    public const bool USE_DEBUG_MENU = true; // HERE IS WHERE YOU TOGGLE THE DEBUG MENU
+    public const bool USE_DEBUG_MENU = false; // HERE IS WHERE YOU TOGGLE THE DEBUG MENU
 
     public enum eOrientation { LANDSCAPE, PORTRAIT };
 

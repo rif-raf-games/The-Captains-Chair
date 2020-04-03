@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using UnityEditor;
+using UnityEngine.SceneManagement;
 
 public class Parking : MiniGame
 {    
@@ -475,6 +476,10 @@ public class Parking : MiniGame
         {
             CheckGameFinish();
         }
+        if (GUI.Button(new Rect(Screen.width - 100, 0, 100, 100), "Main Menu"))
+        {
+            SceneManager.LoadScene("ParkingDemo");
+        }        
     }
 
     IEnumerator ShowResults(string result, bool success)
@@ -485,9 +490,9 @@ public class Parking : MiniGame
         yield return new WaitForSeconds(3f);
         ResultsText.gameObject.SetActive(false);
         if(success == true)
-        {            
+        {
             if (MCP != null) MCP.PuzzleFinished();
-            else Debug.Log("We're not part of an MCP so figure out what next to do");
+            else SceneManager.LoadScene("ParkingDemo");//Debug.Log("We're not part of an MCP so figure out what next to do");
         }      
         else
         {
