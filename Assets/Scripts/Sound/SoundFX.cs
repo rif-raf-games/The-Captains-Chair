@@ -19,7 +19,11 @@ public class SoundFX : MonoBehaviour
     private void Start()
     {
         this.AudioSource = GetComponent<AudioSource>();
-        foreach (FXInfo info in SoundFXList) SoundFXNames.Add(info.Name);
+        foreach (FXInfo info in SoundFXList)
+        {
+            info.Name = info.Clip.name;
+            SoundFXNames.Add(info.Name);
+        }
     }
 
     public void PlayFX(string fxID )
@@ -36,6 +40,7 @@ public static class SoundFXPlayer
     static SoundFX SoundFX;
     public static void Init(SoundFX soundFX)
     {
+        Debug.Log("SoundFXPlayer Init()");
         SoundFX = soundFX;
     }
     public static void Play(string fxID)

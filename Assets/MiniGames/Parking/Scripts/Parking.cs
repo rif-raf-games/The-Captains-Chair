@@ -17,17 +17,24 @@ public class Parking : MiniGame
 
     enum eGameState { OFF, NORMAL, ROTATE_PAD };
     eGameState CurGameState = eGameState.OFF;
-
-    [Header("Ignore Debug Stuff Below")]
+    
     public ParkingShip ActiveShip = null;
+    ParkingShip ClickedShip = null;
+    bool TouchingRotatePad = false;
 
     Vector3 CurTouchPos = Vector3.zero;
     Vector3 LastTouchPos = Vector3.zero;
 
-    public List<ParkingShip> TargetShips = new List<ParkingShip>();
+    List<ParkingShip> AllShips = new List<ParkingShip>();
+    List<ParkingShip> TargetShips = new List<ParkingShip>();
+    public GameObject LiftPad;
+    Quaternion LerpRotStart, LerpRotEnd;
+    float LerpStartTime, LerpDurationTime;
 
     public Text ResultsText;
+    [Header("Debug")]
     public Text DebugText;
+
     public override void Init(MiniGameMCP mcp)
     {
         //Debug.Log("Parking.Init()");
@@ -38,9 +45,11 @@ public class Parking : MiniGame
     }
 
     private void Start()
-    {
-        if(IsSolo == true)
+    {        
+        if (IsSolo == true)
         {
+            SoundFX soundFX = FindObjectOfType<SoundFX>();
+            SoundFXPlayer.Init(soundFX);
             ResultsText.gameObject.SetActive(false);
             BeginPuzzle();
         }
@@ -48,13 +57,13 @@ public class Parking : MiniGame
 
     public override void BeginPuzzle()
     {        
-       // Debug.Log("Parking.BeginPuzzle()");
         TouchState = eTouchState.NONE;
         CurGameState = eGameState.NORMAL;
-        ContainGO = new GameObject();                  
+        ContainGO = new GameObject();
 
-        List<ParkingShip> ships = FindObjectsOfType<ParkingShip>().ToList();
-        foreach(ParkingShip ship in ships)
+        AllShips.Clear();
+        AllShips = FindObjectsOfType<ParkingShip>().ToList();
+        foreach(ParkingShip ship in AllShips)
         {
             if(ship.ShipType == ParkingShip.eParkingShipType.TARGET)
             {
@@ -66,7 +75,91 @@ public class Parking : MiniGame
             }
         }
     }
-    //CreateSphere(Transform t, string end, Color color, bool addToDebugSpheres = true)
+
+    public void RotateGridPlatform()
+    {
+        RotateShipList.Clear();
+        foreach (GameObject sphere in DebugSpheres)
+        {
+            Destroy(sphere);
+        }
+        DebugSpheres.Clear();
+        //Debug.Log("check rot platform");
+        BoxCollider box = RotatePlatform.GetComponent<BoxCollider>();
+        Vector3 size = box.size;
+        //Debug.Log("before size: " + size.ToString("F2"));
+        size -= new Vector3(.1f, 0f, .1f);
+        //Debug.Log("after size: " + size.ToString("F2"));
+        Collider[] colliders = Physics.OverlapBox(RotatePlatform.transform.position, size / 2, RotatePlatform.transform.rotation);
+        if (colliders != null && colliders.Length > 0)
+        {
+            foreach (Collider c in colliders)
+            {
+                //Debug.Log("collided with: " + c.name);                                
+                if (c.GetComponent<ParkingShip>() != null) RotateShipList.Add(c.GetComponent<ParkingShip>());
+            }
+        }
+
+        bool allShipsContained = true;
+        foreach (ParkingShip ship in RotateShipList)
+        {
+            List<Vector3> checkPoints = new List<Vector3>();
+            //GameObject go;
+            Vector3 moveVec;
+            BoxCollider shipBox = ship.GetComponent<BoxCollider>();
+            Bounds b = shipBox.bounds;
+            Vector3 shipMax = b.max;
+            Vector3 shipMin = b.min;
+
+            // min check spot                
+            ContainGO.transform.position = shipMin;
+            moveVec = shipBox.bounds.center - shipMin;
+            ContainGO.transform.Translate(moveVec * .1f);
+            //CreateSphere(ContainGO.transform, "_rawMin", Color.red);
+            ContainGO.transform.position = new Vector3(ContainGO.transform.position.x, RotateBox01.bounds.center.y, ContainGO.transform.position.z);
+            // CreateSphere(ContainGO.transform, "_checkMin", Color.blue);
+            checkPoints.Add(ContainGO.transform.position);
+
+            // max check spot                
+            ContainGO.transform.position = shipMax;
+            moveVec = shipBox.bounds.center - shipMax;
+            ContainGO.transform.Translate(moveVec * .1f);
+            // CreateSphere(ContainGO.transform, "_rawMax", Color.red);
+            ContainGO.transform.position = new Vector3(ContainGO.transform.position.x, RotateBox01.bounds.center.y, ContainGO.transform.position.z);
+            //  CreateSphere(ContainGO.transform, "_checkMax", Color.blue);
+            checkPoints.Add(ContainGO.transform.position);
+
+            bool inBox01 = RotateBox01.bounds.Contains(checkPoints[0]) && RotateBox01.bounds.Contains(checkPoints[1]);
+            bool inBox02 = RotateBox02.bounds.Contains(checkPoints[0]) && RotateBox02.bounds.Contains(checkPoints[1]);
+            if (inBox01 || inBox02)
+            {
+                //Debug.Log("ship: " + ship.name + " is fully contained within one of the rotate boxes");
+            }
+            else
+            {
+                //Debug.Log("ship: " + ship.name + " is NOT fully contained within any of the rotate boxes so can't rotate");
+                allShipsContained = false;
+                break;
+            }
+        }
+        //Debug.Log("are all ships contained?: " + allShipsContained.ToString());
+        if (allShipsContained == true || RotateShipList.Count == 0)
+        {
+            SoundFXPlayer.Play("RotatePad");
+            foreach (ParkingShip ship in RotateShipList)
+            {
+                ship.transform.parent = RotateParent.transform;
+            }
+            LerpRotStart = RotateParent.transform.rotation;
+            RotateParent.transform.Rotate(0f, 90f, 0f);
+            LerpRotEnd = RotateParent.transform.rotation;
+            RotateParent.transform.Rotate(0f, -90f, 0f);
+            LerpStartTime = Time.time;
+            LerpDurationTime = .5f;
+            CurGameState = eGameState.ROTATE_PAD;
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -106,22 +199,30 @@ public class Parking : MiniGame
                // Debug.Log("Clicked on a ship.");
                 ParkingShip ship = hit.collider.gameObject.GetComponent<ParkingShip>();
                 if (ship == null) { Debug.LogError("Clicked on a ship with no ParkingShip component: " + hit.collider.name); return; }
-                SetActiveShip(ship);
+                //SetActiveShip(ship);
+                ClickedShip = ship;
                 TouchState = eTouchState.CLICK;
                 InputTimer = 0f;
+            }
+            mask = LayerMask.GetMask("Parking Rotate Platform");
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask))
+            {
+                TouchingRotatePad = true;
             }
         }
         else if (Input.GetMouseButton(0))
         {
+            InputTimer += Time.deltaTime;
             if (TouchState == eTouchState.CLICK)
-            {
-                InputTimer += Time.deltaTime;
+            {                
                 if (InputTimer >= HoldTime)
                 {
                     TouchState = eTouchState.HOLD;
+                    SetActiveShip(ClickedShip);
                     ActiveShip.BeginHold(RaiserLowerTime);
                     CurTouchPos = Input.mousePosition;
                     LastTouchPos = Input.mousePosition;
+                    TouchingRotatePad = false;
                 }
             }
             else if (TouchState == eTouchState.HOLD && ActiveShip.GetState() == ParkingShip.eParkingShipState.RAISED)
@@ -194,55 +295,45 @@ public class Parking : MiniGame
                         }
                     }
                 }
-
-
             }
         }
         else if (Input.GetMouseButtonUp(0))
         {
+            InputTimer += Time.deltaTime;
             if (ActiveShip != null)
             {
+                //Debug.Log("GMU() BeginLower: " + InputTimer);
                 ActiveShip.BeginLower(RaiserLowerTime);
+            }            
+            if (TouchingRotatePad == true && InputTimer <= HoldTime)
+            {
+               // Debug.Log("GMU() Rotate: " + InputTimer);
+                RotateGridPlatform();
             }
+            TouchingRotatePad = false;
+            InputTimer = 0f;
+            SetActiveShip(null);
             TouchState = eTouchState.NONE;
         }
 
         if (DebugText != null)
         {
-            //DebugText.text = CurGameState.ToString() + "\n";
-            /*DebugText.text = TouchState + "\n";            
-            DebugText.text += "CurTouchPos: " + CurTouchPos.ToString("F2") + "\n";
-            DebugText.text += "LastTouchPos: " + LastTouchPos.ToString("F2") + "\n";
-            DebugText.text += "mouseMoveAngle: " + mouseMoveAngle.ToString("F2") + "\n";
-            DebugText.text += "curMoveDir: " + curMoveDir.ToString() + "\n";
-            if (ActiveShip != null) DebugText.text += "Ship Dir: " + ActiveShip.GetMoveDir() + "\n";
-            DebugText.text = "";*/
+            string s = (ActiveShip == null ? "null ActiveShip" : ActiveShip.name) + "\n";
+            DebugText.text = s;            
         }
         LastTouchPos = CurTouchPos;
     }
 
-    
-
-
-    
     void SetActiveShip(ParkingShip ship)
     {
-        if (ship == null)
-        {
-            Debug.Log("Setting a null ship");
-        }
-        else
-        {
-
-        }
+        //if (ship != null) Debug.Log("SetActiveShip() " + ship.name);
         ActiveShip = ship;
+        ClickedShip = null;
     }
 
     public void SetBoardPiecesInEditor()
-    {
-       // float dec;
-        Debug.Log("Parking.SetBoardPiecesInEditor()");
-        //List<ParkingShip> ships = FindObjectsOfType<ParkingShip>().ToList();
+    {       
+        Debug.Log("Parking.SetBoardPiecesInEditor()");        
         List<GameObject> parkingBoardItems = GameObject.FindGameObjectsWithTag("Parking Board Item").ToList();
         
         Debug.Log("num items: " + parkingBoardItems.Count);
@@ -266,6 +357,7 @@ public class Parking : MiniGame
 
     public Vector3 GetClosestCenteredPoint(GameObject item )
     {
+       // Debug.Log("GetClosestCenteredPoint() " + item.name);
         float dec;
         BoxCollider box = item.GetComponent<BoxCollider>();
         Vector3 size = box.size;
@@ -314,93 +406,25 @@ public class Parking : MiniGame
     public List<ParkingShip> RotateShipList = new List<ParkingShip>();
     public List<ParkingShip> LiftPadShipList = new List<ParkingShip>();
     GameObject ContainGO;    
-
-    public void RotateGridPlatform()
+       
+    bool AllShipsLowered()
     {
-        RotateShipList.Clear();
-        foreach (GameObject sphere in DebugSpheres)
+        foreach(ParkingShip ship in AllShips)
         {
-            Destroy(sphere);
+            if (ship.GetState() != ParkingShip.eParkingShipState.LOWERED) return false;
         }
-        DebugSpheres.Clear();
-        //Debug.Log("check rot platform");
-        BoxCollider box = RotatePlatform.GetComponent<BoxCollider>();
-        Vector3 size = box.size;
-        //Debug.Log("before size: " + size.ToString("F2"));
-        size -= new Vector3(.1f, 0f, .1f);
-        //Debug.Log("after size: " + size.ToString("F2"));
-        Collider[] colliders = Physics.OverlapBox(RotatePlatform.transform.position, size / 2, RotatePlatform.transform.rotation);
-        if (colliders != null && colliders.Length > 0)
-        {
-            foreach (Collider c in colliders)
-            {
-                //Debug.Log("collided with: " + c.name);                                
-                if (c.GetComponent<ParkingShip>() != null) RotateShipList.Add(c.GetComponent<ParkingShip>());
-            }
-        }
-
-        bool allShipsContained = true;
-        foreach (ParkingShip ship in RotateShipList)
-        {
-            List<Vector3> checkPoints = new List<Vector3>();
-            //GameObject go;
-            Vector3 moveVec;
-            BoxCollider shipBox = ship.GetComponent<BoxCollider>();
-            Bounds b = shipBox.bounds;
-            Vector3 shipMax = b.max;
-            Vector3 shipMin = b.min;
-
-            // min check spot                
-            ContainGO.transform.position = shipMin;
-            moveVec = shipBox.bounds.center - shipMin;
-            ContainGO.transform.Translate(moveVec * .1f);
-            //CreateSphere(ContainGO.transform, "_rawMin", Color.red);
-            ContainGO.transform.position = new Vector3(ContainGO.transform.position.x, RotateBox01.bounds.center.y, ContainGO.transform.position.z);
-            // CreateSphere(ContainGO.transform, "_checkMin", Color.blue);
-            checkPoints.Add(ContainGO.transform.position);
-
-            // max check spot                
-            ContainGO.transform.position = shipMax;
-            moveVec = shipBox.bounds.center - shipMax;
-            ContainGO.transform.Translate(moveVec * .1f);
-            // CreateSphere(ContainGO.transform, "_rawMax", Color.red);
-            ContainGO.transform.position = new Vector3(ContainGO.transform.position.x, RotateBox01.bounds.center.y, ContainGO.transform.position.z);
-            //  CreateSphere(ContainGO.transform, "_checkMax", Color.blue);
-            checkPoints.Add(ContainGO.transform.position);
-
-            bool inBox01 = RotateBox01.bounds.Contains(checkPoints[0]) && RotateBox01.bounds.Contains(checkPoints[1]);
-            bool inBox02 = RotateBox02.bounds.Contains(checkPoints[0]) && RotateBox02.bounds.Contains(checkPoints[1]);
-            if (inBox01 || inBox02)
-            {
-                Debug.Log("ship: " + ship.name + " is fully contained within one of the rotate boxes");
-            }
-            else
-            {
-                Debug.Log("ship: " + ship.name + " is NOT fully contained within any of the rotate boxes so can't rotate");
-                allShipsContained = false;
-                break;
-            }
-        }
-        Debug.Log("are all ships contained?: " + allShipsContained.ToString());
-        if (allShipsContained == true || RotateShipList.Count == 0)
-        {
-            foreach (ParkingShip ship in RotateShipList)
-            {
-                ship.transform.parent = RotateParent.transform;
-            }
-            LerpRotStart = RotateParent.transform.rotation;
-            RotateParent.transform.Rotate(0f, 90f, 0f);
-            LerpRotEnd = RotateParent.transform.rotation;
-            RotateParent.transform.Rotate(0f, -90f, 0f);
-            LerpStartTime = Time.time;
-            LerpDurationTime = .5f;
-            CurGameState = eGameState.ROTATE_PAD;
-        }
+        return true;
     }
 
     public void CheckGameFinish()
     {
-        CurGameState = eGameState.OFF;
+        bool allLowered = AllShipsLowered();
+        if(allLowered == false)
+        {
+            Debug.LogError("All ships should be lowered at this point");
+            return;
+        }
+                
         LiftPadShipList.Clear();
         foreach (GameObject sphere in DebugSpheres)
         {
@@ -460,22 +484,25 @@ public class Parking : MiniGame
         }
         Debug.Log("are all TARGET ships contained in the lift?: " + allTargetShipsContainedLiftPad);
         string result;
-        if (allTargetShipsContainedLiftPad == true) result = "All TARGET ships are on the Lift Pad, so you win";
-        else result = "Not all TARGET ships are on the Lift Pad, so keep trying.";
-        StartCoroutine(ShowResults(result, allTargetShipsContainedLiftPad));
+        if (allTargetShipsContainedLiftPad == true)
+        {
+            result = "All TARGET ships are on the Lift Pad, so you win";
+            StartCoroutine(ShowResults(result, allTargetShipsContainedLiftPad));
+        }
+        //else result = "Not all TARGET ships are on the Lift Pad, so keep trying.";        
         //StartCoroutine(ShowResults("FIX THIS IT'S AN ENDGAME HACK", true));
     }
     private void OnGUI()
     {        
         //Debug.Log("OnGUI(): " + this.name);
-        if(GUI.Button(new Rect(0,0,100,100), "Rotate Platform"))
+       /* if(GUI.Button(new Rect(0,0,100,100), "Rotate Platform"))
         {
             RotateGridPlatform();
         }
         if(GUI.Button(new Rect(0,100,100,100), "Check Finish"))
         {
             CheckGameFinish();
-        }
+        }*/
         if (GUI.Button(new Rect(Screen.width - 100, 0, 100, 100), "Main Menu"))
         {
             SceneManager.LoadScene("ParkingDemo");
@@ -502,9 +529,7 @@ public class Parking : MiniGame
 
     
     
-    public GameObject LiftPad;
-    Quaternion LerpRotStart, LerpRotEnd;
-    float LerpStartTime, LerpDurationTime;
+    
 
     GameObject CreateSphere(Transform t, string end, Color color, bool addToDebugSpheres = true)
     {

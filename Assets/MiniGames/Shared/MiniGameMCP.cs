@@ -45,6 +45,8 @@ public class MiniGameMCP : MonoBehaviour
     // Start is called before the first frame update
     public virtual void Start()
     {
+        SoundFX soundFX = FindObjectOfType<SoundFX>();
+        SoundFXPlayer.Init(soundFX);
         //Debug.Log("MiniGameMCP.Start()");
         GameState = eGameState.NONE;
         FadeImage.gameObject.SetActive(true);
@@ -95,8 +97,7 @@ public class MiniGameMCP : MonoBehaviour
             GameObject[] newPuzzleObjs = puzzleScene.GetRootGameObjects();
             foreach (GameObject go in newPuzzleObjs)
             {
-                newPuzzle = go.GetComponent<MiniGame>();
-                if (newPuzzle != null) break;
+                if(newPuzzle == null) newPuzzle = go.GetComponent<MiniGame>();                
             }
             Puzzles[i] = newPuzzle;
             Puzzles[i].transform.parent = this.transform;

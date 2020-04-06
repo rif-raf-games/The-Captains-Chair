@@ -865,6 +865,75 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 555023409}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &601174889
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 7486881126430893609, guid: 39e14df931c7ae94f81b4622691c1d1f,
+        type: 3}
+      propertyPath: m_Name
+      value: ParkingSound
+      objectReference: {fileID: 0}
+    - target: {fileID: 7486881126430893614, guid: 39e14df931c7ae94f81b4622691c1d1f,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7486881126430893614, guid: 39e14df931c7ae94f81b4622691c1d1f,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7486881126430893614, guid: 39e14df931c7ae94f81b4622691c1d1f,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7486881126430893614, guid: 39e14df931c7ae94f81b4622691c1d1f,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7486881126430893614, guid: 39e14df931c7ae94f81b4622691c1d1f,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7486881126430893614, guid: 39e14df931c7ae94f81b4622691c1d1f,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7486881126430893614, guid: 39e14df931c7ae94f81b4622691c1d1f,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7486881126430893614, guid: 39e14df931c7ae94f81b4622691c1d1f,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 7486881126430893614, guid: 39e14df931c7ae94f81b4622691c1d1f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7486881126430893614, guid: 39e14df931c7ae94f81b4622691c1d1f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7486881126430893614, guid: 39e14df931c7ae94f81b4622691c1d1f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 39e14df931c7ae94f81b4622691c1d1f, type: 3}
 --- !u!1001 &686705577
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1040,7 +1109,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 714794593}
-  m_Enabled: 0
+  m_Enabled: 1
 --- !u!20 &714794595
 Camera:
   m_ObjectHideFlags: 0
@@ -2656,7 +2725,7 @@ MonoBehaviour:
   RaiserLowerTime: 0.2
   DirChangeBuffer: 0.2
   ActiveShip: {fileID: 0}
-  TargetShips: []
+  LiftPad: {fileID: 8296172667882724149}
   ResultsText: {fileID: 748055420}
   DebugText: {fileID: 1308687120}
   RotatePlatform: {fileID: 1754507630}
@@ -2665,7 +2734,6 @@ MonoBehaviour:
   RotateParent: {fileID: 430171512}
   RotateShipList: []
   LiftPadShipList: []
-  LiftPad: {fileID: 8296172667882724149}
 --- !u!114 &1580447752
 MonoBehaviour:
   m_ObjectHideFlags: 0
