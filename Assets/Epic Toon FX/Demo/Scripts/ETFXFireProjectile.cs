@@ -52,7 +52,6 @@ namespace EpicToonFX
                     if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100f)) //Finds the point where you click with the mouse
                     {
                         GameObject projectile = Instantiate(projectiles[currentProjectile], spawnPosition.position, Quaternion.identity) as GameObject; //Spawns the selected projectile
-                        Debug.Log(projectiles[currentProjectile].name);
                         projectile.transform.LookAt(hit.point); //Sets the projectiles rotation to look at the point clicked
                         projectile.GetComponent<Rigidbody>().AddForce(projectile.transform.forward * speed); //Set the speed of the projectile by applying force to the rigidbody
                     }
