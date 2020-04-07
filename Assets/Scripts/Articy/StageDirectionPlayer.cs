@@ -18,6 +18,10 @@ public class StageDirectionPlayer : MonoBehaviour
         this.ArticyFlow = GetComponent<ArticyFlow>();        
     }
 
+    // 1) re-arrange/re-name stuff in SD frag
+    // 2) Turn Off:  
+    // 3) Timer
+
     public void HandleStangeDirectionContainer(Stage_Directions_Container sdc)
     {
         List<ArticyScriptInstruction> outputsToExecute = new List<ArticyScriptInstruction>();
@@ -75,12 +79,13 @@ public class StageDirectionPlayer : MonoBehaviour
                 case Direction.SFX:
                     SoundFXPlayer.Play(sdf.Direction_Info);
                     break;
-                case Direction.VFX:
+                case Direction.VFX_On:
                     Vector3 vfxPos = Vector3.zero;
+                    GameObject posObj = null;
                     string[] locInfo = sdf.DirectionTargets.Split(',');
                     if(locInfo.Length == 1)
                     {
-                        GameObject posObj = GameObject.Find(sdf.DirectionTargets);
+                        posObj = GameObject.Find(sdf.DirectionTargets);
                         if (posObj == null) { Debug.LogError("Trying to play VFX but no location object in scene"); break; }
                         vfxPos = posObj.transform.position;
                     }
@@ -88,7 +93,24 @@ public class StageDirectionPlayer : MonoBehaviour
                     {
                         vfxPos = new Vector3(float.Parse(locInfo[0]), float.Parse(locInfo[1]), float.Parse(locInfo[2]));
                     }
-                    VisualFXPlayer.Play(sdf.Direction_Info, vfxPos);                        
+                    GameObject fx = VisualFXPlayer.Play(sdf.Direction_Info, vfxPos);                        
+                    if(sdf.Timer.Equals("") == false)
+                    {
+                        float vfxTime = float.Parse(sdf.Timer);
+                        StartCoroutine(VFXDelay(fx, vfxTime));
+                    }
+                    if(sdf.FollowTarget == true )
+                    {
+                        if (posObj == null) { Debug.LogError("Trying to have VFX follow a target not in the scene OR you've set it to coordinates."); break; }
+                        fx.transform.parent = posObj.transform;
+                    }
+                    break;
+                case Direction.VFX_Off:                    
+                    GameObject[] vfxs = GameObject.FindGameObjectsWithTag("Looped VFX");
+                    foreach (GameObject vfx in vfxs)
+                    {
+                        if(vfx.name.Contains(sdf.Direction_Info)) Destroy(vfx);
+                    }
                     break;
                 case Direction.Dialogue_Text_Speed:
                     if (sdf.Direction_Info.Equals("Default")) ArticyFlow.TypewriterSpeed = ArticyFlow.GetDefaultTypewriterSpeed(); //TypewriterSpeed = ConvoUI.DefaultTypewriterSpeed;
@@ -103,6 +125,17 @@ public class StageDirectionPlayer : MonoBehaviour
             }      
         }
         return true;
+    }
+
+    IEnumerator VFXDelay(GameObject vfx, float vfxTime)
+    {
+        float timer = 0f;
+        while(timer < vfxTime)
+        {
+            yield return new WaitForEndOfFrame();
+            timer += Time.deltaTime;
+        }
+        Destroy(vfx);
     }
 
     public void StartAIOnNPC(NPC npc, bool removeFromShutOffAis = false)

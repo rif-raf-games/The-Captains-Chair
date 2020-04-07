@@ -40,7 +40,7 @@ public static class SoundFXPlayer
     static SoundFX SoundFX;
     public static void Init(SoundFX soundFX)
     {
-        Debug.Log("SoundFXPlayer Init()");
+       // Debug.Log("SoundFXPlayer Init()");
         SoundFX = soundFX;
     }
     public static void Play(string fxID)

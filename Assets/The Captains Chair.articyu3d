@@ -5,7 +5,7 @@
     "set_IncludedNodes": "Settings, Project, GlobalVariables, ObjectDefinitions, Packages, ScriptMethods, Hierarchy, Assets",
     "set_UseScriptSupport": "True",
     "ExportVersion": "1.1",
-    "ObjectDefinitionsHash": "83272F30571553768C86F2A7A3D06BDF83882C56C5F179093231F8564D9E6F4E",
+    "ObjectDefinitionsHash": "31183A8EB3266A2C73997C7E983C6BA3E46FCE3B0210717AC9A837EAAFB84AF0",
     "ScriptFragmentsHash": "2282777272"
   },
   "Project": {
@@ -538,7 +538,8 @@
         "AI_Off": 1,
         "AI_On": 2,
         "SFX": 3,
-        "VFX": 8,
+        "VFX_On": 8,
+        "VFX_Off": 9,
         "Background_Track_Change": 4,
         "Dialogue_Interact_Off": 5,
         "Dialogue_Interact_On": 6,
@@ -548,7 +549,8 @@
         "AI_Off": "AI Off",
         "AI_On": "AI On",
         "SFX": "SFX",
-        "VFX": "VFX",
+        "VFX_On": "VFX On",
+        "VFX_Off": "VFX Off",
         "Background_Track_Change": "Background Track Change",
         "Dialogue_Interact_Off": "Dialogue Interact Off",
         "Dialogue_Interact_On": "Dialogue Interact On",
@@ -802,6 +804,16 @@
                 "Property": "Direction_Info",
                 "Type": "string",
                 "DisplayName": "Direction Info"
+              },
+              {
+                "Property": "Timer",
+                "Type": "string",
+                "DisplayName": "Timer"
+              },
+              {
+                "Property": "FollowTarget",
+                "Type": "Bool",
+                "DisplayName": "Follow Target"
               }
             ],
             "Constraints": [
@@ -826,6 +838,19 @@
                 "PlaceholderValue": "",
                 "IsLocalized": "False",
                 "AllowsLinebreaks": "False"
+              },
+              {
+                "Property": "Timer",
+                "Type": "Text",
+                "MaxLength": "2048",
+                "PlaceholderValue": "",
+                "IsLocalized": "False",
+                "AllowsLinebreaks": "False"
+              },
+              {
+                "Property": "FollowTarget",
+                "Type": "Boolean",
+                "DisplayAsCombobox": "False"
               }
             ]
           }
@@ -2968,8 +2993,8 @@
   ],
   "Packages": [
     {
-      "Name": "Export package 01",
-      "Description": "",
+      "Name": "All objects",
+      "Description": "Exports all objects & types of the project",
       "IsDefaultPackage": true,
       "Models": [
         {
@@ -4456,6 +4481,57 @@
         {
           "Type": "FlowFragment",
           "Properties": {
+            "TechnicalName": "FFr_43340082",
+            "Id": "0x100000800002E9E",
+            "Parent": "0x100000800000A21",
+            "Attachments": [],
+            "DisplayName": "SFX Tests",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 75.0,
+              "y": 200.0
+            },
+            "ZIndex": 16.0,
+            "Size": {
+              "w": 275.0,
+              "h": 200.0
+            },
+            "ShortId": 1127481474,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000800002EA1",
+                "Owner": "0x100000800002E9E"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000800002EA2",
+                "Owner": "0x100000800002E9E"
+              }
+            ]
+          }
+        },
+        {
+          "Type": "FlowFragment",
+          "Properties": {
             "TechnicalName": "FFr_52746A8C",
             "Id": "0x100000800000F4A",
             "Parent": "0x100000800000A1B",
@@ -5484,57 +5560,6 @@
                 "Text": "",
                 "Id": "0x100000800000733",
                 "Owner": "0x10000080000072F"
-              }
-            ]
-          }
-        },
-        {
-          "Type": "FlowFragment",
-          "Properties": {
-            "TechnicalName": "FFr_43340082",
-            "Id": "0x100000800002E9E",
-            "Parent": "0x100000800000A21",
-            "Attachments": [],
-            "DisplayName": "SFX Tests",
-            "PreviewImage": {
-              "ViewBox": {
-                "x": 0.0,
-                "y": 0.0,
-                "w": 0.0,
-                "h": 0.0
-              },
-              "Mode": "FromAsset",
-              "Asset": "0x0"
-            },
-            "Color": {
-              "r": 0.5764706,
-              "g": 0.75686276,
-              "b": 0.8
-            },
-            "Text": "",
-            "ExternalId": "",
-            "Position": {
-              "x": 75.0,
-              "y": 200.0
-            },
-            "ZIndex": 16.0,
-            "Size": {
-              "w": 275.0,
-              "h": 200.0
-            },
-            "ShortId": 1127481474,
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x100000800002EA1",
-                "Owner": "0x100000800002E9E"
-              }
-            ],
-            "OutputPins": [
-              {
-                "Text": "",
-                "Id": "0x100000800002EA2",
-                "Owner": "0x100000800002E9E"
               }
             ]
           }
@@ -31494,7 +31519,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -31565,7 +31592,9 @@
             "Stage_Direction": {
               "DirectionTargets": "O'Mally",
               "Direction": 1,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -31636,7 +31665,9 @@
             "Stage_Direction": {
               "DirectionTargets": "Carver",
               "Direction": 1,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -31694,7 +31725,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -31752,7 +31785,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -31810,7 +31845,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -31881,7 +31918,9 @@
             "Stage_Direction": {
               "DirectionTargets": "Grunfeld",
               "Direction": 1,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -31952,7 +31991,9 @@
             "Stage_Direction": {
               "DirectionTargets": "Loop",
               "Direction": 1,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -32010,7 +32051,69 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
+            }
+          }
+        },
+        {
+          "Type": "Stage_Directions",
+          "Properties": {
+            "TechnicalName": "FFr_ECE02794",
+            "Id": "0x100000800002EAA",
+            "Parent": "0x100000800002EA4",
+            "Attachments": [],
+            "DisplayName": "Stars",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.7647059,
+              "g": 0.149019614,
+              "b": 0.0
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 1050.0,
+              "y": 550.0
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 275.0,
+              "h": 200.0
+            },
+            "ShortId": 3974113172,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000800002EAD",
+                "Owner": "0x100000800002EAA"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000800002EAE",
+                "Owner": "0x100000800002EAA"
+              }
+            ]
+          },
+          "Template": {
+            "Stage_Direction": {
+              "DirectionTargets": "headeffect",
+              "Direction": 8,
+              "Direction_Info": "StunnedCirclingStars",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -32068,7 +32171,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -32126,7 +32231,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -32184,7 +32291,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -32242,7 +32351,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -32300,7 +32411,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -32358,7 +32471,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -32416,7 +32531,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -32487,7 +32604,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -32558,7 +32677,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -32629,7 +32750,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -32687,7 +32810,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": 4,
-              "Direction_Info": "Obs_Background"
+              "Direction_Info": "Obs_Background",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -32745,7 +32870,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": 4,
-              "Direction_Info": "Off"
+              "Direction_Info": "Off",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -32803,7 +32930,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": 4,
-              "Direction_Info": "Off"
+              "Direction_Info": "Off",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -32861,7 +32990,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": 4,
-              "Direction_Info": "We Did it Once Loop 1"
+              "Direction_Info": "We Did it Once Loop 1",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -32919,7 +33050,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": 4,
-              "Direction_Info": "Off"
+              "Direction_Info": "Off",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -32977,7 +33110,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": 4,
-              "Direction_Info": "bridge_sound"
+              "Direction_Info": "bridge_sound",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -33035,7 +33170,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": 4,
-              "Direction_Info": "Off"
+              "Direction_Info": "Off",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -33093,7 +33230,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": 4,
-              "Direction_Info": "Engine_Sound"
+              "Direction_Info": "Engine_Sound",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -33151,7 +33290,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": 4,
-              "Direction_Info": "Off"
+              "Direction_Info": "Off",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -33222,7 +33363,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": 4,
-              "Direction_Info": "spa_forest"
+              "Direction_Info": "spa_forest",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -33280,7 +33423,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -33338,7 +33483,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -33396,7 +33543,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -33454,7 +33603,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -33525,7 +33676,9 @@
             "Stage_Direction": {
               "DirectionTargets": "O'Mally",
               "Direction": 1,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -33596,7 +33749,9 @@
             "Stage_Direction": {
               "DirectionTargets": "Carver",
               "Direction": 1,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -33654,7 +33809,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -33712,7 +33869,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -33770,7 +33929,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -33841,7 +34002,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -33912,7 +34075,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -33983,7 +34148,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -34041,7 +34208,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -34112,7 +34281,9 @@
             "Stage_Direction": {
               "DirectionTargets": "O'Mally",
               "Direction": 1,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -34183,7 +34354,9 @@
             "Stage_Direction": {
               "DirectionTargets": "Carver",
               "Direction": 1,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -34241,7 +34414,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -34299,7 +34474,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -34357,7 +34534,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -34428,7 +34607,9 @@
             "Stage_Direction": {
               "DirectionTargets": "Grunfeld",
               "Direction": 1,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -34499,7 +34680,9 @@
             "Stage_Direction": {
               "DirectionTargets": "Loop",
               "Direction": 1,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -34557,7 +34740,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -34615,7 +34800,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -34673,7 +34860,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -34731,7 +34920,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -34802,7 +34993,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -34873,7 +35066,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -34944,65 +35139,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
-            }
-          }
-        },
-        {
-          "Type": "Stage_Directions",
-          "Properties": {
-            "TechnicalName": "FFr_39D7927C",
-            "Id": "0x100000600001AFF",
-            "Parent": "0x100000600001AF7",
-            "Attachments": [],
-            "DisplayName": "Untitled flow fragment (02)",
-            "PreviewImage": {
-              "ViewBox": {
-                "x": 0.0,
-                "y": 0.0,
-                "w": 0.0,
-                "h": 0.0
-              },
-              "Mode": "FromAsset",
-              "Asset": "0x0"
-            },
-            "Color": {
-              "r": 0.7647059,
-              "g": 0.149019614,
-              "b": 0.0
-            },
-            "Text": "",
-            "ExternalId": "",
-            "Position": {
-              "x": 500.0,
-              "y": 325.0
-            },
-            "ZIndex": 0.0,
-            "Size": {
-              "w": 275.0,
-              "h": 200.0
-            },
-            "ShortId": 970429052,
-            "InputPins": [
-              {
-                "Text": "",
-                "Id": "0x100000600001B02",
-                "Owner": "0x100000600001AFF"
-              }
-            ],
-            "OutputPins": [
-              {
-                "Text": "",
-                "Id": "0x100000600001B03",
-                "Owner": "0x100000600001AFF"
-              }
-            ]
-          },
-          "Template": {
-            "Stage_Direction": {
-              "DirectionTargets": "",
-              "Direction": 3,
-              "Direction_Info": "zapsplat_household_doorbell_ring_chime_004_42806"
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -35060,7 +35199,9 @@
             "Stage_Direction": {
               "DirectionTargets": "VisualFXLoc",
               "Direction": 8,
-              "Direction_Info": "ExplosionNovaBlue"
+              "Direction_Info": "ExplosionNovaBlue",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -35118,7 +35259,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": 4,
-              "Direction_Info": "Background_Engine"
+              "Direction_Info": "Background_Engine",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -35176,7 +35319,9 @@
             "Stage_Direction": {
               "DirectionTargets": "VisualFXLoc2",
               "Direction": 8,
-              "Direction_Info": "MysticPurpleOBJ"
+              "Direction_Info": "MysticPurpleOBJ",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -35234,7 +35379,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": 3,
-              "Direction_Info": "zapsplat_household_doorbell_ring_chime_004_42806"
+              "Direction_Info": "zapsplat_household_doorbell_ring_chime_004_42806",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -35292,7 +35439,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": 3,
-              "Direction_Info": "Door_Open"
+              "Direction_Info": "Door_Open",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -35350,7 +35499,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": 4,
-              "Direction_Info": "Off"
+              "Direction_Info": "Off",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -35408,7 +35559,129 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": 4,
-              "Direction_Info": "EDIS-SRP-0196-04"
+              "Direction_Info": "EDIS-SRP-0196-04",
+              "Timer": "",
+              "FollowTarget": false
+            }
+          }
+        },
+        {
+          "Type": "Stage_Directions",
+          "Properties": {
+            "TechnicalName": "FFr_F23E1A84",
+            "Id": "0x100000600001BD0",
+            "Parent": "0x100000600001BCF",
+            "Attachments": [],
+            "DisplayName": "Visual FX",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.7647059,
+              "g": 0.149019614,
+              "b": 0.0
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 475.0,
+              "y": 375.0
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 275.0,
+              "h": 200.0
+            },
+            "ShortId": 4064156292,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001BD1",
+                "Owner": "0x100000600001BD0"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001BD2",
+                "Owner": "0x100000600001BD0"
+              }
+            ]
+          },
+          "Template": {
+            "Stage_Direction": {
+              "DirectionTargets": "-22.08,28.75,-6.56",
+              "Direction": 8,
+              "Direction_Info": "MysticPurpleOBJ",
+              "Timer": "",
+              "FollowTarget": false
+            }
+          }
+        },
+        {
+          "Type": "Stage_Directions",
+          "Properties": {
+            "TechnicalName": "FFr_429F040F",
+            "Id": "0x100000600001BD8",
+            "Parent": "0x100000600001BCF",
+            "Attachments": [],
+            "DisplayName": "Sound FX",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.7647059,
+              "g": 0.149019614,
+              "b": 0.0
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 511.34360236393525,
+              "y": 684.23075631545623
+            },
+            "ZIndex": 4.0,
+            "Size": {
+              "w": 275.0,
+              "h": 200.0
+            },
+            "ShortId": 1117717519,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001BD9",
+                "Owner": "0x100000600001BD8"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001BDA",
+                "Owner": "0x100000600001BD8"
+              }
+            ]
+          },
+          "Template": {
+            "Stage_Direction": {
+              "DirectionTargets": "",
+              "Direction": 3,
+              "Direction_Info": "zapsplat_household_doorbell_ring_chime_004_42806",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -35466,7 +35739,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -35524,7 +35799,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -35582,7 +35859,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -35640,7 +35919,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -35703,7 +35984,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -35761,7 +36044,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -35819,7 +36104,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -35877,7 +36164,9 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -35935,18 +36224,20 @@
             "Stage_Direction": {
               "DirectionTargets": "",
               "Direction": null,
-              "Direction_Info": ""
+              "Direction_Info": "",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
         {
           "Type": "Stage_Directions",
           "Properties": {
-            "TechnicalName": "FFr_ECE02794",
-            "Id": "0x100000800002EAA",
-            "Parent": "0x100000800002EA4",
+            "TechnicalName": "FFr_217E284D",
+            "Id": "0x100000600001CA6",
+            "Parent": "0x100000600001C9D",
             "Attachments": [],
-            "DisplayName": "Stars",
+            "DisplayName": "Visual FX Test 2",
             "PreviewImage": {
               "ViewBox": {
                 "x": 0.0,
@@ -35965,27 +36256,267 @@
             "Text": "",
             "ExternalId": "",
             "Position": {
-              "x": 1050.0,
-              "y": 550.0
+              "x": 500.0,
+              "y": 25.0
+            },
+            "ZIndex": 3.0,
+            "Size": {
+              "w": 275.0,
+              "h": 200.0
+            },
+            "ShortId": 561915981,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001CA7",
+                "Owner": "0x100000600001CA6"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001CA8",
+                "Owner": "0x100000600001CA6"
+              }
+            ]
+          },
+          "Template": {
+            "Stage_Direction": {
+              "DirectionTargets": "VisualFXLoc",
+              "Direction": 8,
+              "Direction_Info": "MysticPurpleOBJ",
+              "Timer": "",
+              "FollowTarget": false
+            }
+          }
+        },
+        {
+          "Type": "Stage_Directions",
+          "Properties": {
+            "TechnicalName": "FFr_7E133881",
+            "Id": "0x100000600001CBE",
+            "Parent": "0x100000600001CBD",
+            "Attachments": [],
+            "DisplayName": "Visual FX Test 3",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.7647059,
+              "g": 0.149019614,
+              "b": 0.0
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 500.0,
+              "y": 25.0
+            },
+            "ZIndex": 3.0,
+            "Size": {
+              "w": 275.0,
+              "h": 200.0
+            },
+            "ShortId": 2115188865,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001CBF",
+                "Owner": "0x100000600001CBE"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001CC0",
+                "Owner": "0x100000600001CBE"
+              }
+            ]
+          },
+          "Template": {
+            "Stage_Direction": {
+              "DirectionTargets": "VisualFXLoc",
+              "Direction": 8,
+              "Direction_Info": "StunnedCirclingStars",
+              "Timer": "",
+              "FollowTarget": false
+            }
+          }
+        },
+        {
+          "Type": "Stage_Directions",
+          "Properties": {
+            "TechnicalName": "FFr_B1420CE7",
+            "Id": "0x100000600001D02",
+            "Parent": "0x100000600001D01",
+            "Attachments": [],
+            "DisplayName": "Visual FX Test 4",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.7647059,
+              "g": 0.149019614,
+              "b": 0.0
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 500.0,
+              "y": 25.0
+            },
+            "ZIndex": 3.0,
+            "Size": {
+              "w": 275.0,
+              "h": 200.0
+            },
+            "ShortId": 2973895911,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001D03",
+                "Owner": "0x100000600001D02"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001D04",
+                "Owner": "0x100000600001D02"
+              }
+            ]
+          },
+          "Template": {
+            "Stage_Direction": {
+              "DirectionTargets": "",
+              "Direction": 9,
+              "Direction_Info": "StunnedCirclingStars",
+              "Timer": "",
+              "FollowTarget": false
+            }
+          }
+        },
+        {
+          "Type": "Stage_Directions",
+          "Properties": {
+            "TechnicalName": "FFr_A0721A34",
+            "Id": "0x100000600001D1A",
+            "Parent": "0x100000600001D19",
+            "Attachments": [],
+            "DisplayName": "Visual FX Test 5",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.7647059,
+              "g": 0.149019614,
+              "b": 0.0
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 500.0,
+              "y": 25.0
+            },
+            "ZIndex": 3.0,
+            "Size": {
+              "w": 275.0,
+              "h": 200.0
+            },
+            "ShortId": 2691832372,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001D1B",
+                "Owner": "0x100000600001D1A"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001D1C",
+                "Owner": "0x100000600001D1A"
+              }
+            ]
+          },
+          "Template": {
+            "Stage_Direction": {
+              "DirectionTargets": "VisualFXLoc",
+              "Direction": 8,
+              "Direction_Info": "StunnedCirclingStars",
+              "Timer": "3.0",
+              "FollowTarget": false
+            }
+          }
+        },
+        {
+          "Type": "Stage_Directions",
+          "Properties": {
+            "TechnicalName": "FFr_F9F705B4",
+            "Id": "0x100000600001DFA",
+            "Parent": "0x100000600001DF4",
+            "Attachments": [],
+            "DisplayName": "Untitled flow fragment (02)",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.7647059,
+              "g": 0.149019614,
+              "b": 0.0
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 621.0,
+              "y": 482.0
             },
             "ZIndex": 0.0,
             "Size": {
               "w": 275.0,
               "h": 200.0
             },
-            "ShortId": 3974113172,
+            "ShortId": 4193715636,
             "InputPins": [
               {
                 "Text": "",
-                "Id": "0x100000800002EAD",
-                "Owner": "0x100000800002EAA"
+                "Id": "0x100000600001DFD",
+                "Owner": "0x100000600001DFA"
               }
             ],
             "OutputPins": [
               {
                 "Text": "",
-                "Id": "0x100000800002EAE",
-                "Owner": "0x100000800002EAA"
+                "Id": "0x100000600001DFE",
+                "Owner": "0x100000600001DFA"
               }
             ]
           },
@@ -35993,7 +36524,129 @@
             "Stage_Direction": {
               "DirectionTargets": "headeffect",
               "Direction": 8,
-              "Direction_Info": "StunnedCirclingStars"
+              "Direction_Info": "StunnedCirclingStars",
+              "Timer": "",
+              "FollowTarget": false
+            }
+          }
+        },
+        {
+          "Type": "Stage_Directions",
+          "Properties": {
+            "TechnicalName": "FFr_FEEEAEAE",
+            "Id": "0x100000600001E04",
+            "Parent": "0x100000600001E03",
+            "Attachments": [],
+            "DisplayName": "Untitled flow fragment (02)",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.7647059,
+              "g": 0.149019614,
+              "b": 0.0
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 621.0,
+              "y": 482.0
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 275.0,
+              "h": 200.0
+            },
+            "ShortId": 4277055150,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001E05",
+                "Owner": "0x100000600001E04"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001E06",
+                "Owner": "0x100000600001E04"
+              }
+            ]
+          },
+          "Template": {
+            "Stage_Direction": {
+              "DirectionTargets": "headeffect",
+              "Direction": 8,
+              "Direction_Info": "StunnedCirclingStars",
+              "Timer": "",
+              "FollowTarget": true
+            }
+          }
+        },
+        {
+          "Type": "Stage_Directions",
+          "Properties": {
+            "TechnicalName": "FFr_2054CF97",
+            "Id": "0x100000600001E13",
+            "Parent": "0x100000600001E12",
+            "Attachments": [],
+            "DisplayName": "Untitled flow fragment (02)",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.7647059,
+              "g": 0.149019614,
+              "b": 0.0
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 621.0,
+              "y": 482.0
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 275.0,
+              "h": 200.0
+            },
+            "ShortId": 542429079,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001E14",
+                "Owner": "0x100000600001E13"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001E15",
+                "Owner": "0x100000600001E13"
+              }
+            ]
+          },
+          "Template": {
+            "Stage_Direction": {
+              "DirectionTargets": "",
+              "Direction": 9,
+              "Direction_Info": "StunnedCirclingStars",
+              "Timer": "",
+              "FollowTarget": false
             }
           }
         },
@@ -36304,6 +36957,71 @@
                     "Target": "0x100000800000D5C"
                   }
                 ]
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Stage_Directions_Container",
+          "Properties": {
+            "TechnicalName": "FFr_14F70E34",
+            "Id": "0x100000800002EA4",
+            "Parent": "0x100000800002E9E",
+            "Attachments": [],
+            "DisplayName": "Circling Stars",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.545098066,
+              "g": 0.149019614,
+              "b": 0.227450982
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 1000.0,
+              "y": 550.0
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 275.0,
+              "h": 200.0
+            },
+            "ShortId": 351735348,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000800002EA7",
+                "Owner": "0x100000800002EA4",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000800002EAD",
+                    "Target": "0x100000800002EAA"
+                  }
+                ]
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000800002EA8",
+                "Owner": "0x100000800002EA4"
               }
             ]
           },
@@ -37250,7 +37968,7 @@
             "Text": "",
             "ExternalId": "",
             "Position": {
-              "x": 1100.0,
+              "x": 725.0,
               "y": 475.0
             },
             "ZIndex": 7.0,
@@ -37265,17 +37983,6 @@
                 "Id": "0x100000600001AFA",
                 "Owner": "0x100000600001AF7",
                 "Connections": [
-                  {
-                    "Color": {
-                      "a": 1.0,
-                      "r": 0.5764706,
-                      "g": 0.75686276,
-                      "b": 0.8
-                    },
-                    "Label": "",
-                    "TargetPin": "0x100000600001B02",
-                    "Target": "0x100000600001AFF"
-                  },
                   {
                     "Color": {
                       "a": 1.0,
@@ -37308,6 +38015,71 @@
                     "Target": "0x100000600001AED"
                   }
                 ]
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Stage_Directions_Container",
+          "Properties": {
+            "TechnicalName": "FFr_3EFB1B21",
+            "Id": "0x100000600001DF4",
+            "Parent": "0x100000600001AA5",
+            "Attachments": [],
+            "DisplayName": "VFX No Follow",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.545098066,
+              "g": 0.149019614,
+              "b": 0.227450982
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 500.0,
+              "y": 625.0
+            },
+            "ZIndex": 12.0,
+            "Size": {
+              "w": 275.0,
+              "h": 200.0
+            },
+            "ShortId": 1056643873,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001DF7",
+                "Owner": "0x100000600001DF4",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000600001DFD",
+                    "Target": "0x100000600001DFA"
+                  }
+                ]
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001DF8",
+                "Owner": "0x100000600001DF4"
               }
             ]
           },
@@ -37610,8 +38382,8 @@
             "Text": "",
             "ExternalId": "",
             "Position": {
-              "x": 625.0,
-              "y": 375.0
+              "x": 450.0,
+              "y": 350.0
             },
             "ZIndex": 10.0,
             "Size": {
@@ -37652,11 +38424,11 @@
         {
           "Type": "Stage_Directions_Container",
           "Properties": {
-            "TechnicalName": "FFr_14F70E34",
-            "Id": "0x100000800002EA4",
-            "Parent": "0x100000800002E9E",
+            "TechnicalName": "FFr_B195EA36",
+            "Id": "0x100000600001BCF",
+            "Parent": "0x100000600001AA5",
             "Attachments": [],
-            "DisplayName": "Circling Stars",
+            "DisplayName": "_Debug TV ITrigger",
             "PreviewImage": {
               "ViewBox": {
                 "x": 0.0,
@@ -37675,20 +38447,20 @@
             "Text": "",
             "ExternalId": "",
             "Position": {
-              "x": 1000.0,
-              "y": 550.0
+              "x": 800.0,
+              "y": 100.0
             },
-            "ZIndex": 0.0,
+            "ZIndex": 10.0,
             "Size": {
               "w": 275.0,
               "h": 200.0
             },
-            "ShortId": 351735348,
+            "ShortId": 2979392054,
             "InputPins": [
               {
                 "Text": "",
-                "Id": "0x100000800002EA7",
-                "Owner": "0x100000800002EA4",
+                "Id": "0x100000600001BE1",
+                "Owner": "0x100000600001BCF",
                 "Connections": [
                   {
                     "Color": {
@@ -37698,8 +38470,19 @@
                       "b": 0.8
                     },
                     "Label": "",
-                    "TargetPin": "0x100000800002EAD",
-                    "Target": "0x100000800002EAA"
+                    "TargetPin": "0x100000600001BD1",
+                    "Target": "0x100000600001BD0"
+                  },
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000600001BD9",
+                    "Target": "0x100000600001BD8"
                   }
                 ]
               }
@@ -37707,8 +38490,450 @@
             "OutputPins": [
               {
                 "Text": "",
-                "Id": "0x100000800002EA8",
-                "Owner": "0x100000800002EA4"
+                "Id": "0x100000600001BE2",
+                "Owner": "0x100000600001BCF"
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Stage_Directions_Container",
+          "Properties": {
+            "TechnicalName": "FFr_2A73E8E9",
+            "Id": "0x100000600001C9D",
+            "Parent": "0x100000600001AD9",
+            "Attachments": [],
+            "DisplayName": "SD Test 2",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.545098066,
+              "g": 0.149019614,
+              "b": 0.227450982
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 1425.0,
+              "y": 475.0
+            },
+            "ZIndex": 7.0,
+            "Size": {
+              "w": 275.0,
+              "h": 200.0
+            },
+            "ShortId": 712239337,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001CAF",
+                "Owner": "0x100000600001C9D",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000600001CA7",
+                    "Target": "0x100000600001CA6"
+                  }
+                ]
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001CB0",
+                "Owner": "0x100000600001C9D",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000600001CB7",
+                    "Target": "0x100000600001CB6"
+                  }
+                ]
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Stage_Directions_Container",
+          "Properties": {
+            "TechnicalName": "FFr_A473B209",
+            "Id": "0x100000600001CBD",
+            "Parent": "0x100000600001AD9",
+            "Attachments": [],
+            "DisplayName": "SD Test 3",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.545098066,
+              "g": 0.149019614,
+              "b": 0.227450982
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 2100.0,
+              "y": 475.0
+            },
+            "ZIndex": 7.0,
+            "Size": {
+              "w": 275.0,
+              "h": 200.0
+            },
+            "ShortId": 2759045641,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001CC7",
+                "Owner": "0x100000600001CBD",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000600001CBF",
+                    "Target": "0x100000600001CBE"
+                  }
+                ]
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001CC8",
+                "Owner": "0x100000600001CBD",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000600001CFB",
+                    "Target": "0x100000600001CFA"
+                  }
+                ]
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Stage_Directions_Container",
+          "Properties": {
+            "TechnicalName": "FFr_6819937C",
+            "Id": "0x100000600001D01",
+            "Parent": "0x100000600001AD9",
+            "Attachments": [],
+            "DisplayName": "SD Test 4 (Stop loop fx)",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.545098066,
+              "g": 0.149019614,
+              "b": 0.227450982
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 2800.0,
+              "y": 450.0
+            },
+            "ZIndex": 7.0,
+            "Size": {
+              "w": 275.0,
+              "h": 200.0
+            },
+            "ShortId": 1746506620,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001D0B",
+                "Owner": "0x100000600001D01",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000600001D03",
+                    "Target": "0x100000600001D02"
+                  }
+                ]
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001D0C",
+                "Owner": "0x100000600001D01",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000600001D12",
+                    "Target": "0x100000600001D11"
+                  }
+                ]
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Stage_Directions_Container",
+          "Properties": {
+            "TechnicalName": "FFr_6B148A55",
+            "Id": "0x100000600001D19",
+            "Parent": "0x100000600001AD9",
+            "Attachments": [],
+            "DisplayName": "SD Test 5",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.545098066,
+              "g": 0.149019614,
+              "b": 0.227450982
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 3618.0985695209347,
+              "y": 332.84769397881774
+            },
+            "ZIndex": 7.0,
+            "Size": {
+              "w": 275.0,
+              "h": 200.0
+            },
+            "ShortId": 1796508245,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001D23",
+                "Owner": "0x100000600001D19",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000600001D1B",
+                    "Target": "0x100000600001D1A"
+                  }
+                ]
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001D24",
+                "Owner": "0x100000600001D19",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000600001D62",
+                    "Target": "0x100000600001D61"
+                  }
+                ]
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Stage_Directions_Container",
+          "Properties": {
+            "TechnicalName": "FFr_715C3979",
+            "Id": "0x100000600001E03",
+            "Parent": "0x100000600001AA5",
+            "Attachments": [],
+            "DisplayName": "VFX Follow",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.545098066,
+              "g": 0.149019614,
+              "b": 0.227450982
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 850.0,
+              "y": 625.0
+            },
+            "ZIndex": 12.0,
+            "Size": {
+              "w": 275.0,
+              "h": 200.0
+            },
+            "ShortId": 1901869433,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001E0D",
+                "Owner": "0x100000600001E03",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000600001E05",
+                    "Target": "0x100000600001E04"
+                  }
+                ]
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001E0E",
+                "Owner": "0x100000600001E03"
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Stage_Directions_Container",
+          "Properties": {
+            "TechnicalName": "FFr_E4708DD3",
+            "Id": "0x100000600001E12",
+            "Parent": "0x100000600001AA5",
+            "Attachments": [],
+            "DisplayName": "VFX Follow Off",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.545098066,
+              "g": 0.149019614,
+              "b": 0.227450982
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 1200.0,
+              "y": 625.0
+            },
+            "ZIndex": 12.0,
+            "Size": {
+              "w": 275.0,
+              "h": 200.0
+            },
+            "ShortId": 3832581587,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001E1C",
+                "Owner": "0x100000600001E12",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000600001E14",
+                    "Target": "0x100000600001E13"
+                  }
+                ]
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001E1D",
+                "Owner": "0x100000600001E12"
               }
             ]
           },
@@ -40874,7 +42099,7 @@
             "Text": "",
             "ExternalId": "",
             "Position": {
-              "x": 1100.0,
+              "x": 1125.0,
               "y": 125.0
             },
             "ZIndex": 3.0,
@@ -42277,8 +43502,8 @@
             "Text": "",
             "ExternalId": "",
             "Position": {
-              "x": 308.0,
-              "y": 402.0
+              "x": 317.0,
+              "y": 400.0
             },
             "ZIndex": 46.0,
             "Size": {
@@ -56619,7 +57844,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "OoooOoh ominious. Hate to interrupt but if your just goint to stand around and talk I have some items on the agenda you can take care of.",
+            "Text": "OoooOoh ominious. Hate to interrupt but if your just going to stand around and talk I have some items on the agenda you can take care of.",
             "ExternalId": "",
             "Position": {
               "x": 3175.0,
@@ -56665,6 +57890,17 @@
                     "Label": "",
                     "TargetPin": "0x10000080000158A",
                     "Target": "0x100000800001589"
+                  },
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000800002EB9",
+                    "Target": "0x100000800002EB6"
                   }
                 ]
               }
@@ -56688,8 +57924,8 @@
             "Text": "Start with the basics, food and water. Got lucky with the whole oxygen thing. Ask around",
             "ExternalId": "",
             "Position": {
-              "x": 3782.0000000000009,
-              "y": 450.33333333333337
+              "x": 3825.0,
+              "y": 675.0
             },
             "ZIndex": 35.0,
             "Size": {
@@ -75219,8 +76455,8 @@
                       "b": 0.8
                     },
                     "Label": "",
-                    "TargetPin": "0x100000600001AEA",
-                    "Target": "0x100000600001AE7"
+                    "TargetPin": "0x100000600001AFA",
+                    "Target": "0x100000600001AF7"
                   }
                 ]
               }
@@ -75230,41 +76466,41 @@
         {
           "Type": "DialogueFragment",
           "Properties": {
-            "TechnicalName": "DFr_7FD37137",
-            "Id": "0x100000600001AE7",
+            "TechnicalName": "DFr_D2F81376",
+            "Id": "0x100000600001CB6",
             "Parent": "0x100000600001AD9",
             "MenuText": "",
             "StageDirections": "",
-            "Speaker": "0x10000000000018C",
+            "Speaker": "0x100000000000190",
             "Color": {
               "r": 0.5764706,
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "DF #2.",
+            "Text": "DF #3",
             "ExternalId": "",
             "Position": {
-              "x": 775.0,
+              "x": 1775.0,
               "y": 475.0
             },
-            "ZIndex": 1.0,
+            "ZIndex": 2.0,
             "Size": {
               "w": 225.0,
               "h": 200.0
             },
-            "ShortId": 2144563511,
+            "ShortId": 3539473270,
             "InputPins": [
               {
                 "Text": "",
-                "Id": "0x100000600001AEA",
-                "Owner": "0x100000600001AE7"
+                "Id": "0x100000600001CB7",
+                "Owner": "0x100000600001CB6"
               }
             ],
             "OutputPins": [
               {
                 "Text": "",
-                "Id": "0x100000600001AEB",
-                "Owner": "0x100000600001AE7",
+                "Id": "0x100000600001CB8",
+                "Owner": "0x100000600001CB6",
                 "Connections": [
                   {
                     "Color": {
@@ -75274,8 +76510,8 @@
                       "b": 0.8
                     },
                     "Label": "",
-                    "TargetPin": "0x100000600001AFA",
-                    "Target": "0x100000600001AF7"
+                    "TargetPin": "0x100000600001CC7",
+                    "Target": "0x100000600001CBD"
                   }
                 ]
               }
@@ -75296,10 +76532,10 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "DF #3.",
+            "Text": "DF #2",
             "ExternalId": "",
             "Position": {
-              "x": 1450.0,
+              "x": 1100.0,
               "y": 475.0
             },
             "ZIndex": 2.0,
@@ -75329,8 +76565,8 @@
                       "b": 0.8
                     },
                     "Label": "",
-                    "TargetPin": "0x100000600001ADD",
-                    "Target": "0x100000600001AD9"
+                    "TargetPin": "0x100000600001CAF",
+                    "Target": "0x100000600001C9D"
                   }
                 ]
               }
@@ -84072,6 +85308,171 @@
           }
         },
         {
+          "Type": "DialogueFragment",
+          "Properties": {
+            "TechnicalName": "DFr_8C446BFC",
+            "Id": "0x100000600001CFA",
+            "Parent": "0x100000600001AD9",
+            "MenuText": "",
+            "StageDirections": "",
+            "Speaker": "0x100000000000190",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "DF #4",
+            "ExternalId": "",
+            "Position": {
+              "x": 2475.0,
+              "y": 450.0
+            },
+            "ZIndex": 2.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 2353294332,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001CFB",
+                "Owner": "0x100000600001CFA"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001CFC",
+                "Owner": "0x100000600001CFA",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000600001D0B",
+                    "Target": "0x100000600001D01"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "DialogueFragment",
+          "Properties": {
+            "TechnicalName": "DFr_08739B28",
+            "Id": "0x100000600001D11",
+            "Parent": "0x100000600001AD9",
+            "MenuText": "",
+            "StageDirections": "",
+            "Speaker": "0x100000000000190",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "DF #5",
+            "ExternalId": "",
+            "Position": {
+              "x": 3215.4396043973811,
+              "y": 394.556400141196
+            },
+            "ZIndex": 2.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 141794088,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001D12",
+                "Owner": "0x100000600001D11"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001D13",
+                "Owner": "0x100000600001D11",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000600001D23",
+                    "Target": "0x100000600001D19"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Type": "DialogueFragment",
+          "Properties": {
+            "TechnicalName": "DFr_13D6BDEB",
+            "Id": "0x100000600001D61",
+            "Parent": "0x100000600001AD9",
+            "MenuText": "",
+            "StageDirections": "",
+            "Speaker": "0x100000000000190",
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "DF #6",
+            "ExternalId": "",
+            "Position": {
+              "x": 4056.280173787356,
+              "y": 297.16407311207615
+            },
+            "ZIndex": 2.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 332840427,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001D62",
+                "Owner": "0x100000600001D61"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000600001D63",
+                "Owner": "0x100000600001D61",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000600001ADD",
+                    "Target": "0x100000600001AD9"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
           "Type": "Captain_Dialogue",
           "Properties": {
             "TechnicalName": "DFr_2F371D55",
@@ -90112,7 +91513,7 @@
             "TechnicalName": "DFr_D94ED3E4",
             "Id": "0x100000800001582",
             "Parent": "0x100000800001508",
-            "MenuText": "",
+            "MenuText": "The Mal",
             "StageDirections": "",
             "Speaker": "0x100000000000190",
             "Color": {
@@ -90120,7 +91521,7 @@
               "g": 0.0156862754,
               "b": 0.0156862754
             },
-            "Text": "The Captain agreed, some structure would probably help the situation.",
+            "Text": "I was in an exploring mood and not one for itineraries.",
             "ExternalId": "",
             "Position": {
               "x": 3494.6666666666674,
@@ -90153,8 +91554,8 @@
                       "b": 0.8
                     },
                     "Label": "",
-                    "TargetPin": "0x100000800001592",
-                    "Target": "0x100000800001591"
+                    "TargetPin": "0x10000080000159A",
+                    "Target": "0x100000800001508"
                   }
                 ]
               }
@@ -90176,11 +91577,11 @@
               "g": 0.0156862754,
               "b": 0.0156862754
             },
-            "Text": "The Captain was in an exploring mood and not one for itineraries.",
+            "Text": "I agreed, some structure would probably help the situation.",
             "ExternalId": "",
             "Position": {
-              "x": 3494.6666666666674,
-              "y": 700.33333333333337
+              "x": 3500.0,
+              "y": 700.0
             },
             "ZIndex": 32.0,
             "Size": {
@@ -90200,6 +91601,62 @@
                 "Text": "",
                 "Id": "0x10000080000158B",
                 "Owner": "0x100000800001589",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000800001592",
+                    "Target": "0x100000800001591"
+                  }
+                ]
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Captain_Dialogue",
+          "Properties": {
+            "TechnicalName": "DFr_E0EEA7AE",
+            "Id": "0x100000800002EB6",
+            "Parent": "0x100000800001508",
+            "MenuText": "",
+            "StageDirections": "",
+            "Speaker": "0x100000000000190",
+            "Color": {
+              "r": 0.121568628,
+              "g": 0.0156862754,
+              "b": 0.0156862754
+            },
+            "Text": "I didn't need a computer telling me what needed to be done.",
+            "ExternalId": "",
+            "Position": {
+              "x": 3500.0,
+              "y": 925.0
+            },
+            "ZIndex": 38.0,
+            "Size": {
+              "w": 225.0,
+              "h": 200.0
+            },
+            "ShortId": 3773736878,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000800002EB9",
+                "Owner": "0x100000800002EB6"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000800002EBA",
+                "Owner": "0x100000800002EB6",
                 "Connections": [
                   {
                     "Color": {
@@ -115070,6 +116527,11 @@
                                         "Id": "0x100000800001591",
                                         "TechnicalName": "DFr_1A5A9B41",
                                         "Type": "DialogueFragment"
+                                      },
+                                      {
+                                        "Id": "0x100000800002EB6",
+                                        "TechnicalName": "DFr_E0EEA7AE",
+                                        "Type": "DialogueFragment"
                                       }
                                     ]
                                   },
@@ -116049,11 +117511,6 @@
                     "Type": "DialogueFragment"
                   },
                   {
-                    "Id": "0x100000600001AE7",
-                    "TechnicalName": "DFr_7FD37137",
-                    "Type": "DialogueFragment"
-                  },
-                  {
                     "Id": "0x100000600001AED",
                     "TechnicalName": "DFr_4380E32D",
                     "Type": "DialogueFragment"
@@ -116064,16 +117521,79 @@
                     "Type": "FlowFragment",
                     "Children": [
                       {
-                        "Id": "0x100000600001AFF",
-                        "TechnicalName": "FFr_39D7927C",
-                        "Type": "FlowFragment"
-                      },
-                      {
                         "Id": "0x100000600001B32",
                         "TechnicalName": "FFr_6B02F371",
                         "Type": "FlowFragment"
                       }
                     ]
+                  },
+                  {
+                    "Id": "0x100000600001C9D",
+                    "TechnicalName": "FFr_2A73E8E9",
+                    "Type": "FlowFragment",
+                    "Children": [
+                      {
+                        "Id": "0x100000600001CA6",
+                        "TechnicalName": "FFr_217E284D",
+                        "Type": "FlowFragment"
+                      }
+                    ]
+                  },
+                  {
+                    "Id": "0x100000600001CB6",
+                    "TechnicalName": "DFr_D2F81376",
+                    "Type": "DialogueFragment"
+                  },
+                  {
+                    "Id": "0x100000600001CBD",
+                    "TechnicalName": "FFr_A473B209",
+                    "Type": "FlowFragment",
+                    "Children": [
+                      {
+                        "Id": "0x100000600001CBE",
+                        "TechnicalName": "FFr_7E133881",
+                        "Type": "FlowFragment"
+                      }
+                    ]
+                  },
+                  {
+                    "Id": "0x100000600001CFA",
+                    "TechnicalName": "DFr_8C446BFC",
+                    "Type": "DialogueFragment"
+                  },
+                  {
+                    "Id": "0x100000600001D01",
+                    "TechnicalName": "FFr_6819937C",
+                    "Type": "FlowFragment",
+                    "Children": [
+                      {
+                        "Id": "0x100000600001D02",
+                        "TechnicalName": "FFr_B1420CE7",
+                        "Type": "FlowFragment"
+                      }
+                    ]
+                  },
+                  {
+                    "Id": "0x100000600001D11",
+                    "TechnicalName": "DFr_08739B28",
+                    "Type": "DialogueFragment"
+                  },
+                  {
+                    "Id": "0x100000600001D19",
+                    "TechnicalName": "FFr_6B148A55",
+                    "Type": "FlowFragment",
+                    "Children": [
+                      {
+                        "Id": "0x100000600001D1A",
+                        "TechnicalName": "FFr_A0721A34",
+                        "Type": "FlowFragment"
+                      }
+                    ]
+                  },
+                  {
+                    "Id": "0x100000600001D61",
+                    "TechnicalName": "DFr_13D6BDEB",
+                    "Type": "DialogueFragment"
                   }
                 ]
               },
@@ -116138,6 +117658,59 @@
                   {
                     "Id": "0x100000600001BAE",
                     "TechnicalName": "FFr_B0452F62",
+                    "Type": "FlowFragment"
+                  }
+                ]
+              },
+              {
+                "Id": "0x100000600001BCF",
+                "TechnicalName": "FFr_B195EA36",
+                "Type": "FlowFragment",
+                "Children": [
+                  {
+                    "Id": "0x100000600001BD0",
+                    "TechnicalName": "FFr_F23E1A84",
+                    "Type": "FlowFragment"
+                  },
+                  {
+                    "Id": "0x100000600001BD8",
+                    "TechnicalName": "FFr_429F040F",
+                    "Type": "FlowFragment"
+                  }
+                ]
+              },
+              {
+                "Id": "0x100000600001DF4",
+                "TechnicalName": "FFr_3EFB1B21",
+                "Type": "FlowFragment",
+                "Children": [
+                  {
+                    "Id": "0x100000600001DFA",
+                    "TechnicalName": "FFr_F9F705B4",
+                    "Type": "FlowFragment"
+                  }
+                ]
+              },
+              {
+                "Id": "0x100000600001E03",
+                "TechnicalName": "FFr_715C3979",
+                "Type": "FlowFragment",
+                "Children": [
+                  {
+                    "Id": "0x100000600001E04",
+                    "TechnicalName": "FFr_FEEEAEAE",
+                    "Type": "FlowFragment"
+                  }
+                ]
+              },
+              {
+                "Id": "0x100000600001E12",
+                "TechnicalName": "FFr_E4708DD3",
+                "Type": "FlowFragment",
+                "Children": [
+                  {
+                    "Id": "0x100000600001E13",
+                    "TechnicalName": "FFr_2054CF97",
                     "Type": "FlowFragment"
                   }
                 ]
