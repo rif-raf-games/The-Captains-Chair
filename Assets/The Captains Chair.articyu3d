@@ -5489,6 +5489,57 @@
           }
         },
         {
+          "Type": "FlowFragment",
+          "Properties": {
+            "TechnicalName": "FFr_43340082",
+            "Id": "0x100000800002E9E",
+            "Parent": "0x100000800000A21",
+            "Attachments": [],
+            "DisplayName": "SFX Tests",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 75.0,
+              "y": 200.0
+            },
+            "ZIndex": 16.0,
+            "Size": {
+              "w": 275.0,
+              "h": 200.0
+            },
+            "ShortId": 1127481474,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000800002EA1",
+                "Owner": "0x100000800002E9E"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000800002EA2",
+                "Owner": "0x100000800002E9E"
+              }
+            ]
+          }
+        },
+        {
           "Type": "Character_Action_List_Template",
           "Properties": {
             "TechnicalName": "FFr_B8559123",
@@ -35889,6 +35940,64 @@
           }
         },
         {
+          "Type": "Stage_Directions",
+          "Properties": {
+            "TechnicalName": "FFr_ECE02794",
+            "Id": "0x100000800002EAA",
+            "Parent": "0x100000800002EA4",
+            "Attachments": [],
+            "DisplayName": "Stars",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.7647059,
+              "g": 0.149019614,
+              "b": 0.0
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 1050.0,
+              "y": 550.0
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 275.0,
+              "h": 200.0
+            },
+            "ShortId": 3974113172,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000800002EAD",
+                "Owner": "0x100000800002EAA"
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000800002EAE",
+                "Owner": "0x100000800002EAA"
+              }
+            ]
+          },
+          "Template": {
+            "Stage_Direction": {
+              "DirectionTargets": "headeffect",
+              "Direction": 8,
+              "Direction_Info": "StunnedCirclingStars"
+            }
+          }
+        },
+        {
           "Type": "Stage_Directions_Container",
           "Properties": {
             "TechnicalName": "FFr_CC1E097B",
@@ -37535,6 +37644,71 @@
                 "Text": "",
                 "Id": "0x100000600001BAC",
                 "Owner": "0x100000600001BA8"
+              }
+            ]
+          },
+          "Template": {}
+        },
+        {
+          "Type": "Stage_Directions_Container",
+          "Properties": {
+            "TechnicalName": "FFr_14F70E34",
+            "Id": "0x100000800002EA4",
+            "Parent": "0x100000800002E9E",
+            "Attachments": [],
+            "DisplayName": "Circling Stars",
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.545098066,
+              "g": 0.149019614,
+              "b": 0.227450982
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 1000.0,
+              "y": 550.0
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 275.0,
+              "h": 200.0
+            },
+            "ShortId": 351735348,
+            "InputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000800002EA7",
+                "Owner": "0x100000800002EA4",
+                "Connections": [
+                  {
+                    "Color": {
+                      "a": 1.0,
+                      "r": 0.5764706,
+                      "g": 0.75686276,
+                      "b": 0.8
+                    },
+                    "Label": "",
+                    "TargetPin": "0x100000800002EAD",
+                    "Target": "0x100000800002EAA"
+                  }
+                ]
+              }
+            ],
+            "OutputPins": [
+              {
+                "Text": "",
+                "Id": "0x100000800002EA8",
+                "Owner": "0x100000800002EA4"
               }
             ]
           },
@@ -113729,6 +113903,25 @@
                                     "Id": "0x100000800002E51",
                                     "TechnicalName": "DFr_E6DB7C02",
                                     "Type": "DialogueFragment"
+                                  }
+                                ]
+                              },
+                              {
+                                "Id": "0x100000800002E9E",
+                                "TechnicalName": "FFr_43340082",
+                                "Type": "FlowFragment",
+                                "Children": [
+                                  {
+                                    "Id": "0x100000800002EA4",
+                                    "TechnicalName": "FFr_14F70E34",
+                                    "Type": "FlowFragment",
+                                    "Children": [
+                                      {
+                                        "Id": "0x100000800002EAA",
+                                        "TechnicalName": "FFr_ECE02794",
+                                        "Type": "FlowFragment"
+                                      }
+                                    ]
                                   }
                                 ]
                               }
