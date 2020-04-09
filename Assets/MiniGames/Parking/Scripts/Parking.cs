@@ -522,10 +522,10 @@ public class Parking : MiniGame
         {
             SceneManager.LoadScene("ParkingDemo");
         }
-        if (GUI.Button(new Rect(0, 100, 100, 100), "Parking"))
+       /* if (GUI.Button(new Rect(0, 100, 100, 100), "Parking"))
         {
             StartCoroutine(ShowResults("yo mama", true));
-        }
+        }*/
     }
 
 

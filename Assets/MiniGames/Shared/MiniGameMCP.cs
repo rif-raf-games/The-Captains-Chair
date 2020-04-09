@@ -200,7 +200,7 @@ public class MiniGameMCP : MonoBehaviour
         SetupLerpFade(0f, 1f, 1.5f);
     }
 
-    private void OnGUI()
+   /* private void OnGUI()
     {
         if (GUI.Button(new Rect(0, 0, 100, 100), "MiniGameMCP"))
         {
@@ -211,7 +211,7 @@ public class MiniGameMCP : MonoBehaviour
 
             StaticStuff.ShowDataPath();
         }
-    }
+    }*/
 
     private void Update()
     {
