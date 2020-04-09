@@ -158,7 +158,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         StaticStuff.PrintFlowBranchesUpdate("Num branches: " + aBranches.Count, this);
 
         CurBranches.Clear();
-        if (CurPauseObject == null) StaticStuff.TrackEvent("Null CurPauseObject in OnBranchesUpdated()");
+        if (CurPauseObject == null) StaticStuff.TrackEvent("Null CurPauseObject in OnBranchesUpdated()");        
         
         // add all the aBranches to CurBranches but do some info sharing and error checking
         int i = 0;

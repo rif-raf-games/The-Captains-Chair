@@ -118,13 +118,8 @@ static public class StaticStuff
         }            
     }*/
     static public void PrintFlowBranchesUpdate(string s, ArticyFlow articyFlowCaller)
-    {        
-       // if (ArticyFlowToPrint != null && (ArticyFlowToPrint == articyFlowCaller))
-       if(true)
-        {
-             
-            // Debug.Log("caller: " + articyFlowCaller.name + ": " + s);
-        }
+    {
+        //Debug.Log("caller: " + articyFlowCaller.name + ": " + s);
 
     }
     static public void PrintBehaviorFlow(string s, BehaviorFlowPlayer player)

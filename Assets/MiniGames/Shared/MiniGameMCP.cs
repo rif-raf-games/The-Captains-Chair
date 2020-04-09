@@ -14,8 +14,9 @@ public class MiniGameMCP : MonoBehaviour
     public Image FadeImage;
     public string PuzzleNameRoot;
     public int[] PuzzlesToLoad;
-    public MiniGame[] Puzzles;
-    public int CurPuzzle;
+    public ArticyRef[] PuzzleDialogues;
+    MiniGame[] Puzzles;
+    int CurPuzzle;
 
     TheCaptainsChair CaptainsChair;
     // UI
@@ -87,7 +88,7 @@ public class MiniGameMCP : MonoBehaviour
             {
                 puzzleName = PuzzleNameRoot + PuzzlesToLoad[i].ToString("D3");
             }            
-           // Debug.Log("load puzzle: " + puzzleName);
+            Debug.Log("load puzzle: " + puzzleName);
             AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(puzzleName, LoadSceneMode.Additive);
             while (!asyncLoad.isDone)
             {
@@ -172,17 +173,30 @@ public class MiniGameMCP : MonoBehaviour
         Puzzles[CurPuzzle].BeginPuzzle();
         GameState = eGameState.PLAYING;
         // UI
-        Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
-        List<ArticyObject> dialogues = jumpSave.Template.Dialogue_List.DialoguesToPlay;
-        if(dialogues == null || dialogues.Count == 0 || dialogues.Count-1 < CurPuzzle)
+        // below is the stuff when it's using articy, but the demo is the code after the commented out stuff
+        /* Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
+         List<ArticyObject> dialogues = jumpSave.Template.Dialogue_List.DialoguesToPlay;
+         if(dialogues == null || dialogues.Count == 0 || dialogues.Count-1 < CurPuzzle)
+         {
+            // Debug.LogError("You don't have the Mini_Game_Jump set up properly because there's no entry in the Dialogues To Play list for this puzzle");
+         }
+         else
+         {
+             Dialogue d = jumpSave.Template.Dialogue_List.DialoguesToPlay[CurPuzzle] as Dialogue;
+             if (d != null) MiniGameArticyFlow.CheckIfDialogueShouldStart(d, null);
+         }*/
+        //public ArticyRef[] PuzzleDialogues;
+        if (PuzzleDialogues == null || PuzzleDialogues.Length == 0 || PuzzleDialogues.Length - 1 < CurPuzzle)
         {
-           // Debug.LogError("You don't have the Mini_Game_Jump set up properly because there's no entry in the Dialogues To Play list for this puzzle");
+            Debug.LogError("You don't have the Mini_Game_Jump set up properly because there's no entry in the Dialogues To Play list for this puzzle");
         }
         else
         {
-            Dialogue d = jumpSave.Template.Dialogue_List.DialoguesToPlay[CurPuzzle] as Dialogue;
+            Debug.Log("trying to start mini game dialogue");
+            Dialogue d = PuzzleDialogues[CurPuzzle].GetObject() as Dialogue;
             if (d != null) MiniGameArticyFlow.CheckIfDialogueShouldStart(d, null);
-        }        
+            else Debug.LogError("No dialogue specified for this mini game level: " + CurPuzzle);
+        }
     }
 
     public void SavePuzzlesProgress(bool success)

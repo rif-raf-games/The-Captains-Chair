@@ -7,7 +7,7 @@ public class ParkingShip : MonoBehaviour
     public enum eParkingShipType { REGULAR, TARGET };
     public eParkingShipType ShipType;
 
-    Parking ParkingMCP;
+    Parking Parking;
     public enum eParkingShipState { LOWERED, RAISING, RAISED, LOWERING };
     eParkingShipState CurState;
 
@@ -19,7 +19,7 @@ public class ParkingShip : MonoBehaviour
 
     private void Start()
     {
-        ParkingMCP = FindObjectOfType<Parking>();
+        Parking = transform.parent.GetComponent<Parking>();//FindObjectOfType<Parking>();
         CurState = eParkingShipState.LOWERED;
         MoveDir = eMoveDir.NONE;
     }
@@ -121,7 +121,7 @@ public class ParkingShip : MonoBehaviour
     public void BeginLower(float lerpPosTime)
     {
         SoundFXPlayer.Play("Lower");
-        transform.position = ParkingMCP.GetClosestCenteredPoint(this.gameObject);
+        transform.position = Parking.GetClosestCenteredPoint(this.gameObject);
         MoveDir = eMoveDir.NONE;
         CurState = eParkingShipState.LOWERING;
         LerpPosStart = transform.position;
@@ -144,7 +144,7 @@ public class ParkingShip : MonoBehaviour
                 if (CurState == eParkingShipState.LOWERED)
                 {
                     SoundFXPlayer.Play("Drop");
-                    ParkingMCP.CheckGameFinish();
+                    Parking.CheckGameFinish();
                 }
             }
         }

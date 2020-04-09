@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311947, g: 0.38074, b: 0.35872698, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -567,6 +567,7 @@ GameObject:
   - component: {fileID: 1006003467}
   - component: {fileID: 1006003469}
   - component: {fileID: 1006003468}
+  - component: {fileID: 1006003470}
   m_Layer: 0
   m_Name: Parking_Game_MCP
   m_TagString: Untagged
@@ -604,8 +605,27 @@ MonoBehaviour:
   FadeImage: {fileID: 3218428995598984601}
   PuzzleNameRoot: Parking_Game_
   PuzzlesToLoad: 0000000004000000030000000200000001000000
-  Puzzles: []
-  CurPuzzle: 0
+  PuzzleDialogues:
+  - instanceId: 0
+    referencingMode: 0
+    lowId: 17975
+    highId: 16777224
+  - instanceId: 0
+    referencingMode: 0
+    lowId: 7749
+    highId: 16777222
+  - instanceId: 0
+    referencingMode: 0
+    lowId: 7749
+    highId: 16777222
+  - instanceId: 0
+    referencingMode: 0
+    lowId: 7749
+    highId: 16777222
+  - instanceId: 0
+    referencingMode: 0
+    lowId: 7749
+    highId: 16777222
   ResultsText: {fileID: 748055420}
   DebugText: {fileID: 1308687120}
   OrientationText: {fileID: 0}
@@ -649,6 +669,18 @@ MonoBehaviour:
   ignoreInvalidBranches: 1
   continuouslyRecalculateBranches: 0
   continouslyRecalculateInterval: 1
+--- !u!114 &1006003470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006003465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc7cfc0667f8a184188336476d312905, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1262270561
 GameObject:
   m_ObjectHideFlags: 0

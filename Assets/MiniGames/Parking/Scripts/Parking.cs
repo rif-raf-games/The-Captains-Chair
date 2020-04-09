@@ -25,8 +25,8 @@ public class Parking : MiniGame
     Vector3 CurTouchPos = Vector3.zero;
     Vector3 LastTouchPos = Vector3.zero;
 
-    List<ParkingShip> AllShips = new List<ParkingShip>();
-    List<ParkingShip> TargetShips = new List<ParkingShip>();
+    public List<ParkingShip> AllShips = new List<ParkingShip>();
+    public List<ParkingShip> TargetShips = new List<ParkingShip>();
     public GameObject LiftPad;
     Quaternion LerpRotStart, LerpRotEnd;
     float LerpStartTime, LerpDurationTime;
@@ -470,6 +470,7 @@ public class Parking : MiniGame
             //CreateSphere(ContainGO.transform, "_checkMax", Color.blue);
             checkPoints.Add(ContainGO.transform.position);
 
+            Debug.Log("this: " + this.name + ", checkPoints[0], checkPoints[1]: " + checkPoints[0].ToString("F2") + ", " + checkPoints[1].ToString("F2"));
             bool inLiftPad = box.bounds.Contains(checkPoints[0]) && box.bounds.Contains(checkPoints[1]);
             if (inLiftPad)
             {
@@ -522,9 +523,10 @@ public class Parking : MiniGame
         {
             SceneManager.LoadScene("ParkingDemo");
         }
-       /* if (GUI.Button(new Rect(0, 100, 100, 100), "Parking"))
+      /*  if (GUI.Button(new Rect(0, 100, 100, 100), "Parking"))
         {
-            StartCoroutine(ShowResults("yo mama", true));
+            StartCoroutine(ShowResults("debug cheat used", true));
+            StaticStuff.ShowDataPath();
         }*/
     }
 
