@@ -116,21 +116,10 @@ public class TheCaptainsChair : MonoBehaviour
     {
         //Debug.Log("aVariableName: " + aVariableName + " changed to: " + aValue.ToString());
         return;
-        ShouldCheckAIs = true;
+        //ShouldCheckAIs = true;
        // CaptainsChair.SaveSaveData();
     }
-        
-    
-    
-   /* public void ToggleNavMeshes(bool val)
-    {        
-        foreach(KeyValuePair<string,NPC> entry in ArticyRefNPCs)
-        {            
-            entry.Value.ToggleNavMeshAgent(val);
-        }
-        
-        //Player.ToggleNavMeshAgent(val);
-    }*/
+                  
     public NPC GetNPCFromActorName(string name)
     {
         //Debug.Log("get npc: " + name);
@@ -142,96 +131,8 @@ public class TheCaptainsChair : MonoBehaviour
         NPC npc = ArticyRefNPCs[name];
         return npc;
     }
-    /*public ArticyRef DebugAmbientTrigger;
-    private void OnGUI()
-    {
-        if (GUI.Button(new Rect(0, 0, 100, 100), "fel"))
-        {
-            Ambient_Trigger at = DebugAmbientTrigger.GetObject() as Ambient_Trigger;
-            Debug.Log("Want to start an ambient flow: " + at.name);
-            List<ArticyObject> ambientEntities = at.Template.Ambient_Actors.Ambient_Actors_Strip;
-            foreach (ArticyObject ao in ambientEntities)
-            {
-                NPC npc = GetNPCFromArticyObj(ao);
-                if (npc == null) { Debug.LogError("There's no NPC associated with the provided ArticyObject. " + ao.name); return; }
-                Debug.Log("found this NPC from the AmbientFlow list: " + npc.name);
-                ArticyFlowPlayer afp = npc.GetComponent<ArticyFlowPlayer>();
-                ArticyFlow af = npc.GetComponent<ArticyFlow>();
-                CharacterActionList cal = npc.GetComponent<CharacterActionList>();
-                af.StopForPuppetShow();
-                afp.StartOn = FlowPauseTarget.GetObject();
-                afp.Play();
-                cal.SetStopped(true);
-            }
-        }
-    }*/
-    // public CharacterActionList debugCAL;
-    /*void OnGUI()
-    {
-        if (GUI.Button(new Rect(0, 0, 100, 100), "stop"))
-        {
-            debugCAL.SetStopped(true);
-        }
-        if (GUI.Button(new Rect(0, 100, 100, 100), "resume"))
-        {
-            debugCAL.SetStopped(false);
-        }
-    }*/
-
-    
-
-    #region SAVE_DATA
-    [System.Serializable]
-    public class SaveDataDic
-    {
-        public Dictionary<string, object> saveData;
-
-        public SaveDataDic()
-        {
-            saveData = new Dictionary<string, object>();
-        }
-    }
-
-    public void SaveSaveData()
-    {
-        SaveDataDic saveData = new SaveDataDic();
-        saveData.saveData = ArticyDatabase.DefaultGlobalVariables.Variables;
         
-        BinaryFormatter bf = new BinaryFormatter();
-        FileStream file;
-        if (File.Exists(Application.persistentDataPath + "/globalVars.dat"))
-        {
-            file = File.Open(Application.persistentDataPath + "/globalVars.dat", FileMode.Open);
-        }
-        else
-        {
-            file = File.Create(Application.persistentDataPath + "/globalVars.dat");
-        }
-        bf.Serialize(file, saveData);
-        file.Close();
-    }
-
-    void LoadSaveData()
-    {
-        if (File.Exists(Application.persistentDataPath + "/globalVars.dat"))
-        {
-            BinaryFormatter bf = new BinaryFormatter();
-            FileStream file = File.Open(Application.persistentDataPath + "/globalVars.dat", FileMode.Open);
-            SaveDataDic saveData = (SaveDataDic)bf.Deserialize(file);
-            ArticyDatabase.DefaultGlobalVariables.Variables = saveData.saveData;
-            file.Close();
-        }
-    }
-
-    public void DeleteSaveData()
-    { 
-        if (File.Exists(Application.persistentDataPath + "/globalVars.dat"))
-        {
-            File.Delete(Application.persistentDataPath + "/globalVars.dat");
-        }
-        ArticyDatabase.DefaultGlobalVariables.ResetVariables();
-    }
-    #endregion
+    
 
     //private void OnGUI()
    // {

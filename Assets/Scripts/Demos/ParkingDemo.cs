@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Articy.Unity;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,7 +11,7 @@ public class ParkingDemo : MonoBehaviour
     public GameObject ChooseButtons;
 
     List<string> ParkingScenes = new List<string>();
-
+    
     void Start()
     {
         int numScenes = SceneManager.sceneCountInBuildSettings;
@@ -22,7 +23,7 @@ public class ParkingDemo : MonoBehaviour
             sceneName = sceneName.Remove(sceneName.Length - 6);
             if (sceneName.Contains("Demo") || sceneName.Contains("MCP")) continue;
             if (sceneName.Contains("Parking")) ParkingScenes.Add(sceneName);
-            Debug.Log("scene index " + i + " has name " + sceneName);
+            //Debug.Log("scene index " + i + " has name " + sceneName);
         }
         
         RootButtons.SetActive(true);        
@@ -31,6 +32,8 @@ public class ParkingDemo : MonoBehaviour
             ChooseButtons.transform.GetChild(i).GetChild(0).GetComponent<Text>().text = ParkingScenes[i];            
         }        
         ChooseButtons.SetActive(false);
+
+        StaticStuff.LoadSaveData();
     }
     public void OnClickStart()
     {
@@ -40,6 +43,11 @@ public class ParkingDemo : MonoBehaviour
     {
         RootButtons.SetActive(false);
         ChooseButtons.SetActive(true);
+    }
+
+    public void OnClickReset()
+    {
+        StaticStuff.DeleteSaveData();
     }
 
     public void OnClickPuzzle(Button button)

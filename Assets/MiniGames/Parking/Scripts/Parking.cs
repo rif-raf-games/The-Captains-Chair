@@ -492,25 +492,11 @@ public class Parking : MiniGame
         //else result = "Not all TARGET ships are on the Lift Pad, so keep trying.";        
         //StartCoroutine(ShowResults("FIX THIS IT'S AN ENDGAME HACK", true));
     }
-    private void OnGUI()
-    {        
-        //Debug.Log("OnGUI(): " + this.name);
-       /* if(GUI.Button(new Rect(0,0,100,100), "Rotate Platform"))
-        {
-            RotateGridPlatform();
-        }
-        if(GUI.Button(new Rect(0,100,100,100), "Check Finish"))
-        {
-            CheckGameFinish();
-        }*/
-        if (GUI.Button(new Rect(Screen.width - 100, 0, 100, 100), "Main Menu"))
-        {
-            SceneManager.LoadScene("ParkingDemo");
-        }        
-    }
 
+    
     IEnumerator ShowResults(string result, bool success)
     {
+        if(MCP != null) MCP.SavePuzzlesProgress(success);
         CurGameState = eGameState.OFF;
         ResultsText.gameObject.SetActive(true);
         ResultsText.text = result;
@@ -527,9 +513,21 @@ public class Parking : MiniGame
         }
     }
 
-    
-    
-    
+   
+
+    private void OnGUI()
+    {
+
+        if (GUI.Button(new Rect(Screen.width - 100, 0, 100, 100), "Main Menu"))
+        {
+            SceneManager.LoadScene("ParkingDemo");
+        }
+        if (GUI.Button(new Rect(0, 100, 100, 100), "Parking"))
+        {
+            StartCoroutine(ShowResults("yo mama", true));
+        }
+    }
+
 
     GameObject CreateSphere(Transform t, string end, Color color, bool addToDebugSpheres = true)
     {

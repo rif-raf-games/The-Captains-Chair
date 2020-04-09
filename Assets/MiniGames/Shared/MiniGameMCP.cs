@@ -17,6 +17,7 @@ public class MiniGameMCP : MonoBehaviour
     public MiniGame[] Puzzles;
     public int CurPuzzle;
 
+    TheCaptainsChair CaptainsChair;
     // UI
     ArticyFlow MiniGameArticyFlow;
 
@@ -28,9 +29,10 @@ public class MiniGameMCP : MonoBehaviour
 
     public virtual void Awake()
     {
-        Debug.Log("MiniGameMCP.Awake(): " + this.name);
+        //Debug.Log("MiniGameMCP.Awake(): " + this.name);
+        CaptainsChair = GameObject.FindObjectOfType<TheCaptainsChair>();
         if (this.name.Contains("LockPick")) StaticStuff.SetOrientation(StaticStuff.eOrientation.PORTRAIT, this.name);        
-        else StaticStuff.SetOrientation(StaticStuff.eOrientation.LANDSCAPE, this.name);        
+        else StaticStuff.SetOrientation(StaticStuff.eOrientation.LANDSCAPE, this.name);             
         if (StaticStuff.USE_DEBUG_MENU == true)
         {
             DebugMenu dm = FindObjectOfType<DebugMenu>();
@@ -110,13 +112,21 @@ public class MiniGameMCP : MonoBehaviour
             Puzzles[i].Init(this);                        
         }
 
-        for (int i = 1; i < Puzzles.Length; i++)
+        for (int i = 0; i < Puzzles.Length; i++)
         {
             Puzzles[i].gameObject.SetActive(false);
         }
-
-
-        CurPuzzle = 0;
+        
+        CurPuzzle = ArticyGlobalVariables.Default.Mini_Games.Parking_Demo_Progress;
+        if (CurPuzzle >= Puzzles.Length)
+        {
+            CurPuzzle = 0;
+            ArticyGlobalVariables.Default.Mini_Games.Parking_Demo_Progress = 0;
+            StaticStuff.SaveSaveData();
+        }
+        Puzzles[CurPuzzle].gameObject.SetActive(true);
+        Debug.Log("MiniGameMCP.LoadPuzzleScenes() CurPuzzle: " + CurPuzzle);
+        
         float endTime = Time.time;
         float deltaTime = endTime - startTime;
         //Debug.Log("load time: " + deltaTime);
@@ -174,11 +184,33 @@ public class MiniGameMCP : MonoBehaviour
             if (d != null) MiniGameArticyFlow.CheckIfDialogueShouldStart(d, null);
         }        
     }
-    public void PuzzleFinished()
+
+    public void SavePuzzlesProgress(bool success)
     {
+        if(success == true)
+        {
+            ArticyGlobalVariables.Default.Mini_Games.Parking_Demo_Progress = CurPuzzle + 1;         
+            StaticStuff.SaveSaveData();
+        }
+    }
+    public void PuzzleFinished()
+    {                
         MiniGameArticyFlow.QuitCurDialogue();
         GameState = eGameState.FADE_OUT;
         SetupLerpFade(0f, 1f, 1.5f);
+    }
+
+    private void OnGUI()
+    {
+        if (GUI.Button(new Rect(0, 0, 100, 100), "MiniGameMCP"))
+        {
+            Dictionary<string, object> bgv = ArticyDatabase.DefaultGlobalVariables.Variables;
+            Debug.Log(bgv["Mini_Games.Parking_Demo_Progress"]);
+            int x = 5;
+            x++;
+
+            StaticStuff.ShowDataPath();
+        }
     }
 
     private void Update()

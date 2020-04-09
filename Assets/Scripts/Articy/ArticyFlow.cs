@@ -497,7 +497,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     void MyGameStateVariablesChanged(string aVariableName, object aValue)
     {
         //Debug.Log("aVariableName: " + aVariableName + " changed to: " + aValue.ToString());
-        if (CaptainsChair != null) CaptainsChair.SaveSaveData();
+        if (CaptainsChair != null) StaticStuff.SaveSaveData();
     }
 
     /// <summary>
@@ -539,17 +539,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     {
         return (CurArticyState == eArticyState.FREE_ROAM);
     }
-    #endregion
-
-    #region SAVE_DATA
-    public void DeleteSaveData()
-    {
-        if (IsCalledInForecast == false)
-        {
-            CaptainsChair.DeleteSaveData();
-        }
-    }
-    #endregion
+    #endregion    
 
     public float GetDefaultTypewriterSpeed() { return ConvoUI.DefaultTypewriterSpeed; }
 }

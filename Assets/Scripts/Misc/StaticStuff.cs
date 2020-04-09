@@ -1,8 +1,11 @@
 ﻿
 
+using Articy.Unity;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using UnityEngine.Analytics;
 
@@ -39,7 +42,66 @@ static public class StaticStuff
                 Screen.orientation = ScreenOrientation.Portrait;
             }*/
         }        
-    }        
+    }
+
+    // C:/Users/<YourNameHere>/AppData/LocalLow/DefaultCompany/CC-MiniGames
+    #region SAVE_DATA 
+    [System.Serializable]
+    public class SaveDataDic
+    {
+        public Dictionary<string, object> saveData;
+
+        public SaveDataDic()
+        {
+            saveData = new Dictionary<string, object>();
+        }
+    }
+
+    static public void ShowDataPath()
+    {
+        Debug.Log(Application.persistentDataPath);
+    }
+
+    static public void SaveSaveData()
+    {
+        SaveDataDic saveData = new SaveDataDic();
+        saveData.saveData = ArticyDatabase.DefaultGlobalVariables.Variables;
+
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream file;
+        if (File.Exists(Application.persistentDataPath + "/globalVars.dat"))
+        {
+            file = File.Open(Application.persistentDataPath + "/globalVars.dat", FileMode.Open);
+        }
+        else
+        {
+            file = File.Create(Application.persistentDataPath + "/globalVars.dat");
+        }
+        bf.Serialize(file, saveData);
+        file.Close();
+    }
+
+    static public void LoadSaveData()
+    {
+        if (File.Exists(Application.persistentDataPath + "/globalVars.dat"))
+        {
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream file = File.Open(Application.persistentDataPath + "/globalVars.dat", FileMode.Open);
+            SaveDataDic saveData = (SaveDataDic)bf.Deserialize(file);
+            ArticyDatabase.DefaultGlobalVariables.Variables = saveData.saveData;
+            file.Close();
+        }
+    }
+
+    static public void DeleteSaveData()
+    {
+        if (File.Exists(Application.persistentDataPath + "/globalVars.dat"))
+        {
+            File.Delete(Application.persistentDataPath + "/globalVars.dat");
+        }
+        ArticyDatabase.DefaultGlobalVariables.ResetVariables();
+    }
+    #endregion
 
 
     static ArticyFlow ArticyFlowToPrint;
