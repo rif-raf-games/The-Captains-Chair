@@ -22,7 +22,7 @@ static public class StaticStuff
         {   // landscape
             Screen.autorotateToPortrait = false;
             Screen.autorotateToPortraitUpsideDown = false;
-            Screen.autorotateToLandscapeLeft = true;
+            Screen.autorotateToLandscapeLeft = false;
             Screen.autorotateToLandscapeRight = true;
             Screen.orientation = ScreenOrientation.LandscapeLeft;
             /*if (Input.deviceOrientation == DeviceOrientation.Portrait || Input.deviceOrientation == DeviceOrientation.PortraitUpsideDown)
@@ -33,7 +33,7 @@ static public class StaticStuff
         else
         {   // portrait            
             Screen.autorotateToPortrait = true;
-            Screen.autorotateToPortraitUpsideDown = true;         
+            Screen.autorotateToPortraitUpsideDown = false;         
             Screen.autorotateToLandscapeLeft = false;
             Screen.autorotateToLandscapeRight = false;
             Screen.orientation = ScreenOrientation.Portrait;

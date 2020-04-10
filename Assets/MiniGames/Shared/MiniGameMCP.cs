@@ -15,6 +15,7 @@ public class MiniGameMCP : MonoBehaviour
     public string PuzzleNameRoot;
     public int[] PuzzlesToLoad;
     public ArticyRef[] PuzzleDialogues;
+    public Vector3[] CameraPositions;
     MiniGame[] Puzzles;
     int CurPuzzle;
 
@@ -76,6 +77,7 @@ public class MiniGameMCP : MonoBehaviour
             }
         }
         Puzzles = new MiniGame[PuzzlesToLoad.Length];
+        CameraPositions = new Vector3[PuzzlesToLoad.Length];
         for (int i = 0; i < PuzzlesToLoad.Length; i++)
         {
             //Debug.Log("LoadScene: " + PuzzlesToLoad[i]);
@@ -97,13 +99,16 @@ public class MiniGameMCP : MonoBehaviour
             //Debug.Log("Load Done: " + puzzleName);            
             UnityEngine.SceneManagement.Scene puzzleScene = SceneManager.GetSceneAt(1);
             MiniGame newPuzzle = null;
+            Vector3 camPos = Vector3.zero;
             GameObject[] newPuzzleObjs = puzzleScene.GetRootGameObjects();
             foreach (GameObject go in newPuzzleObjs)
             {
-                if(newPuzzle == null) newPuzzle = go.GetComponent<MiniGame>();                
+                if(newPuzzle == null) newPuzzle = go.GetComponent<MiniGame>();
+                if (go.GetComponent<Camera>() != null) camPos = go.transform.position;
             }
             Puzzles[i] = newPuzzle;
             Puzzles[i].transform.parent = this.transform;
+            CameraPositions[i] = camPos;
             asyncLoad = SceneManager.UnloadSceneAsync(puzzleScene);
             while (!asyncLoad.isDone)
             {
@@ -126,6 +131,7 @@ public class MiniGameMCP : MonoBehaviour
             StaticStuff.SaveSaveData();
         }
         Puzzles[CurPuzzle].gameObject.SetActive(true);
+        Camera.main.transform.position = CameraPositions[CurPuzzle];
         Debug.Log("MiniGameMCP.LoadPuzzleScenes() CurPuzzle: " + CurPuzzle);
         
         float endTime = Time.time;
@@ -163,6 +169,7 @@ public class MiniGameMCP : MonoBehaviour
             Puzzles[CurPuzzle].gameObject.SetActive(false);
             CurPuzzle++;
             Puzzles[CurPuzzle].gameObject.SetActive(true);
+            Camera.main.transform.position = CameraPositions[CurPuzzle];
             SetupLerpFade(1f, 0f, 1.5f);
             GameState = eGameState.FADE_IN;
         }
