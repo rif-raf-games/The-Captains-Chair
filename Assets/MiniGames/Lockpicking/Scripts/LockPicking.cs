@@ -190,6 +190,7 @@ public class LockPicking : MiniGame
 
     IEnumerator EndGame(string endGameString, bool success)
     {
+        if (MCP != null) MCP.SavePuzzlesProgress(success);
         CurGameState = eGameState.OFF;
         ResultsText.gameObject.SetActive(true);
         ResultsText.text = endGameString;
@@ -200,7 +201,7 @@ public class LockPicking : MiniGame
         if (success == true)
         {
             if (MCP != null) MCP.PuzzleFinished();
-            else Debug.Log("We're not part of an MCP so figure out what next to do");
+            else SceneManager.LoadScene("LockPickingDemo");//else Debug.Log("We're not part of an MCP so figure out what next to do");
         }
         else
         {
@@ -509,5 +510,13 @@ public class LockPicking : MiniGame
 #if UNITY_EDITOR
         EditorUtility.SetDirty(this);
 #endif
+    }
+
+    private void OnGUI()
+    {
+        if (GUI.Button(new Rect(Screen.width - 100, 0, 100, 100), "Main Menu"))
+        {
+            SceneManager.LoadScene("LockPickingDemo");
+        }
     }
 }

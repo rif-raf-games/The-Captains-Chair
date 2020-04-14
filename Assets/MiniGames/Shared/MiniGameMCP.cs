@@ -122,14 +122,8 @@ public class MiniGameMCP : MonoBehaviour
         {
             Puzzles[i].gameObject.SetActive(false);
         }
-        
-        CurPuzzle = ArticyGlobalVariables.Default.Mini_Games.Parking_Demo_Progress;
-        if (CurPuzzle >= Puzzles.Length)
-        {
-            CurPuzzle = 0;
-            ArticyGlobalVariables.Default.Mini_Games.Parking_Demo_Progress = 0;
-            StaticStuff.SaveSaveData();
-        }
+
+        CurPuzzle = GetStartingCurPuzzle();
         Puzzles[CurPuzzle].gameObject.SetActive(true);
         Camera.main.transform.position = CameraPositions[CurPuzzle];
         Debug.Log("MiniGameMCP.LoadPuzzleScenes() CurPuzzle: " + CurPuzzle);
@@ -144,6 +138,25 @@ public class MiniGameMCP : MonoBehaviour
         //Debug.Log("start fade in");
         SetupLerpFade(1f, 0f, 1.5f);
         GameState = eGameState.FADE_IN;
+    }
+
+    int GetStartingCurPuzzle()
+    {
+        int curPuzzle = 0;
+        if (PuzzleNameRoot.Contains("Parking")) curPuzzle = ArticyGlobalVariables.Default.Mini_Games.Parking_Demo_Progress;
+        else if (PuzzleNameRoot.Contains("LockPicking")) curPuzzle = ArticyGlobalVariables.Default.Mini_Games.LockPicking_Demo_Progress;
+        else if (PuzzleNameRoot.Contains("Repair")) curPuzzle = ArticyGlobalVariables.Default.Mini_Games.Repair_Demo_Progress;
+
+        if (curPuzzle >= Puzzles.Length)
+        {
+            curPuzzle = 0;
+            if (PuzzleNameRoot.Contains("Parking")) ArticyGlobalVariables.Default.Mini_Games.Parking_Demo_Progress = 0;
+            else if (PuzzleNameRoot.Contains("LockPicking")) ArticyGlobalVariables.Default.Mini_Games.LockPicking_Demo_Progress = 0;
+            else if (PuzzleNameRoot.Contains("Repair")) ArticyGlobalVariables.Default.Mini_Games.Repair_Demo_Progress = 0;
+            StaticStuff.SaveSaveData();
+        }
+
+        return curPuzzle;
     }
 
     IEnumerator FadePause()
@@ -161,8 +174,9 @@ public class MiniGameMCP : MonoBehaviour
             ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success = true;
             Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
             //SceneManager.LoadScene(jumpSave.Template.Next_Game_Scene.Scene_Name);
-            SceneManager.LoadScene("ParkingDemo");
-            
+            if (PuzzleNameRoot.Contains("Parking")) SceneManager.LoadScene("ParkingDemo");
+            else if (PuzzleNameRoot.Contains("LockPicking")) SceneManager.LoadScene("LockPickingDemo");
+            else if (PuzzleNameRoot.Contains("Repair")) SceneManager.LoadScene("RepairDemo");
         }
         else
         {
@@ -199,7 +213,7 @@ public class MiniGameMCP : MonoBehaviour
         }
         else
         {
-            Debug.Log("trying to start mini game dialogue");
+            //Debug.Log("trying to start mini game dialogue");
             Dialogue d = PuzzleDialogues[CurPuzzle].GetObject() as Dialogue;
             if (d != null) MiniGameArticyFlow.CheckIfDialogueShouldStart(d, null);
             else Debug.LogError("No dialogue specified for this mini game level: " + CurPuzzle);
@@ -208,9 +222,12 @@ public class MiniGameMCP : MonoBehaviour
 
     public void SavePuzzlesProgress(bool success)
     {
-        if(success == true)
+        if (success == true)
         {
-            ArticyGlobalVariables.Default.Mini_Games.Parking_Demo_Progress = CurPuzzle + 1;         
+            ArticyGlobalVariables.Default.Mini_Games.Parking_Demo_Progress = CurPuzzle + 1;
+            if (PuzzleNameRoot.Contains("Parking")) ArticyGlobalVariables.Default.Mini_Games.Parking_Demo_Progress = CurPuzzle + 1;
+            else if (PuzzleNameRoot.Contains("LockPicking")) ArticyGlobalVariables.Default.Mini_Games.LockPicking_Demo_Progress = CurPuzzle + 1;
+            else if (PuzzleNameRoot.Contains("Repair")) ArticyGlobalVariables.Default.Mini_Games.Repair_Demo_Progress = CurPuzzle + 1;
             StaticStuff.SaveSaveData();
         }
     }

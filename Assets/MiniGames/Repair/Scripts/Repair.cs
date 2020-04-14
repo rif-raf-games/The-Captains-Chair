@@ -63,7 +63,7 @@ public class Repair : MiniGame
     {
         Debug.Log("Repair.Init()");
         base.Init(mcp);
-        if (ResultsText == null) ResultsText = MCP.ResultsText;
+        ResultsText = MCP.ResultsText;
         //if (DebugText == null) DebugText = MCP.DebugText;
         ResultsText.text = "";
     }
@@ -749,20 +749,20 @@ public class Repair : MiniGame
                     PathErrorSphere.transform.position = pieceNotReached.transform.position + new Vector3(0f, .5f, 0f);
                 }
             }
-            
+            string result = "";
             if (puzzleSolved == false)
             {
-                string s = "epic FAIL because: " + msg + ", took " + NumChecks + " to do it";
-                Debug.Log("***************************************************************" + s);
-                ResultsText.text = s;
+                result = "epic FAIL because: " + msg + ", took " + NumChecks + " to do it";
+                //Debug.Log("***************************************************************" + s);
+                // ResultsText.text = s;
             }
             else
             {
-                string s = "epic WIN because: " + msg + ", took " + NumChecks + " to do it";
-                Debug.Log("***************************************************************" + s);
-                ResultsText.text = s;
+                result = "epic WIN because: " + msg + ", took " + NumChecks + " to do it";
+                //Debug.Log("***************************************************************" + s);
+                //ResultsText.text = s;
             }
-            StartCoroutine(EndGame(puzzleSolved));
+            StartCoroutine(EndGame(result, puzzleSolved));
             //PuzzleFinishedTest = true;
         }
 
@@ -795,20 +795,30 @@ public class Repair : MiniGame
         {            
             StartCoroutine(ShowPath());            
         }*/
+        if (GUI.Button(new Rect(Screen.width - 100, 0, 100, 100), "Main Menu"))
+        {
+            SceneManager.LoadScene("RepairDemo");
+        }
+        /*  if (GUI.Button(new Rect(Screen.width - 100, 100, 100, 100), "CHEAT"))
+          {
+              StartCoroutine(EndGame("You won but you cheated", true));
+          }        */
     }
-    IEnumerator EndGame(bool success)
+    IEnumerator EndGame(string result, bool success)
     {
+        ResultsText.text = result;
+        if (MCP != null) MCP.SavePuzzlesProgress(success);
         CurGameState = eGameState.OFF;
         yield return new WaitForSeconds(3);
-        if(success == true)
+        if (success == true)
         {
             if (MCP != null) MCP.PuzzleFinished();
-            else Debug.Log("We're not part of an MCP so figure out what next to do");   
+            else SceneManager.LoadScene("RepairDemo");//Debug.Log("We're not part of an MCP so figure out what next to do");   
         }
         else
         {
             CurGameState = eGameState.ON;
-            ResetPuzzleState(true);            
+            ResetPuzzleState(true);
             ResultsText.text = "";
             PathErrorSphere.transform.position = new Vector3(-9999f, 0f, -9999f);
             if (EndColPiece != null)

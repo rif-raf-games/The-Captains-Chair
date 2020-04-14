@@ -124,17 +124,17 @@ public class CharacterEntity : MonoBehaviour
 
             // determines whether or not we go to the WALK bit
             Speed = DeltaPos.magnitude * 10f;
-            Animator.SetFloat("Speed", Speed);
+            Animator.SetFloat("Vertical", Speed);
 
             // determines how much of the WalkForward and WalkBackward we play
-            WalkDir = Vector3.Angle(ForwardDir, MoveDir) / 180f; // 0 = forward, 1 = backward
+            /*WalkDir = Vector3.Angle(ForwardDir, MoveDir) / 180f; // 0 = forward, 1 = backward
             WalkDir *= 2; // 2*m_WalkDir: 0 = forward, 2 = backward
             WalkDir = 1 - WalkDir; // 1-(above) 1=forward, -1=backward
             Animator.SetFloat("Walk Dir", WalkDir);
 
             TurnSpeed = Vector3.SignedAngle(LastForwardDir, ForwardDir, Vector3.up);
             TurnSpeed /= 2f;
-            Animator.SetFloat("Turn Speed", TurnSpeed);                   
+            Animator.SetFloat("Turn Speed", TurnSpeed);     */              
 
             LastPos = transform.position;            
             LastForwardDir = ForwardDir;

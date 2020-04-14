@@ -136,8 +136,8 @@ public class Room : MonoBehaviour
 
             NPCMaterials.Clear();
             int layerMask = LayerMask.GetMask("NPC");
-            BoxCollider box = GetComponent<BoxCollider>();
-            if (box == null) box = transform.GetChild(0).GetComponent<BoxCollider>();
+            BoxCollider box = GetComponent<BoxCollider>();            
+            if (box == null) box = transform.parent.GetComponent<BoxCollider>();//box = transform.GetChild(0).GetComponent<BoxCollider>();
             Collider[] colliders = Physics.OverlapBox(box.bounds.center, box.size / 2, transform.rotation, layerMask);
             if(colliders.Length != 0)
             {
