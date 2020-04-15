@@ -9,19 +9,18 @@ public class CamFollow : MonoBehaviour
     enum eCamState { FOLLOW, SHIP_VIEW, TRANSITION };
     eCamState CurCamState = eCamState.FOLLOW;
 
-    private CCPlayer Player;
     public CharacterEntity EntityToFollow;
+    public Vector3 CamOffset;
+    //public Vector3 CamRot = new Vector3(24, 180, 0);
+
+    private CCPlayer Player;    
     CharacterEntity EntityWasFollowing;
     Vector3 PrevCamPos;
-    float PrevCamRot;
-    public Vector3 CamOffset;
-
-    Vector3 ShipViewCamPos = new Vector3(-23.7f, 40f, 295f);
-    
+    float PrevCamRot;    
+    Vector3 ShipViewCamPos = new Vector3(-23.7f, 40f, 295f);    
     Vector3 LerpStart, LerpEnd;
-
     ShipAreasCollider ShipAreasCollider;
-
+    
     private void Start()
     {
         Player = FindObjectOfType<CCPlayer>();
@@ -40,12 +39,12 @@ public class CamFollow : MonoBehaviour
         }*/
     }
 
-    public void SetupNewCamFollow(CharacterEntity newEntityToFollow, Vector3 newCamOffset)
+    public void SetupNewCamFollow(CharacterEntity newEntityToFollow, Vector3 newCamOffset, Quaternion newCamRot)
     {        
         if(CurCamState != eCamState.FOLLOW ) Debug.LogError("Trying to set up a new cam follow: " + newEntityToFollow.name + " but the camera is not in FOLLOW mode");        
 
         this.EntityToFollow = newEntityToFollow;
-        StartCoroutine(LerpCamFollow(newCamOffset));
+        StartCoroutine(LerpCamFollow(newCamOffset, newCamRot));
     }
 
     Vector3 PrevMousePos;
@@ -212,17 +211,21 @@ public class CamFollow : MonoBehaviour
         }        
     }
 
-    IEnumerator LerpCamFollow(Vector3 newCamOffset)
+    IEnumerator LerpCamFollow(Vector3 newCamOffset, Quaternion newCamRot)
     {
+        Quaternion lerpRotStart = transform.rotation;
+        Quaternion lerpRotEnd = newCamRot;
         LerpStart = transform.position - EntityToFollow.transform.position;
         LerpEnd = newCamOffset;                
         float timer = 0f;
         while (timer < 1f)
         {
             CamOffset = Vector3.Lerp(LerpStart, LerpEnd, timer);
+            transform.rotation = Quaternion.Lerp(lerpRotStart, lerpRotEnd, timer);
             timer += Time.deltaTime;
             yield return new WaitForEndOfFrame();
         }
         CamOffset = newCamOffset;
+        transform.rotation = lerpRotEnd;
     }         
 }
