@@ -194,7 +194,7 @@ static public class StaticStuff
         platform = "Android";
 #endif
         parameters.Add("Platform", platform);
-        parameters.Add("stack", Environment.StackTrace);
+        //parameters.Add("stack", Environment.StackTrace);
         AnalyticsResult ar = Analytics.CustomEvent(e, parameters);
         Debug.Log("Analytic: " + e + " has result: " + ar.ToString());
         if (ar != AnalyticsResult.Ok) Debug.LogError("ERROR: we have a screwed up analytics event tracking: " + ar.ToString());
