@@ -184,6 +184,16 @@ static public class StaticStuff
     {
         if (parameters == null) parameters = new Dictionary<string, object>();
         
+        
+        string platform = "Unknown";
+#if UNITY_EDITOR
+        platform = "Editor";
+#elif UNITY_IOS
+        platform = "IOS";
+#elif UNITY_ANDROID
+        platform = "Android";
+#endif
+        parameters.Add("Platform", platform);
         parameters.Add("stack", Environment.StackTrace);
         AnalyticsResult ar = Analytics.CustomEvent(e, parameters);
         Debug.Log("Analytic: " + e + " has result: " + ar.ToString());
