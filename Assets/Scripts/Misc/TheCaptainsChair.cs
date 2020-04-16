@@ -28,7 +28,8 @@ public class TheCaptainsChair : MonoBehaviour
         StaticStuff.SetOrientation(StaticStuff.eOrientation.LANDSCAPE, this.name);
     }
     void Start()
-    {      
+    {
+        StaticStuff.TrackEvent("TCC Start()");
         ArticyDatabase.DefaultGlobalVariables.Notifications.AddListener("*.*", MyGameStateVariablesChanged);
         //Debug.Log("Welcome to The Captain's Chair!!");
         StaticStuff.SetCaptainsChair(this.ArticyFlowToPrint);
