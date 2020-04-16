@@ -182,12 +182,12 @@ static public class StaticStuff
     }
     public static void TrackEvent(string e, Dictionary<string, object> parameters = null)
     {
-        /*if (parameters == null) parameters = new Dictionary<string, object>();
+        if (parameters == null) parameters = new Dictionary<string, object>();
         
         parameters.Add("stack", Environment.StackTrace);
         AnalyticsResult ar = Analytics.CustomEvent(e, parameters);
         Debug.Log("Analytic: " + e + " has result: " + ar.ToString());
-        if (ar != AnalyticsResult.Ok) Debug.LogError("ERROR: we have a screwed up analytics event tracking: " + ar.ToString());*/
+        if (ar != AnalyticsResult.Ok) Debug.LogError("ERROR: we have a screwed up analytics event tracking: " + ar.ToString());
     }
 
 }
