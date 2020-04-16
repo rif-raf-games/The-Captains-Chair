@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -32,7 +33,7 @@ public class MiniGame : MonoBehaviour
                 if (dm == null)
                 {
                     //Debug.Log("-----------------------------------------------------------------------------------------------load debug menu " + this.name);
-                    Object debugObject = Resources.Load("DebugMenu");
+                    UnityEngine.Object debugObject = Resources.Load("DebugMenu");
                     Instantiate(debugObject);
                 }
             }            
@@ -43,9 +44,22 @@ public class MiniGame : MonoBehaviour
         //Debug.Log("MiniGame.Init()");
         this.MCP = mcp;
     }
-    
+
+    float PuzzleStartTime = 0f;
     public virtual void BeginPuzzle()
     {
-
+        Debug.Log("Reset puzzle time");
+        PuzzleStartTime = Time.time;
     }    
+    public void EndPuzzle(bool success, string name)
+    {
+        if(success == true)
+        {
+            float gameTime = Time.time - PuzzleStartTime;
+            TimeSpan time = TimeSpan.FromSeconds(gameTime);
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("Total Time To Solve", time);
+            StaticStuff.TrackEvent("debug_" + name + "_solved", parameters);
+        }
+    }
 }

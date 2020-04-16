@@ -125,7 +125,8 @@ public class LockPicking : MiniGame
     // Start is called before the first frame update
     public override void BeginPuzzle()
     {
-        //Debug.Log("Lockpicking.BeginPuzzle()");        
+        //Debug.Log("Lockpicking.BeginPuzzle()");   
+        base.BeginPuzzle();
         CenterBlock.transform.position = new Vector3(CenterBlock.transform.position.x, 0f, CenterBlock.transform.position.z);              
         LargestRingDiameter = Rings[Rings.Count-1].GetComponent<MeshCollider>().bounds.extents.x;
 
@@ -173,6 +174,7 @@ public class LockPicking : MiniGame
         GatesThisGame.Remove(gate);
         gate.gameObject.SetActive(false);
         if(GatesThisGame.Count == 0)
+        //if(true)
         {
             StartCoroutine(EndGame("You Won.", true));
         }        
@@ -191,6 +193,7 @@ public class LockPicking : MiniGame
     IEnumerator EndGame(string endGameString, bool success)
     {
         if (MCP != null) MCP.SavePuzzlesProgress(success);
+        EndPuzzle(success, this.name);
         CurGameState = eGameState.OFF;
         ResultsText.gameObject.SetActive(true);
         ResultsText.text = endGameString;

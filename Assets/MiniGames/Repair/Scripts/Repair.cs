@@ -78,6 +78,7 @@ public class Repair : MiniGame
 
     public override void BeginPuzzle()
     {
+        base.BeginPuzzle();
         ResultsText.text = "";
         CurGameState = eGameState.ON;
         AllPieces = GameObject.FindObjectsOfType<RepairPiece>().ToList<RepairPiece>();        
@@ -799,15 +800,16 @@ public class Repair : MiniGame
         {
             SceneManager.LoadScene("RepairDemo");
         }
-        /*  if (GUI.Button(new Rect(Screen.width - 100, 100, 100, 100), "CHEAT"))
+         /* if (GUI.Button(new Rect(Screen.width - 100, 100, 100, 100), "CHEAT"))
           {
               StartCoroutine(EndGame("You won but you cheated", true));
-          }        */
+          }*/        
     }
     IEnumerator EndGame(string result, bool success)
     {
         ResultsText.text = result;
         if (MCP != null) MCP.SavePuzzlesProgress(success);
+        EndPuzzle(success, this.name);
         CurGameState = eGameState.OFF;
         yield return new WaitForSeconds(3);
         if (success == true)

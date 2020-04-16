@@ -55,8 +55,11 @@ public class Parking : MiniGame
         }
     }
 
+    
     public override void BeginPuzzle()
-    {        
+    {
+        base.BeginPuzzle();
+        Debug.Log("Parking.BeginPuzzle()");
         TouchState = eTouchState.NONE;
         CurGameState = eGameState.NORMAL;
         ContainGO = new GameObject();
@@ -73,6 +76,25 @@ public class Parking : MiniGame
                 sphere.transform.localScale = new Vector3(.2f, .2f, .2f);
                 sphere.transform.parent = ship.transform;
             }
+        }
+    }
+    IEnumerator ShowResults(string result, bool success)
+    {
+        if (MCP != null) MCP.SavePuzzlesProgress(success);
+        EndPuzzle(success, this.name);
+        CurGameState = eGameState.OFF;
+        ResultsText.gameObject.SetActive(true);
+        ResultsText.text = result;
+        yield return new WaitForSeconds(3f);
+        ResultsText.gameObject.SetActive(false);
+        if (success == true)
+        {
+            if (MCP != null) MCP.PuzzleFinished();
+            else SceneManager.LoadScene("ParkingDemo");//Debug.Log("We're not part of an MCP so figure out what next to do");
+        }
+        else
+        {
+            CurGameState = eGameState.NORMAL;
         }
     }
 
@@ -495,24 +517,7 @@ public class Parking : MiniGame
     }
 
     
-    IEnumerator ShowResults(string result, bool success)
-    {
-        if(MCP != null) MCP.SavePuzzlesProgress(success);
-        CurGameState = eGameState.OFF;
-        ResultsText.gameObject.SetActive(true);
-        ResultsText.text = result;
-        yield return new WaitForSeconds(3f);
-        ResultsText.gameObject.SetActive(false);
-        if(success == true)
-        {
-            if (MCP != null) MCP.PuzzleFinished();
-            else SceneManager.LoadScene("ParkingDemo");//Debug.Log("We're not part of an MCP so figure out what next to do");
-        }      
-        else
-        {
-            CurGameState = eGameState.NORMAL;
-        }
-    }
+    
 
    
 
