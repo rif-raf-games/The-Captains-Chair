@@ -825,6 +825,7 @@ GameObject:
   m_Component:
   - component: {fileID: 466464696}
   - component: {fileID: 466464697}
+  - component: {fileID: 466464698}
   m_Layer: 0
   m_Name: Repair Demo
   m_TagString: Untagged
@@ -861,6 +862,59 @@ MonoBehaviour:
   GameNameRoot: Repair
   RootButtons: {fileID: 1571604035}
   ChooseButtons: {fileID: 1536192495}
+--- !u!114 &466464698
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 466464695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -745406591, guid: 220224b43fc464c28bc0e8de8f54a432, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Trigger:
+    m_IsTriggerExpanded: 1
+    m_Type: 0
+    m_LifecycleEvent: 2
+    m_ApplyRules: 0
+    m_Rules:
+      m_Rules: []
+    m_TriggerBool: 0
+    m_InitTime: 5
+    m_RepeatTime: 5
+    m_Repetitions: 0
+    repetitionCount: 0
+  m_EventPayload:
+    m_IsEventExpanded: 1
+    m_StandardEventType: ScreenVisit
+    m_Parameters:
+      m_Parameters:
+      - m_RequirementType: 1
+        m_GroupID: 
+        m_Tooltip: The name of the screen or type of screen visited.
+        m_Name: screen_name
+        m_Value:
+          m_EditingCustomValue: 0
+          m_PopupIndex: 2
+          m_CustomValue: 
+          m_FixedType: 1
+          m_EnumType: UnityEngine.Analytics.ScreenName
+          m_EnumTypeIsCustomizable: 1
+          m_CanDisable: 0
+          m_PropertyType: 2
+          m_ValueType: System.String
+          m_Value: settings
+          m_Target:
+            m_Target: {fileID: 466464695}
+            m_Path: name
+            m_ValidTypeNames:
+            - System.String
+            - System.String
+            m_Type: System.String
+            m_EnumType: UnityEngine.Analytics.ScreenName
+    m_Name: screen_visit
 --- !u!1 &525826794
 GameObject:
   m_ObjectHideFlags: 0
@@ -2506,10 +2560,32 @@ MonoBehaviour:
     repetitionCount: 0
   m_EventPayload:
     m_IsEventExpanded: 1
-    m_StandardEventType: GameStart
+    m_StandardEventType: TutorialStart
     m_Parameters:
-      m_Parameters: []
-    m_Name: game_start
+      m_Parameters:
+      - m_RequirementType: 2
+        m_GroupID: 
+        m_Tooltip: The tutorial name or ID.
+        m_Name: tutorial_id
+        m_Value:
+          m_EditingCustomValue: 0
+          m_PopupIndex: 0
+          m_CustomValue: 
+          m_FixedType: 1
+          m_EnumType: 
+          m_EnumTypeIsCustomizable: 0
+          m_CanDisable: 1
+          m_PropertyType: 1
+          m_ValueType: System.String
+          m_Value: RepairTutorialTestStart
+          m_Target:
+            m_Target: {fileID: 0}
+            m_Path: 
+            m_ValidTypeNames:
+            - System.String
+            m_Type: System.String
+            m_EnumType: 
+    m_Name: tutorial_start
 --- !u!4 &1964778836
 Transform:
   m_ObjectHideFlags: 0
