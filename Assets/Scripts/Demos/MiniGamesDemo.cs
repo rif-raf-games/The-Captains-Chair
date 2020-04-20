@@ -5,6 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class MiniGamesDemo : MonoBehaviour
 {
+    private void Start()
+    {
+        StaticStuff.TrackEvent("mini_game_demo_start");
+    }
     public void OnClickParking()
     {
         SceneManager.LoadScene("ParkingDemo");
