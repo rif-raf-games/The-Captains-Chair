@@ -715,6 +715,7 @@ public class Repair : MiniGame
                 if (piece.GetComponentInChildren<MeshRenderer>() == null) Debug.LogError(piece.name + ": null mr");
                 if (piece.GetComponentInChildren<MeshRenderer>().material == null) Debug.LogError(piece.name + ": null material");
                 piece.GetComponentInChildren<MeshRenderer>().material = NoneMat;
+                piece.FluidType = eFluidType.NONE;
             }
         }
     }
