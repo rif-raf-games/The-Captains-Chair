@@ -253,12 +253,12 @@ public class MiniGameMCP : MonoBehaviour
 
     private void Update()
     {
-        if(OrientationText != null)
+       /* if(OrientationText != null)
         {
             OrientationText.text = "Input: " + Input.deviceOrientation.ToString() + "\n";
             OrientationText.text += "Screen: " + Screen.orientation.ToString() + "\n";
            // OrientationText.text = "";
-        }
+        }*/
     }
     private void FixedUpdate()
     {

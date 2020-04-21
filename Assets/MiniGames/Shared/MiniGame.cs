@@ -2,15 +2,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MiniGame : MonoBehaviour
 {
     protected MiniGameMCP MCP;
     protected bool IsSolo;
 
+    [Header("Debug")]
+    public Text DebugText;
     public virtual void Awake()
     {
-        //Debug.Log("MiniGame.Awake()");
+        Debug.Log("MiniGame.Awake()");
         MiniGameMCP mcp = FindObjectOfType<MiniGameMCP>();
         if(mcp == null)
         {

@@ -251,7 +251,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                             StageDirectionPlayer.StartAIOnNPC(DialogueNPC);
                             DialogueNPC = null;
                         }
-                        StageDirectionPlayer.ShutOnAllAIs();    // make sure all AI's shut off during the dialogue are turned back on
+                        if(StageDirectionPlayer != null) StageDirectionPlayer.ShutOnAllAIs();    // make sure all AI's shut off during the dialogue are turned back on
                     }
                     else if (CurArticyState == eArticyState.AMBIENT_TRIGGER)
                     {

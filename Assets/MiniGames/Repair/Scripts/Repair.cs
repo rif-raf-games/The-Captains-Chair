@@ -15,7 +15,10 @@ public class Repair : MiniGame
     public enum eRepairPieceType { PIPE, SPLITTER, XOVER, BLOCKER, TERMINAL }; // types of pieces
     enum eGameState { OFF, ON };
     eGameState CurGameState = eGameState.OFF;
-    //public RepairPiece[] Terminals; // the terminals on this puzzle
+
+    FuelDoor FuelDoor;
+
+    [Header("Repair")]
     public List<RepairPiece> Terminals = new List<RepairPiece>();
 
     RepairPiece CurTerminalStart;
@@ -34,7 +37,10 @@ public class Repair : MiniGame
     float BeltMoveRange;
 
     public Text ResultsText;
-    //bool PuzzleFinishedTest = false;
+    public Material FuelMat;
+    public Material CoolantMat;
+    public Material NoneMat;
+    public GameObject[] Lights;
 
     class PieceConn
     {
@@ -57,7 +63,7 @@ public class Repair : MiniGame
     List<GameObject> BeltAnchors = new List<GameObject>();
     int NumChecks = 0;
     int PiecesAndBeltMask;
-    // int PiecesAndAnchorMask;
+    int FuelDoorMask;
 
     public override void Init(MiniGameMCP mcp)
     {
@@ -67,8 +73,24 @@ public class Repair : MiniGame
         //if (DebugText == null) DebugText = MCP.DebugText;
         ResultsText.text = "";
     }
+    
+    private void Awake()
+    {
+        base.Awake();
+        SetLights(-1);
+        FuelDoor = GetComponentInChildren<FuelDoor>();
+    }
+
+    void SetLights(int val)
+    {
+        foreach (GameObject go in Lights) go.SetActive(false);
+        if (val == -1 || val >= Lights.Length) return;
+        Lights[val].SetActive(true);
+    }
+
     private void Start()
     {
+        //Debug.Log("start " + IsSolo);
         if (IsSolo == true)
         {
             ResultsText.text = "";
@@ -78,9 +100,10 @@ public class Repair : MiniGame
 
     public override void BeginPuzzle()
     {
+       // Debug.Log("BeginPUzzle()");
         base.BeginPuzzle();
         ResultsText.text = "";
-        CurGameState = eGameState.ON;
+        CurGameState = eGameState.OFF;
         AllPieces = GameObject.FindObjectsOfType<RepairPiece>().ToList<RepairPiece>();        
         foreach (RepairPiece terminal in Terminals)
         {
@@ -97,13 +120,19 @@ public class Repair : MiniGame
         BeltAnchors = BeltAnchors.OrderBy(go => go.name).ToList<GameObject>();
 
         PiecesAndBeltMask = 1 << LayerMask.NameToLayer("Repair Piece");
-        PiecesAndBeltMask |= (1 << LayerMask.NameToLayer("Repair Piece Belt"));        
-        
+        PiecesAndBeltMask |= (1 << LayerMask.NameToLayer("Repair Piece Belt"));
+
+        FuelDoorMask = LayerMask.GetMask("Parking Rotate Platform"); // we ran out of tags so i'm re-using some from another game
+
         InitialBeltIndexStops.Add(-1);
         InitialBeltIndexStops.Add(BeltAnchors.Count);
         BeltIndexAdjusts.Add(-1);
-        BeltIndexAdjusts.Add(1);        
+        BeltIndexAdjusts.Add(1);
+
+        FuelDoor.Open(TurnGameOn);
     }
+
+    
 
     List<int> InitialBeltIndexStops = new List<int>();
     List<int> BeltIndexAdjusts = new List<int>();
@@ -112,6 +141,8 @@ public class Repair : MiniGame
     Vector3 StartWorldTouchPos;
     Vector3 StartHeldPieceWorldPos;
     float TapTimer;
+    bool TouchingDoor = false;
+    Vector3 DoorTouchPos;
     enum eMoveType { BELT, PIECE, WAITING_FOR_TYPE, NO_MOVEMENT };
     eMoveType MoveType = eMoveType.NO_MOVEMENT;
     enum eLocationType { BELT, BOARD, };
@@ -119,6 +150,12 @@ public class Repair : MiniGame
     static float TAP_TIME = .1f;
     private void Update()
     {
+        if(DebugText != null)
+        {
+            DebugText.text = CurGameState.ToString() + "\n";
+            DebugText.text += TouchingDoor + "\n";
+            DebugText.text += TapTimer + "\n";
+        }
         //ResultText.text = "";
         if (CurGameState == eGameState.OFF) return;
         float deltaZ=0f;
@@ -151,8 +188,13 @@ public class Repair : MiniGame
                     MoveType = eMoveType.BELT;                    
                 }
             }
-        }
-        
+            else if (Physics.Raycast(ray, out hit, Mathf.Infinity, FuelDoorMask))
+            {
+                TouchingDoor = true;
+                TapTimer = 0;
+                DoorTouchPos = GetWorldPosFromTouchPos();
+            }
+        }        
         else if (Input.GetMouseButton(0))
         {
             newWorldTouchPos = GetWorldPosFromTouchPos();
@@ -193,8 +235,21 @@ public class Repair : MiniGame
                     SnapPieceIntoPlace(HeldPiece, StartHeldPieceWorldPos);                               
                 }
             }
+            else if(TouchingDoor == true)
+            {                
+                if(TapTimer <= TAP_TIME && CurGameState == eGameState.ON)
+                {
+                    Vector3 doorReleasePos = GetWorldPosFromTouchPos();
+                    if(doorReleasePos.z <= DoorTouchPos.z)
+                    {
+                        CurGameState = eGameState.OFF;
+                        FuelDoor.Close(CheckPuzzleComplete);
+                    }                    
+                }
+            }            
             // reset all of the movement data
             TapTimer = 0f;
+            TouchingDoor = false;
             HeldPiece = null;
             MoveType = eMoveType.NO_MOVEMENT;
         }        
@@ -472,11 +527,7 @@ public class Repair : MiniGame
         Debug.Log(err);
         PieceConn newConn = new PieceConn(collPiece, curPiece);
         DEBUG_ConnsOnThisPath.Add(newConn);
-    }
-
-    public Material FuelMat;
-    public Material CoolantMat;
-    public Material NoneMat;    
+    }    
 
     Color GetColor(int dir)
     {
@@ -658,159 +709,124 @@ public class Repair : MiniGame
         if(startOver == true)
         {
             foreach (RepairPiece terminal in Terminals) terminal.ReachedOnPath = false;
-            foreach (RepairPiece piece in AllPieces) piece.GetComponentInChildren<MeshRenderer>().material = NoneMat;
+            foreach (RepairPiece piece in AllPieces)
+            {
+                if (piece == null) Debug.LogError(piece.name + ": null piece");
+                if (piece.GetComponentInChildren<MeshRenderer>() == null) Debug.LogError(piece.name + ": null mr");
+                if (piece.GetComponentInChildren<MeshRenderer>().material == null) Debug.LogError(piece.name + ": null material");
+                piece.GetComponentInChildren<MeshRenderer>().material = NoneMat;
+            }
         }
+    }
+
+    bool CheckPaths()
+    {
+        foreach (RepairPiece terminal in Terminals) terminal.ReachedOnPath = false;
+        bool puzzleSolved = false;
+        bool brokenPathFound = false;
+        string msg = "";
+        ResultsText.text = "";
+        foreach (RepairPiece terminal in Terminals)
+        {
+            if (terminal.ReachedOnPath == true) continue;
+            ResetPuzzleState(false);
+            CurTerminalStart = terminal;
+            CurTerminalStartFluidType = CurTerminalStart.FluidType;
+            ConnsToCheck.Add(new PieceConn(CurTerminalStart, CurTerminalStart));
+            CurTerminalStart.ReachedOnPath = true;
+
+            int i = 0; // this is just for debugging so that we don't get into an infinite loop
+            while (ConnsToCheck.Count != 0 && i < 100)
+            {
+                PieceConn curPieceConn = ConnsToCheck[0];
+                ConnsToCheck.Remove(curPieceConn);
+                StaticStuff.PrintRepairPath("************************************ going to check conn Us: " + curPieceConn.Cur.name + " , From: " + curPieceConn.From.name);
+                if (CheckPieceConn(curPieceConn) == false)
+                {
+                    ConnsToCheck.Clear();
+                    puzzleSolved = false;
+                    brokenPathFound = true;
+                    Debug.Log("***************************************************bailed due to broken puzzle");
+                    msg = PathErrorMessage;
+                    break;
+                }
+            }
+            if (brokenPathFound == true) break;
+        }
+
+        if (brokenPathFound == false)
+        {
+            RepairPiece pieceNotReached = null;
+            foreach (RepairPiece piece in Terminals)
+            {
+                if (piece.ReachedOnPath == false)
+                {
+                    pieceNotReached = piece;
+                    break;
+                }
+            }
+            if (pieceNotReached == null)
+            {
+                puzzleSolved = true;
+                msg = "CONGRATS WE HAVE REACHED EVERY TERMINAL ON THE PUZZLE SO WE WIN!!!!!!";
+            }
+            else
+            {
+                puzzleSolved = false;
+                msg = "WE HAVE AT LEAST 1 TERMINAL " + pieceNotReached.name + " THAT HAS NOT BEEN REACHED SO WE FAIL!!!!!!";
+                PathErrorSphere.transform.position = pieceNotReached.transform.position + new Vector3(0f, .5f, 0f);
+            }
+        }
+        string result = "";
+        if (puzzleSolved == false)
+        {
+            result = "epic FAIL because: " + msg + ", took " + NumChecks + " to do it";
+        }
+        else
+        {
+            result = "epic WIN because: " + msg + ", took " + NumChecks + " to do it";
+        }
+        StartCoroutine(EndGame(result, puzzleSolved));
+        return puzzleSolved;
     }
     
     private void OnGUI()
     {
-        /*if(PuzzleFinishedTest == true)
-        {
-            if (GUI.Button(new Rect(0, 100, 100, 100), "reset"))
-            {
-                ResetPuzzleState(true);
-                PuzzleFinishedTest = false;
-                ResultText.text = "";
-                PathErrorSphere.transform.position = new Vector3(-9999f, 0f, -9999f);
-                if(EndColPiece != null)
-                {
-                    Destroy(EndColPiece);
-                    EndColPiece = null;
-                }
-            }
-            return;
-        }*/
-        if (GUI.Button(new Rect(0,100,100,100), "path test"))
-        {
-            //foreach (RepairPiece piece in AllPieces) Debug.Log("piece: " + piece.name + " rot: " + piece.transform.eulerAngles.ToString("F2"));
-            foreach (RepairPiece terminal in Terminals) terminal.ReachedOnPath = false;
-            bool puzzleSolved = false;
-            bool brokenPathFound = false;
-            string msg = "";
-            ResultsText.text = "";
-            foreach ( RepairPiece terminal in Terminals)
-            {
-                if (terminal.ReachedOnPath == true) continue;
-                ResetPuzzleState(false);
-                CurTerminalStart = terminal;
-                CurTerminalStartFluidType = CurTerminalStart.FluidType;
-                ConnsToCheck.Add(new PieceConn(CurTerminalStart, CurTerminalStart));
-                CurTerminalStart.ReachedOnPath = true;
-                //foreach (RepairPiece rp in AllPieces) rp.FluidType = eFluidType.NONE;
-                /*NumChecks = 0;                                
-                CurTerminalStart = terminal;
-                CurTerminalStartFluidType = CurTerminalStart.FluidType;
-                ConnsToCheck.Clear();
-                AllConnsChecked.Clear();
-                DEBUG_ConnsOnThisPath.Clear();
-                ConnsResult.Clear();
-                ConnsToCheck.Add(new PieceConn(CurTerminalStart, CurTerminalStart));
-                CurTerminalStart.ReachedOnPath = true;*/
-
-                //Debug.Log("going to check a path from terminal: " + CurTerminalStart.name);
-                int i = 0; // this is just for debugging so that we don't get into an infinite loop
-                while (ConnsToCheck.Count != 0 && i < 100)
-                {
-                    PieceConn curPieceConn = ConnsToCheck[0];
-                    ConnsToCheck.Remove(curPieceConn);
-                    StaticStuff.PrintRepairPath("************************************ going to check conn Us: " + curPieceConn.Cur.name + " , From: " + curPieceConn.From.name);
-                    if (CheckPieceConn(curPieceConn) == false)
-                    {
-                        ConnsToCheck.Clear();
-                        puzzleSolved = false;
-                        brokenPathFound = true;
-                        Debug.Log("***************************************************bailed due to broken puzzle");
-                        msg = PathErrorMessage;
-                        break;
-                    }                    
-                }
-                if (brokenPathFound == true) break;                
-            }            
-
-            if(brokenPathFound == false)
-            {
-                RepairPiece pieceNotReached = null;
-                foreach (RepairPiece piece in Terminals)
-                {
-                    if (piece.ReachedOnPath == false)
-                    {
-                        pieceNotReached = piece;
-                        break;
-                    }
-                }
-                if (pieceNotReached == null)
-                {
-                    puzzleSolved = true;
-                    msg = "CONGRATS WE HAVE REACHED EVERY TERMINAL ON THE PUZZLE SO WE WIN!!!!!!";
-                }
-                else
-                {
-                    puzzleSolved = false;
-                    msg = "WE HAVE AT LEAST 1 TERMINAL " + pieceNotReached.name + " THAT HAS NOT BEEN REACHED SO WE FAIL!!!!!!";
-                    PathErrorSphere.transform.position = pieceNotReached.transform.position + new Vector3(0f, .5f, 0f);
-                }
-            }
-            string result = "";
-            if (puzzleSolved == false)
-            {
-                result = "epic FAIL because: " + msg + ", took " + NumChecks + " to do it";
-                //Debug.Log("***************************************************************" + s);
-                // ResultsText.text = s;
-            }
-            else
-            {
-                result = "epic WIN because: " + msg + ", took " + NumChecks + " to do it";
-                //Debug.Log("***************************************************************" + s);
-                //ResultsText.text = s;
-            }
-            StartCoroutine(EndGame(result, puzzleSolved));
-            //PuzzleFinishedTest = true;
-        }
-
-        /*if (GUI.Button(new Rect(0, 200, 100, 100), "p1, p2"))
-        {
-            float dist = Vector3.Distance(p1.transform.position, p2.transform.position);
-            Debug.Log("p1: " + p1.transform.position);
-            Debug.Log("p2: " + p2.transform.position);
-            Debug.Log("dist: " + dist);
-        }
-        if (GUI.Button(new Rect(0, 300, 100, 100), "p1, p3"))
-        {
-            float dist = Vector3.Distance(p1.transform.position, p3.transform.position);
-            Debug.Log("p1: " + p1.transform.position);
-            Debug.Log("p3: " + p3.transform.position);
-            Debug.Log("dist: " + dist);
-            
-        }*/
-        /*if(GUI.Button(new Rect(0, 100, 100, 100), "prev Conn"))
-        {
-            if (CurConnIndex != 0) CurConnIndex--;
-            ShowPathIndex();
-        }
-        if (GUI.Button(new Rect(100, 100, 100, 100), "next Conn"))
-        {
-            if (CurConnIndex < DEBUG_ConnsOnThisPath.Count - 1) CurConnIndex++;
-            ShowPathIndex();
-        }
-        if (GUI.Button(new Rect(0, 200, 100, 100), "show path"))
-        {            
-            StartCoroutine(ShowPath());            
-        }*/
         if (GUI.Button(new Rect(Screen.width - 100, 0, 100, 100), "Main Menu"))
         {
             SceneManager.LoadScene("RepairDemo");
         }
+        if (CurGameState == eGameState.OFF) return;
+
+        if (GUI.Button(new Rect(0,100,100,100), "path test"))
+        {
+            CurGameState = eGameState.OFF;
+            FuelDoor.Close(CheckPuzzleComplete);
+        }                
          /* if (GUI.Button(new Rect(Screen.width - 100, 100, 100, 100), "CHEAT"))
           {
               StartCoroutine(EndGame("You won but you cheated", true));
           }*/        
     }
-    IEnumerator EndGame(string result, bool success)
+
+    public void CheckPuzzleComplete()
     {
+        CheckPaths();
+    }
+    public void TurnGameOn()
+    {
+        CurGameState = eGameState.ON;
+        SetLights(1);
+    }
+    IEnumerator EndGame(string result, bool success)
+    {        
         ResultsText.text = result;
         if (MCP != null) MCP.SavePuzzlesProgress(success);
         EndPuzzle(success, this.name);
         CurGameState = eGameState.OFF;
+        FuelDoor.Open();
+        if (success == true) SetLights(0);
+        else SetLights(2);
         yield return new WaitForSeconds(3);
         if (success == true)
         {
@@ -820,6 +836,7 @@ public class Repair : MiniGame
         else
         {
             CurGameState = eGameState.ON;
+            SetLights(1);
             ResetPuzzleState(true);
             ResultsText.text = "";
             PathErrorSphere.transform.position = new Vector3(-9999f, 0f, -9999f);
@@ -830,7 +847,7 @@ public class Repair : MiniGame
             }
         }
     }
-    public GameObject p1, p2, p3;
+    GameObject p1, p2, p3;
     void ShowPathIndex()
     {
         PieceConn pc = DEBUG_ConnsOnThisPath[CurConnIndex];
@@ -856,7 +873,7 @@ public class Repair : MiniGame
         Debug.Log("Cur: " + curName + ", From: " + pc.From.gameObject.name);
     }
     int CurConnIndex = 0;
-    public GameObject Cur, From;
+    GameObject Cur, From;
     IEnumerator ShowPath()
     {
         Debug.Log("num PieceConns: " + DEBUG_ConnsOnThisPath.Count);
