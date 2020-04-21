@@ -214,6 +214,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 211258099}
+        m_MethodName: TriggerEvent
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &211258097
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -294,7 +305,7 @@ MonoBehaviour:
           m_CanDisable: 1
           m_PropertyType: 1
           m_ValueType: System.String
-          m_Value: Repair
+          m_Value: mgd_4_21_repair_button
           m_Target:
             m_Target: {fileID: 0}
             m_Path: 
@@ -583,6 +594,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1150871941}
+        m_MethodName: TriggerEvent
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1150871939
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -663,7 +685,7 @@ MonoBehaviour:
           m_CanDisable: 1
           m_PropertyType: 1
           m_ValueType: System.String
-          m_Value: LockPicking
+          m_Value: mgd_4_21_lock_button
           m_Target:
             m_Target: {fileID: 0}
             m_Path: 
@@ -849,6 +871,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1331330237}
+        m_MethodName: TriggerEvent
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1331330235
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -929,7 +962,7 @@ MonoBehaviour:
           m_CanDisable: 1
           m_PropertyType: 1
           m_ValueType: System.String
-          m_Value: Parking
+          m_Value: mgd_4_21_parking_button
           m_Target:
             m_Target: {fileID: 0}
             m_Path: 
@@ -1018,7 +1051,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1474290095}
   - component: {fileID: 1474290094}
-  - component: {fileID: 1474290096}
   m_Layer: 0
   m_Name: AnalyticsEventTracker
   m_TagString: Untagged
@@ -1054,7 +1086,36 @@ MonoBehaviour:
     m_IsEventExpanded: 1
     m_StandardEventType: GameStart
     m_Parameters:
-      m_Parameters: []
+      m_Parameters:
+      - m_RequirementType: 0
+        m_GroupID: 
+        m_Tooltip: 
+        m_Name: mgd_start
+        m_Value:
+          m_EditingCustomValue: 0
+          m_PopupIndex: 0
+          m_CustomValue: 
+          m_FixedType: 0
+          m_EnumType: 
+          m_EnumTypeIsCustomizable: 0
+          m_CanDisable: 0
+          m_PropertyType: 1
+          m_ValueType: System.String
+          m_Value: mgd_4_21_mainmenu_st
+          m_Target:
+            m_Target: {fileID: 0}
+            m_Path: 
+            m_ValidTypeNames:
+            - System.Int32
+            - System.Boolean
+            - System.Decimal
+            - System.Double
+            - System.Single
+            - System.Int64
+            - System.Int16
+            - System.String
+            m_Type: System.String
+            m_EnumType: 
     m_Name: game_start
 --- !u!4 &1474290095
 Transform:
@@ -1070,81 +1131,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1474290096
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1474290093}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -745406591, guid: 220224b43fc464c28bc0e8de8f54a432, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Trigger:
-    m_IsTriggerExpanded: 1
-    m_Type: 0
-    m_LifecycleEvent: 0
-    m_ApplyRules: 0
-    m_Rules:
-      m_Rules: []
-    m_TriggerBool: 0
-    m_InitTime: 5
-    m_RepeatTime: 5
-    m_Repetitions: 0
-    repetitionCount: 0
-  m_EventPayload:
-    m_IsEventExpanded: 1
-    m_StandardEventType: LevelComplete
-    m_Parameters:
-      m_Parameters:
-      - m_RequirementType: 1
-        m_GroupID: level
-        m_Tooltip: The level name. Either level_name or level_index is required.
-        m_Name: level_name
-        m_Value:
-          m_EditingCustomValue: 0
-          m_PopupIndex: 0
-          m_CustomValue: 
-          m_FixedType: 1
-          m_EnumType: 
-          m_EnumTypeIsCustomizable: 0
-          m_CanDisable: 1
-          m_PropertyType: 1
-          m_ValueType: System.String
-          m_Value: Parking_Game_Tutorial
-          m_Target:
-            m_Target: {fileID: 0}
-            m_Path: 
-            m_ValidTypeNames:
-            - System.String
-            m_Type: System.String
-            m_EnumType: 
-      - m_RequirementType: 1
-        m_GroupID: level
-        m_Tooltip: The order of this level within the game. Either level_name or level_index
-          is required.
-        m_Name: level_index
-        m_Value:
-          m_EditingCustomValue: 0
-          m_PopupIndex: 0
-          m_CustomValue: 
-          m_FixedType: 1
-          m_EnumType: 
-          m_EnumTypeIsCustomizable: 0
-          m_CanDisable: 1
-          m_PropertyType: 0
-          m_ValueType: System.Int32
-          m_Value: 
-          m_Target:
-            m_Target: {fileID: 0}
-            m_Path: 
-            m_ValidTypeNames:
-            - System.Int32
-            m_Type: System.Int32
-            m_EnumType: 
-    m_Name: level_complete
 --- !u!1 &1510600075
 GameObject:
   m_ObjectHideFlags: 0
@@ -1257,7 +1243,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1536192495}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -745406591, guid: 220224b43fc464c28bc0e8de8f54a432, type: 3}
   m_Name: 
@@ -1291,12 +1277,12 @@ MonoBehaviour:
           m_EnumType: 
           m_EnumTypeIsCustomizable: 0
           m_CanDisable: 0
-          m_PropertyType: 2
+          m_PropertyType: 1
           m_ValueType: System.String
-          m_Value: Parking game clicked
+          m_Value: mgd_4_21_parking_chosen
           m_Target:
             m_Target: {fileID: 1331330234}
-            m_Path: name
+            m_Path: 
             m_ValidTypeNames:
             - System.Int32
             - System.Boolean
@@ -1306,7 +1292,6 @@ MonoBehaviour:
             - System.Int64
             - System.Int16
             - System.String
-            - enum
             m_Type: System.String
             m_EnumType: 
       - m_RequirementType: 0
@@ -1321,12 +1306,12 @@ MonoBehaviour:
           m_EnumType: 
           m_EnumTypeIsCustomizable: 0
           m_CanDisable: 0
-          m_PropertyType: 2
+          m_PropertyType: 1
           m_ValueType: System.String
-          m_Value: 
+          m_Value: mgd_4_21_lock_chosen
           m_Target:
             m_Target: {fileID: 1150871938}
-            m_Path: name
+            m_Path: 
             m_ValidTypeNames:
             - System.Int32
             - System.Boolean
@@ -1336,7 +1321,6 @@ MonoBehaviour:
             - System.Int64
             - System.Int16
             - System.String
-            - enum
             m_Type: System.String
             m_EnumType: 
       - m_RequirementType: 0
@@ -1351,12 +1335,12 @@ MonoBehaviour:
           m_EnumType: 
           m_EnumTypeIsCustomizable: 0
           m_CanDisable: 0
-          m_PropertyType: 2
+          m_PropertyType: 1
           m_ValueType: System.String
-          m_Value: 
+          m_Value: mgd_4_21_repair_chosen
           m_Target:
             m_Target: {fileID: 211258096}
-            m_Path: name
+            m_Path: 
             m_ValidTypeNames:
             - System.Int32
             - System.Boolean
@@ -1366,7 +1350,6 @@ MonoBehaviour:
             - System.Int64
             - System.Int16
             - System.String
-            - enum
             m_Type: System.String
             m_EnumType: 
     m_Name: game_clicked
