@@ -24,7 +24,7 @@ public class MiniGameDemo : MonoBehaviour
             sceneName = sceneName.Remove(sceneName.Length - 6);
             if (sceneName.Contains("Demo") || sceneName.Contains("MCP")) continue;
             if (sceneName.Contains(GameNameRoot)) MiniGameScenes.Add(sceneName);
-            Debug.Log("scene index " + i + " has name " + sceneName);
+           // Debug.Log("scene index " + i + " has name " + sceneName);
         }
         
         RootButtons.SetActive(true);        
