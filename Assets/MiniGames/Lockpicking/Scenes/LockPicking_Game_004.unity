@@ -2371,12 +2371,12 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1511071710}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.35, y: 1.35, z: 1}
+  m_LocalScale: {x: 1.35, y: 1.3500005, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_Father: {fileID: 8040514808561139897}
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2505,7 +2505,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1598353272
 RectTransform:
   m_ObjectHideFlags: 0
@@ -54095,6 +54095,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09e4e2017b62bc64cb8beb4c4223c20c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DebugText: {fileID: 1598353273}
   Diode: {fileID: 1633366290925391127}
   CenterBlock: {fileID: 3174009292662535106}
   Rings:
@@ -54156,20 +54157,16 @@ MonoBehaviour:
   ResultsText: {fileID: 1992280551}
   DebugText: {fileID: 1598353273}
   EvilDiodes: []
-  MaxEvilDiodes: 8
+  MaxEvilDiodes: 4
   EvilDiodeSpeeds:
   - 5
-  - 5
-  - 7
   - 7
   - 9
-  - 9
-  - 11
   - 11
   TimeBeforeEvilSpawn: 20
-  TimeBetweenEvilSpawns: 15
+  TimeBetweenEvilSpawns: 20
   EvilRespawnTime: 1
-  NumSpawnAtATime: 2
+  NumSpawnAtATime: 1
   MAX_DIODE_SPEED: 40
   SpeedAdjTime: 1
   SpeedAdjNumGates: 1
@@ -67302,6 +67299,7 @@ Transform:
   - {fileID: 5687061779177970016}
   - {fileID: 7037731284036236408}
   - {fileID: 421896315}
+  - {fileID: 1511071713}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
