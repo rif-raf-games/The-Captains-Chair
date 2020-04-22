@@ -124,7 +124,7 @@ public class Repair : MiniGame
 
         FuelDoorMask = LayerMask.GetMask("Parking Rotate Platform"); // we ran out of tags so i'm re-using some from another game
 
-        InitialBeltIndexStops.Add(-1);
+        InitialBeltIndexStops.Add(-1); 
         InitialBeltIndexStops.Add(BeltAnchors.Count);
         BeltIndexAdjusts.Add(-1);
         BeltIndexAdjusts.Add(1);
@@ -366,8 +366,7 @@ public class Repair : MiniGame
                 else if (hit.collider.tag == "Repair Piece Anchor" || hit.collider.tag == "Repair Piece Belt Anchor")
                 {   // nope, the anchor point is empty so put the HeldPiece there and assign it's parent                          
                     piece.transform.position = p.Coll.transform.position;
-                    piece.transform.parent = (locType == eLocationType.BOARD ? BoardPieces : Belt);
-                    //Debug.Log("found spot");
+                    piece.transform.parent = (locType == eLocationType.BOARD ? BoardPieces : Belt);                    
                     newLocFound = true;
                     break;
                 }
@@ -375,27 +374,58 @@ public class Repair : MiniGame
             // if we're here and we're belt type then try to move the pieces on the belt up or down to make room for this spot
             if (newLocFound == false && locType == eLocationType.BELT)
             {
-#if UNITY_EDITOR                
-                return false;
-#else
                 newLocFound = AssignBeltSpot(anchorPoints[0]);
-#endif
             }
         }
         piece.GetComponentInChildren<MeshCollider>().enabled = true; // make sure to turn this back on 
         if (newLocFound == false)
-        {   // didn't find an empty spot, so put the piece back to where it started from
+        {   // didn't find an empty spot, so put the piece back to where it started from           
             piece.transform.position = origPos;
         }        
+        else
+        {
+            bool adjustmentMade = CheckBeltSorting();
+           // Debug.Log("piece found a new position, but was there an adjustment made to the belt?: " + adjustmentMade);
+        }
         return newLocFound;
+    }
+
+    bool CheckBeltSorting()
+    {
+        int topIndex = 0;
+        int bottomIndex = BeltAnchors.Count - 1;        
+        bool adjustmentMade = false;
+        RaycastHit hit;
+        while(adjustmentMade == false)
+        {   //int indexDataIndex = (HeldPiece.transform.position.z < p.Coll.transform.position.z ? 0 : 1); // 0 = move up, 1 = move down
+            hit = GetHitAtAnchorPos(BeltAnchors[topIndex]);            
+            if (hit.collider.tag == "Repair Piece")
+            {   // hit the top index, so move down
+                adjustmentMade = PushPiecesToMakeSpace(BeltAnchors[topIndex], (BeltAnchors.Count / 2) + 1, BeltIndexAdjusts[1]); ;
+            }
+            if(adjustmentMade == false )
+            {
+                hit = GetHitAtAnchorPos(BeltAnchors[bottomIndex]);
+                if (hit.collider.tag == "Repair Piece")
+                {   // hit the bottom index, so move up
+                    adjustmentMade = PushPiecesToMakeSpace(BeltAnchors[bottomIndex], (BeltAnchors.Count / 2) - 1, BeltIndexAdjusts[0]);
+                }
+            }
+            topIndex++;
+            bottomIndex--;
+            if (topIndex > bottomIndex) break;
+        }
+
+        return adjustmentMade;
     }
     /// <summary>
     /// If we need to make room for a spot on the belt, this will check to see if there's any available space in the direction
     /// defined by the initialIndexStop and indexAdj vals
     /// </summary>    
     bool PushPiecesToMakeSpace(GameObject beltAnchor, int initialIndexStop, int indexAdj)
-    {   
+    {        
         int baIndex = BeltAnchors.IndexOf(beltAnchor);
+       // Debug.Log("PushPiecesToMakeSpace() baIndex: " + baIndex);
         if (baIndex == -1) { Debug.LogError("we're trying to PushPiecesToMakeSpace but the beltAnchor isn't in the list: " + beltAnchor.name); return false; }
         // start going through the list, looking for an empty spot
         bool spotFound = false;
@@ -415,7 +445,7 @@ public class Repair : MiniGame
         }
         if (spotFound == true)
         {
-            Debug.Log("found an empty spot at index: " + foundSpotIndex + " so push pieces");
+            //Debug.Log("found an empty spot at index: " + foundSpotIndex + " so push pieces");
             i = baIndex;
             while(i != foundSpotIndex)
             {
@@ -435,21 +465,21 @@ public class Repair : MiniGame
     /// </summary>
     bool AssignBeltSpot(AnchorHitPoint p)
     {   
-        Debug.Log("AssignBeltSpot() coll: " + p.Coll.name + ", which is index: " + BeltAnchors.IndexOf(p.Coll));
-        int indexDataIndex = (HeldPiece.transform.position.z < p.Coll.transform.position.z ? 0 : 1);
+       // Debug.Log("AssignBeltSpot() coll: " + p.Coll.name + ", which is index: " + BeltAnchors.IndexOf(p.Coll));
+        int indexDataIndex = (HeldPiece.transform.position.z < p.Coll.transform.position.z ? 0 : 1); // 0 = move up, 1 = move down
         bool piecesMoved = false;
         piecesMoved = PushPiecesToMakeSpace(p.Coll, InitialBeltIndexStops[indexDataIndex], BeltIndexAdjusts[indexDataIndex]);
         if(piecesMoved == false) piecesMoved = PushPiecesToMakeSpace(p.Coll, InitialBeltIndexStops[1-indexDataIndex], BeltIndexAdjusts[1-indexDataIndex]);
 
         if (piecesMoved)
         {
-            Debug.Log("pieces were moved so put the piece at the spot");
+          //  Debug.Log("pieces were moved so put the piece at the spot");
             HeldPiece.transform.position = p.Coll.transform.position;
             HeldPiece.transform.parent = Belt;
         }
         else
         {
-            Debug.Log("Nope, no empty spots so the belt must be full");
+           // Debug.Log("Nope, no empty spots so the belt must be full");
         }
 
         return piecesMoved;        
