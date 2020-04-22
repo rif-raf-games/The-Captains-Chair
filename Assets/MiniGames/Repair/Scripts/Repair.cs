@@ -569,6 +569,7 @@ public class Repair : MiniGame
     {             
         RepairPiece curPiece = pieceConn.Cur;        
         Vector3 curPiecePos = new Vector3(curPiece.transform.position.x, PieceAnchorHeightValToUse, curPiece.transform.position.z); //curPiece.transform.position + new Vector3(0f, Repair.MODEL_HEIGHT / 2f, 0f);        
+        StaticStuff.PrintRepairPath("CheckPieceConn() pieceConn: " + pieceConn.ID + ", num OpenAngles: " + curPiece.OpenAngles.Count);
         foreach (int angle in curPiece.OpenAngles)
         {
             NumChecks++;            
@@ -649,8 +650,7 @@ public class Repair : MiniGame
                     else
                     {                        
                         if(adjacentPiece.Type == eRepairPieceType.XOVER)
-                        {
-                            // moangleupdate                             
+                        {                                                   
                             StaticStuff.PrintRepairPath("There is a piece called: " + hit.collider.transform.parent.name + " on the spot that " + curPiece.name + "'s ray collided with but it " +
                                 "is an XOVER type, so assign the XOVER's only relevant OpenAngle: " + angleAdj + " to check and do NOT assign a fluid type.  Create a new " +
                                 "conn Us: " + hit.collider.transform.parent.name + ", From: " + curPiece.name);                            
@@ -686,8 +686,13 @@ public class Repair : MiniGame
                             adjacentPiece.OpenAngles.Clear();
                             adjacentPiece.OpenAngles.Add(reflectAngleInt);
                         }
-                        else
+                        else if (adjacentPiece.Type == eRepairPieceType.BLOCKER)
                         {
+                            SetupPathError("There is a broken piece on this spot " + hit.collider.name, curPiece, hit.collider, rayDir);
+                            return false;
+                        }
+                        else
+                        {                            
                             StaticStuff.PrintRepairPath("There is a piece called: " + hit.collider.transform.parent.name + " on the spot that " + curPiece.name + "'s ray collided with that does NOT have the same fluid type " +
                             "as our current path so assign the fluid type and create a new conn Us: " + hit.collider.transform.parent.name + ", From: " + curPiece.name);                            
                             adjacentPiece.FluidType = CurTerminalStartFluidType;
@@ -744,8 +749,11 @@ public class Repair : MiniGame
                 if (piece == null) Debug.LogError(piece.name + ": null piece");
                 if (piece.GetComponentInChildren<MeshRenderer>() == null) Debug.LogError(piece.name + ": null mr");
                 if (piece.GetComponentInChildren<MeshRenderer>().material == null) Debug.LogError(piece.name + ": null material");
-                piece.GetComponentInChildren<MeshRenderer>().material = NoneMat;
-                piece.FluidType = eFluidType.NONE;
+                if(piece.Type != eRepairPieceType.BLOCKER)
+                {
+                    piece.GetComponentInChildren<MeshRenderer>().material = NoneMat;
+                    piece.FluidType = eFluidType.NONE;
+                }                
             }
         }
     }
