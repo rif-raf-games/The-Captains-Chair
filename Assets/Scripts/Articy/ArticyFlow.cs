@@ -30,7 +30,9 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     List<ArticyObject> ActiveCALPauseObjects = new List<ArticyObject>(); 
     List<string> FlowFragsVisited = new List<string>(); // List of flow fragments visited to check against ActiveCALPauseObjects
     
-    NPC DialogueNPC = null; // The NPC you're in conversation with        
+    NPC DialogueNPC = null; // The NPC you're in conversation with    
+
+    MiniGameMCP MiniGameMCP; // if we're in a mini game we'll have a mini game mcp
 
     // game stuff
     TheCaptainsChair CaptainsChair; // Core game
@@ -54,6 +56,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         CaptainsChair = GameObject.FindObjectOfType<TheCaptainsChair>();
         FlowPlayer = this.GetComponent<ArticyFlowPlayer>();
         StageDirectionPlayer = FindObjectOfType<StageDirectionPlayer>();
+        this.MiniGameMCP = FindObjectOfType<MiniGameMCP>();
         TypewriterSpeed = ConvoUI.DefaultTypewriterSpeed;
         ArticyDatabase.DefaultGlobalVariables.Notifications.AddListener("*.*", MyGameStateVariablesChanged);
         ActiveCALPauseObjects.Clear();
@@ -63,13 +66,13 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     /// We now determine manually whether or not we're going to start a dialogue in order to solve lots of potential
     /// conflicts like more than 1 dialogue starting at once.  
     /// </summary>
-    public void CheckIfDialogueShouldStart(Dialogue convoStart, GameObject collider)
+    public bool CheckIfDialogueShouldStart(Dialogue convoStart, GameObject collider)
     {
         Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ CheckDialogue() with technical name: " + convoStart.TechnicalName + " on GameObject: " + this.gameObject.name + " but DON'T DO ANY CODE STUFF UNTIL WE KNOW WE'RE ACTUALLY COMMITTING  time: " + Time.time);
         
         if (CurArticyState == eArticyState.DIALOGUE)
         {   // we're already in a dialogue, so bail
-            return;
+            return false;
         }
         bool shouldBail;
         Condition c = (convoStart.InputPins[0].Connections[0].Target) as Condition;
@@ -86,7 +89,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         if (shouldBail == true)
         {
             // for whatever reason determined above we're gonna bail so do it
-            return;
+            return false;
         }
         
         // if we made it this far then we're going to start the dialogue so get ready        
@@ -102,7 +105,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                 if (e.DisplayName.Equals("Dialogue_NPC"))
                 {
                     DialogueNPC = collider.GetComponent<NPC>();
-                    if (DialogueNPC == null) { Debug.LogError("There's no NPC on the Dialgue_NPC you collided with"); return; }
+                    if (DialogueNPC == null) { Debug.LogError("There's no NPC on the Dialgue_NPC you collided with"); return false; }
                     StageDirectionPlayer.StopAIOnNPC(DialogueNPC);                    
                 }                
             }
@@ -111,7 +114,8 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         // start the dialogue
         IsDialogueFragmentsInteractive = true;
         FlowPlayer.StartOn = convoStart;
-        if (Player != null) Player.ToggleMovementBlocked(true); 
+        if (Player != null) Player.ToggleMovementBlocked(true);
+        return true;
     }
 
     #region ARTICY_FLOW_CALLBACKS    
@@ -258,9 +262,10 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                         Debug.LogWarning("We're leaving an Ambient Trigger, and with all the recent changes this might not be being handled correctly so double check");                        
                         StageDirectionPlayer.ShutOnAllAIs();
                     }
-                    //CurArticyState = eArticyState.FREE_ROAM;
+                    
                     SetArticyState(eArticyState.FREE_ROAM);
                     FlowFragsVisited.Clear();
+                    if (this.MiniGameMCP != null) this.MiniGameMCP.CurrentDiaogueEnded();
                 }
                 else
                 {   // We're on a Hub that has an actual target, so that means we're in a dialogue that's going to continue                    

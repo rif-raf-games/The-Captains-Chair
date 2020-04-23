@@ -189,8 +189,29 @@ public class MiniGameMCP : MonoBehaviour
         }
 
     }
+
+    public void CurrentDiaogueEnded()
+    {
+        Puzzles[CurPuzzle].DialogueEnded();
+    }
     void StartCurrentPuzzle()
     {
+        if (PuzzleDialogues == null || PuzzleDialogues.Length == 0 || PuzzleDialogues.Length - 1 < CurPuzzle)
+        {
+            Debug.LogError("You don't have the Mini_Game_Jump set up properly because there's no entry in the Dialogues To Play list for this puzzle");
+        }
+        else
+        {
+            //Debug.Log("trying to start mini game dialogue");
+            Dialogue d = PuzzleDialogues[CurPuzzle].GetObject() as Dialogue;
+            if (d != null)
+            {
+                bool dialogueActive = MiniGameArticyFlow.CheckIfDialogueShouldStart(d, null);
+                Puzzles[CurPuzzle].SetDialogueActive(dialogueActive);
+            }
+            else Debug.LogError("No dialogue specified for this mini game level: " + CurPuzzle);
+        }
+
         Puzzles[CurPuzzle].BeginPuzzle();
         GameState = eGameState.PLAYING;
         // UI
@@ -207,17 +228,7 @@ public class MiniGameMCP : MonoBehaviour
              if (d != null) MiniGameArticyFlow.CheckIfDialogueShouldStart(d, null);
          }*/
         //public ArticyRef[] PuzzleDialogues;
-        if (PuzzleDialogues == null || PuzzleDialogues.Length == 0 || PuzzleDialogues.Length - 1 < CurPuzzle)
-        {
-            Debug.LogError("You don't have the Mini_Game_Jump set up properly because there's no entry in the Dialogues To Play list for this puzzle");
-        }
-        else
-        {
-            //Debug.Log("trying to start mini game dialogue");
-            Dialogue d = PuzzleDialogues[CurPuzzle].GetObject() as Dialogue;
-            if (d != null) MiniGameArticyFlow.CheckIfDialogueShouldStart(d, null);
-            else Debug.LogError("No dialogue specified for this mini game level: " + CurPuzzle);
-        }
+        
     }
 
     public void SavePuzzlesProgress(bool success)
@@ -238,28 +249,6 @@ public class MiniGameMCP : MonoBehaviour
         SetupLerpFade(0f, 1f, 1.5f);
     }
 
-   /* private void OnGUI()
-    {
-        if (GUI.Button(new Rect(0, 0, 100, 100), "MiniGameMCP"))
-        {
-            Dictionary<string, object> bgv = ArticyDatabase.DefaultGlobalVariables.Variables;
-            Debug.Log(bgv["Mini_Games.Parking_Demo_Progress"]);
-            int x = 5;
-            x++;
-
-            StaticStuff.ShowDataPath();
-        }
-    }*/
-
-    private void Update()
-    {
-       /* if(OrientationText != null)
-        {
-            OrientationText.text = "Input: " + Input.deviceOrientation.ToString() + "\n";
-            OrientationText.text += "Screen: " + Screen.orientation.ToString() + "\n";
-           // OrientationText.text = "";
-        }*/
-    }
     private void FixedUpdate()
     {
         if (GameState == eGameState.FADE_IN || GameState == eGameState.FADE_OUT)

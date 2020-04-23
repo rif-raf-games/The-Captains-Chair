@@ -8,12 +8,14 @@ public class MiniGame : MonoBehaviour
 {
     protected MiniGameMCP MCP;
     protected bool IsSolo;
+    protected bool DialogueActive;
 
     [Header("Debug")]
     public Text DebugText;
     public virtual void Awake()
     {
         Debug.Log("MiniGame.Awake()");
+        DialogueActive = false;
         MiniGameMCP mcp = FindObjectOfType<MiniGameMCP>();
         if(mcp == null)
         {
@@ -48,11 +50,27 @@ public class MiniGame : MonoBehaviour
         this.MCP = mcp;
     }
 
-    float PuzzleStartTime = 0f;
+    protected float PuzzleStartTime = 0f;   
+    void ResetPuzzleTimer()
+    {
+        PuzzleStartTime = Time.time;
+    }
+    public virtual void ResetPostDialogueState()
+    {
+
+    }
+    public void DialogueEnded()
+    {
+        ResetPuzzleTimer();
+        ResetPostDialogueState();
+    }
+    public void SetDialogueActive( bool val )
+    {
+        DialogueActive = val;
+    }
     public virtual void BeginPuzzle()
     {
-        Debug.Log("Reset puzzle time");
-        PuzzleStartTime = Time.time;
+        if (DialogueActive == false) ResetPuzzleTimer();
     }    
     public void EndPuzzle(bool success, string name)
     {

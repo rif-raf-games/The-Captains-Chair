@@ -67,11 +67,16 @@ public class Repair : MiniGame
 
     public override void Init(MiniGameMCP mcp)
     {
-        Debug.Log("Repair.Init()");
+        //Debug.Log("Repair.Init()");
         base.Init(mcp);
         ResultsText = MCP.ResultsText;
-        //if (DebugText == null) DebugText = MCP.DebugText;
         ResultsText.text = "";
+        if (DebugText == null && MCP.DebugText != null)
+        {
+            DebugText = MCP.DebugText;
+            DebugText.text = "";
+        }
+        
     }
     
     private void Awake()
@@ -95,7 +100,23 @@ public class Repair : MiniGame
         {
             ResultsText.text = "";
             BeginPuzzle();
-        }
+        }        
+    }
+
+    eGameState DialogueSaveState;
+    void SetGameState( eGameState newState )
+    {
+        DialogueSaveState = newState;
+        if (DialogueActive == false)
+        {
+            CurGameState = newState;
+        }               
+    }
+
+    public override void ResetPostDialogueState()
+    {
+        base.ResetPostDialogueState();
+        CurGameState = DialogueSaveState;        
     }
 
     public override void BeginPuzzle()
@@ -103,7 +124,7 @@ public class Repair : MiniGame
        // Debug.Log("BeginPUzzle()");
         base.BeginPuzzle();
         ResultsText.text = "";
-        CurGameState = eGameState.OFF;
+        SetGameState(eGameState.OFF); 
         AllPieces = GameObject.FindObjectsOfType<RepairPiece>().ToList<RepairPiece>();        
         foreach (RepairPiece terminal in Terminals)
         {
@@ -153,8 +174,9 @@ public class Repair : MiniGame
         if(DebugText != null)
         {
             DebugText.text = CurGameState.ToString() + "\n";
-            DebugText.text += TouchingDoor + "\n";
-            DebugText.text += TapTimer + "\n";
+            DebugText.text += PuzzleStartTime + "\n";
+            //DebugText.text += TouchingDoor + "\n";
+           // DebugText.text += TapTimer + "\n";
         }
         //ResultText.text = "";
         if (CurGameState == eGameState.OFF) return;
@@ -242,7 +264,7 @@ public class Repair : MiniGame
                     Vector3 doorReleasePos = GetWorldPosFromTouchPos();
                     if(doorReleasePos.z <= DoorTouchPos.z)
                     {
-                        CurGameState = eGameState.OFF;
+                        SetGameState(eGameState.OFF); 
                         FuelDoor.Close(CheckPuzzleComplete);
                     }                    
                 }
@@ -770,7 +792,7 @@ public class Repair : MiniGame
             if (terminal.ReachedOnPath == true) continue;
             ResetPuzzleState(false);
             CurTerminalStart = terminal;
-            CurTerminalStartFluidType = CurTerminalStart.FluidType;
+            CurTerminalStartFluidType = CurTerminalStart.FluidType;  
             ConnsToCheck.Add(new PieceConn(CurTerminalStart, CurTerminalStart));
             CurTerminalStart.ReachedOnPath = true;
 
@@ -837,15 +859,15 @@ public class Repair : MiniGame
         }
         if (CurGameState == eGameState.OFF) return;
 
-        if (GUI.Button(new Rect(0,100,100,100), "path test"))
+        /*if (GUI.Button(new Rect(0,100,100,100), "path test"))
         {
-            CurGameState = eGameState.OFF;
+            SetGameState(eGameState.OFF); 
             FuelDoor.Close(CheckPuzzleComplete);
-        }                
-         /* if (GUI.Button(new Rect(Screen.width - 100, 100, 100, 100), "CHEAT"))
-          {
-              StartCoroutine(EndGame("You won but you cheated", true));
-          }*/        
+        }    */            
+        if (GUI.Button(new Rect(0, 200, 100, 100), "cheat like the\npiece of shit\nyou are"))
+        {
+            StartCoroutine(EndGame("You won but you cheated", true));
+        }        
     }
 
     public void CheckPuzzleComplete()
@@ -854,7 +876,7 @@ public class Repair : MiniGame
     }
     public void TurnGameOn()
     {
-        CurGameState = eGameState.ON;
+        SetGameState(eGameState.ON); 
         SetLights(1);
     }
     IEnumerator EndGame(string result, bool success)
@@ -862,7 +884,7 @@ public class Repair : MiniGame
         ResultsText.text = result;
         if (MCP != null) MCP.SavePuzzlesProgress(success);
         EndPuzzle(success, this.name);
-        CurGameState = eGameState.OFF;
+        SetGameState(eGameState.OFF);
         FuelDoor.Open();
         if (success == true) SetLights(0);
         else SetLights(2);
@@ -874,7 +896,7 @@ public class Repair : MiniGame
         }
         else
         {
-            CurGameState = eGameState.ON;
+            SetGameState(eGameState.ON); 
             SetLights(1);
             ResetPuzzleState(true);
             ResultsText.text = "";

@@ -134,8 +134,8 @@ public class LockPicking : MiniGame
     }    
 
     void StartGame()
-    {        
-        CurGameState = eGameState.ON;
+    {
+        SetGameState(eGameState.ON); 
         Diode.Moving = true;
         ResultsText.gameObject.SetActive(false);
         GameTime = 0f;
@@ -168,6 +168,21 @@ public class LockPicking : MiniGame
         }
     }
 
+    eGameState DialogueSaveState;
+    public override void ResetPostDialogueState()
+    {
+        base.ResetPostDialogueState();
+        CurGameState = DialogueSaveState;
+    }
+    void SetGameState(eGameState newState)
+    {
+        DialogueSaveState = newState;
+        if (DialogueActive == false)
+        {
+            CurGameState = newState;
+        }
+    }
+
     public void CollectGate(Gate gate)
     {
         // Debug.Log("found gate: " + gate.name);
@@ -194,7 +209,7 @@ public class LockPicking : MiniGame
     {
         if (MCP != null) MCP.SavePuzzlesProgress(success);
         EndPuzzle(success, this.name);
-        CurGameState = eGameState.OFF;
+        SetGameState(eGameState.OFF); 
         ResultsText.gameObject.SetActive(true);
         ResultsText.text = endGameString;
         Diode.Moving = false;
@@ -215,6 +230,7 @@ public class LockPicking : MiniGame
 
     private void FixedUpdate()
     {
+        if (DialogueActive == true) return;
         foreach (Diode d in EvilDiodes)
         {
             d.DiodeFixedUpdate();
@@ -226,7 +242,20 @@ public class LockPicking : MiniGame
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log(this.name + " Update()");
+        if (DebugText != null)
+        {
+            DebugText.text = CurGameState.ToString() + "\n";
+            DebugText.text += PuzzleStartTime + "\n";
+            /*DebugText.text = "";
+            DebugText.text = "GameTime: " + GameTime.ToString("F2") + "\n";
+            DebugText.text += "\n";
+            DebugText.text += "EvilSpanBegan: " + EvilSpawnBegan + "\n";
+            DebugText.text += "Num Evil Diodes: " + EvilDiodes.Count + "\n";
+            DebugText.text += "MaxEvilDiodes: " + MaxEvilDiodes + "\n";
+            DebugText.text += "EvilDiodeTimer: " + EvilDiodeTimer.ToString("F2") + "\n";
+            DebugText.text += "\n";
+            DebugText.text += "Diode speed: " + Diode.CurSpeed.ToString("F2") + "\n";*/
+        }
         if (CurGameState == eGameState.OFF) return;
         GameTime += Time.deltaTime;
         if (Input.GetMouseButtonDown(0)) // initial press
@@ -297,18 +326,7 @@ public class LockPicking : MiniGame
                 }
             }
         }        
-        if(DebugText != null)
-        {
-            DebugText.text = "";
-            DebugText.text = "GameTime: " + GameTime.ToString("F2") + "\n";
-            DebugText.text += "\n";
-            DebugText.text += "EvilSpanBegan: " + EvilSpawnBegan + "\n";
-            DebugText.text += "Num Evil Diodes: " + EvilDiodes.Count + "\n";
-            DebugText.text += "MaxEvilDiodes: " + MaxEvilDiodes + "\n";
-            DebugText.text += "EvilDiodeTimer: " + EvilDiodeTimer.ToString("F2") + "\n";
-            DebugText.text += "\n";
-            DebugText.text += "Diode speed: " + Diode.CurSpeed.ToString("F2") + "\n";
-        }
+        
     }
     bool SpawnEvilDiodes(Diode respawnDiode = null)
     {
