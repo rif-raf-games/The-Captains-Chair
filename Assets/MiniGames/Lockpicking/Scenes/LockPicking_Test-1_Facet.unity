@@ -37209,12 +37209,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d5f6829d7cb93d488d06dab9dbc52ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  StartSpeed: 1
+  CurSpeed: 0
   CurPath:
     Start: {fileID: 0}
     End: {fileID: 0}
     Ring: {fileID: 0}
   LastPosition: {fileID: 887722322}
   Moving: 0
+  Evil: 0
+  DebugStartNode: {fileID: 0}
 --- !u!54 &4581390283509804540
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -65511,6 +65515,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09e4e2017b62bc64cb8beb4c4223c20c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DebugText: {fileID: 0}
   Diode: {fileID: 4581390283509804539}
   CenterBlock: {fileID: 374616182118142766}
   Rings:
@@ -65523,6 +65528,7 @@ MonoBehaviour:
     type: 3}
   Gates:
   - {fileID: 469013716}
+  GatesThisGame: []
   StartNodes:
   - {fileID: 2920828810307980206}
   - {fileID: 6461593161561164745}
@@ -65536,7 +65542,16 @@ MonoBehaviour:
   CurTouchedRing: {fileID: 0}
   ResultsText: {fileID: 0}
   DebugText: {fileID: 0}
-  DebugStartNode: {fileID: 0}
+  EvilDiodes: []
+  MaxEvilDiodes: 5
+  EvilDiodeSpeeds: []
+  TimeBeforeEvilSpawn: 3
+  TimeBetweenEvilSpawns: 2
+  EvilRespawnTime: 1
+  NumSpawnAtATime: 2
+  MAX_DIODE_SPEED: 40
+  SpeedAdjTime: 0
+  SpeedAdjNumGates: 1
 --- !u!1 &8138313752244271835
 GameObject:
   m_ObjectHideFlags: 0
