@@ -65,10 +65,10 @@ public class Repair : MiniGame
     int PiecesAndBeltMask;
     int FuelDoorMask;
 
-    public override void Init(MiniGameMCP mcp)
+    public override void Init(MiniGameMCP mcp, string sceneName)
     {
         //Debug.Log("Repair.Init()");
-        base.Init(mcp);
+        base.Init(mcp, sceneName);
         ResultsText = MCP.ResultsText;
         ResultsText.text = "";
         if (DebugText == null && MCP.DebugText != null)

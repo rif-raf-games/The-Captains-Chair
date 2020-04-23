@@ -35,10 +35,10 @@ public class Parking : MiniGame
     [Header("Debug")]
     public Text DebugText;
 
-    public override void Init(MiniGameMCP mcp)
+    public override void Init(MiniGameMCP mcp, string sceneName)
     {
         //Debug.Log("Parking.Init()");
-        base.Init(mcp);
+        base.Init(mcp, sceneName);
         if (ResultsText == null) ResultsText = MCP.ResultsText;
         if (DebugText == null && MCP.DebugText != null)
         {

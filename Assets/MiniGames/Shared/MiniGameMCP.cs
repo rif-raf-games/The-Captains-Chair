@@ -115,7 +115,7 @@ public class MiniGameMCP : MonoBehaviour
                 yield return null;
             }
            // Debug.Log("Unload Done: " + puzzleScene);
-            Puzzles[i].Init(this);                        
+            Puzzles[i].Init(this, puzzleName);                        
         }
 
         for (int i = 0; i < Puzzles.Length; i++)

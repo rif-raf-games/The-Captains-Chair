@@ -3,12 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class MiniGame : MonoBehaviour
 {
     protected MiniGameMCP MCP;
     protected bool IsSolo;
     protected bool DialogueActive;
+    public string SceneName;
 
     [Header("Debug")]
     public Text DebugText;
@@ -21,6 +23,7 @@ public class MiniGame : MonoBehaviour
         {
             //Debug.Log("we're running solo");
             IsSolo = true;
+            SceneName = SceneManager.GetActiveScene().name;
         }
         else
         {
@@ -44,10 +47,11 @@ public class MiniGame : MonoBehaviour
             }            
         }        
     }
-    public virtual void Init(MiniGameMCP mcp)
+    public virtual void Init(MiniGameMCP mcp, string sceneName)
     {
         //Debug.Log("MiniGame.Init()");
         this.MCP = mcp;
+        SceneName = sceneName;
     }
 
     protected float PuzzleStartTime = 0f;   
@@ -81,7 +85,8 @@ public class MiniGame : MonoBehaviour
             TimeSpan time = TimeSpan.FromSeconds(gameTime);
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             parameters.Add("Total Time To Solve", time);
-            StaticStuff.TrackEvent("debug_" + name + "_solved", parameters);
+            StaticStuff.TrackEvent("debug_" + SceneName + "_solved", parameters);   
+            
         }
     }
 }

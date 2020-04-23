@@ -75,10 +75,10 @@ public class LockPicking : MiniGame
         }
     }
 
-    public override void Init(MiniGameMCP mcp)
+    public override void Init(MiniGameMCP mcp, string sceneName)
     {
         //Debug.Log("LockPicking.Init()");
-        base.Init(mcp);
+        base.Init(mcp, sceneName);
         if (ResultsText == null) ResultsText = MCP.ResultsText;
         if (DebugText == null) DebugText = MCP.DebugText;
         ResultsText.gameObject.SetActive(false);
