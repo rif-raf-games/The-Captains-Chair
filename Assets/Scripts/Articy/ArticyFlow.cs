@@ -227,7 +227,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         {   // for stage direction containers we again get the next fragment automatically since we're temp taking over for this fragment        
             Stage_Directions_Container sdc = CurPauseObject as Stage_Directions_Container;
             NextFragment = (sdc.OutputPins[0].Connections[0].Target as ArticyObject);            
-            StageDirectionPlayer.HandleStangeDirectionContainer(sdc);            
+            if(StageDirectionPlayer != null) StageDirectionPlayer.HandleStangeDirectionContainer(sdc);            
         }
         else if (CurBranches.Count == 1)
         {   // We're paused and there's only one valid branch available. This is common so have it's own section                 

@@ -61,6 +61,7 @@ public class MiniGame : MonoBehaviour
     }
     public void DialogueEnded()
     {
+        SetDialogueActive(false);
         ResetPuzzleTimer();
         ResetPostDialogueState();
     }

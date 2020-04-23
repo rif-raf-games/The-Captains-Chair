@@ -188,8 +188,8 @@ public class LockPicking : MiniGame
         // Debug.Log("found gate: " + gate.name);
         GatesThisGame.Remove(gate);
         gate.gameObject.SetActive(false);
-        if(GatesThisGame.Count == 0)
-        //if(true)
+        //if (true)
+        if(GatesThisGame.Count == 0)        
         {
             StartCoroutine(EndGame("You Won.", true));
         }        
@@ -230,7 +230,7 @@ public class LockPicking : MiniGame
 
     private void FixedUpdate()
     {
-        if (DialogueActive == true) return;
+        if (CurGameState == eGameState.OFF || DialogueActive == true) return;
         foreach (Diode d in EvilDiodes)
         {
             d.DiodeFixedUpdate();
