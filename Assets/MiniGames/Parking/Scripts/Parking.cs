@@ -55,14 +55,14 @@ public class Parking : MiniGame
             SoundFX soundFX = FindObjectOfType<SoundFX>();
             SoundFXPlayer.Init(soundFX);
             ResultsText.gameObject.SetActive(false);
-            BeginPuzzle();
+            BeginPuzzleStartTime();
         }
     }
 
     
-    public override void BeginPuzzle()
+    public override void BeginPuzzleStartTime()
     {
-        base.BeginPuzzle();
+        base.BeginPuzzleStartTime();
         Debug.Log("Parking.BeginPuzzle()");
         TouchState = eTouchState.NONE;
         SetGameState(eGameState.NORMAL);
@@ -102,7 +102,7 @@ public class Parking : MiniGame
     IEnumerator ShowResults(string result, bool success)
     {
         if (MCP != null) MCP.SavePuzzlesProgress(success);
-        EndPuzzle(success, this.name);
+        if (success == true) EndPuzzleTime(true);
         SetGameState(eGameState.OFF);
         ResultsText.gameObject.SetActive(true);
         ResultsText.text = result;
@@ -547,16 +547,11 @@ public class Parking : MiniGame
 
     private void OnGUI()
     {
-
         if (GUI.Button(new Rect(Screen.width - 100, 0, 100, 100), "Main Menu"))
         {
+            EndPuzzleTime(false);
             SceneManager.LoadScene("ParkingDemo");
-        }
-      /*  if (GUI.Button(new Rect(0, 100, 100, 100), "Parking"))
-        {
-            StartCoroutine(ShowResults("debug cheat used", true));
-            StaticStuff.ShowDataPath();
-        }*/
+        }      
     }
 
 

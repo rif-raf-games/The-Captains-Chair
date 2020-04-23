@@ -54,11 +54,7 @@ public class MiniGame : MonoBehaviour
         SceneName = sceneName;
     }
 
-    protected float PuzzleStartTime = 0f;   
-    void ResetPuzzleTimer()
-    {
-        PuzzleStartTime = Time.time;
-    }
+    
     public virtual void ResetPostDialogueState()
     {
 
@@ -73,20 +69,23 @@ public class MiniGame : MonoBehaviour
     {
         DialogueActive = val;
     }
-    public virtual void BeginPuzzle()
+
+    protected float PuzzleStartTime = 0f;
+    void ResetPuzzleTimer()
+    {
+        PuzzleStartTime = Time.time;
+    }
+    public virtual void BeginPuzzleStartTime()
     {
         if (DialogueActive == false) ResetPuzzleTimer();
     }    
-    public void EndPuzzle(bool success, string name)
+    public void EndPuzzleTime(bool didFinish)
     {
-        if(success == true)
-        {
-            float gameTime = Time.time - PuzzleStartTime;
-            TimeSpan time = TimeSpan.FromSeconds(gameTime);
-            Dictionary<string, object> parameters = new Dictionary<string, object>();
-            parameters.Add("Total Time To Solve", time);
-            StaticStuff.TrackEvent("debug_" + SceneName + "_solved", parameters);   
-            
-        }
+        float gameTime = Time.time - PuzzleStartTime;
+        TimeSpan time = TimeSpan.FromSeconds(gameTime);
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+        parameters.Add("Total Time To Solve", time);
+        string tag = (didFinish == true ? "_solved" : "_quit");
+        StaticStuff.TrackEvent("debug_" + SceneName + tag, parameters);
     }
 }

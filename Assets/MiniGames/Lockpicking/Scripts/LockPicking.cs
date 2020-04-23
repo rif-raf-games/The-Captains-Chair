@@ -119,14 +119,14 @@ public class LockPicking : MiniGame
         if (IsSolo == true)
         {
             ResultsText.gameObject.SetActive(false);
-            BeginPuzzle();
+            BeginPuzzleStartTime();
         }                
     }
     // Start is called before the first frame update
-    public override void BeginPuzzle()
+    public override void BeginPuzzleStartTime()
     {
         //Debug.Log("Lockpicking.BeginPuzzle()");   
-        base.BeginPuzzle();
+        base.BeginPuzzleStartTime();
         CenterBlock.transform.position = new Vector3(CenterBlock.transform.position.x, 0f, CenterBlock.transform.position.z);              
         LargestRingDiameter = Rings[Rings.Count-1].GetComponent<MeshCollider>().bounds.extents.x;
 
@@ -208,7 +208,7 @@ public class LockPicking : MiniGame
     IEnumerator EndGame(string endGameString, bool success)
     {
         if (MCP != null) MCP.SavePuzzlesProgress(success);
-        EndPuzzle(success, this.name);
+        if(success == true) EndPuzzleTime(true);
         SetGameState(eGameState.OFF); 
         ResultsText.gameObject.SetActive(true);
         ResultsText.text = endGameString;
@@ -537,6 +537,7 @@ public class LockPicking : MiniGame
     {
         if (GUI.Button(new Rect(Screen.width - 100, 0, 100, 100), "Main Menu"))
         {
+            EndPuzzleTime(false);
             SceneManager.LoadScene("LockPickingDemo");
         }
     }

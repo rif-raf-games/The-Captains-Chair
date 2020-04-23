@@ -99,7 +99,7 @@ public class Repair : MiniGame
         if (IsSolo == true)
         {
             ResultsText.text = "";
-            BeginPuzzle();
+            BeginPuzzleStartTime();
         }        
     }
 
@@ -119,10 +119,10 @@ public class Repair : MiniGame
         CurGameState = DialogueSaveState;        
     }
 
-    public override void BeginPuzzle()
+    public override void BeginPuzzleStartTime()
     {
        // Debug.Log("BeginPUzzle()");
-        base.BeginPuzzle();
+        base.BeginPuzzleStartTime();
         ResultsText.text = "";
         SetGameState(eGameState.OFF); 
         AllPieces = GameObject.FindObjectsOfType<RepairPiece>().ToList<RepairPiece>();        
@@ -855,6 +855,7 @@ public class Repair : MiniGame
     {
         if (GUI.Button(new Rect(Screen.width - 100, 0, 100, 100), "Main Menu"))
         {
+            EndPuzzleTime(false);
             SceneManager.LoadScene("RepairDemo");
         }
         if (CurGameState == eGameState.OFF) return;
@@ -883,7 +884,7 @@ public class Repair : MiniGame
     {        
         ResultsText.text = result;
         if (MCP != null) MCP.SavePuzzlesProgress(success);
-        EndPuzzle(success, this.name);
+        if (success == true) EndPuzzleTime(true);
         SetGameState(eGameState.OFF);
         FuelDoor.Open();
         if (success == true) SetLights(0);

@@ -212,7 +212,7 @@ public class MiniGameMCP : MonoBehaviour
             else Debug.LogError("No dialogue specified for this mini game level: " + CurPuzzle);
         }
 
-        Puzzles[CurPuzzle].BeginPuzzle();
+        Puzzles[CurPuzzle].BeginPuzzleStartTime();
         GameState = eGameState.PLAYING;
         // UI
         // below is the stuff when it's using articy, but the demo is the code after the commented out stuff
