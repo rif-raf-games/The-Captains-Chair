@@ -864,10 +864,10 @@ public class Repair : MiniGame
             SetGameState(eGameState.OFF); 
             FuelDoor.Close(CheckPuzzleComplete);
         }    */            
-        if (GUI.Button(new Rect(0, 200, 100, 100), "cheat like the\npiece of shit\nyou are"))
+       /* if (GUI.Button(new Rect(0, 200, 100, 100), "cheat like the\npiece of shit\nyou are"))
         {
             StartCoroutine(EndGame("You won but you cheated", true));
-        }        
+        }       */ 
     }
 
     public void CheckPuzzleComplete()
