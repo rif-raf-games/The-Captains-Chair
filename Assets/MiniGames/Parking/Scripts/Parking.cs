@@ -40,7 +40,11 @@ public class Parking : MiniGame
         //Debug.Log("Parking.Init()");
         base.Init(mcp);
         if (ResultsText == null) ResultsText = MCP.ResultsText;
-        if (DebugText == null) DebugText = MCP.DebugText;
+        if (DebugText == null && MCP.DebugText != null)
+        {
+            DebugText = MCP.DebugText;
+            DebugText.text = "";
+        }
         ResultsText.gameObject.SetActive(false);
     }
 
@@ -61,7 +65,7 @@ public class Parking : MiniGame
         base.BeginPuzzle();
         Debug.Log("Parking.BeginPuzzle()");
         TouchState = eTouchState.NONE;
-        CurGameState = eGameState.NORMAL;
+        SetGameState(eGameState.NORMAL);
         ContainGO = new GameObject();
 
         AllShips.Clear();
@@ -78,11 +82,28 @@ public class Parking : MiniGame
             }
         }
     }
+
+    eGameState DialogueSaveState;
+    void SetGameState(eGameState newState)
+    {
+        DialogueSaveState = newState;
+        if (DialogueActive == false)
+        {
+            CurGameState = newState;
+        }
+    }
+
+    public override void ResetPostDialogueState()
+    {
+        base.ResetPostDialogueState();
+        CurGameState = DialogueSaveState;
+    }
+
     IEnumerator ShowResults(string result, bool success)
     {
         if (MCP != null) MCP.SavePuzzlesProgress(success);
         EndPuzzle(success, this.name);
-        CurGameState = eGameState.OFF;
+        SetGameState(eGameState.OFF);
         ResultsText.gameObject.SetActive(true);
         ResultsText.text = result;
         yield return new WaitForSeconds(3f);
@@ -94,7 +115,7 @@ public class Parking : MiniGame
         }
         else
         {
-            CurGameState = eGameState.NORMAL;
+            SetGameState(eGameState.NORMAL);
         }
     }
 
@@ -178,15 +199,18 @@ public class Parking : MiniGame
             RotateParent.transform.Rotate(0f, -90f, 0f);
             LerpStartTime = Time.time;
             LerpDurationTime = .5f;
-            CurGameState = eGameState.ROTATE_PAD;
+            SetGameState(eGameState.ROTATE_PAD);
         }
     }
 
     // Update is called once per frame
     void Update()
-    {
-        //Debug.Log("update");
-        if (DebugText != null) DebugText.text = CurGameState.ToString();
+    {        
+        if (DebugText != null)
+        {
+            DebugText.text = CurGameState.ToString() + "\n";
+            DebugText.text += PuzzleStartTime + "\n";            
+        }
         if (CurGameState == eGameState.OFF) return;
         if(CurGameState == eGameState.ROTATE_PAD)
         {
@@ -196,7 +220,7 @@ public class Parking : MiniGame
             if(lerpPercentage >= 1f)
             {
                 RotateParent.transform.rotation = LerpRotEnd;
-                CurGameState = eGameState.NORMAL;
+                SetGameState(eGameState.NORMAL);
 
                 List<ParkingShip> ships = new List<ParkingShip>();
                 ships = RotateParent.GetComponentsInChildren<ParkingShip>().ToList();
