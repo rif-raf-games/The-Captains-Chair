@@ -12,7 +12,11 @@ public class MiniGameDemo : MonoBehaviour
     public GameObject ChooseButtons;
 
     List<string> MiniGameScenes = new List<string>();
-    
+
+    private void Awake()
+    {
+        StaticStuff.SetOrientation(StaticStuff.eOrientation.LANDSCAPE, this.name);
+    }
     void Start()
     {
         int numScenes = SceneManager.sceneCountInBuildSettings;
