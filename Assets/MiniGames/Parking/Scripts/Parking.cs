@@ -32,8 +32,8 @@ public class Parking : MiniGame
     float LerpStartTime, LerpDurationTime;
 
     public Text ResultsText;
-    [Header("Debug")]
-    public Text DebugText;
+    //[Header("Debug")]
+    //public Text DebugText;
 
     public override void Init(MiniGameMCP mcp, string sceneName)
     {

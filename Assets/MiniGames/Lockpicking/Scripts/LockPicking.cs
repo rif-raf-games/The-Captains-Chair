@@ -28,7 +28,7 @@ public class LockPicking : MiniGame
     Vector3 LastWorldTouchPos = Vector3.zero;
     float LastCenterToWorldAngle;
     public Text ResultsText;
-    public Text DebugText;
+    //public Text DebugText;
 
     Diode EvilDiodePrefab;
     float GameTime;
