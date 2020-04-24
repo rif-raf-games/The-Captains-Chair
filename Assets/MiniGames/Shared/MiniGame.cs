@@ -31,18 +31,20 @@ public class MiniGame : MonoBehaviour
             IsSolo = false;
         }
 
-        if(IsSolo == true)
+        /*if (this.name.Contains("LockPick"))
         {
-            if (this.name.Contains("LockPick"))
-            {
-                Debug.LogError("change to portrait on this mini game");
-                StaticStuff.SetOrientation(StaticStuff.eOrientation.PORTRAIT, this.name);
-            }
-            else
-            {
-                Debug.LogError("change to landscape on this mini game");
-                StaticStuff.SetOrientation(StaticStuff.eOrientation.LANDSCAPE, this.name);
-            }
+            Debug.LogError("change to portrait on this mini game");
+            StaticStuff.SetOrientation(StaticStuff.eOrientation.PORTRAIT, this.name);
+        }
+        else
+        {
+            Debug.LogError("change to landscape on this mini game");
+            StaticStuff.SetOrientation(StaticStuff.eOrientation.LANDSCAPE, this.name);
+        }*/
+
+        if (IsSolo == true)
+        {
+            
             if( StaticStuff.USE_DEBUG_MENU == true)
             {
                 DebugMenu dm = FindObjectOfType<DebugMenu>();

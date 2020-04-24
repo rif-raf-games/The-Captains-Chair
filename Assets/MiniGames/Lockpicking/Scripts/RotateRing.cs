@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Rotate : MonoBehaviour
+public class RotateRing : MonoBehaviour
 {
     public float m_RotateSpeed = 0f;
     // Start is called before the first frame update
