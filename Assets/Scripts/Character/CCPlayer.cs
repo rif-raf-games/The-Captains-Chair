@@ -328,6 +328,8 @@ public class CCPlayer : CharacterEntity
                         SelectedElevator.transform.GetChild(0).GetComponent<SphereCollider>().enabled = true;
                         SelectedElevator = null;
                         ToggleMovementBlocked(false);
+                        transform.parent = null;
+                        if (Loop != null) Loop.transform.parent = null;
                     }                    
                 }
                 else
