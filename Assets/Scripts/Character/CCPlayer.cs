@@ -316,16 +316,19 @@ public class CCPlayer : CharacterEntity
                             Loop.SetShouldFollowEntity(false);
                             Loop.SetNavMeshDest(other.gameObject.transform.parent.GetChild(1).position);
                         }
-                    }
-                    else
-                    {
+                    }                    
+                }
+                else if (other.gameObject.name.Contains("End"))
+                {
+                    if (MovementBlocked == true)
+                    {                     
                         StaticStuff.PrintTriggerEnter("Player moved off elevator, back to normal movement");
                         DealingWithElevator = false;
                         SetupForControlType(CurControlType);
                         SelectedElevator.transform.GetChild(0).GetComponent<SphereCollider>().enabled = true;
                         SelectedElevator = null;
-                        ToggleMovementBlocked(false);                        
-                    }
+                        ToggleMovementBlocked(false);
+                    }                    
                 }
                 else
                 {
@@ -379,7 +382,7 @@ public class CCPlayer : CharacterEntity
         {
             // Debug.Log("Elevator done moving, so move player back to entrance");
             ToggleNavMeshAgent(true);
-            SetNavMeshDest(SelectedElevator.transform.GetChild(2).transform.position);
+            SetNavMeshDest(SelectedElevator.transform.GetChild(3).transform.position);
             if (WaitingForFollowersOnElevator == true)
             {
                 WaitingForFollowersOnElevator = false;
