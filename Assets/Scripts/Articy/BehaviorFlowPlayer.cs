@@ -439,12 +439,17 @@ public class BehaviorFlowPlayer : MonoBehaviour
             case Action.WalkToObject:
                 ce = actionState.actionObject.GetComponent<CharacterEntity>();
                 if (ce == null) { Debug.LogError("Can't tell an object that's not a Player/NPC to walk to an object: " + actionState.actionObject.name); return false; }
-                actionState.infoObject = GameObject.Find(actionState.actionInfo);
-                if (actionState.infoObject == null) { Debug.LogError("The object to walk to: " + actionState.actionInfo + " is not in the scene."); return false; }
+                string[] walkToInfo = actionState.actionInfo.Split(',');
+                actionState.infoObject = GameObject.Find(walkToInfo[0]);                
+                if (actionState.infoObject == null) { Debug.LogError("The object to walk to: " + walkToInfo[0] + " is not in the scene."); return false; }
                 if (CurCALEntitySaveData.ContainsKey(ce) == false)
                 {
                     CurCALEntitySaveData.Add(ce, new EntitySaveData(ce.transform.position, ce.GetStoppingDist(), ce.GetShouldFollowEntity()));
                     ce.SetShouldFollowEntity(false);
+                }
+                if(walkToInfo.Length > 1)
+                {
+                    ce.SetStoppingDist(float.Parse(walkToInfo[1]));
                 }
                 break;
             case Action.WalkToLocation:
