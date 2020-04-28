@@ -97,5 +97,7 @@ public class MiniGame : MonoBehaviour
         parameters.Add("Total Time To Solve", time);
         string tag = (didFinish == true ? "_solved" : "_quit");
         StaticStuff.TrackEvent("debug_" + SceneName + tag, parameters);
+
+
     }
 }

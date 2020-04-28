@@ -856,11 +856,18 @@ public class Repair : MiniGame
         if (GUI.Button(new Rect(Screen.width - 100, 0, 100, 100), "Main Menu"))
         {
             EndPuzzleTime(false);
-            SceneManager.LoadScene("RepairDemo");
+            if (IsSolo == false)
+            {
+                MCP.QuitCurrentPuzzle();
+            }
+            else
+            {
+                SceneManager.LoadScene("RepairDemo");
+            }            
         }
-        if (CurGameState == eGameState.OFF) return;
-
-        /*if (GUI.Button(new Rect(0,100,100,100), "path test"))
+        
+        /*if (CurGameState == eGameState.OFF) return;
+        if (GUI.Button(new Rect(0,100,100,100), "path test"))
         {
             SetGameState(eGameState.OFF); 
             FuelDoor.Close(CheckPuzzleComplete);

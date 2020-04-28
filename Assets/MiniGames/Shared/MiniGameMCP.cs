@@ -14,7 +14,8 @@ public class MiniGameMCP : MonoBehaviour
     public Image FadeImage;
     public string PuzzleNameRoot;
     public int[] PuzzlesToLoad;
-    public ArticyRef[] PuzzleDialogues;
+    public ArticyRef[] PuzzleDialogueRefs;
+    public List<ArticyObject> PuzzleDialogues;
     public Vector3[] CameraPositions;
     MiniGame[] Puzzles;
     int CurPuzzle;
@@ -33,6 +34,7 @@ public class MiniGameMCP : MonoBehaviour
     {
         //Debug.Log("MiniGameMCP.Awake(): " + this.name);
         CaptainsChair = GameObject.FindObjectOfType<TheCaptainsChair>();
+        PuzzleDialogues = null;
         if (this.name.Contains("LockPick")) StaticStuff.SetOrientation(StaticStuff.eOrientation.PORTRAIT, this.name);        
         else StaticStuff.SetOrientation(StaticStuff.eOrientation.LANDSCAPE, this.name);             
         if (StaticStuff.USE_DEBUG_MENU == true)
@@ -64,7 +66,7 @@ public class MiniGameMCP : MonoBehaviour
     {
         float startTime = Time.time;        
         if(ArticyGlobalVariables.Default.Mini_Games.Coming_From_Main_Game == true)
-        {
+        {            
             Debug.Log("coming from a main game so get the puzzles from the articy data");
             ArticyGlobalVariables.Default.Mini_Games.Coming_From_Main_Game = false;
             Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
@@ -75,6 +77,7 @@ public class MiniGameMCP : MonoBehaviour
             {
                 PuzzlesToLoad[i] = int.Parse(puzzleNums[i]);
             }
+            PuzzleDialogues = jumpSave.Template.Dialogue_List.DialoguesToPlay;            
         }
         Puzzles = new MiniGame[PuzzlesToLoad.Length];
         CameraPositions = new Vector3[PuzzlesToLoad.Length];
@@ -172,11 +175,17 @@ public class MiniGameMCP : MonoBehaviour
             Debug.Log("we're done with all puzzles");
             ArticyGlobalVariables.Default.Mini_Games.Returning_From_Mini_Game = true;
             ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success = true;
-            Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
-            //SceneManager.LoadScene(jumpSave.Template.Next_Game_Scene.Scene_Name);
-            if (PuzzleNameRoot.Contains("Parking")) SceneManager.LoadScene("ParkingDemo");
-            else if (PuzzleNameRoot.Contains("LockPicking")) SceneManager.LoadScene("LockPickingDemo");
-            else if (PuzzleNameRoot.Contains("Repair")) SceneManager.LoadScene("RepairDemo");
+            if(PuzzleDialogues != null)
+            {   // if PuzzleDialogues isn't null then we're under articy control
+                Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
+                SceneManager.LoadScene(jumpSave.Template.Success_Mini_Game_Result.SceneName);
+            }
+            else
+            {
+                if (PuzzleNameRoot.Contains("Parking")) SceneManager.LoadScene("ParkingDemo");
+                else if (PuzzleNameRoot.Contains("LockPicking")) SceneManager.LoadScene("LockPickingDemo");
+                else if (PuzzleNameRoot.Contains("Repair")) SceneManager.LoadScene("RepairDemo");
+            }                        
         }
         else
         {
@@ -187,7 +196,23 @@ public class MiniGameMCP : MonoBehaviour
             SetupLerpFade(1f, 0f, 1.5f);
             GameState = eGameState.FADE_IN;
         }
+    }
 
+    public void QuitCurrentPuzzle()
+    {
+        ArticyGlobalVariables.Default.Mini_Games.Returning_From_Mini_Game = true;
+        ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success = false;
+        if (PuzzleDialogues != null)
+        {   // if PuzzleDialogues isn't null then we're under articy control
+            Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
+            SceneManager.LoadScene(jumpSave.Template.Quit_Mini_Game_Result.SceneName);
+        }
+        else
+        {
+            if (PuzzleNameRoot.Contains("Parking")) SceneManager.LoadScene("ParkingDemo");
+            else if (PuzzleNameRoot.Contains("LockPicking")) SceneManager.LoadScene("LockPickingDemo");
+            else if (PuzzleNameRoot.Contains("Repair")) SceneManager.LoadScene("RepairDemo");
+        }
     }
 
     public void CurrentDiaogueEnded()
@@ -196,21 +221,42 @@ public class MiniGameMCP : MonoBehaviour
     }
     void StartCurrentPuzzle()
     {
-        if (PuzzleDialogues == null || PuzzleDialogues.Length == 0 || PuzzleDialogues.Length - 1 < CurPuzzle)
-        {
-            Debug.LogError("You don't have the Mini_Game_Jump set up properly because there's no entry in the Dialogues To Play list for this puzzle");
+        if(PuzzleDialogues != null)
+        {   // if we're here, then we've gotten a list of dialogues from an articy ref, so use that
+            if (PuzzleDialogues.Count == 0 || PuzzleDialogues.Count - 1 < CurPuzzle)
+            {
+                Debug.LogError("You don't have the Mini_Game_Jump set up properly because there's no entry in the Dialogues To Play list for this puzzle");                
+            }
+            else
+            {
+                Dialogue d = PuzzleDialogues[CurPuzzle] as Dialogue;
+                if (d != null)
+                {                    
+                    bool dialogueActive = MiniGameArticyFlow.CheckIfDialogueShouldStart(d, null);
+                    Puzzles[CurPuzzle].SetDialogueActive(dialogueActive);
+                }
+                else Debug.LogError("The articy object for this Dialogue in the Mini_Game_Jump Dialogues To Play list isn't a Dialogue: " + PuzzleDialogues[CurPuzzle].GetArticyType());
+            }
         }
         else
-        {
-            //Debug.Log("trying to start mini game dialogue");
-            Dialogue d = PuzzleDialogues[CurPuzzle].GetObject() as Dialogue;
-            if (d != null)
+        {   // if we're here, then we're doing either a straight MCP run or a demo run, so use the lsit set up in Unity
+            if (PuzzleDialogueRefs == null || PuzzleDialogueRefs.Length == 0 || PuzzleDialogueRefs.Length - 1 < CurPuzzle)
             {
-                bool dialogueActive = MiniGameArticyFlow.CheckIfDialogueShouldStart(d, null);
-                Puzzles[CurPuzzle].SetDialogueActive(dialogueActive);
+                Debug.LogError("You don't have the Mini_Game_Jump set up properly because there's no entry in the Dialogues To Play list for this puzzle");
             }
-            else Debug.LogError("No dialogue specified for this mini game level: " + CurPuzzle);
+            else
+            {
+                //Debug.Log("trying to start mini game dialogue");
+                Dialogue d = PuzzleDialogueRefs[CurPuzzle].GetObject() as Dialogue;
+                if (d != null)
+                {
+                    bool dialogueActive = MiniGameArticyFlow.CheckIfDialogueShouldStart(d, null);
+                    Puzzles[CurPuzzle].SetDialogueActive(dialogueActive);
+                }
+                else Debug.LogError("No dialogue specified for this mini game level: " + CurPuzzle);
+            }
         }
+        
 
         Puzzles[CurPuzzle].BeginPuzzleStartTime();
         GameState = eGameState.PLAYING;

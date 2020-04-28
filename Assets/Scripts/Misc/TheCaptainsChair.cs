@@ -46,26 +46,33 @@ public class TheCaptainsChair : MonoBehaviour
         }
         Player = FindObjectOfType<CCPlayer>();
         if(ArticyGlobalVariables.Default.Mini_Games.Returning_From_Mini_Game == true)
-        {            
-            if(ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success == true)
+        {
+            ArticyObject flowStartAO;
+            Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
+            if (ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success == true)
             {
-                Debug.Log("set another start thing for the articy flow player");
-                Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
-                ArticyObject flowStartAO = jumpSave.Template.Flow_Start_Success.ReferenceSlot;
-                Debug.Log("flow start: " + flowStartAO.TechnicalName);
-                Player.GetComponent<ArticyFlow>().CheckIfDialogueShouldStart(flowStartAO as Dialogue, Player.gameObject);
+                Debug.Log("We were a success so do the success thing");
+                flowStartAO = jumpSave.Template.Success_Mini_Game_Result.Dialogue; //jumpSave.Template.Flow_Start_Success.ReferenceSlot;
+               // Debug.Log("flow start: " + flowStartAO.TechnicalName);
+               // Player.GetComponent<ArticyFlow>().CheckIfDialogueShouldStart(flowStartAO as Dialogue, Player.gameObject);
             }
             else
             {
-                Debug.LogWarning("We're coming back from a mini game failure and we haven't supported this yet");
+                Debug.Log("We quit the mini game so deal with that");
+                flowStartAO = jumpSave.Template.Quit_Mini_Game_Result.Dialogue; //jumpSave.Template.Flow_Start_Success.ReferenceSlot;
+               // Debug.Log("flow start: " + flowStartAO.TechnicalName);
+                //Player.GetComponent<ArticyFlow>().CheckIfDialogueShouldStart(flowStartAO as Dialogue, Player.gameObject);
             }
+            Debug.Log("flow start: " + flowStartAO.TechnicalName);
+            Player.GetComponent<ArticyFlow>().CheckIfDialogueShouldStart(flowStartAO as Dialogue, Player.gameObject);
+
             ArticyGlobalVariables.Default.Mini_Games.Returning_From_Mini_Game = false;
             ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success = false;
             ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Score = 0;
         }
         else
         {
-            if(DialogueToStartOn == null)
+            /*if(DialogueToStartOn == null)
             {
                 Debug.LogError("There's no dialogue defined to start on in this scene");
             }
@@ -76,7 +83,7 @@ public class TheCaptainsChair : MonoBehaviour
             if(DialogueToStartOn.GetObject() as Dialogue == null)
             {
                 Debug.LogError("The starting Articy element is not a Dialogue");
-            }
+            }*/
             Player.GetComponent<ArticyFlow>().CheckIfDialogueShouldStart(DialogueToStartOn.GetObject() as Dialogue, Player.gameObject);
         }
         SoundFX soundFX = FindObjectOfType<SoundFX>();

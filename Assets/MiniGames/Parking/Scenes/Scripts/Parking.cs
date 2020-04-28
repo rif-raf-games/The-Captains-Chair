@@ -539,18 +539,20 @@ public class Parking : MiniGame
         //else result = "Not all TARGET ships are on the Lift Pad, so keep trying.";        
         //StartCoroutine(ShowResults("FIX THIS IT'S AN ENDGAME HACK", true));
     }
-
-    
-    
-
-   
-
+           
     private void OnGUI()
     {
         if (GUI.Button(new Rect(Screen.width - 100, 0, 100, 100), "Main Menu"))
         {
             EndPuzzleTime(false);
-            SceneManager.LoadScene("ParkingDemo");
+            if(IsSolo == false )
+            {
+                MCP.QuitCurrentPuzzle();
+            }
+            else
+            {
+                SceneManager.LoadScene("ParkingDemo");
+            }            
         }      
     }
 

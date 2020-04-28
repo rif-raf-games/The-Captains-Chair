@@ -538,12 +538,14 @@ public class LockPicking : MiniGame
         if (GUI.Button(new Rect(Screen.width - 100, 0, 100, 100), "Main Menu"))
         {
             EndPuzzleTime(false);
-            SceneManager.LoadScene("LockPickingDemo");
-        }
-        if (GUI.Button(new Rect(Screen.width - 100, Screen.height-100, 100, 100), "Main Menu"))
-        {
-            EndPuzzleTime(false);
-            SceneManager.LoadScene("LockPickingDemo");
-        }
+            if (IsSolo == false)
+            {
+                MCP.QuitCurrentPuzzle();
+            }
+            else
+            {
+                SceneManager.LoadScene("LockPickingDemo");
+            }            
+        }        
     }
 }

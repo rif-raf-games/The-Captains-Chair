@@ -295,15 +295,18 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                 SceneManager.LoadScene(sj.Template.Next_Game_Scene.Scene_Name);
             }
             else if (CurPauseObject.GetType().Equals(typeof(Mini_Game_Jump)))
-            {   // we're going to a mini game, so fill up the mini game info container with the current pause object's information, then start the mini game
+            {   // we're going to a mini game, so fill up the mini game info container with the current pause object's information, then start the mini game                
                 Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
                 Mini_Game_Jump curJump = CurPauseObject as Mini_Game_Jump;
                 jumpSave.Template.Mini_Game_Scene.Scene_Name = curJump.Template.Mini_Game_Scene.Scene_Name;
                 jumpSave.Template.Mini_Game_Puzzles_To_Play.Puzzle_Numbers = curJump.Template.Mini_Game_Puzzles_To_Play.Puzzle_Numbers;
                 jumpSave.Template.Dialogue_List.DialoguesToPlay = curJump.Template.Dialogue_List.DialoguesToPlay;
-                jumpSave.Template.Next_Game_Scene.Scene_Name = curJump.Template.Next_Game_Scene.Scene_Name;
-                jumpSave.Template.Flow_Start_Success.ReferenceSlot = curJump.Template.Flow_Start_Success.ReferenceSlot;
-                jumpSave.Template.Flow_Start_Fail.ReferenceSlot = curJump.Template.Flow_Start_Fail.ReferenceSlot;
+
+                jumpSave.Template.Success_Mini_Game_Result.SceneName = curJump.Template.Success_Mini_Game_Result.SceneName;
+                jumpSave.Template.Success_Mini_Game_Result.Dialogue = curJump.Template.Success_Mini_Game_Result.Dialogue;
+                jumpSave.Template.Quit_Mini_Game_Result.SceneName = curJump.Template.Quit_Mini_Game_Result.SceneName;
+                jumpSave.Template.Quit_Mini_Game_Result.Dialogue = curJump.Template.Quit_Mini_Game_Result.Dialogue;                
+
                 ArticyGlobalVariables.Default.Mini_Games.Coming_From_Main_Game = true;
                 Debug.Log("About to start a mini game: " + curJump.Template.Mini_Game_Scene.Scene_Name);
                 SceneManager.LoadScene(curJump.Template.Mini_Game_Scene.Scene_Name);
