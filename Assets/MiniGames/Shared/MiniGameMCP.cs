@@ -177,7 +177,8 @@ public class MiniGameMCP : MonoBehaviour
             ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success = true;
             if(PuzzleDialogues != null)
             {   // if PuzzleDialogues isn't null then we're under articy control
-                Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
+                Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");                
+                MiniGameArticyFlow.HandleSavePoint(jumpSave.Template.Success_Save_Fragment.SaveFragment as Save_Point);
                 SceneManager.LoadScene(jumpSave.Template.Success_Mini_Game_Result.SceneName);
             }
             else
@@ -259,22 +260,7 @@ public class MiniGameMCP : MonoBehaviour
         
 
         Puzzles[CurPuzzle].BeginPuzzleStartTime();
-        GameState = eGameState.PLAYING;
-        // UI
-        // below is the stuff when it's using articy, but the demo is the code after the commented out stuff
-        /* Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
-         List<ArticyObject> dialogues = jumpSave.Template.Dialogue_List.DialoguesToPlay;
-         if(dialogues == null || dialogues.Count == 0 || dialogues.Count-1 < CurPuzzle)
-         {
-            // Debug.LogError("You don't have the Mini_Game_Jump set up properly because there's no entry in the Dialogues To Play list for this puzzle");
-         }
-         else
-         {
-             Dialogue d = jumpSave.Template.Dialogue_List.DialoguesToPlay[CurPuzzle] as Dialogue;
-             if (d != null) MiniGameArticyFlow.CheckIfDialogueShouldStart(d, null);
-         }*/
-        //public ArticyRef[] PuzzleDialogues;
-        
+        GameState = eGameState.PLAYING;        
     }
 
     public void SavePuzzlesProgress(bool success)

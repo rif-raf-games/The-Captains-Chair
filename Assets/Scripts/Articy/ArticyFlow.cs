@@ -305,7 +305,9 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                 jumpSave.Template.Success_Mini_Game_Result.SceneName = curJump.Template.Success_Mini_Game_Result.SceneName;
                 jumpSave.Template.Success_Mini_Game_Result.Dialogue = curJump.Template.Success_Mini_Game_Result.Dialogue;
                 jumpSave.Template.Quit_Mini_Game_Result.SceneName = curJump.Template.Quit_Mini_Game_Result.SceneName;
-                jumpSave.Template.Quit_Mini_Game_Result.Dialogue = curJump.Template.Quit_Mini_Game_Result.Dialogue;                
+                jumpSave.Template.Quit_Mini_Game_Result.Dialogue = curJump.Template.Quit_Mini_Game_Result.Dialogue;
+                
+                jumpSave.Template.Success_Save_Fragment.SaveFragment = curJump.Template.Success_Save_Fragment.SaveFragment;                
 
                 ArticyGlobalVariables.Default.Mini_Games.Coming_From_Main_Game = true;
                 Debug.Log("About to start a mini game: " + curJump.Template.Mini_Game_Scene.Scene_Name);
@@ -313,35 +315,8 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             }
             else if(CurPauseObject.GetType().Equals(typeof(Save_Point)))
             {
-                StaticStuff.PrintFlowBranchesUpdate("We're on a Save_Point, so parse the data and save it", this);
-                Save_Point savePoint = CurPauseObject as Save_Point;                
-                if(savePoint.Template.Save_Info.SavePlayerPosition == true )
-                {
-                    if (Player != null)
-                    {
-                        Vector3 playerPos = Player.transform.position;
-                        string s = playerPos.x.ToString("F5") + "," + playerPos.y.ToString("F5") + "," + playerPos.z.ToString("F5");                        
-                        ArticyGlobalVariables.Default.Save_Info.Last_Player_Position = s;
-                    }
-                    else Debug.LogError("Trying to save player position in a scene with no Player");                    
-                }
-                else
-                {
-                    ArticyGlobalVariables.Default.Save_Info.Last_Player_Position = "null";
-                }
-                //Debug.Log("Return scene: " + savePoint.Template.Save_Info.ReturnScene);
-                ArticyGlobalVariables.Default.Save_Info.Return_Scene = savePoint.Template.Save_Info.ReturnScene;
-                //Debug.Log("Analytics: " + savePoint.Template.Save_Info.AnalyticsToTrack);
-                string[] analytics = savePoint.Template.Save_Info.AnalyticsToTrack.Split(',');
-                int char_mal = ArticyGlobalVariables.Default.TheCaptain.char_mal;                
-                foreach (string a in analytics)
-                {                    
-                    string x = ArticyGlobalVariables.Default.GetVariableByString<string>(a);                    
-                    Dictionary<string, object> trackingParameters = new Dictionary<string, object>();
-                    trackingParameters.Add("value at save", x);
-                    StaticStuff.TrackEvent("TESTING_" + a, trackingParameters);                   
-                }
-                StaticStuff.SaveSaveData();
+                StaticStuff.PrintFlowBranchesUpdate("We're on a Save_Point, so parse the data and save it", this);                
+                HandleSavePoint(CurPauseObject as Save_Point);                
                 SetNextBranch(CurBranches[0]);
             }
             else
@@ -383,6 +358,45 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         }
 
         StaticStuff.PrintFlowBranchesUpdate("************** OnBranchesUpdated() END *************** time: " + Time.time, this);        
+    }
+
+    /// <summary>
+    /// Save_Point fragments can show up in different ways so have a separate function to handle the process
+    /// </summary>
+    /// <param name="savePoint"></param>
+    public void HandleSavePoint(Save_Point savePoint)
+    {                
+        ArticyGlobalVariables.Default.Save_Info.Return_Scene = savePoint.Template.Save_Info.ReturnScene;
+        if (savePoint.Template.Save_Info.SavePlayerPosition == true)
+        {
+            if (Player != null)
+            {
+                Vector3 playerPos = Player.transform.position;
+                string s = playerPos.x.ToString("F5") + "," + playerPos.y.ToString("F5") + "," + playerPos.z.ToString("F5");
+                ArticyGlobalVariables.Default.Save_Info.Last_Player_Position = s;
+            }
+            else Debug.LogError("Trying to save player position in a scene with no Player");
+        }
+        else
+        {
+            ArticyGlobalVariables.Default.Save_Info.Last_Player_Position = "null";
+        }
+
+        string d = "spp? " + savePoint.Template.Save_Info.SavePlayerPosition + ", ";
+        d += "lpp: " + ArticyGlobalVariables.Default.Save_Info.Last_Player_Position + "\n";
+        d += "return scene: " + savePoint.Template.Save_Info.ReturnScene + ", ";
+        d += "analytics: " + savePoint.Template.Save_Info.AnalyticsToTrack;
+        Debug.Log(d);
+
+        string[] analytics = savePoint.Template.Save_Info.AnalyticsToTrack.Split(',');
+        foreach (string a in analytics)
+        {
+            string x = ArticyGlobalVariables.Default.GetVariableByString<string>(a);
+            Dictionary<string, object> trackingParameters = new Dictionary<string, object>();
+            trackingParameters.Add("value at save", x);
+            StaticStuff.TrackEvent("TESTING_" + a, trackingParameters);
+        }
+        StaticStuff.SaveSaveData();        
     }
 
     /// <summary>

@@ -68,6 +68,7 @@ public class TheCaptainsChair : MonoBehaviour
             ArticyGlobalVariables.Default.Mini_Games.Returning_From_Mini_Game = false;
             ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success = false;
             ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Score = 0;
+            StaticStuff.SaveSaveData();
         }
         else
         {
