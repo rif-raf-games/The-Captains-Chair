@@ -150,13 +150,13 @@ public class TheCaptainsChair : MonoBehaviour
     }
 
 
-    /*private void OnGUI()
+    private void OnGUI()
     {
         if (GUI.Button(new Rect(Screen.width-100, Screen.height-100, 100, 100), "Sim Startup\nData Load"))
         {
             StaticStuff.CheckSceneLoadSave();
         }
-    }*/
+    }
     //private void OnGUI()
     // {
     /*if (GUI.Button(new Rect(0, 0, 100, 100), "SaveData"))
