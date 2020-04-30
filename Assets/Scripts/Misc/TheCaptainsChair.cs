@@ -152,11 +152,11 @@ public class TheCaptainsChair : MonoBehaviour
 
     private void OnGUI()
     {
-        if (GUI.Button(new Rect(Screen.width - 100, Screen.height - 200, 100, 100), "Show Data Path"))
+        /*if (GUI.Button(new Rect(Screen.width - 100, Screen.height - 200, 100, 100), "Show Data Path"))
         {
             StaticStuff.ShowDataPath();
-        }
-        if (GUI.Button(new Rect(Screen.width-100, Screen.height-100, 100, 100), "Sim Startup\nData Load"))
+        }*/
+        if (GUI.Button(new Rect(Screen.width-100, 0, 100, 100), "Sim Startup\nData Load"))
         {
             StaticStuff.CheckSceneLoadSave();
         }
