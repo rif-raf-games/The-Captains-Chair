@@ -67,7 +67,7 @@ static public class StaticStuff
         Debug.Log("returnScene: " + returnScene + ", playerLoc: " + playerLoc);
         if (returnScene.Equals("null") || returnScene.Equals(""))
         {
-            SceneManager.LoadScene("MoScratch");
+            SceneManager.LoadScene("Ep1.S1");
         }
         else
         {
