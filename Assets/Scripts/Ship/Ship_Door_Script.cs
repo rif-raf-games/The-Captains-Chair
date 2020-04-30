@@ -34,9 +34,13 @@ public class Ship_Door_Script : MonoBehaviour {
     }
     void OnTriggerEnter(Collider coll) 
     {
-        //Debug.Log("********************" + this.name + " door OnTriggerEnter() BEGIN: " + coll.name);
+        Debug.Log("********************" + this.name + " door OnTriggerEnter() BEGIN: " + coll.name);
         Collider[] colliders = GetColliders();
-        if(colliders.Length == 0 || colliders.Length == 1 && colliders[0] == coll)
+        string s = "**********Door.OnTriggerEnter() coll: " + coll.name + "\n";
+        s += colliders.Length + "\n";
+        foreach (Collider c in colliders) s += c.name + "\n";
+        Debug.Log(s);
+        if (colliders.Length == 0 || colliders.Length == 1 && colliders[0] == coll)
         {   // if there's nothing within the trigger's collider box other than the object colliding with it
             // then the doors are ready to be opened
             //Debug.Log("no collisions other than self so call OpenDoor()");
@@ -46,7 +50,7 @@ public class Ship_Door_Script : MonoBehaviour {
     }
     void OnTriggerExit(Collider coll) 
     {
-        //Debug.Log("********************" + this.name + " door OnTriggerExit(): START" + coll.name);              
+        Debug.Log("********************" + this.name + " door OnTriggerExit(): START" + coll.name);              
         Collider[] colliders = GetColliders();
         if (colliders.Length == 0)
         {   // If there's nothing within the trigger's collision box then go ahead and close

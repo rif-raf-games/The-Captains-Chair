@@ -1,5 +1,6 @@
 ﻿
 
+using Articy.The_Captain_s_Chair.GlobalVariables;
 using Articy.Unity;
 using System;
 using System.Collections;
@@ -8,6 +9,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using UnityEngine.Analytics;
+using UnityEngine.SceneManagement;
 
 static public class StaticStuff 
 {    
@@ -57,6 +59,21 @@ static public class StaticStuff
         }
     }
 
+    static public void CheckSceneLoadSave()
+    {
+        StaticStuff.LoadSaveData();
+        string returnScene = ArticyGlobalVariables.Default.Save_Info.Return_Scene;
+        string playerLoc = ArticyGlobalVariables.Default.Save_Info.Last_Player_Position;
+        Debug.Log("returnScene: " + returnScene + ", playerLoc: " + playerLoc);
+        if (returnScene.Equals("null") || returnScene.Equals(""))
+        {
+            SceneManager.LoadScene("MoScratch");
+        }
+        else
+        {
+            SceneManager.LoadScene(returnScene);
+        }
+    }
     static public void ShowDataPath()
     {
         Debug.Log(Application.persistentDataPath);
@@ -119,8 +136,7 @@ static public class StaticStuff
     }*/
     static public void PrintFlowBranchesUpdate(string s, ArticyFlow articyFlowCaller)
     {
-        //Debug.Log("caller: " + articyFlowCaller.name + ": " + s);
-
+        //Debug.Log(articyFlowCaller.name + ": " + s);
     }
     static public void PrintBehaviorFlow(string s, BehaviorFlowPlayer player)
     {

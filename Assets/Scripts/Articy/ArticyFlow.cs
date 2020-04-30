@@ -311,6 +311,39 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                 Debug.Log("About to start a mini game: " + curJump.Template.Mini_Game_Scene.Scene_Name);
                 SceneManager.LoadScene(curJump.Template.Mini_Game_Scene.Scene_Name);
             }
+            else if(CurPauseObject.GetType().Equals(typeof(Save_Point)))
+            {
+                StaticStuff.PrintFlowBranchesUpdate("We're on a Save_Point, so parse the data and save it", this);
+                Save_Point savePoint = CurPauseObject as Save_Point;                
+                if(savePoint.Template.Save_Info.SavePlayerPosition == true )
+                {
+                    if (Player != null)
+                    {
+                        Vector3 playerPos = Player.transform.position;
+                        string s = playerPos.x.ToString("F5") + "," + playerPos.y.ToString("F5") + "," + playerPos.z.ToString("F5");                        
+                        ArticyGlobalVariables.Default.Save_Info.Last_Player_Position = s;
+                    }
+                    else Debug.LogError("Trying to save player position in a scene with no Player");                    
+                }
+                else
+                {
+                    ArticyGlobalVariables.Default.Save_Info.Last_Player_Position = "null";
+                }
+                //Debug.Log("Return scene: " + savePoint.Template.Save_Info.ReturnScene);
+                ArticyGlobalVariables.Default.Save_Info.Return_Scene = savePoint.Template.Save_Info.ReturnScene;
+                //Debug.Log("Analytics: " + savePoint.Template.Save_Info.AnalyticsToTrack);
+                string[] analytics = savePoint.Template.Save_Info.AnalyticsToTrack.Split(',');
+                int char_mal = ArticyGlobalVariables.Default.TheCaptain.char_mal;                
+                foreach (string a in analytics)
+                {                    
+                    string x = ArticyGlobalVariables.Default.GetVariableByString<string>(a);                    
+                    Dictionary<string, object> trackingParameters = new Dictionary<string, object>();
+                    trackingParameters.Add("value at save", x);
+                    StaticStuff.TrackEvent("TESTING_" + a, trackingParameters);                   
+                }
+                StaticStuff.SaveSaveData();
+                SetNextBranch(CurBranches[0]);
+            }
             else
             {
                 Debug.LogWarning("We haven't supported this single branch situation yet. CurPauseObject: " + CurPauseObject.GetType() + ", branch: " + CurBranches[0].Target.GetType());
@@ -505,7 +538,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     void MyGameStateVariablesChanged(string aVariableName, object aValue)
     {
         //Debug.Log("aVariableName: " + aVariableName + " changed to: " + aValue.ToString());
-        if (CaptainsChair != null) StaticStuff.SaveSaveData();
+        //if (CaptainsChair != null) StaticStuff.SaveSaveData();
     }
 
     /// <summary>

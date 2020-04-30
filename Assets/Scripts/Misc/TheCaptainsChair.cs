@@ -28,8 +28,7 @@ public class TheCaptainsChair : MonoBehaviour
         StaticStuff.SetOrientation(StaticStuff.eOrientation.LANDSCAPE, this.name);
     }
     void Start()
-    {
-        StaticStuff.TrackEvent("TCC Start()");
+    {       
         ArticyDatabase.DefaultGlobalVariables.Notifications.AddListener("*.*", MyGameStateVariablesChanged);
         //Debug.Log("Welcome to The Captain's Chair!!");
         StaticStuff.SetCaptainsChair(this.ArticyFlowToPrint);
@@ -86,6 +85,16 @@ public class TheCaptainsChair : MonoBehaviour
             }*/
             Player.GetComponent<ArticyFlow>().CheckIfDialogueShouldStart(DialogueToStartOn.GetObject() as Dialogue, Player.gameObject);
         }
+        string playerLoc = ArticyGlobalVariables.Default.Save_Info.Last_Player_Position;
+        if ( !(playerLoc.Equals("null") || playerLoc.Equals("")) )
+        {
+            string[] loc = playerLoc.Split(',');
+            Vector3 pos = new Vector3(float.Parse(loc[0]), float.Parse(loc[1]), float.Parse(loc[2]));
+            Player.transform.position = pos;
+        }
+            // set up the player position based on save data
+
+
         SoundFX soundFX = FindObjectOfType<SoundFX>();
         SoundFXPlayer.Init(soundFX);
         VisualFX visualFX = FindObjectOfType<VisualFX>();
@@ -139,25 +148,31 @@ public class TheCaptainsChair : MonoBehaviour
         NPC npc = ArticyRefNPCs[name];
         return npc;
     }
-        
-    
 
-    //private void OnGUI()
-   // {
-        /*if (GUI.Button(new Rect(0, 0, 100, 100), "SaveData"))
+
+    /*private void OnGUI()
+    {
+        if (GUI.Button(new Rect(Screen.width-100, Screen.height-100, 100, 100), "Sim Startup\nData Load"))
         {
-            SaveSaveData();
+            StaticStuff.CheckSceneLoadSave();
         }
-        if (GUI.Button(new Rect(0, 100, 100, 100), "LoadData"))
-        {
-            LoadSaveData();
-        }*/
-        /*(if (GUI.Button(new Rect(0, 0, 100, 50), "Delete\nSave Data"))
-        {
-            DeleteSaveData();
-        }*/
+    }*/
+    //private void OnGUI()
+    // {
+    /*if (GUI.Button(new Rect(0, 0, 100, 100), "SaveData"))
+    {
+        SaveSaveData();
+    }
+    if (GUI.Button(new Rect(0, 100, 100, 100), "LoadData"))
+    {
+        LoadSaveData();
+    }*/
+    /*(if (GUI.Button(new Rect(0, 0, 100, 50), "Delete\nSave Data"))
+    {
+        DeleteSaveData();
+    }*/
 
-   // }
+    // }
 
     /* NOT USING THE BELOW STUFF YET BUT I'M KEEPING IT FOR REFERENCE
     [System.Serializable]
