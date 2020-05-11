@@ -58,6 +58,11 @@ static public class StaticStuff
             saveData = new Dictionary<string, object>();
         }
     }
+    
+    static public void ShowDataPath()
+    {
+        Debug.Log(Application.persistentDataPath);
+    }
 
     static public void CheckSceneLoadSave()
     {
@@ -74,19 +79,22 @@ static public class StaticStuff
             SceneManager.LoadScene(returnScene);
         }
     }
-    static public void ShowDataPath()
-    {
-        Debug.Log(Application.persistentDataPath);
-    }
 
-    static public void SaveSaveData()
+    static public void CreateNewSaveData()
     {
+        FileStream file;
+        DeleteSaveData();        
+        SaveSaveData("StaticStuff.CreateSaveData()");
+    }
+    static public void SaveSaveData(string s)
+    {
+        Debug.Log("SaveSaveData(): " + s + ", stack track: " + Environment.StackTrace);
         SaveDataDic saveData = new SaveDataDic();
         saveData.saveData = ArticyDatabase.DefaultGlobalVariables.Variables;
 
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file;
-        if (File.Exists(Application.persistentDataPath + "/globalVars.dat"))
+        if (SaveDataExists() == true)
         {
             file = File.Open(Application.persistentDataPath + "/globalVars.dat", FileMode.Open);
         }
@@ -100,7 +108,7 @@ static public class StaticStuff
 
     static public void LoadSaveData()
     {
-        if (File.Exists(Application.persistentDataPath + "/globalVars.dat"))
+        if (SaveDataExists() == true)
         {
             BinaryFormatter bf = new BinaryFormatter();
             FileStream file = File.Open(Application.persistentDataPath + "/globalVars.dat", FileMode.Open);
@@ -108,15 +116,24 @@ static public class StaticStuff
             ArticyDatabase.DefaultGlobalVariables.Variables = saveData.saveData;
             file.Close();
         }
+        else
+        {
+            Debug.LogError("Trying to LoadSaveData() but no save data exists");
+        }
     }
 
     static public void DeleteSaveData()
     {
-        if (File.Exists(Application.persistentDataPath + "/globalVars.dat"))
+        if( SaveDataExists() == true )
         {
             File.Delete(Application.persistentDataPath + "/globalVars.dat");
         }
         ArticyDatabase.DefaultGlobalVariables.ResetVariables();
+    }
+
+    static public bool SaveDataExists()
+    {
+        return File.Exists(Application.persistentDataPath + "/globalVars.dat");
     }
     #endregion
 
@@ -155,6 +172,11 @@ static public class StaticStuff
     static public void PrintRepairPath(string s)
     {
         //Debug.Log(s);
+    }
+
+    static public void PrintRifRafUI(string s)
+    {
+        Debug.Log(s);
     }
 
     static public void PrintCAL(string s)

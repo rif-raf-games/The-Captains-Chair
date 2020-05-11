@@ -847,7 +847,7 @@ public class Repair : MiniGame
         {
             result = "epic WIN because: " + msg + ", took " + NumChecks + " to do it";
         }
-        StartCoroutine(EndGame(result, puzzleSolved));
+        StartCoroutine(ShowResults(result, puzzleSolved));
         return puzzleSolved;
     }
     
@@ -887,7 +887,7 @@ public class Repair : MiniGame
         SetGameState(eGameState.ON); 
         SetLights(1);
     }
-    IEnumerator EndGame(string result, bool success)
+    IEnumerator ShowResults(string result, bool success)
     {        
         ResultsText.text = result;
         if (MCP != null) MCP.SavePuzzlesProgress(success);

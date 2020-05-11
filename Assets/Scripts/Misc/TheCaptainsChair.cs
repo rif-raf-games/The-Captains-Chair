@@ -26,6 +26,18 @@ public class TheCaptainsChair : MonoBehaviour
     private void Awake()
     {
         StaticStuff.SetOrientation(StaticStuff.eOrientation.LANDSCAPE, this.name);
+        MCP mcp = FindObjectOfType<MCP>();
+        if (mcp == null)
+        {
+            Debug.Log("no MCP yet so load it up");
+            mcp = Resources.Load<MCP>("Prefabs/MCP");
+            mcp = Object.Instantiate<MCP>(mcp);
+        }
+        else
+        {
+            Debug.Log("we have an MCP so do nothing");
+        }
+        mcp.ToggleUI(false);
     }
     void Start()
     {       
@@ -68,7 +80,7 @@ public class TheCaptainsChair : MonoBehaviour
             ArticyGlobalVariables.Default.Mini_Games.Returning_From_Mini_Game = false;
             ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success = false;
             ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Score = 0;
-            StaticStuff.SaveSaveData();
+            StaticStuff.SaveSaveData("TheCaptainsChair.Start() after finishing the \"return from mini game == true\" bit");
         }
         else
         {
@@ -160,6 +172,10 @@ public class TheCaptainsChair : MonoBehaviour
         if (GUI.Button(new Rect(Screen.width-100, 0, 100, 100), "Sim Startup\nData Load"))
         {
             StaticStuff.CheckSceneLoadSave();
+        }
+        if (GUI.Button(new Rect(Screen.width - 100, Screen.height / 2 - 100, 100, 100), "Menu On"))
+        {
+            FindObjectOfType<MCP>().ToggleUI(true);
         }
     }
     //private void OnGUI()

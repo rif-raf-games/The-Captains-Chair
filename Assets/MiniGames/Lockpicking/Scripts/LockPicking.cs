@@ -60,7 +60,7 @@ public class LockPicking : MiniGame
     {
         if (IsDeathNode(pathNode))
         {
-            if (diode.Evil == false) StartCoroutine(EndGame("You Lost.", false));
+            if (diode.Evil == false) StartCoroutine(ShowResults("You Lost.", false));
             else StartCoroutine(EvilDiodeRespawn(diode));
         }
     }
@@ -191,13 +191,13 @@ public class LockPicking : MiniGame
         //if (true)
         if(GatesThisGame.Count == 0)        
         {
-            StartCoroutine(EndGame("You Won.", true));
+            StartCoroutine(ShowResults("You Won.", true));
         }        
     }
 
     public void HitEvilDiode(Diode evilDiode)        
     {
-        StartCoroutine(EndGame("You were killed by an evil diode.", false));
+        StartCoroutine(ShowResults("You were killed by an evil diode.", false));
     }
     public bool IsDeathNode(PathNode pathNode)
     {
@@ -205,13 +205,13 @@ public class LockPicking : MiniGame
     }
            
 
-    IEnumerator EndGame(string endGameString, bool success)
+    IEnumerator ShowResults(string result, bool success)
     {
         if (MCP != null) MCP.SavePuzzlesProgress(success);
         if(success == true) EndPuzzleTime(true);
         SetGameState(eGameState.OFF); 
         ResultsText.gameObject.SetActive(true);
-        ResultsText.text = endGameString;
+        ResultsText.text = result;
         Diode.Moving = false;
         foreach (Diode d in EvilDiodes) d.Moving = false;
         yield return new WaitForSeconds(3);

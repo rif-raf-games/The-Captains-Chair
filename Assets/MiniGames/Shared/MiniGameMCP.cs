@@ -156,7 +156,7 @@ public class MiniGameMCP : MonoBehaviour
             if (PuzzleNameRoot.Contains("Parking")) ArticyGlobalVariables.Default.Mini_Games.Parking_Demo_Progress = 0;
             else if (PuzzleNameRoot.Contains("LockPicking")) ArticyGlobalVariables.Default.Mini_Games.LockPicking_Demo_Progress = 0;
             else if (PuzzleNameRoot.Contains("Repair")) ArticyGlobalVariables.Default.Mini_Games.Repair_Demo_Progress = 0;
-            StaticStuff.SaveSaveData();
+            StaticStuff.SaveSaveData("MiniGameMCP.GetStartingCurPuzzle() if we're done with all the puzzles and resetting all puzzle progress");
         }
 
         return curPuzzle;
@@ -271,7 +271,7 @@ public class MiniGameMCP : MonoBehaviour
             if (PuzzleNameRoot.Contains("Parking")) ArticyGlobalVariables.Default.Mini_Games.Parking_Demo_Progress = CurPuzzle + 1;
             else if (PuzzleNameRoot.Contains("LockPicking")) ArticyGlobalVariables.Default.Mini_Games.LockPicking_Demo_Progress = CurPuzzle + 1;
             else if (PuzzleNameRoot.Contains("Repair")) ArticyGlobalVariables.Default.Mini_Games.Repair_Demo_Progress = CurPuzzle + 1;
-            StaticStuff.SaveSaveData();
+            StaticStuff.SaveSaveData("MiniGameMCP.SavePuzzleProgress() if success == true");
         }
     }
     public void PuzzleFinished()
