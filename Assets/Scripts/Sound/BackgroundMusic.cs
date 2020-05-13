@@ -23,15 +23,21 @@ public class BackgroundMusic : MonoBehaviour
     {
         this.AudioSource.Stop();            
     }
+
+    public void SetVolume(int vol)
+    {
+        this.AudioSource.volume = vol / 100f;
+    }
 }
 
 public static class BackgroundMusicPlayer
 {
     static BackgroundMusic BGMusic;
-    public static void Init(BackgroundMusic bgMusic)
+    public static void Init(BackgroundMusic bgMusic, int vol)
     {
-        if (bgMusic == null) { Debug.LogError("Trying to set up a null BackgroundMusic Player."); return; }
+        if (bgMusic == null) { Debug.LogError("Trying to set up a null BackgroundMusic Player."); return; }        
         BGMusic = bgMusic;
+        BGMusic.SetVolume(vol);
     }
 
     public static void Play(string musicName)

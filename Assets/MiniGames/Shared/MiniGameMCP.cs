@@ -52,8 +52,8 @@ public class MiniGameMCP : MonoBehaviour
     public virtual void Start()
     {
         SoundFX soundFX = FindObjectOfType<SoundFX>();
-        SoundFXPlayer.Init(soundFX);
-        //Debug.Log("MiniGameMCP.Start()");
+        SoundFXPlayer.Init(soundFX, -1);
+        
         GameState = eGameState.NONE;
         FadeImage.gameObject.SetActive(true);
         MiniGameArticyFlow = GetComponent<ArticyFlow>();

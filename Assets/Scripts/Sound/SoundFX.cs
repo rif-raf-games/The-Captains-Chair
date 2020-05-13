@@ -32,16 +32,22 @@ public class SoundFX : MonoBehaviour
         if(fxIndex == -1) { Debug.LogError("Trying to play a sound effect that doesn't exist: " + fxID); return; }
 
         this.AudioSource.PlayOneShot(SoundFXList[fxIndex].Clip);      
-    }   
+    }
+
+    public void SetVolume(int vol)
+    {
+        this.AudioSource.volume = vol / 100f;
+    }
 }
 
 public static class SoundFXPlayer
 {
     static SoundFX SoundFX;
-    public static void Init(SoundFX soundFX)
+    public static void Init(SoundFX soundFX, int vol)
     {
-       // Debug.Log("SoundFXPlayer Init()");
+        if (soundFX == null) { Debug.LogError("Trying to set up a null sound fx Player."); return; }
         SoundFX = soundFX;
+        if(vol != -1f) SoundFX.SetVolume(vol); // monote - update this volume thing with the mCP
     }
     public static void Play(string fxID)
     {

@@ -51,9 +51,7 @@ public class Parking : MiniGame
     private void Start()
     {        
         if (IsSolo == true)
-        {
-            SoundFX soundFX = FindObjectOfType<SoundFX>();
-            SoundFXPlayer.Init(soundFX);
+        {            
             ResultsText.gameObject.SetActive(false);
             BeginPuzzleStartTime();
         }

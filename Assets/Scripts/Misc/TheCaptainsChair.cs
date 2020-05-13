@@ -11,6 +11,7 @@ using Articy.The_Captain_s_Chair.GlobalVariables;
 public class TheCaptainsChair : MonoBehaviour
 {
     CCPlayer Player;
+    MCP MCP;
     public ArticyRef DialogueToStartOn;
 
     [Header("Room And Floor Settings")]
@@ -26,18 +27,17 @@ public class TheCaptainsChair : MonoBehaviour
     private void Awake()
     {
         StaticStuff.SetOrientation(StaticStuff.eOrientation.LANDSCAPE, this.name);
-        MCP mcp = FindObjectOfType<MCP>();
-        if (mcp == null)
+        this.MCP = FindObjectOfType<MCP>();
+        if (this.MCP == null)
         {
             Debug.Log("no MCP yet so load it up");
-            mcp = Resources.Load<MCP>("Prefabs/MCP");
-            mcp = Object.Instantiate<MCP>(mcp);
+            this.MCP = Resources.Load<MCP>("Prefabs/MCP");
+            this.MCP = Object.Instantiate<MCP>(this.MCP);
         }
         else
         {
             Debug.Log("we have an MCP so do nothing");
-        }
-        mcp.ToggleUI(false);
+        }        
     }
     void Start()
     {       
@@ -109,13 +109,15 @@ public class TheCaptainsChair : MonoBehaviour
 
 
         SoundFX soundFX = FindObjectOfType<SoundFX>();
-        SoundFXPlayer.Init(soundFX);
+        SoundFXPlayer.Init(soundFX, this.MCP.GetAudioVolume());
         VisualFX visualFX = FindObjectOfType<VisualFX>();
         VisualFXPlayer.Init(visualFX);
         BackgroundMusic bgMusic = FindObjectOfType<BackgroundMusic>();
-        BackgroundMusicPlayer.Init(bgMusic);          
+        BackgroundMusicPlayer.Init(bgMusic, this.MCP.GetAudioVolume());
 
-        if(StaticStuff.USE_DEBUG_MENU == true)
+        this.MCP.InitMenusForMainGame();
+
+        if (StaticStuff.USE_DEBUG_MENU == true)
         {
             Object debugObject = Resources.Load("DebugMenu");
             Instantiate(debugObject);
@@ -163,21 +165,21 @@ public class TheCaptainsChair : MonoBehaviour
     }
 
 
-    private void OnGUI()
+    /*private void OnGUI()
     {
-        /*if (GUI.Button(new Rect(Screen.width - 100, Screen.height - 200, 100, 100), "Show Data Path"))
+        if (GUI.Button(new Rect(Screen.width - 100, Screen.height - 200, 100, 100), "Show Data Path"))
         {
             StaticStuff.ShowDataPath();
-        }*/
+        }
         if (GUI.Button(new Rect(Screen.width-100, 0, 100, 100), "Sim Startup\nData Load"))
         {
             StaticStuff.CheckSceneLoadSave();
         }
         if (GUI.Button(new Rect(Screen.width - 100, Screen.height / 2 - 100, 100, 100), "Menu On"))
         {
-            FindObjectOfType<MCP>().ToggleUI(true);
+            FindObjectOfType<MCP>().ToggleMenuUI(true);
         }
-    }
+    }*/
     //private void OnGUI()
     // {
     /*if (GUI.Button(new Rect(0, 0, 100, 100), "SaveData"))

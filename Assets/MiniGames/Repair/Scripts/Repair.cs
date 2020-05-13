@@ -60,7 +60,7 @@ public class Repair : MiniGame
     List<PieceConn> AllConnsChecked = new List<PieceConn>();
     List<PieceConn> DEBUG_ConnsOnThisPath = new List<PieceConn>();
     List<string> ConnsResult = new List<string>();
-    List<GameObject> BeltAnchors = new List<GameObject>();
+    public List<GameObject> BeltAnchors = new List<GameObject>();
     int NumChecks = 0;
     int PiecesAndBeltMask;
     int FuelDoorMask;
@@ -137,18 +137,18 @@ public class Repair : MiniGame
         Vector3 wpDiff = Camera.main.ViewportToWorldPoint(vpDiff);
         BeltMoveRange = Belt.GetComponent<BoxCollider>().size.z/2f + wpDiff.z;
 
-        BeltAnchors = GameObject.FindGameObjectsWithTag("Repair Piece Belt Anchor").ToList<GameObject>();
-        BeltAnchors = BeltAnchors.OrderBy(go => go.name).ToList<GameObject>();
+        //BeltAnchors = GameObject.FindGameObjectsWithTag("Repair Piece Belt Anchor").ToList<GameObject>();
+        //BeltAnchors = BeltAnchors.OrderBy(go => go.name).ToList<GameObject>();
 
         PiecesAndBeltMask = 1 << LayerMask.NameToLayer("Repair Piece");
         PiecesAndBeltMask |= (1 << LayerMask.NameToLayer("Repair Piece Belt"));
 
         FuelDoorMask = LayerMask.GetMask("Parking Rotate Platform"); // we ran out of tags so i'm re-using some from another game
 
-        InitialBeltIndexStops.Add(-1); 
-        InitialBeltIndexStops.Add(BeltAnchors.Count);
-        BeltIndexAdjusts.Add(-1);
-        BeltIndexAdjusts.Add(1);
+        //InitialBeltIndexStops.Add(-1); 
+       // InitialBeltIndexStops.Add(BeltAnchors.Count);
+       //BeltIndexAdjusts.Add(-1);
+      //  BeltIndexAdjusts.Add(1);
 
         FuelDoor.Open(TurnGameOn);
     }
@@ -294,9 +294,18 @@ public class Repair : MiniGame
         foreach (RepairPiece terminal in Terminals)
         {
             allPieces.Remove(terminal);
-        }        
-        
-        foreach(RepairPiece rp in allPieces)
+        }
+
+        BeltAnchors = GameObject.FindGameObjectsWithTag("Repair Piece Belt Anchor").ToList<GameObject>();
+        BeltAnchors = BeltAnchors.OrderBy(go => go.name).ToList<GameObject>();
+        InitialBeltIndexStops.Clear();
+        BeltIndexAdjusts.Clear();
+        InitialBeltIndexStops.Add(-1);
+        InitialBeltIndexStops.Add(BeltAnchors.Count);
+        BeltIndexAdjusts.Add(-1);
+        BeltIndexAdjusts.Add(1);
+
+        foreach (RepairPiece rp in allPieces)
         {
             bool pieceSnapped = SnapPieceIntoPlace(rp, Vector3.zero);
             if(pieceSnapped == false)
@@ -420,6 +429,7 @@ public class Repair : MiniGame
         RaycastHit hit;
         while(adjustmentMade == false)
         {   //int indexDataIndex = (HeldPiece.transform.position.z < p.Coll.transform.position.z ? 0 : 1); // 0 = move up, 1 = move down
+            //Debug.Log("topIndex: " + topIndex);
             hit = GetHitAtAnchorPos(BeltAnchors[topIndex]);            
             if (hit.collider.tag == "Repair Piece")
             {   // hit the top index, so move down

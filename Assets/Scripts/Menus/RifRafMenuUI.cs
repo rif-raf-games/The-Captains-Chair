@@ -18,6 +18,8 @@ public class RifRafMenuUI : MonoBehaviour
     public enum eSaveGameFunction { NEW, CONTINUE, DELETE, NUM_SAVE_GAME_FUNCTIONS };
     public eSaveGameFunction CurActiveSaveGameFunction;
 
+    public MCP MCP;
+
     private void Awake()
     {
         foreach (GameObject go in Menus) go.SetActive(false);
@@ -27,6 +29,12 @@ public class RifRafMenuUI : MonoBehaviour
 
         CurActiveSaveGameFunction = eSaveGameFunction.NUM_SAVE_GAME_FUNCTIONS;
     }
+
+    public void Init(MCP mcp)
+    {
+        this.MCP = mcp;
+    }
+
     public void ToggleMenu(eMenuType menuID, bool isActive)
     {
         StaticStuff.PrintRifRafUI("ToggleMenu() menuID: " + menuID.ToString() + ", isActive: " + isActive);
@@ -104,6 +112,14 @@ public class RifRafMenuUI : MonoBehaviour
         if (MenusActiveCheck() == false) return;
 
         ToggleMenu(eMenuType.TELL_FRIENDS, true);
+    }
+
+    public void OnClickMainMenuBack()
+    {
+        StaticStuff.PrintRifRafUI("OnClickMainMenuBack()");
+        if (MenusActiveCheck() == false) return;
+
+        this.MCP.TurnOnInGamePopUp();
     }
     #endregion
 
