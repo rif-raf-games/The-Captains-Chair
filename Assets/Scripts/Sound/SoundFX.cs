@@ -26,6 +26,11 @@ public class SoundFX : MonoBehaviour
         }
     }
 
+    public void PlayVO(AudioClip voClip)
+    {
+        this.AudioSource.PlayOneShot(voClip);
+    }
+
     public void PlayFX(string fxID )
     {
         int fxIndex = SoundFXNames.IndexOf(fxID);
@@ -53,5 +58,11 @@ public static class SoundFXPlayer
     {
         if(SoundFX == null ) { Debug.LogError("Trying to play sound fx with no sound fx player"); return; }
         SoundFX.PlayFX(fxID);
+    }
+
+    public static void PlayVO(AudioClip voClip)
+    {
+        if (SoundFX == null) { Debug.LogError("Trying to play VO with no sound fx player"); return; }
+        SoundFX.PlayVO(voClip);
     }
 }

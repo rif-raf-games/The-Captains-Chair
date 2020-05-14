@@ -11,6 +11,7 @@ public class ConvoUI : MonoBehaviour
     public GameObject SpeakerPanel;
     public Text SpeakerName;
     public Text SpeakerText;
+    public Image SpeakerImage;
     public float DefaultTypewriterSpeed = 20f;
     float TypewriterSpeed;
     public GameObject[] DialogueOptions;
@@ -40,11 +41,13 @@ public class ConvoUI : MonoBehaviour
         DialogueFragment d = dialogueOptions[0].Target as DialogueFragment;
         if(d!=null) StaticStuff.PrintUI(d.MenuText + ", " + d.Text + ", " + d.TechnicalName);
         this.gameObject.SetActive(true);
-        
-        Entity speaker = ((Entity)dialogueFrag.Speaker);
-        if(speaker.DisplayName.Equals("Dialogue Pause")) SpeakerPanel.SetActive(false);        
-        else SpeakerPanel.SetActive(true);        
-        SpeakerName.text = speaker.DisplayName;
+
+        Entity speakerEntity = ((Entity)dialogueFrag.Speaker);
+        if (speakerEntity.DisplayName.Equals("Dialogue Pause")) SpeakerPanel.SetActive(false);
+        else SpeakerPanel.SetActive(true);
+        if (speakerEntity.PreviewImage.Asset != null) SpeakerImage.sprite = speakerEntity.PreviewImage.Asset.LoadAssetAsSprite();
+        else SpeakerImage.sprite = null;
+        SpeakerName.text = speakerEntity.DisplayName;
 
         IsInteractive = isInteractive;
         TypewriterSpeed = typewriterSpeed;
@@ -69,7 +72,26 @@ public class ConvoUI : MonoBehaviour
                     DialogueOptions[i].GetComponentInChildren<Text>().text = "Continue";
                 }
             }
-        }            
+        }
+
+        // VO stuff
+        VO_Dialogue_Fragment vod = flowObj as VO_Dialogue_Fragment;
+        if (vod != null)
+        {   // we've got a voice over dialogue                        
+            Asset a = vod.Template.VO_File.VOFile as Asset;
+            AudioClip ac = a.LoadAsset<AudioClip>();
+            SoundFXPlayer.PlayVO(ac);
+            string color = vod.Template.VO_File.Color;
+            if (color != "")
+            {
+                string[] colors = color.Split(',');
+                SpeakerText.color = new Color(int.Parse(colors[0]), int.Parse(colors[1]), int.Parse(colors[2]));
+            }
+        }
+        else
+        {
+            SpeakerText.color = Color.white;
+        }
     }
 
     IEnumerator TypewriterEffect()
