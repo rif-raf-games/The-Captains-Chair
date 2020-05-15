@@ -43,12 +43,15 @@ public class ConvoUI : MonoBehaviour
         this.gameObject.SetActive(true);
 
         Entity speakerEntity = ((Entity)dialogueFrag.Speaker);
-        if (speakerEntity.DisplayName.Equals("Dialogue Pause")) SpeakerPanel.SetActive(false);
-        else SpeakerPanel.SetActive(true);
-        if (speakerEntity.PreviewImage.Asset != null) SpeakerImage.sprite = speakerEntity.PreviewImage.Asset.LoadAssetAsSprite();
-        else SpeakerImage.sprite = null;
-        SpeakerName.text = speakerEntity.DisplayName;
-
+        if (speakerEntity == null) Debug.LogError("THIS DIALOGUE HAS NO ENTITY");
+        else
+        {
+            if (speakerEntity.DisplayName.Equals("Dialogue Pause")) SpeakerPanel.SetActive(false);
+            else SpeakerPanel.SetActive(true);
+            if (speakerEntity.PreviewImage.Asset != null) SpeakerImage.sprite = speakerEntity.PreviewImage.Asset.LoadAssetAsSprite();
+            else SpeakerImage.sprite = null;
+            SpeakerName.text = speakerEntity.DisplayName;
+        }        
         IsInteractive = isInteractive;
         TypewriterSpeed = typewriterSpeed;
         SpeakerText.text = "";
