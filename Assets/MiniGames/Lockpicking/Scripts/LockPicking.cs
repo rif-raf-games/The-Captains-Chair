@@ -533,7 +533,7 @@ public class LockPicking : MiniGame
 #endif
     }
 
-    private void OnGUI()
+   /* private void OnGUI()
     {
         if (GUI.Button(new Rect(Screen.width - 100, 0, 100, 100), "Main Menu"))
         {
@@ -547,5 +547,5 @@ public class LockPicking : MiniGame
                 SceneManager.LoadScene("LockPickingDemo");
             }            
         }        
-    }
+    }*/
 }

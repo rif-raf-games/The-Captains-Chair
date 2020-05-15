@@ -863,7 +863,7 @@ public class Repair : MiniGame
     
     private void OnGUI()
     {
-        if (GUI.Button(new Rect(Screen.width - 100, 0, 100, 100), "Main Menu"))
+        /*if (GUI.Button(new Rect(Screen.width - 100, 0, 100, 100), "Main Menu"))
         {
             EndPuzzleTime(false);
             if (IsSolo == false)
@@ -874,7 +874,7 @@ public class Repair : MiniGame
             {
                 SceneManager.LoadScene("RepairDemo");
             }            
-        }
+        }*/
         
         /*if (CurGameState == eGameState.OFF) return;
         if (GUI.Button(new Rect(0,100,100,100), "path test"))

@@ -538,7 +538,7 @@ public class Parking : MiniGame
         //StartCoroutine(ShowResults("FIX THIS IT'S AN ENDGAME HACK", true));
     }
            
-    private void OnGUI()
+   /* private void OnGUI()
     {
         if (GUI.Button(new Rect(Screen.width - 100, 0, 100, 100), "Main Menu"))
         {
@@ -552,7 +552,7 @@ public class Parking : MiniGame
                 SceneManager.LoadScene("ParkingDemo");
             }            
         }      
-    }
+    }*/
 
 
     GameObject CreateSphere(Transform t, string end, Color color, bool addToDebugSpheres = true)
