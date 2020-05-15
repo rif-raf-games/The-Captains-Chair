@@ -140,12 +140,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: 
+      - m_Target: {fileID: 1253283874}
+        m_MethodName: OnClickResumeGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -328,12 +328,12 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: 
-        m_Mode: 1
+      - m_Target: {fileID: 1253283874}
+        m_MethodName: OnToggleAudioVolume
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgument: {fileID: 1061225797599322810}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Toggle, UnityEngine.UI
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -1099,18 +1099,18 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1356935100237173547}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 1
-  m_WholeNumbers: 0
+  m_MaxValue: 100
+  m_WholeNumbers: 1
   m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: 
-        m_Mode: 1
+      - m_Target: {fileID: 1253283874}
+        m_MethodName: OnSliderAudioVolume
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgument: {fileID: 5873341313180330581}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -1350,12 +1350,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: 
+      - m_Target: {fileID: 1253283874}
+        m_MethodName: OnClickMainMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -1507,10 +1507,10 @@ RectTransform:
   m_Father: {fileID: 7070895898989529936}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 360, y: -396}
-  m_SizeDelta: {x: 400, y: 64}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &8320368743642305741
 CanvasRenderer:
@@ -1611,12 +1611,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: 
+      - m_Target: {fileID: 1253283874}
+        m_MethodName: OnClickMissionHintBack
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -1657,10 +1657,10 @@ RectTransform:
   m_Father: {fileID: 7070895898989529936}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 360, y: -235}
-  m_SizeDelta: {x: 680, y: 306}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6997711107526564782
 CanvasRenderer:
@@ -1753,10 +1753,10 @@ RectTransform:
   m_Father: {fileID: 7070895898989529936}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 20, y: -47}
-  m_SizeDelta: {x: 680, y: 54}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &4584328202301611158
 CanvasRenderer:
@@ -1892,7 +1892,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Quit to Main Menu?
+  m_Text: Main Menu
 --- !u!114 &5846141442742727639
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2175,12 +2175,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: 
+      - m_Target: {fileID: 1253283874}
+        m_MethodName: OnClickBurger
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -2766,6 +2766,7 @@ GameObject:
   - component: {fileID: 7401595427761828000}
   - component: {fileID: 5797689299074852681}
   - component: {fileID: 7954147576120512847}
+  - component: {fileID: 1253283874}
   m_Layer: 5
   m_Name: RifRaf UI - In Game Pop-Up Menu
   m_TagString: Untagged
@@ -2855,6 +2856,21 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &1253283874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6732433165535002115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3401b2050284dd444b68df1696d528ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PopUpPanel: {fileID: 2379832812703087827}
+  MissionHint: {fileID: 5325479683504752508}
+  MCP: {fileID: 0}
 --- !u!1 &6903190902321180766
 GameObject:
   m_ObjectHideFlags: 0
@@ -3276,12 +3292,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: 
+      - m_Target: {fileID: 1253283874}
+        m_MethodName: OnClickMissionHint
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
