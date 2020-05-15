@@ -82,8 +82,11 @@ public class ConvoUI : MonoBehaviour
         if (vod != null)
         {   // we've got a voice over dialogue                        
             Asset a = vod.Template.VO_File.VOFile as Asset;
-            AudioClip ac = a.LoadAsset<AudioClip>();
-            SoundFXPlayer.PlayVO(ac);
+            if(a != null)
+            {
+                AudioClip ac = a.LoadAsset<AudioClip>();
+                SoundFXPlayer.PlayVO(ac);
+            }            
             string color = vod.Template.VO_File.Color;
             if (color != "")
             {
