@@ -121,10 +121,10 @@ public class ConvoUI : MonoBehaviour
 
     IEnumerator NextDialogueFragmentDelay()
     {
-        Debug.Log("NextDialogueFragmentDelay() a");
+       // Debug.Log("NextDialogueFragmentDelay() a");
         yield return new WaitForSeconds(2);
         foreach (GameObject go in DialogueOptions) go.GetComponent<Button>().enabled = true;
-        Debug.Log("NextDialogueFragmentDelay() b");
+       // Debug.Log("NextDialogueFragmentDelay() b");
         ArticyFlow.UIButtonCallback(0);
     }
 
