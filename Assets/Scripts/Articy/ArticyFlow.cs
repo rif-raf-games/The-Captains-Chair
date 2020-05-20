@@ -292,7 +292,8 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             else if (CurPauseObject.GetType().Equals(typeof(Scene_Jump)))
             {   // Jump to the scene specified
                 Scene_Jump sj = CurPauseObject as Scene_Jump;
-                SceneManager.LoadScene(sj.Template.Next_Game_Scene.Scene_Name);
+                //SceneManager.Load Scene(sj.Template.Next_Game_Scene.Scene_Name);
+                FindObjectOfType<MCP>().LoadNextScene(sj.Template.Next_Game_Scene.Scene_Name);
             }
             else if (CurPauseObject.GetType().Equals(typeof(Mini_Game_Jump)))
             {   // we're going to a mini game, so fill up the mini game info container with the current pause object's information, then start the mini game                
@@ -311,7 +312,8 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
 
                 ArticyGlobalVariables.Default.Mini_Games.Coming_From_Main_Game = true;
                 Debug.Log("About to start a mini game: " + curJump.Template.Mini_Game_Scene.Scene_Name);
-                SceneManager.LoadScene(curJump.Template.Mini_Game_Scene.Scene_Name);
+                //SceneManager.LoadScene(curJump.Template.Mini_Game_Scene.Scene_Name);
+                FindObjectOfType<MCP>().LoadNextScene(curJump.Template.Mini_Game_Scene.Scene_Name);
             }
             else if(CurPauseObject.GetType().Equals(typeof(Save_Point)))
             {

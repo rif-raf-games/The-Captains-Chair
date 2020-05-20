@@ -69,11 +69,11 @@ public class Repair : MiniGame
     {
         //Debug.Log("Repair.Init()");
         base.Init(mcp, sceneName);
-        ResultsText = MCP.ResultsText;
+        ResultsText = MiniGameMCP.ResultsText;
         ResultsText.text = "";
-        if (DebugText == null && MCP.DebugText != null)
+        if (DebugText == null && MiniGameMCP.DebugText != null)
         {
-            DebugText = MCP.DebugText;
+            DebugText = MiniGameMCP.DebugText;
             DebugText.text = "";
         }
         
@@ -861,33 +861,6 @@ public class Repair : MiniGame
         return puzzleSolved;
     }
     
-    private void OnGUI()
-    {
-        /*if (GUI.Button(new Rect(Screen.width - 100, 0, 100, 100), "Main Menu"))
-        {
-            EndPuzzleTime(false);
-            if (IsSolo == false)
-            {
-                MCP.QuitCurrentPuzzle();
-            }
-            else
-            {
-                SceneManager.LoadScene("RepairDemo");
-            }            
-        }*/
-        
-        /*if (CurGameState == eGameState.OFF) return;
-        if (GUI.Button(new Rect(0,100,100,100), "path test"))
-        {
-            SetGameState(eGameState.OFF); 
-            FuelDoor.Close(CheckPuzzleComplete);
-        }    */            
-       /* if (GUI.Button(new Rect(0, 200, 100, 100), "cheat like the\npiece of shit\nyou are"))
-        {
-            StartCoroutine(EndGame("You won but you cheated", true));
-        }       */ 
-    }
-
     public void CheckPuzzleComplete()
     {
         CheckPaths();
@@ -900,7 +873,7 @@ public class Repair : MiniGame
     IEnumerator ShowResults(string result, bool success)
     {        
         ResultsText.text = result;
-        if (MCP != null) MCP.SavePuzzlesProgress(success);
+        if (MiniGameMCP != null) MiniGameMCP.SavePuzzlesProgress(success);
         if (success == true) EndPuzzleTime(true);
         SetGameState(eGameState.OFF);
         FuelDoor.Open();
@@ -909,8 +882,15 @@ public class Repair : MiniGame
         yield return new WaitForSeconds(3);
         if (success == true)
         {
-            if (MCP != null) MCP.PuzzleFinished();
-            else SceneManager.LoadScene("RepairDemo");//Debug.Log("We're not part of an MCP so figure out what next to do");   
+            if (MiniGameMCP != null)
+            {
+                MiniGameMCP.PuzzleFinished();
+            }
+            else
+            {
+                ResultsText.gameObject.SetActive(true);
+                ResultsText.text = "You beat the level but are not part of an MCP so restart.";
+            }
         }
         else
         {

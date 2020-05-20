@@ -91,7 +91,7 @@ public class DebugMenu : MonoBehaviour
                 {
                     if (GUI.Button(new Rect(0, height*i, Screen.width-200, height), CurScenesList[i], ButtonStyle))
                     {
-                        SceneManager.LoadScene(CurScenesList[i]);
+                        //SceneManager.Load Scene(CurScenesList[i]);
                     }
                 }
                 break;

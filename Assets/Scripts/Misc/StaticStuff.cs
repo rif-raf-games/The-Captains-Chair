@@ -12,9 +12,7 @@ using UnityEngine.Analytics;
 using UnityEngine.SceneManagement;
 
 static public class StaticStuff 
-{    
-    public const bool USE_DEBUG_MENU = false; // HERE IS WHERE YOU TOGGLE THE DEBUG MENU
-
+{        
     public enum eOrientation { LANDSCAPE, PORTRAIT };
 
     static public void SetOrientation(eOrientation orientation, string screenName)
@@ -64,19 +62,20 @@ static public class StaticStuff
         Debug.Log(Application.persistentDataPath);
     }
 
-    static public void CheckSceneLoadSave()
+    static public void CheckSceneLoadSave() // Called from RifRafMenuUI
     {
         StaticStuff.LoadSaveData();
         string returnScene = ArticyGlobalVariables.Default.Save_Info.Return_Scene;
         string playerLoc = ArticyGlobalVariables.Default.Save_Info.Last_Player_Position;
-        Debug.Log("returnScene: " + returnScene + ", playerLoc: " + playerLoc);
+        //Debug.Log("returnScene: " + returnScene + ", playerLoc: " + playerLoc);
+        
         if (returnScene.Equals("null") || returnScene.Equals(""))
-        {
-            SceneManager.LoadScene("Ep1.S1");
+        {            
+            GameObject.FindObjectOfType<MCP>().LoadNextScene("Ep1.S1");
         }
         else
-        {
-            SceneManager.LoadScene(returnScene);
+        {         
+            GameObject.FindObjectOfType<MCP>().LoadNextScene(returnScene);
         }
     }
 

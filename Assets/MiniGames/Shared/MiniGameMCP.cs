@@ -36,17 +36,7 @@ public class MiniGameMCP : MonoBehaviour
         CaptainsChair = GameObject.FindObjectOfType<TheCaptainsChair>();
         PuzzleDialogues = null;
         if (this.name.Contains("LockPick")) StaticStuff.SetOrientation(StaticStuff.eOrientation.PORTRAIT, this.name);        
-        else StaticStuff.SetOrientation(StaticStuff.eOrientation.LANDSCAPE, this.name);             
-        if (StaticStuff.USE_DEBUG_MENU == true)
-        {
-            DebugMenu dm = FindObjectOfType<DebugMenu>();
-            if (dm == null)
-            {
-                Debug.Log("-----------------------------------------------------------------------------------------------load debug menu " + this.name);
-                Object debugObject = Resources.Load("DebugMenu");
-                Instantiate(debugObject);
-            }
-        }
+        else StaticStuff.SetOrientation(StaticStuff.eOrientation.LANDSCAPE, this.name);                     
     }
     // Start is called before the first frame update
     public virtual void Start()
@@ -140,7 +130,7 @@ public class MiniGameMCP : MonoBehaviour
         }
         //Debug.Log("start fade in");
         SetupLerpFade(1f, 0f, 1.5f);
-        GameState = eGameState.FADE_IN;
+        GameState = eGameState.FADE_IN;        
     }
 
     int GetStartingCurPuzzle()
@@ -179,13 +169,15 @@ public class MiniGameMCP : MonoBehaviour
             {   // if PuzzleDialogues isn't null then we're under articy control
                 Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");                
                 MiniGameArticyFlow.HandleSavePoint(jumpSave.Template.Success_Save_Fragment.SaveFragment as Save_Point);
-                SceneManager.LoadScene(jumpSave.Template.Success_Mini_Game_Result.SceneName);
+                //SceneManager.Load Scene(jumpSave.Template.Success_Mini_Game_Result.SceneName);
+                FindObjectOfType<MCP>().LoadNextScene(jumpSave.Template.Success_Mini_Game_Result.SceneName);
             }
             else
             {
-                if (PuzzleNameRoot.Contains("Parking")) SceneManager.LoadScene("ParkingDemo");
-                else if (PuzzleNameRoot.Contains("LockPicking")) SceneManager.LoadScene("LockPickingDemo");
-                else if (PuzzleNameRoot.Contains("Repair")) SceneManager.LoadScene("RepairDemo");
+                Debug.LogWarning("If we're here then you're expecting some kind of demo.");
+                /*if (PuzzleNameRoot.Contains("Parking")) SceneManager.Load Scene("ParkingDemo");
+                else if (PuzzleNameRoot.Contains("LockPicking")) SceneManager.Load Scene("LockPickingDemo");
+                else if (PuzzleNameRoot.Contains("Repair")) SceneManager.Load Scene("RepairDemo");*/
             }                        
         }
         else
@@ -199,22 +191,22 @@ public class MiniGameMCP : MonoBehaviour
         }
     }
 
-    public void QuitCurrentPuzzle()
+    /*public void QuitCurrentPuzzle()
     {
         ArticyGlobalVariables.Default.Mini_Games.Returning_From_Mini_Game = true;
         ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success = false;
         if (PuzzleDialogues != null)
         {   // if PuzzleDialogues isn't null then we're under articy control
             Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
-            SceneManager.LoadScene(jumpSave.Template.Quit_Mini_Game_Result.SceneName);
+            SceneManager.Load Scene(jumpSave.Template.Quit_Mini_Game_Result.SceneName);
         }
         else
         {
-            if (PuzzleNameRoot.Contains("Parking")) SceneManager.LoadScene("ParkingDemo");
-            else if (PuzzleNameRoot.Contains("LockPicking")) SceneManager.LoadScene("LockPickingDemo");
-            else if (PuzzleNameRoot.Contains("Repair")) SceneManager.LoadScene("RepairDemo");
+            if (PuzzleNameRoot.Contains("Parking")) SceneManager.Load Scene("ParkingDemo");
+            else if (PuzzleNameRoot.Contains("LockPicking")) SceneManager.Load Scene("LockPickingDemo");
+            else if (PuzzleNameRoot.Contains("Repair")) SceneManager.Load Scene("RepairDemo");
         }
-    }
+    }*/
 
     public void CurrentDiaogueEnded()
     {
@@ -313,4 +305,5 @@ public class MiniGameMCP : MonoBehaviour
         LerpStartTime = Time.time;
         LerpDurationTime = time;
     }    
+
 }

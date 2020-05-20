@@ -39,10 +39,10 @@ public class Parking : MiniGame
     {
         //Debug.Log("Parking.Init()");
         base.Init(mcp, sceneName);
-        if (ResultsText == null) ResultsText = MCP.ResultsText;
-        if (DebugText == null && MCP.DebugText != null)
+        if (ResultsText == null) ResultsText = MiniGameMCP.ResultsText;
+        if (DebugText == null && MiniGameMCP.DebugText != null)
         {
-            DebugText = MCP.DebugText;
+            DebugText = MiniGameMCP.DebugText;
             DebugText.text = "";
         }
         ResultsText.gameObject.SetActive(false);
@@ -99,7 +99,7 @@ public class Parking : MiniGame
 
     IEnumerator ShowResults(string result, bool success)
     {
-        if (MCP != null) MCP.SavePuzzlesProgress(success);
+        if (MiniGameMCP != null) MiniGameMCP.SavePuzzlesProgress(success);
         if (success == true) EndPuzzleTime(true);
         SetGameState(eGameState.OFF);
         ResultsText.gameObject.SetActive(true);
@@ -108,8 +108,15 @@ public class Parking : MiniGame
         ResultsText.gameObject.SetActive(false);
         if (success == true)
         {
-            if (MCP != null) MCP.PuzzleFinished();
-            else SceneManager.LoadScene("ParkingDemo");//Debug.Log("We're not part of an MCP so figure out what next to do");
+            if (MiniGameMCP != null)
+            {
+                MiniGameMCP.PuzzleFinished();
+            }
+            else
+            {                
+                ResultsText.gameObject.SetActive(true);
+                ResultsText.text = "You beat the level but are not part of an MCP so restart.";
+            }
         }
         else
         {
@@ -533,28 +540,9 @@ public class Parking : MiniGame
         {
             result = "All TARGET ships are on the Lift Pad, so you win";
             StartCoroutine(ShowResults(result, allTargetShipsContainedLiftPad));
-        }
-        //else result = "Not all TARGET ships are on the Lift Pad, so keep trying.";        
-        //StartCoroutine(ShowResults("FIX THIS IT'S AN ENDGAME HACK", true));
+        }        
     }
-           
-   /* private void OnGUI()
-    {
-        if (GUI.Button(new Rect(Screen.width - 100, 0, 100, 100), "Main Menu"))
-        {
-            EndPuzzleTime(false);
-            if(IsSolo == false )
-            {
-                MCP.QuitCurrentPuzzle();
-            }
-            else
-            {
-                SceneManager.LoadScene("ParkingDemo");
-            }            
-        }      
-    }*/
-
-
+              
     GameObject CreateSphere(Transform t, string end, Color color, bool addToDebugSpheres = true)
     {
         GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);

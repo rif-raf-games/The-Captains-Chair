@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class MiniGame : MonoBehaviour
 {
-    protected MiniGameMCP MCP;
+    protected MiniGameMCP MiniGameMCP;
     protected bool IsSolo;
     protected bool DialogueActive;
     public string SceneName;
@@ -29,41 +29,14 @@ public class MiniGame : MonoBehaviour
         {
             //Debug.Log("we're part of a MCP group");
             IsSolo = false;
-        }
-
-        /*if (this.name.Contains("LockPick"))
-        {
-            Debug.LogError("change to portrait on this mini game");
-            StaticStuff.SetOrientation(StaticStuff.eOrientation.PORTRAIT, this.name);
-        }
-        else
-        {
-            Debug.LogError("change to landscape on this mini game");
-            StaticStuff.SetOrientation(StaticStuff.eOrientation.LANDSCAPE, this.name);
-        }*/
-
-        if (IsSolo == true)
-        {
-            
-            if( StaticStuff.USE_DEBUG_MENU == true)
-            {
-                DebugMenu dm = FindObjectOfType<DebugMenu>();
-                if (dm == null)
-                {
-                    //Debug.Log("-----------------------------------------------------------------------------------------------load debug menu " + this.name);
-                    UnityEngine.Object debugObject = Resources.Load("DebugMenu");
-                    Instantiate(debugObject);
-                }
-            }            
-        }        
+        }                        
     }
     public virtual void Init(MiniGameMCP mcp, string sceneName)
     {
         //Debug.Log("MiniGame.Init()");
-        this.MCP = mcp;
+        this.MiniGameMCP = mcp;
         SceneName = sceneName;
     }
-
     
     public virtual void ResetPostDialogueState()
     {

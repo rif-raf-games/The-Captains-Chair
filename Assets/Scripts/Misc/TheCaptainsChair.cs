@@ -115,16 +115,7 @@ public class TheCaptainsChair : MonoBehaviour
         BackgroundMusic bgMusic = FindObjectOfType<BackgroundMusic>();
         BackgroundMusicPlayer.Init(bgMusic, this.MCP.GetAudioVolume());
 
-        this.MCP.InitMenusForMainGame();
-
-        if (StaticStuff.USE_DEBUG_MENU == true)
-        {
-            Object debugObject = Resources.Load("DebugMenu");
-            Instantiate(debugObject);
-        }        
-        
-        //DeleteSaveData();
-        // LoadSaveData();
+        this.MCP.InitMenusForMainGame();        
     }
 
     bool ShouldCheckAIs = false;
