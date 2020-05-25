@@ -173,8 +173,8 @@ public class RifRafMenuUI : MonoBehaviour
     public void OnClickNewGameYes()
     {
         StaticStuff.PrintRifRafUI("OnClickNewGameYes");
-        TogglePopUp(0, false);
-        MCP.ToggleMenuUI(false);
+        //TogglePopUp(0, false);
+        //MCP.ToggleMenuUI(false);
         StaticStuff.CreateNewSaveData();
         StaticStuff.CheckSceneLoadSave();
     }

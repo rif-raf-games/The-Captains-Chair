@@ -37,26 +37,28 @@ public class TheCaptainsChair : MonoBehaviour
         else
         {
             Debug.Log("we have an MCP so do nothing");
-        }        
+        }
     }
     void Start()
-    {       
+    {
         ArticyDatabase.DefaultGlobalVariables.Notifications.AddListener("*.*", MyGameStateVariablesChanged);
         //Debug.Log("Welcome to The Captain's Chair!!");
         StaticStuff.SetCaptainsChair(this.ArticyFlowToPrint);
+        Player = FindObjectOfType<CCPlayer>();
         // get a list of all the NPC's so that we can search for them quickly via an articy reference
         List<NPC> npcs = GameObject.FindObjectsOfType<NPC>().ToList();
-        foreach(NPC npc in npcs)
+        foreach (NPC npc in npcs)
         {
             if (npc.ArticyEntityReference == null || npc.ArticyEntityReference.GetObject() == null)
             {
                 Debug.LogWarning("This NPC has a missing or broken ArticyRef so make sure all is well: " + npc.name);
-                continue;                
+                continue;
             }
             ArticyRefNPCs.Add(npc.name, npc);
         }
-        Player = FindObjectOfType<CCPlayer>();
-        if(ArticyGlobalVariables.Default.Mini_Games.Returning_From_Mini_Game == true)
+
+        Dialogue dialogueToStartOn = null;
+        if (ArticyGlobalVariables.Default.Mini_Games.Returning_From_Mini_Game == true)
         {
             ArticyObject flowStartAO;
             Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
@@ -64,18 +66,19 @@ public class TheCaptainsChair : MonoBehaviour
             {
                 Debug.Log("We were a success so do the success thing");
                 flowStartAO = jumpSave.Template.Success_Mini_Game_Result.Dialogue; //jumpSave.Template.Flow_Start_Success.ReferenceSlot;
-               // Debug.Log("flow start: " + flowStartAO.TechnicalName);
-               // Player.GetComponent<ArticyFlow>().CheckIfDialogueShouldStart(flowStartAO as Dialogue, Player.gameObject);
+                                                                                   // Debug.Log("flow start: " + flowStartAO.TechnicalName);
+                                                                                   // Player.GetComponent<ArticyFlow>().CheckIfDialogueShouldStart(flowStartAO as Dialogue, Player.gameObject);
             }
             else
             {
                 Debug.Log("We quit the mini game so deal with that");
                 flowStartAO = jumpSave.Template.Quit_Mini_Game_Result.Dialogue; //jumpSave.Template.Flow_Start_Success.ReferenceSlot;
-               // Debug.Log("flow start: " + flowStartAO.TechnicalName);
-                //Player.GetComponent<ArticyFlow>().CheckIfDialogueShouldStart(flowStartAO as Dialogue, Player.gameObject);
+                                                                                // Debug.Log("flow start: " + flowStartAO.TechnicalName);
+                                                                                //Player.GetComponent<ArticyFlow>().CheckIfDialogueShouldStart(flowStartAO as Dialogue, Player.gameObject);
             }
             Debug.Log("flow start: " + flowStartAO.TechnicalName);
-            Player.GetComponent<ArticyFlow>().CheckIfDialogueShouldStart(flowStartAO as Dialogue, Player.gameObject);
+            //Player.GetComponent<ArticyFlow>().CheckIfDialogueShouldStart(flowStartAO as Dialogue, Player.gameObject);
+            dialogueToStartOn = flowStartAO as Dialogue;
 
             ArticyGlobalVariables.Default.Mini_Games.Returning_From_Mini_Game = false;
             ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success = false;
@@ -96,17 +99,28 @@ public class TheCaptainsChair : MonoBehaviour
             {
                 Debug.LogError("The starting Articy element is not a Dialogue");
             }*/
-            Player.GetComponent<ArticyFlow>().CheckIfDialogueShouldStart(DialogueToStartOn.GetObject() as Dialogue, Player.gameObject);
+            //Player.GetComponent<ArticyFlow>().CheckIfDialogueShouldStart(DialogueToStartOn.GetObject() as Dialogue, Player.gameObject);
+            dialogueToStartOn = DialogueToStartOn.GetObject() as Dialogue;
         }
+
+        if (dialogueToStartOn == null) { Debug.LogError("We've got no Dialogue to start on in this scene"); return; }
+        if (this.MCP == null)
+        {
+            Debug.LogWarning("we've got no MCP in this scene yet....");
+            Player.GetComponent<ArticyFlow>().CheckIfDialogueShouldStart(dialogueToStartOn, Player.gameObject);
+        }
+        else
+        {
+            this.MCP.SetDialogueToStartSceneOn(dialogueToStartOn);
+        }
+
         string playerLoc = ArticyGlobalVariables.Default.Save_Info.Last_Player_Position;
-        if ( !(playerLoc.Equals("null") || playerLoc.Equals("")) )
+        if (!(playerLoc.Equals("null") || playerLoc.Equals("")))
         {
             string[] loc = playerLoc.Split(',');
             Vector3 pos = new Vector3(float.Parse(loc[0]), float.Parse(loc[1]), float.Parse(loc[2]));
             Player.transform.position = pos;
         }
-            // set up the player position based on save data
-
 
         SoundFX soundFX = FindObjectOfType<SoundFX>();
         SoundFXPlayer.Init(soundFX, this.MCP.GetAudioVolume());
@@ -115,13 +129,18 @@ public class TheCaptainsChair : MonoBehaviour
         BackgroundMusic bgMusic = FindObjectOfType<BackgroundMusic>();
         BackgroundMusicPlayer.Init(bgMusic, this.MCP.GetAudioVolume());
 
-        this.MCP.InitMenusForMainGame();        
+        this.MCP.SetupSceneSound();
+    }
+
+    public void CheckStartDialogue(Dialogue startDialogue)
+    {
+        Player.GetComponent<ArticyFlow>().CheckIfDialogueShouldStart(startDialogue, Player.gameObject);
     }
 
     bool ShouldCheckAIs = false;
     private void LateUpdate()
     {
-        if(ShouldCheckAIs == true)
+        if (ShouldCheckAIs == true)
         {
             ShouldCheckAIs = false;
             foreach (KeyValuePair<string, NPC> entry in ArticyRefNPCs)
@@ -129,7 +148,7 @@ public class TheCaptainsChair : MonoBehaviour
                 if (entry.Value.name.Equals("Carver") || entry.Value.name.Equals("Grunfeld")) continue;
                 Debug.Log("checking if npc: " + entry.Value.name + " has it's AI changed");
                 bool changed = entry.Value.CheckForAIChange();
-            }            
+            }
         }
     }
     /// <summary>
@@ -140,9 +159,9 @@ public class TheCaptainsChair : MonoBehaviour
         //Debug.Log("aVariableName: " + aVariableName + " changed to: " + aValue.ToString());
         return;
         //ShouldCheckAIs = true;
-       // CaptainsChair.SaveSaveData();
+        // CaptainsChair.SaveSaveData();
     }
-                  
+
     public NPC GetNPCFromActorName(string name)
     {
         //Debug.Log("get npc: " + name);
@@ -154,6 +173,7 @@ public class TheCaptainsChair : MonoBehaviour
         NPC npc = ArticyRefNPCs[name];
         return npc;
     }
+}
 
 
     /*private void OnGUI()
@@ -228,4 +248,3 @@ public class TheCaptainsChair : MonoBehaviour
             file.Close();
         }
     }    */
-}
