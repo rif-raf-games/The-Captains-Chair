@@ -8,7 +8,7 @@ public class FuelDoor : MonoBehaviour
     enum eDoorState { OPEN, MOVING, CLOSED };
     eDoorState CurDoorState;
     static float CLOSE_Z = 0f;
-    static float OPEN_Z = 14f;
+    static float OPEN_Z = 13.7f;
 
     Repair RepairGame;
 
