@@ -30,6 +30,7 @@ public class RifRafMenuUI : MonoBehaviour
         CurActiveSaveGameFunction = eSaveGameFunction.NUM_SAVE_GAME_FUNCTIONS;
     }
 
+ 
     public void Init(MCP mcp)
     {
         this.MCP = mcp;

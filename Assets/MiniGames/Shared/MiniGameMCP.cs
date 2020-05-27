@@ -48,7 +48,7 @@ public class MiniGameMCP : MonoBehaviour
         FadeImage.gameObject.SetActive(true);
         MiniGameArticyFlow = GetComponent<ArticyFlow>();
         if (MiniGameArticyFlow == null) Debug.LogError("There's no ArticyFlow component on this mini game MCP: " + this.name);
-        else MiniGameArticyFlow.ConvoUI.gameObject.SetActive(false);
+        else Debug.LogWarning("This is related to the UI moving...should be a quick fix");//MiniGameArticyFlow.ConvoUI.gameObject.SetActive(false);
         StartCoroutine(LoadPuzzleScenes());
     }
 

@@ -8,15 +8,22 @@ using UnityEngine.UI;
 
 public class MCP : MonoBehaviour
 {
+    [Header("UI")]
     public Camera UICamera;
     public RifRafMenuUI MenuUI;
     public RifRafInGamePopUp InGamePopUp;
+    public ConvoUI ConvoUI;
     public GameObject LoadingScreen;
     public GameObject LoadingAlien;
     public RawImage Curtain;
+    public FixedJoystick Joystick;
 
-    SoundFX soundFX;
-    BackgroundMusic bgMusic;
+    [Header("Sound")]
+    public SoundFX SoundFX;
+    public BackgroundMusic BGMusic;
+
+   // SoundFX soundFX;
+  //  BackgroundMusic bgMusic;
 
     
     private void Awake()
@@ -35,10 +42,47 @@ public class MCP : MonoBehaviour
         ToggleInGamePopUp(false);
         InGamePopUp.Init(this);
         MenuUI.ToggleMenu(RifRafMenuUI.eMenuType.SPLASH, true);
+        ConvoUI.Init(this);
+        ConvoUI.gameObject.SetActive(false);
         LoadingScreen.SetActive(false);
         LoadingAlien.SetActive(false);
         SetFadeAlpha(0f);
+        Joystick.gameObject.transform.parent.gameObject.SetActive(false);
+
+        SoundFXPlayer.Init(SoundFX, GetAudioVolume());
+        BackgroundMusicPlayer.Init(BGMusic, GetAudioVolume());
+
         DontDestroyOnLoad(this.gameObject);
+    }
+
+    public void SetupSceneSound(List<SoundFX.FXInfo> soundFXUsedInScene)
+    {
+        SoundFX.SetupFXList(soundFXUsedInScene);
+    }
+
+    public void TMP_ShutOffUI()
+    {
+        MenuUI.gameObject.SetActive(false);
+        InGamePopUp.gameObject.SetActive(false);
+        ConvoUI.gameObject.SetActive(false);
+        LoadingScreen.SetActive(false);
+        LoadingAlien.SetActive(false);
+        SetFadeAlpha(0f);
+        Joystick.gameObject.transform.parent.gameObject.SetActive(false);
+    }
+    public ConvoUI TMP_GetConvoUI()
+    {
+        return this.ConvoUI;
+    }
+    public FixedJoystick TMP_GetJoystick()
+    {
+        return this.Joystick;
+    }
+    public void TMP_ToggleBurger(bool isActive)
+    {
+        MenuUI.gameObject.SetActive(false);
+        if (isActive == false) InGamePopUp.gameObject.SetActive(false);
+        else InGamePopUp.TMP_TurnOnBurger();
     }
 
     void SetFadeAlpha(float alpha)
@@ -113,8 +157,7 @@ public class MCP : MonoBehaviour
         float fadeTime = 1f;
      //   Debug.Log("7) Fade out loading screen");
         // 7) Fade out loading screen      
-        // TMP shut off convo ui in the scene
-        FindObjectOfType<ConvoUI>().gameObject.SetActive(false);
+        // TMP shut off convo ui in the scene        
         timer = 0f;
         while (timer < 1f)
         {
@@ -141,6 +184,7 @@ public class MCP : MonoBehaviour
         {
             FindObjectOfType<TheCaptainsChair>().CheckStartDialogue(DialogueToStartOnThisScene);
         }
+        Joystick.gameObject.transform.parent.gameObject.SetActive(true);
     }
 
     public Dialogue DialogueToStartOnThisScene = null;
@@ -166,17 +210,8 @@ public class MCP : MonoBehaviour
         InGamePopUp.TogglePopUpPanel(false);
     }
 
-    public void SetupSceneSound()
-    {      
-        /*ToggleMenuUI(false);
-        ToggleInGamePopUp(true);
-        InGamePopUp.TogglePopUpPanel(false);
-        InGamePopUp.ToggleMissionHint(false);
-        LoadingScreen.SetActive(false);*/
+    
 
-        soundFX = FindObjectOfType<SoundFX>();        
-        bgMusic = FindObjectOfType<BackgroundMusic>();        
-    }
     public void ToggleMenuUI(bool isActive)
     {
         MenuUI.gameObject.SetActive(isActive);        
@@ -194,8 +229,8 @@ public class MCP : MonoBehaviour
     public void SetAudioVolume(int vol)
     {
         ArticyGlobalVariables.Default.Game_Settings.Audio_Volume = vol;
-        soundFX.SetVolume(vol);
-        bgMusic.SetVolume(vol);
+        SoundFX.SetVolume(vol);
+        BGMusic.SetVolume(vol);
     }
 
     #endregion

@@ -44,6 +44,10 @@ static public class StaticStuff
         }        
     }
 
+    public static void CreateMCPScene()
+    {
+        SceneManager.LoadScene("Front End Launcher", LoadSceneMode.Additive);        
+    }
     // C:/Users/<YourNameHere>/AppData/LocalLow/DefaultCompany/CC-MiniGames
     #region SAVE_DATA 
     [System.Serializable]
@@ -68,7 +72,8 @@ static public class StaticStuff
         string returnScene = ArticyGlobalVariables.Default.Save_Info.Return_Scene;
         string playerLoc = ArticyGlobalVariables.Default.Save_Info.Last_Player_Position;
         //Debug.Log("returnScene: " + returnScene + ", playerLoc: " + playerLoc);
-        
+        GameObject.FindObjectOfType<MCP>().LoadNextScene("Ep1.S2"); //("Ep1.S1 Mo");
+        /*
         if (returnScene.Equals("null") || returnScene.Equals(""))
         {            
             GameObject.FindObjectOfType<MCP>().LoadNextScene("Ep1.S1");
@@ -76,7 +81,7 @@ static public class StaticStuff
         else
         {         
             GameObject.FindObjectOfType<MCP>().LoadNextScene(returnScene);
-        }
+        }*/
     }
 
     static public void CreateNewSaveData()
@@ -175,7 +180,7 @@ static public class StaticStuff
 
     static public void PrintRifRafUI(string s)
     {
-        Debug.Log(s);
+        //Debug.Log(s);
     }
 
     static public void PrintCAL(string s)

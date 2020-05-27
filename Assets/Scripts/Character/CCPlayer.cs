@@ -25,21 +25,22 @@ public class CCPlayer : CharacterEntity
     [Header("CCPlayer")]
     public float MoveSpeed = 650f;
     public float RotSpeed = 3f;
-    public FixedJoystick Joystick;
+    public FixedJoystick Joystick = null;
     CharacterEntity Loop;    
 
     [Header("Player Debug")]
     public bool DEBUG_BlockMovement = false;
     public GameObject DebugDestPos;
-
+   
     // Start is called before the first frame update
     public override void Start()
     {
-        base.Start();        
+        base.Start();
 
+        Joystick = FindObjectOfType<MCP>().TMP_GetJoystick();
         CaptainArticyFlow = GetComponent<ArticyFlow>();
         CaptainsChair = FindObjectOfType<TheCaptainsChair>();
-        RigidBody = GetComponent<Rigidbody>();
+        RigidBody = GetComponent<Rigidbody>();        
 
         Elevators = FindObjectsOfType<Elevator>();
         ToggleMovementBlocked(false);

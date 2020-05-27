@@ -19,6 +19,9 @@ public class TheCaptainsChair : MonoBehaviour
     public float RoomFadeOpacity = .2f;
     public float FloorFadeOpacity = 0f;
 
+    [Header("Sound")]
+    public List<SoundFX.FXInfo> SoundFXUsedInScene;
+
     [Header("Debug")]
     public ArticyFlow ArticyFlowToPrint;
     Dictionary<string, NPC> ArticyRefNPCs = new Dictionary<string, NPC>();
@@ -30,17 +33,22 @@ public class TheCaptainsChair : MonoBehaviour
         this.MCP = FindObjectOfType<MCP>();
         if (this.MCP == null)
         {
-            Debug.Log("no MCP yet so load it up");
-            this.MCP = Resources.Load<MCP>("Prefabs/MCP");
-            this.MCP = Object.Instantiate<MCP>(this.MCP);
-        }
-        else
-        {
-            Debug.Log("we have an MCP so do nothing");
-        }
+            Debug.LogWarning("no MCP yet so load it up");
+            StaticStuff.CreateMCPScene();            
+        }        
     }
+   
     void Start()
     {
+        bool forceDialogueStart = false;
+        if(this.MCP == null)
+        {
+            Debug.LogWarning("TheCaptainsChair.Start() getting MCP");
+            this.MCP = FindObjectOfType<MCP>();
+            this.MCP.TMP_ShutOffUI();
+            forceDialogueStart = true;
+        }        
+
         ArticyDatabase.DefaultGlobalVariables.Notifications.AddListener("*.*", MyGameStateVariablesChanged);
         //Debug.Log("Welcome to The Captain's Chair!!");
         StaticStuff.SetCaptainsChair(this.ArticyFlowToPrint);
@@ -104,10 +112,12 @@ public class TheCaptainsChair : MonoBehaviour
         }
 
         if (dialogueToStartOn == null) { Debug.LogError("We've got no Dialogue to start on in this scene"); return; }
-        if (this.MCP == null)
+        if(forceDialogueStart == true)
         {
-            Debug.LogWarning("we've got no MCP in this scene yet....");
+            Debug.LogWarning("We're forcing the start of the dialogue since we had no MCP when this started");
             Player.GetComponent<ArticyFlow>().CheckIfDialogueShouldStart(dialogueToStartOn, Player.gameObject);
+            //Joystick.gameObject.transform.parent.gameObject.SetActive(true);
+            this.MCP.TMP_GetJoystick().gameObject.transform.parent.gameObject.SetActive(true);            
         }
         else
         {
@@ -122,14 +132,14 @@ public class TheCaptainsChair : MonoBehaviour
             Player.transform.position = pos;
         }
 
-        SoundFX soundFX = FindObjectOfType<SoundFX>();
-        SoundFXPlayer.Init(soundFX, this.MCP.GetAudioVolume());
+       // SoundFX soundFX = FindObjectOfType<SoundFX>();
+       // SoundFXPlayer.Init(soundFX, this.MCP.GetAudioVolume());
         VisualFX visualFX = FindObjectOfType<VisualFX>();
         VisualFXPlayer.Init(visualFX);
-        BackgroundMusic bgMusic = FindObjectOfType<BackgroundMusic>();
-        BackgroundMusicPlayer.Init(bgMusic, this.MCP.GetAudioVolume());
+       // BackgroundMusic bgMusic = FindObjectOfType<BackgroundMusic>();
+      //  BackgroundMusicPlayer.Init(bgMusic, this.MCP.GetAudioVolume());
 
-        this.MCP.SetupSceneSound();
+        this.MCP.SetupSceneSound(SoundFXUsedInScene);
     }
 
     public void CheckStartDialogue(Dialogue startDialogue)

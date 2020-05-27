@@ -113,7 +113,7 @@ public class StageDirectionPlayer : MonoBehaviour
                     }
                     break;
                 case Direction.Dialogue_Text_Speed:
-                    if (sdf.Direction_Info.Equals("Default")) ArticyFlow.TypewriterSpeed = ArticyFlow.GetDefaultTypewriterSpeed(); //TypewriterSpeed = ConvoUI.DefaultTypewriterSpeed;
+                    if (sdf.Direction_Info.Equals("Default")) ArticyFlow.TypewriterSpeed = ArticyFlow.GetDefaultTypewriterSpeed(); 
                     else ArticyFlow.TypewriterSpeed = float.Parse(sdf.Direction_Info);
                    // Debug.Log("TypewriterSpeed: " + ArticyFlow.TypewriterSpeed);
                     break;

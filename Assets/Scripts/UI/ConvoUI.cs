@@ -17,6 +17,7 @@ public class ConvoUI : MonoBehaviour
     public GameObject[] DialogueOptions;
 
     ArticyFlow ArticyFlow;
+    MCP MCP;
     bool TextTyping = false;
     bool IsInteractive = true;
 
@@ -34,13 +35,22 @@ public class ConvoUI : MonoBehaviour
     {
         ArticyFlow = GameObject.FindObjectOfType<ArticyFlow>();                
     }
+
+    public void Init(MCP mcp)
+    {
+        this.MCP = mcp;
+    }
+
     public void ShowDialogueFragment(DialogueFragment dialogueFrag, IFlowObject flowObj, IList<Branch> dialogueOptions, bool isInteractive, float typewriterSpeed)
     {
         StaticStuff.PrintUI("going to set up a dialogue fragment with speaker: " + dialogueFrag.Speaker + " with text: " + dialogueFrag.Text + ", tech name: " + dialogueFrag.TechnicalName);
         StaticStuff.PrintUI("this dialogue fragment has: " + dialogueOptions.Count + " options");
         DialogueFragment d = dialogueOptions[0].Target as DialogueFragment;
         if(d!=null) StaticStuff.PrintUI(d.MenuText + ", " + d.Text + ", " + d.TechnicalName);
+
+        // monote - this is sloppy, fix it
         this.gameObject.SetActive(true);
+        this.MCP.TMP_ToggleBurger(false);
 
         Entity speakerEntity = ((Entity)dialogueFrag.Speaker);
         if (speakerEntity == null) Debug.LogError("THIS DIALOGUE HAS NO ENTITY");
@@ -128,7 +138,7 @@ public class ConvoUI : MonoBehaviour
         yield return new WaitForSeconds(2);
         foreach (GameObject go in DialogueOptions) go.GetComponent<Button>().enabled = true;
        // Debug.Log("NextDialogueFragmentDelay() b");
-        ArticyFlow.UIButtonCallback(0);
+        ArticyFlow.ConvoButtonClicked(0);
     }
 
     // Update is called once per frame
@@ -155,10 +165,14 @@ public class ConvoUI : MonoBehaviour
     { 
         //Debug.Log("----------------------- EndConversation()");
         this.gameObject.SetActive(false);
+        this.MCP.TMP_ToggleBurger(true);
         //Player.ToggleMovementBlocked(false);        
     }
     
-
+    public void OnClickDialogueButton(int buttonIndex)
+    {
+        ArticyFlow.ConvoButtonClicked(buttonIndex);
+    }
     
 
 }

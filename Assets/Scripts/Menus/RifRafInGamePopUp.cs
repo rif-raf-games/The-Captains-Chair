@@ -55,6 +55,12 @@ public class RifRafInGamePopUp : MonoBehaviour
 
         TogglePopUpPanel(false);
     }
+    public void TMP_TurnOnBurger()
+    {
+        this.gameObject.SetActive(true);
+        TogglePopUpPanel(false);
+        ToggleMissionHint(false);
+    }
 
     public void OnClickMissionHint()
     {

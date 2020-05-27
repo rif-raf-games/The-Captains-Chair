@@ -39,7 +39,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     CCPlayer Player;                // Captain/Player
 
     // UI stuff
-    public ConvoUI ConvoUI; 
+    ConvoUI ConvoUI; 
     public bool IsDialogueFragmentsInteractive { get; set; }    // Whether or not the UI dialogue is interactive or not
     public float TypewriterSpeed { get; set; }  // How fast the UI text types on screen    
                
@@ -57,6 +57,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         FlowPlayer = this.GetComponent<ArticyFlowPlayer>();
         StageDirectionPlayer = FindObjectOfType<StageDirectionPlayer>();
         this.MiniGameMCP = FindObjectOfType<MiniGameMCP>();
+        ConvoUI = FindObjectOfType<MCP>().TMP_GetConvoUI();
         TypewriterSpeed = ConvoUI.DefaultTypewriterSpeed;
         ArticyDatabase.DefaultGlobalVariables.Notifications.AddListener("*.*", MyGameStateVariablesChanged);
         ActiveCALPauseObjects.Clear();
@@ -143,14 +144,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         //StaticStuff.PrintFlowPaused("************** OnFlowPlayerPaused() END aObject was NOT null*************** time: " + Time.time, this);
         //Debug.Log("************** OnFlowPlayerPaused() END aObject was NOT null***************");
     }
-
-    /*void OnGUI()
-    {
-        if(GUI.Button(new Rect(100,100,100,100), "feh"))
-        {
-            Debug.Log(Environment.StackTrace);
-        }
-    }*/
+    
     /// <summary>
     /// Callback from Articy when it's calculated the available branches
     /// </summary>
@@ -504,7 +498,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     #endregion
 
     #region UI_DIALOGUE    
-
+/*
     /// <summary>
     /// Callback function for the buttons on the UI
     /// </summary>
@@ -526,6 +520,29 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         else
         {
             StaticStuff.PrintUI("Chosen branch isn't a DialogueFragment or a Character_Movement so for now just assume we're done talking and shut off the UI");            
+            //Debug.Log("----------------------------------- Chosen branch isn't a DialogueFragment or a Character_Movement so for now just assume we're done talking and shut off the UI");
+            ConvoUI.EndConversation();
+        }
+    }*/
+
+    public void ConvoButtonClicked(int buttonIndex)
+    {
+        StaticStuff.PrintUI("ConvoButtonClicked() buttonIndex: " + buttonIndex);
+        SetNextBranch(CurBranches[buttonIndex]); // select the next branch from the list based on the button index
+        DialogueFragment df = CurBranches[buttonIndex].Target as DialogueFragment;
+        if (df != null)
+        {
+            StaticStuff.PrintUI("Chosen branch is a dialogue fragment, so just let the engine handle the next phase.");
+        }
+        else if (CurBranches[buttonIndex].Target.GetType().Equals(typeof(Character_Action_List_Template)))
+        {
+            StaticStuff.PrintUI("Next thing is a Character_Actions_List_Template, so shut off the UI and let the action list do it's thing.");
+            //Debug.Log("---------------------------Next thing is a Character_Actions_List_Template, so shut off the UI and let the action list do it's thing.");
+            ConvoUI.EndConversation();
+        }
+        else
+        {
+            StaticStuff.PrintUI("Chosen branch isn't a DialogueFragment or a Character_Movement so for now just assume we're done talking and shut off the UI");
             //Debug.Log("----------------------------------- Chosen branch isn't a DialogueFragment or a Character_Movement so for now just assume we're done talking and shut off the UI");
             ConvoUI.EndConversation();
         }

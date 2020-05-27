@@ -7,24 +7,45 @@ public class SoundFX : MonoBehaviour
     [System.Serializable]
     public class FXInfo
     {
-        public string Name;
+        string Name { get; set; }
         public AudioClip Clip;
+
+        public void SetName() { this.Name = Clip.name; }
+        public string GetName() { return this.Name; }
     }
 
     public List<FXInfo> SoundFXList;    
 
     AudioSource AudioSource;
-    List<string> SoundFXNames = new List<string>();
+    public List<string> SoundFXNames;
 
-    private void Start()
+    private void Awake()
     {
         this.AudioSource = GetComponent<AudioSource>();
-        foreach (FXInfo info in SoundFXList)
+        SoundFXList = new List<FXInfo>();
+        SoundFXNames = new List<string>();
+    }
+
+    public void SetupFXList(List<SoundFX.FXInfo> soundFXUsedInScene)
+    {
+        SoundFXList.Clear();
+        SoundFXNames.Clear();
+        foreach (FXInfo info in soundFXUsedInScene)
         {
-            info.Name = info.Clip.name;
-            SoundFXNames.Add(info.Name);
+            info.SetName();
+            SoundFXList.Add(info);            
+            SoundFXNames.Add(info.GetName());
         }
     }
+
+    /*private void Start()
+    {        
+        foreach (FXInfo info in SoundFXList)
+        {
+            info.SetName();
+            SoundFXNames.Add(info.GetName());
+        }
+    }*/
 
     public void PlayVO(AudioClip voClip)
     {
