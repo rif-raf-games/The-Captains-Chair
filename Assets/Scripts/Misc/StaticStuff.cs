@@ -12,7 +12,8 @@ using UnityEngine.Analytics;
 using UnityEngine.SceneManagement;
 
 static public class StaticStuff 
-{        
+{
+    static string DEBUG_SCENE_TO_LOAD = "Ep1.Hanger(Exchage Mission 1)";
     public enum eOrientation { LANDSCAPE, PORTRAIT };
 
     static public void SetOrientation(eOrientation orientation, string screenName)
@@ -72,7 +73,7 @@ static public class StaticStuff
         string returnScene = ArticyGlobalVariables.Default.Save_Info.Return_Scene;
         string playerLoc = ArticyGlobalVariables.Default.Save_Info.Last_Player_Position;
         //Debug.Log("returnScene: " + returnScene + ", playerLoc: " + playerLoc);
-        GameObject.FindObjectOfType<MCP>().LoadNextScene("Ep1.S2"); //("Ep1.S1 Mo");
+        GameObject.FindObjectOfType<MCP>().LoadNextScene(DEBUG_SCENE_TO_LOAD); //("Ep1.S1 Mo");
         /*
         if (returnScene.Equals("null") || returnScene.Equals(""))
         {            
