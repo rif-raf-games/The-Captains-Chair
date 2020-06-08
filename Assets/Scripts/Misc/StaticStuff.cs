@@ -13,7 +13,7 @@ using UnityEngine.SceneManagement;
 
 static public class StaticStuff 
 {
-    static string DEBUG_SCENE_TO_LOAD = "Ep1.Hanger(Exchage Mission 1)";
+    static string DEBUG_SCENE_TO_LOAD = "Ep1.S1";
     public enum eOrientation { LANDSCAPE, PORTRAIT };
 
     static public void SetOrientation(eOrientation orientation, string screenName)
