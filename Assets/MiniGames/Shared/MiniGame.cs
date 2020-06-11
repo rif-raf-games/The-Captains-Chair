@@ -36,6 +36,11 @@ public class MiniGame : MonoBehaviour
         //Debug.Log("MiniGame.Init()");
         this.MiniGameMCP = mcp;
         SceneName = sceneName;
+    } 
+    
+    public virtual void TMP_WinGame()
+    {
+
     }
     
     public virtual void ResetPostDialogueState()

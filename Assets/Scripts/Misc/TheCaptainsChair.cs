@@ -10,6 +10,9 @@ using Articy.The_Captain_s_Chair.GlobalVariables;
 
 public class TheCaptainsChair : MonoBehaviour
 {
+    // DEBUG - set the Activty.ID  to EXCHANGE
+    // Start on scene that allows you to begin having jobs.  - Ep1.Exchange
+    // have the bool unlock the jobs are available bit
     CCPlayer Player;
     MCP MCP;
     public ArticyRef DialogueToStartOn;
@@ -55,6 +58,12 @@ public class TheCaptainsChair : MonoBehaviour
         Player = FindObjectOfType<CCPlayer>();
         // get a list of all the NPC's so that we can search for them quickly via an articy reference
         List<NPC> npcs = GameObject.FindObjectsOfType<NPC>().ToList();
+        string s = "TheCaptainsChair.Start() ArticyRefNPCs:\n";
+        foreach (KeyValuePair<string, NPC> entry in ArticyRefNPCs)
+        {
+            s += entry.Key + ", " + entry.Value.name + "\n";
+        }
+       // Debug.Log(s);
         foreach (NPC npc in npcs)
         {
             if (npc.ArticyEntityReference == null || npc.ArticyEntityReference.GetObject() == null)
@@ -62,6 +71,7 @@ public class TheCaptainsChair : MonoBehaviour
                 Debug.LogWarning("This NPC has a missing or broken ArticyRef so make sure all is well: " + npc.name);
                 continue;
             }
+           // Debug.Log("about to add npc: " + npc.name);
             ArticyRefNPCs.Add(npc.name, npc);
         }
 

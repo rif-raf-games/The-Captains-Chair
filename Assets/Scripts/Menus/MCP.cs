@@ -13,6 +13,7 @@ public class MCP : MonoBehaviour
     public RifRafMenuUI MenuUI;
     public RifRafInGamePopUp InGamePopUp;
     public ConvoUI ConvoUI;
+    public RifRafExchangeJobBoard ExchangeJobBoard;
     public GameObject LoadingScreen;
     public GameObject LoadingAlien;
     public RawImage Curtain;
@@ -21,10 +22,6 @@ public class MCP : MonoBehaviour
     [Header("Sound")]
     public SoundFX SoundFX;
     public BackgroundMusic BGMusic;
-
-   // SoundFX soundFX;
-  //  BackgroundMusic bgMusic;
-
     
     private void Awake()
     {
@@ -44,6 +41,8 @@ public class MCP : MonoBehaviour
         MenuUI.ToggleMenu(RifRafMenuUI.eMenuType.SPLASH, true);
         ConvoUI.Init(this);
         ConvoUI.gameObject.SetActive(false);
+        ExchangeJobBoard.Init(this);
+        ExchangeJobBoard.gameObject.SetActive(false);
         LoadingScreen.SetActive(false);
         LoadingAlien.SetActive(false);
         SetFadeAlpha(0f);
@@ -84,6 +83,11 @@ public class MCP : MonoBehaviour
         if (isActive == false) InGamePopUp.gameObject.SetActive(false);
         else InGamePopUp.TMP_TurnOnBurger();
     }
+    public void TMP_ShutOffExchangeBoard()
+    {
+        ExchangeJobBoard.ShutOffPopups();
+        ExchangeJobBoard.gameObject.SetActive(false);
+    }
 
     void SetFadeAlpha(float alpha)
     {
@@ -100,7 +104,7 @@ public class MCP : MonoBehaviour
     {
        // Debug.Log("LoadNextSceneDelay() sceneName: " + sceneName + ", Time.timeScale: " + Time.timeScale);
 
-       // Debug.Log("1) Turn on loading screen, make curtain alpha 0, set alien to false");
+        //Debug.Log("1) Turn on loading screen, make curtain alpha 0, set alien to false");
         // 1) Turn on loading screen, make curtain alpha 0, set alien to false
         LoadingScreen.SetActive(true);
         SetFadeAlpha(0f);
@@ -117,14 +121,14 @@ public class MCP : MonoBehaviour
         }
         SetFadeAlpha(1f);
 
-      //  Debug.Log("3) Shut off any menu ui's and popups.  Shut on the alien and move the camera forward");
+       // Debug.Log("3) Shut off any menu ui's and popups.  Shut on the alien and move the camera forward");
         // 3) Shut off any menu ui's and popups.  Shut on the alien and move the camera forward
         ToggleMenuUI(false);
         ToggleInGamePopUp(false);
         LoadingAlien.SetActive(true);
         UICamera.depth = 100;
 
-      //  Debug.Log("4) Fade in to loading screen");
+       // Debug.Log("4) Fade in to loading screen");
         // 4) Fade in to loading screen
         timer = 1f;
         while (timer > 0f)
@@ -138,15 +142,18 @@ public class MCP : MonoBehaviour
         // 5) Begin unloading the old scene if necessary
       //  Debug.Log("5) Begin unloading the old scene if necessary");
         if (SceneManager.sceneCount > 1)
-        {            
-            AsyncOperation asyncUnLoad = SceneManager.UnloadSceneAsync(SceneManager.GetSceneAt(1));
+        {
+            int sceneIndex = (SceneManager.GetSceneAt(1).name.Contains("Front") ? 0 : 1);
+            AsyncOperation asyncUnLoad = SceneManager.UnloadSceneAsync(SceneManager.GetSceneAt(sceneIndex));
             while (asyncUnLoad.isDone == false)
             {                
                 yield return null;
             }
         }
 
-      //  Debug.Log("6) Begin loading the next scene");
+        yield return new WaitForSeconds(.1f);        
+
+       // Debug.Log("6) Begin loading the next scene");
         // 6) Begin loading the next scene
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
         while(asyncLoad.isDone == false)
@@ -155,7 +162,7 @@ public class MCP : MonoBehaviour
         }
 
         float fadeTime = 1f;
-     //   Debug.Log("7) Fade out loading screen");
+       // Debug.Log("7) Fade out loading screen");
         // 7) Fade out loading screen      
         // TMP shut off convo ui in the scene        
         timer = 0f;
@@ -167,7 +174,9 @@ public class MCP : MonoBehaviour
         }
         SetFadeAlpha(1f);
 
-      //  Debug.Log("8) Move camera back and fade in to the in-game scene");
+        ConvoUI.TMP_SetArticyFlow();
+
+       // Debug.Log("8) Move camera back and fade in to the in-game scene");
         // 8) Move camera back and fade in to the in-game scene
         UICamera.depth = -2;        
         timer = 1f;
@@ -184,10 +193,12 @@ public class MCP : MonoBehaviour
         {
             FindObjectOfType<TheCaptainsChair>().CheckStartDialogue(DialogueToStartOnThisScene);
         }
-        Joystick.gameObject.transform.parent.gameObject.SetActive(true);
+        Joystick.gameObject.transform.parent.gameObject.SetActive(true);        
+        InGamePopUp.TogglePopUpPanel(true);
+        InGamePopUp.TMP_TurnOnBurger();
     }
 
-    public Dialogue DialogueToStartOnThisScene = null;
+    Dialogue DialogueToStartOnThisScene = null;
     public void SetDialogueToStartSceneOn(Dialogue dialogueToStartOn)
     {
         DialogueToStartOnThisScene = dialogueToStartOn;
@@ -207,7 +218,7 @@ public class MCP : MonoBehaviour
     {
         ToggleMenuUI(false);
         ToggleInGamePopUp(true);
-        InGamePopUp.TogglePopUpPanel(false);
+        InGamePopUp.TogglePopUpPanel(true);
     }
 
     

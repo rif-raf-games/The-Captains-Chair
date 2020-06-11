@@ -22,7 +22,7 @@ public class NPC : CharacterEntity
         ToggleBarkText(false);
        
         AI_Template t = ArticyAIReference.GetObject() as AI_Template;
-        if (t == null) { Debug.LogError("This NPC: " + this.name + " does not have an AI_Template on it's ArticyAIReference"); return; }
+        if (t == null) { Debug.LogWarning("This NPC: " + this.name + " does not have an AI_Template on it's ArticyAIReference"); return; }
         List<ArticyObject> children = t.Children;
         foreach(ArticyObject child in children)
         {

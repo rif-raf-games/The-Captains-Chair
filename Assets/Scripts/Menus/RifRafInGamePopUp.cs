@@ -6,7 +6,8 @@ using UnityEngine.UI;
 public class RifRafInGamePopUp : MonoBehaviour
 {
     public GameObject PopUpPanel;
-    public GameObject MissionHint;        
+    public GameObject MissionHint;
+    public RifRafExchangeJobBoard ExchangeBoard;    
     public MCP MCP;
 
     private void Awake()
@@ -26,6 +27,7 @@ public class RifRafInGamePopUp : MonoBehaviour
 
     public void TogglePopUpPanel(bool isActive)
     {
+        //Debug.Log("RifRafInGamePopUp.TogglePopUpPanel() isActive: " + isActive);
         PopUpPanel.SetActive(isActive);  
         if(isActive == true)
         {
@@ -41,10 +43,15 @@ public class RifRafInGamePopUp : MonoBehaviour
     {
         MissionHint.SetActive(isActive);
     }
+    public void ToggleExchangeBoard(bool isActive)
+    {
+        if(isActive == true) ExchangeBoard.FillBoard();
+        ExchangeBoard.gameObject.SetActive(isActive);
+    }
 
     bool PopupActiveCheck()
     {
-        return MissionHint.activeSelf == false;
+        return MissionHint.activeSelf == false && ExchangeBoard.gameObject.activeSelf == false;
     }
 
     #region MAIN_POPUP
@@ -62,6 +69,13 @@ public class RifRafInGamePopUp : MonoBehaviour
         ToggleMissionHint(false);
     }
 
+    public void OnClickExchangeBoard()
+    {
+        StaticStuff.PrintRifRafUI("OnClickExchangeBoard()");
+        if (PopupActiveCheck() == false) return;
+
+        ToggleExchangeBoard(true);
+    }
     public void OnClickMissionHint()
     {
         StaticStuff.PrintRifRafUI("OnClickMissionHint()");
@@ -93,7 +107,7 @@ public class RifRafInGamePopUp : MonoBehaviour
     {
         StaticStuff.PrintRifRafUI("OnSliderAudioVolume()");
         
-        Debug.Log(slider.value);
+        //Debug.Log(slider.value);
         this.MCP.SetAudioVolume((int)slider.value);
         SetAudioVolumeToggle();
     }
@@ -110,6 +124,9 @@ public class RifRafInGamePopUp : MonoBehaviour
         }
         GetComponentInChildren<Slider>().value = this.MCP.GetAudioVolume();
     }
+    #endregion
+
+    #region EXCHANGE_BOARD
     #endregion
 
     #region MISSION_HINT

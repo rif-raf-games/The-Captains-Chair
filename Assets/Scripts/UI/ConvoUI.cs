@@ -32,13 +32,24 @@ public class ConvoUI : MonoBehaviour
     }
     // Start is called before the first frame update
     void Start()
-    {
-        ArticyFlow = GameObject.FindObjectOfType<ArticyFlow>();                
+    {        
+        ArticyFlow = GameObject.FindObjectOfType<ArticyFlow>();
+        string hash = (ArticyFlow == null ? "no ArticyFlow" : ArticyFlow.GetHashCode().ToString());
+       // Debug.LogError("ConvoUI.Start() ArticyFlow hash: " + hash);
     }
 
+    public void TMP_SetArticyFlow()
+    {
+        ArticyFlow = GameObject.FindObjectOfType<ArticyFlow>();
+        string hash = (ArticyFlow == null ? "no ArticyFlow" : ArticyFlow.GetHashCode().ToString());
+       // Debug.LogError("TMP_SetArticyFlow.Start() ArticyFlow hash: " + hash);
+    }
     public void Init(MCP mcp)
     {
         this.MCP = mcp;
+        ArticyFlow = GameObject.FindObjectOfType<ArticyFlow>();
+        string hash = (ArticyFlow == null ? "no ArticyFlow" : ArticyFlow.GetHashCode().ToString());
+        //Debug.LogError("ConvoUI.Init() ArticyFlow hash: " + hash);
     }
 
     public void ShowDialogueFragment(DialogueFragment dialogueFrag, IFlowObject flowObj, IList<Branch> dialogueOptions, bool isInteractive, float typewriterSpeed)
@@ -157,7 +168,7 @@ public class ConvoUI : MonoBehaviour
     public void PauseConversation()
     {
         // conversation isn't over, but we want to temporarily shut it off while a character moves somewhere.
-        Debug.Log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ PauseConversation()");
+        //Debug.Log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ PauseConversation()");
         this.gameObject.SetActive(false);
        // Player.ToggleMovementBlocked(true);
     }
@@ -171,6 +182,7 @@ public class ConvoUI : MonoBehaviour
     
     public void OnClickDialogueButton(int buttonIndex)
     {
+        //Debug.LogError("OnClickDialogueButton() buttonIndex: " + buttonIndex + ", ArticyFlow hash: " + ArticyFlow.GetHashCode());
         ArticyFlow.ConvoButtonClicked(buttonIndex);
     }
     
