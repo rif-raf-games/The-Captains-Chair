@@ -244,17 +244,6 @@ public class MCP : MonoBehaviour
         BGMusic.SetVolume(vol);
     }
 
-    #endregion
-
-    /*bool feh = false;
-private void OnGUI()
-{
-    if(GUI.Button(new Rect(Screen.width-100, Screen.height/2, 100, 100), "feh`"))
-    {
-        if (feh) LoadNextScene("Ep1.S5");
-        else LoadNextScene("Ep1.S6");
-        feh = !feh;
-    }
-}*/
+    #endregion    
 
 }

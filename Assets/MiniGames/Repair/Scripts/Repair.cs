@@ -95,7 +95,9 @@ public class Repair : MiniGame
 
     private void Start()
     {
-        //Debug.Log("start " + IsSolo);
+        BeltIndexAdjusts.Clear(); // this is a bullshit way around a bug but i'll do all the cleanup during next project pre-production i mean it        
+        BeltIndexAdjusts.Add(-1);
+        BeltIndexAdjusts.Add(1);
         if (IsSolo == true)
         {
             ResultsText.text = "";
@@ -405,7 +407,7 @@ public class Repair : MiniGame
             // if we're here and we're belt type then try to move the pieces on the belt up or down to make room for this spot
             if (newLocFound == false && locType == eLocationType.BELT)
             {
-                newLocFound = AssignBeltSpot(anchorPoints[0]);
+                newLocFound = AssignBeltSpot(piece, anchorPoints[0]);
             }
         }
         piece.GetComponentInChildren<MeshCollider>().enabled = true; // make sure to turn this back on 
@@ -433,7 +435,8 @@ public class Repair : MiniGame
             hit = GetHitAtAnchorPos(BeltAnchors[topIndex]);            
             if (hit.collider.tag == "Repair Piece")
             {   // hit the top index, so move down
-                adjustmentMade = PushPiecesToMakeSpace(BeltAnchors[topIndex], (BeltAnchors.Count / 2) + 1, BeltIndexAdjusts[1]); ;
+                int a = (BeltAnchors.Count / 2) + 1;
+                adjustmentMade = PushPiecesToMakeSpace(BeltAnchors[topIndex], a, BeltIndexAdjusts[1]); ;
             }
             if(adjustmentMade == false )
             {
@@ -495,19 +498,19 @@ public class Repair : MiniGame
     /// If we're trying to move a piece onto the belt but there's already a piece on the anchor point, see if you can push the pieces
     /// up or down to make room.
     /// </summary>
-    bool AssignBeltSpot(AnchorHitPoint p)
-    {   
-       // Debug.Log("AssignBeltSpot() coll: " + p.Coll.name + ", which is index: " + BeltAnchors.IndexOf(p.Coll));
-        int indexDataIndex = (HeldPiece.transform.position.z < p.Coll.transform.position.z ? 0 : 1); // 0 = move up, 1 = move down
+    bool AssignBeltSpot(RepairPiece piece, AnchorHitPoint p)
+    {
+        // Debug.Log("AssignBeltSpot() coll: " + p.Coll.name + ", which is index: " + BeltAnchors.IndexOf(p.Coll));        
+        int indexDataIndex = (piece.transform.position.z < p.Coll.transform.position.z ? 0 : 1); // 0 = move up, 1 = move down
         bool piecesMoved = false;
         piecesMoved = PushPiecesToMakeSpace(p.Coll, InitialBeltIndexStops[indexDataIndex], BeltIndexAdjusts[indexDataIndex]);
         if(piecesMoved == false) piecesMoved = PushPiecesToMakeSpace(p.Coll, InitialBeltIndexStops[1-indexDataIndex], BeltIndexAdjusts[1-indexDataIndex]);
 
         if (piecesMoved)
         {
-          //  Debug.Log("pieces were moved so put the piece at the spot");
-            HeldPiece.transform.position = p.Coll.transform.position;
-            HeldPiece.transform.parent = Belt;
+            //  Debug.Log("pieces were moved so put the piece at the spot");
+            piece.transform.position = p.Coll.transform.position;
+            piece.transform.parent = Belt;
         }
         else
         {
@@ -764,16 +767,17 @@ public class Repair : MiniGame
     }
     
     void ResetPuzzleState( bool startOver )
-    {
+    {   
         NumChecks = 0;
         CurTerminalStart = null;
         CurTerminalStartFluidType = eFluidType.NONE;
         ConnsToCheck.Clear();
         AllConnsChecked.Clear();
         DEBUG_ConnsOnThisPath.Clear();
-        ConnsResult.Clear();     
-        
-        if(startOver == true)
+        ConnsResult.Clear();
+       
+
+        if (startOver == true)
         {
             foreach (RepairPiece terminal in Terminals) terminal.ReachedOnPath = false;
             foreach (RepairPiece piece in AllPieces)
