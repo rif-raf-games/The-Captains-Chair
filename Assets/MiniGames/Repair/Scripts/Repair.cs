@@ -16,7 +16,7 @@ public class Repair : MiniGame
     enum eGameState { OFF, ON };
     eGameState CurGameState = eGameState.OFF;
 
-    FuelDoor FuelDoor;
+    public FuelDoor FuelDoor;
 
     [Header("Repair")]
     public List<RepairPiece> Terminals = new List<RepairPiece>();
@@ -83,7 +83,7 @@ public class Repair : MiniGame
     {
         base.Awake();
         SetLights(-1);
-        FuelDoor = GetComponentInChildren<FuelDoor>();
+        //FuelDoor = GetComponentInChildren<FuelDoor>();
     }
 
     void SetLights(int val)
