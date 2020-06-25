@@ -97,6 +97,11 @@ public class Parking : MiniGame
         CurGameState = DialogueSaveState;
     }
 
+    public override void TMP_WinGame()
+    {
+        StartCoroutine(ShowResults("You are using a debug cheat to win.\nMo is making you lazy.", true));
+    }
+
     IEnumerator ShowResults(string result, bool success)
     {
         if (MiniGameMCP != null) MiniGameMCP.SavePuzzlesProgress(success);
