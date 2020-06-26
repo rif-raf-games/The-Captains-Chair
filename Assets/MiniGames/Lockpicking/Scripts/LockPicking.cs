@@ -203,7 +203,11 @@ public class LockPicking : MiniGame
     {
         return DeathNodes.Contains(pathNode);
     }
-           
+
+    public override void TMP_WinGame()
+    {
+        StartCoroutine(ShowResults("You are using a debug cheat to win.\nMo is making you lazy.", true));
+    }
 
     IEnumerator ShowResults(string result, bool success)
     {
