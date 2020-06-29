@@ -12,14 +12,15 @@ using Articy.Unity;
 public class Repair : MiniGame
 {    
     public enum eFluidType { NONE, FUEL, COOLANT }; // two types of fluid are possible in the game
-    public enum eRepairPieceType { PIPE, SPLITTER, XOVER, BLOCKER, TERMINAL }; // types of pieces
+    public enum eRepairPieceType { PIPE, SPLITTER, XOVER, BLOCKER, DAMAGED, TERMINAL }; // types of pieces
     enum eGameState { OFF, ON };
-    eGameState CurGameState = eGameState.OFF;
-
-    public FuelDoor FuelDoor;
+    eGameState CurGameState = eGameState.OFF;    
 
     [Header("Repair")]
     public List<RepairPiece> Terminals = new List<RepairPiece>();
+    public RepairScanLines ScanLines;
+    public Material OnBoardMaterial;
+    public Material RegMaterial;
 
     RepairPiece CurTerminalStart;
     eFluidType CurTerminalStartFluidType;
@@ -63,7 +64,7 @@ public class Repair : MiniGame
     public List<GameObject> BeltAnchors = new List<GameObject>();
     int NumChecks = 0;
     int PiecesAndBeltMask;
-    int FuelDoorMask;
+    //int FuelDoorMask;
 
     public override void Init(MiniGameMCP mcp, string sceneName)
     {
@@ -82,8 +83,7 @@ public class Repair : MiniGame
     private void Awake()
     {
         base.Awake();
-        SetLights(-1);
-        //FuelDoor = GetComponentInChildren<FuelDoor>();
+        SetLights(-1);        
     }
 
     void SetLights(int val)
@@ -98,6 +98,7 @@ public class Repair : MiniGame
         BeltIndexAdjusts.Clear(); // this is a bullshit way around a bug but i'll do all the cleanup during next project pre-production i mean it        
         BeltIndexAdjusts.Add(-1);
         BeltIndexAdjusts.Add(1);
+        ScanLines.ResetLines();
         if (IsSolo == true)
         {
             ResultsText.text = "";
@@ -137,22 +138,13 @@ public class Repair : MiniGame
         Vector3 beltTopVP = Camera.main.WorldToViewportPoint(beltTopWP);
         Vector3 vpDiff = new Vector3(0f, 0f, beltTopVP.y - 1f);
         Vector3 wpDiff = Camera.main.ViewportToWorldPoint(vpDiff);
-        BeltMoveRange = Belt.GetComponent<BoxCollider>().size.z/2f + wpDiff.z;
-
-        //BeltAnchors = GameObject.FindGameObjectsWithTag("Repair Piece Belt Anchor").ToList<GameObject>();
-        //BeltAnchors = BeltAnchors.OrderBy(go => go.name).ToList<GameObject>();
+        BeltMoveRange = Belt.GetComponent<BoxCollider>().size.z/2f + wpDiff.z;        
 
         PiecesAndBeltMask = 1 << LayerMask.NameToLayer("Repair Piece");
         PiecesAndBeltMask |= (1 << LayerMask.NameToLayer("Repair Piece Belt"));
 
-        FuelDoorMask = LayerMask.GetMask("Parking Rotate Platform"); // we ran out of tags so i'm re-using some from another game
-
-        //InitialBeltIndexStops.Add(-1); 
-       // InitialBeltIndexStops.Add(BeltAnchors.Count);
-       //BeltIndexAdjusts.Add(-1);
-      //  BeltIndexAdjusts.Add(1);
-
-        FuelDoor.Open(TurnGameOn);
+       // FuelDoorMask = LayerMask.GetMask("Parking Rotate Platform"); // we ran out of tags so i'm re-using some from another game               
+        ScanLines.Scan(TurnGameOn);
     }
 
     
@@ -164,13 +156,14 @@ public class Repair : MiniGame
     Vector3 StartWorldTouchPos;
     Vector3 StartHeldPieceWorldPos;
     float TapTimer;
-    bool TouchingDoor = false;
-    Vector3 DoorTouchPos;
+   // bool TouchingDoor = false;
+   // Vector3 DoorTouchPos;
     enum eMoveType { BELT, PIECE, WAITING_FOR_TYPE, NO_MOVEMENT };
     eMoveType MoveType = eMoveType.NO_MOVEMENT;
     enum eLocationType { BELT, BOARD, };
 
     static float TAP_TIME = .1f;
+    
     private void Update()
     {
         if(DebugText != null)
@@ -200,6 +193,7 @@ public class Repair : MiniGame
                         if (p.transform.parent == null) { Debug.LogError("All RepairPieces need a parent"); return; }
                         // set up the data for the new held piece
                         HeldPiece = p;
+                        if(p.Type != eRepairPieceType.DAMAGED) p.GetComponentInChildren<MeshRenderer>().material = RegMaterial;
                         StartHeldPieceWorldPos = HeldPiece.transform.position; // used for knowing where to put the piece back if it's an invalid move
                         StartWorldTouchPos = LastWorldTouchPos;  //  used for the angle that determines whether we move the piece or the belt
                         TapTimer = 0f;  // reset tap timer
@@ -212,12 +206,12 @@ public class Repair : MiniGame
                     MoveType = eMoveType.BELT;                    
                 }
             }
-            else if (Physics.Raycast(ray, out hit, Mathf.Infinity, FuelDoorMask))
+           /* else if (Physics.Raycast(ray, out hit, Mathf.Infinity, FuelDoorMask))
             {
                 TouchingDoor = true;
                 TapTimer = 0;
                 DoorTouchPos = GetWorldPosFromTouchPos();
-            }
+            }*/
         }        
         else if (Input.GetMouseButton(0))
         {
@@ -256,27 +250,69 @@ public class Repair : MiniGame
                 }
                 else
                 {   // ok we've released our touch after moving a piece around, so figure out what to do
-                    SnapPieceIntoPlace(HeldPiece, StartHeldPieceWorldPos);                               
+                    SnapPieceIntoPlace(HeldPiece, StartHeldPieceWorldPos);
+                    if(HeldPiece.Type != eRepairPieceType.DAMAGED)
+                    {
+                        if (HeldPiece.transform.parent == BoardPieces)
+                        {
+                            HeldPiece.GetComponentInChildren<MeshRenderer>().material = OnBoardMaterial;
+                        }
+                        else
+                        {
+                            HeldPiece.GetComponentInChildren<MeshRenderer>().material = RegMaterial;
+                        }
+                    }
+                    
+                    //SetHeldPiece(null, false);
                 }
             }
-            else if(TouchingDoor == true)
+            /*else if(TouchingDoor == true)
             {                
                 if(TapTimer <= TAP_TIME && CurGameState == eGameState.ON)
                 {
                     Vector3 doorReleasePos = GetWorldPosFromTouchPos();
                     if(doorReleasePos.z <= DoorTouchPos.z)
                     {
-                        SetGameState(eGameState.OFF); 
-                        FuelDoor.Close(CheckPuzzleComplete);
+                        SetGameState(eGameState.OFF);
+                        Debug.LogWarning("OK this is where we just touched the door");
+                        //FuelDoor.Close(CheckPuzzleComplete);
                     }                    
                 }
-            }            
+            }         */   
             // reset all of the movement data
             TapTimer = 0f;
-            TouchingDoor = false;
+            // TouchingDoor = false;
+            
             HeldPiece = null;
             MoveType = eMoveType.NO_MOVEMENT;
         }        
+    }
+   /* void SetHeldPiece(RepairPiece p)
+    {
+        if (p != null)
+        {
+            HeldPiece = p;
+            p.GetComponentInChildren<MeshRenderer>().material = RegMaterial;
+        }
+        else
+        {
+            HeldPiece = null;
+        }
+    }*/
+
+    private void OnGUI()
+    {
+        if (GUI.Button(new Rect(0, 0, 100, 100), "Scan"))
+        {
+            OnClickScan();
+        }
+    }
+
+    public void OnClickScan()
+    {
+        Debug.Log("I JUST CLICKED THE SCAN BUTTON");
+        SetGameState(eGameState.OFF);
+        ScanLines.Scan(CheckPuzzleComplete);
     }
 
     public void SetBoardPiecesInEditor()
@@ -458,7 +494,8 @@ public class Repair : MiniGame
     /// defined by the initialIndexStop and indexAdj vals
     /// </summary>    
     bool PushPiecesToMakeSpace(GameObject beltAnchor, int initialIndexStop, int indexAdj)
-    {        
+    {
+        Debug.Log("PushPiecesToMakeSpace() beltAnchor: " + beltAnchor.name + ", initialIndexStop: " + initialIndexStop + ", indexAdj: " + indexAdj);
         int baIndex = BeltAnchors.IndexOf(beltAnchor);
        // Debug.Log("PushPiecesToMakeSpace() baIndex: " + baIndex);
         if (baIndex == -1) { Debug.LogError("we're trying to PushPiecesToMakeSpace but the beltAnchor isn't in the list: " + beltAnchor.name); return false; }
@@ -471,16 +508,18 @@ public class Repair : MiniGame
             RaycastHit hit = GetHitAtAnchorPos(BeltAnchors[i]);
             if (hit.collider == null) { Debug.LogError("why is there no hit on the belt at this spot?: " + i + ", " + BeltAnchors[i].name); return false; }
             if (hit.collider.tag == "Repair Piece Belt Anchor")
-            {
+            {               
                 spotFound = true;
                 foundSpotIndex = i;
+                Debug.Log("spot found.  foundSpotIndex: " + foundSpotIndex);
+                hit.collider.name = "index: " + foundSpotIndex;
                 break;
             }
             i += indexAdj;
         }
         if (spotFound == true)
         {
-            //Debug.Log("found an empty spot at index: " + foundSpotIndex + " so push pieces");
+            Debug.Log("found an empty spot at index: " + foundSpotIndex + " so push pieces");
             i = baIndex;
             while(i != foundSpotIndex)
             {
@@ -503,6 +542,12 @@ public class Repair : MiniGame
         // Debug.Log("AssignBeltSpot() coll: " + p.Coll.name + ", which is index: " + BeltAnchors.IndexOf(p.Coll));        
         int indexDataIndex = (piece.transform.position.z < p.Coll.transform.position.z ? 0 : 1); // 0 = move up, 1 = move down
         bool piecesMoved = false;
+        if(InitialBeltIndexStops.Count == 0)
+        {
+            Debug.LogWarning("You REALLY need to get more careful about your mini game flow, Mo.");
+            InitialBeltIndexStops.Add(-1);
+            InitialBeltIndexStops.Add(BeltAnchors.Count);
+        }
         piecesMoved = PushPiecesToMakeSpace(p.Coll, InitialBeltIndexStops[indexDataIndex], BeltIndexAdjusts[indexDataIndex]);
         if(piecesMoved == false) piecesMoved = PushPiecesToMakeSpace(p.Coll, InitialBeltIndexStops[1-indexDataIndex], BeltIndexAdjusts[1-indexDataIndex]);
 
@@ -721,9 +766,9 @@ public class Repair : MiniGame
                             adjacentPiece.OpenAngles.Clear();
                             adjacentPiece.OpenAngles.Add(reflectAngleInt);
                         }
-                        else if (adjacentPiece.Type == eRepairPieceType.BLOCKER)
+                        else if (adjacentPiece.Type == eRepairPieceType.BLOCKER || adjacentPiece.Type == eRepairPieceType.DAMAGED)
                         {
-                            SetupPathError("There is a broken piece on this spot " + hit.collider.name, curPiece, hit.collider, rayDir);
+                            SetupPathError("There is a broken or blocker piece on this spot " + hit.collider.name, curPiece, hit.collider, rayDir);
                             return false;
                         }
                         else
@@ -785,11 +830,17 @@ public class Repair : MiniGame
                 if (piece == null) Debug.LogError(piece.name + ": null piece");
                 if (piece.GetComponentInChildren<MeshRenderer>() == null) Debug.LogError(piece.name + ": null mr");
                 if (piece.GetComponentInChildren<MeshRenderer>().material == null) Debug.LogError(piece.name + ": null material");
-                if(piece.Type != eRepairPieceType.BLOCKER)
+                if (piece.Type != eRepairPieceType.DAMAGED && piece.Type != eRepairPieceType.BLOCKER)
                 {
-                    piece.GetComponentInChildren<MeshRenderer>().material = NoneMat;
-                    piece.FluidType = eFluidType.NONE;
-                }                
+                    if (piece.transform.parent == BoardPieces)
+                    {
+                        piece.GetComponentInChildren<MeshRenderer>().material = OnBoardMaterial;
+                    }
+                    else
+                    {
+                        piece.GetComponentInChildren<MeshRenderer>().material = RegMaterial;
+                    }
+                }
             }
         }
     }
@@ -886,7 +937,8 @@ public class Repair : MiniGame
         if (MiniGameMCP != null) MiniGameMCP.SavePuzzlesProgress(success);
         if (success == true) EndPuzzleTime(true);
         SetGameState(eGameState.OFF);
-        FuelDoor.Open();
+        Debug.LogWarning("ShowResults FuelDoor.Open");
+        //FuelDoor.Open();
         if (success == true) SetLights(0);
         else SetLights(2);
         yield return new WaitForSeconds(3);

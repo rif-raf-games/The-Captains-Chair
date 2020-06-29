@@ -136,6 +136,7 @@ public class MiniGameMCP : MonoBehaviour
                 break;
         }
 
+        //Debug.LogError("DONT PAINIC I JUST WANT TO SEE WHAT'S GOING ON: " + ProgressVarName);
         string var = ArticyGlobalVariables.Default.GetVariableByString<string>(ProgressVarName);
         int progress = int.Parse(var);
         if (progress == 0)
