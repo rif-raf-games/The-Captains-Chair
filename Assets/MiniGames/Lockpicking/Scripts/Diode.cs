@@ -56,7 +56,7 @@ public class Diode : MonoBehaviour
                     StopCoroutine(CamLerpRoutine);
                     CamLerpRoutine = null;
                 }
-                StartCoroutine(LerpCamPos());
+                //StartCoroutine(LerpCamPos());
             }
         }                     
     }
