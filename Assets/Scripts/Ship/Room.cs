@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Room : MonoBehaviour
@@ -124,7 +125,16 @@ public class Room : MonoBehaviour
     float ToggleTime, ToggleValue;  
     string Result;    
     public void ToggleAlpha(float alpha, bool skipLerp = false)
-    {     
+    {
+        for (int i = 0; i < SceneManager.sceneCount; i++)
+        {
+            if(SceneManager.GetSceneAt(i).name.Contains("E1.Intro"))
+            {
+                Debug.LogWarning("Hacking our way around fading");
+                return;
+            }
+        }
+
         ToggleTime = Time.time;
         ToggleValue = alpha;        
        // Debug.Log("---------------------------------------ToggleAlpha from: " + ChildMaterials[0].color.a + " to: " + alpha + " skipLerp: " + skipLerp);
