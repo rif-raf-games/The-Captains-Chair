@@ -6,14 +6,15 @@ using UnityEngine.UI;
 public class RifRafInGamePopUp : MonoBehaviour
 {
     public GameObject PopUpPanel;
-    public GameObject MissionHint;
+    public MissionHint MissionHint;
     public RifRafExchangeJobBoard ExchangeBoard;    
     public MCP MCP;
 
     private void Awake()
     {
         PopUpPanel.SetActive(false);
-        MissionHint.SetActive(false);
+        this.MissionHint.Init();
+        MissionHint.gameObject.SetActive(false);
     }
     public void Init(MCP mcp)
     {
@@ -41,7 +42,12 @@ public class RifRafInGamePopUp : MonoBehaviour
     }
     public void ToggleMissionHint(bool isActive)
     {
-        MissionHint.SetActive(isActive);
+        if (isActive == true)
+        {
+            Debug.LogWarning("Get the hint ready");
+            MissionHint.SetupHint();
+        }
+        MissionHint.gameObject.SetActive(isActive);
     }
     public void ToggleExchangeBoard(bool isActive)
     {
@@ -51,7 +57,7 @@ public class RifRafInGamePopUp : MonoBehaviour
 
     bool PopupActiveCheck()
     {
-        return MissionHint.activeSelf == false && ExchangeBoard.gameObject.activeSelf == false;
+        return MissionHint.gameObject.activeSelf == false && ExchangeBoard.gameObject.activeSelf == false;
     }
 
     #region MAIN_POPUP

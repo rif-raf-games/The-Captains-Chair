@@ -515,7 +515,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             {
                 DebugDF = df;
                 ArticyObject curAO = CurPauseObject as ArticyObject;
-                int numCheck = 0;
+              //  int numCheck = 0;
                 bool iSaySo = true;
                 Debug.Log("*************************************skip");
                 while (iSaySo == true)
@@ -549,7 +549,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                         curAO = validArticyObjects[choice];
                         if (curAO as DialogueFragment != null)
                         {
-                            Debug.Log("We now have a new DebugDF: " + curAO.TechnicalName);
+                           // Debug.Log("We now have a new DebugDF: " + curAO.TechnicalName);
                             DebugDF = curAO as DialogueFragment;
                         }
                     }

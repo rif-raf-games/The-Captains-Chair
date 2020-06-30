@@ -121,6 +121,10 @@ public class Room : MonoBehaviour
         }              
     }    
 
+    // Hint system:
+    // Activity.ID = determines free roam or if you're in a mini game
+    // 
+
     List<Material> NPCMaterials = new List<Material>();
     float ToggleTime, ToggleValue;  
     string Result;    
@@ -130,7 +134,7 @@ public class Room : MonoBehaviour
         {
             if(SceneManager.GetSceneAt(i).name.Contains("E1.Intro"))
             {
-                Debug.LogWarning("Hacking our way around fading");
+              //  Debug.LogWarning("Hacking our way around fading");
                 return;
             }
         }
