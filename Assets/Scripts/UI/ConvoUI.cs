@@ -20,7 +20,8 @@ public class ConvoUI : MonoBehaviour
     MCP MCP;
     bool TextTyping = false;
     bool IsInteractive = true;
-    List<ArticyObject> ValidAOTargets = null;
+    List<ArticyObject> CurValidAOTargets = null;
+    IList<Branch> CurDialogueOptions = null;
 
     public CCPlayer Player;
     Coroutine TypewriterCoroutine;
@@ -81,15 +82,18 @@ public class ConvoUI : MonoBehaviour
         TypewriterSpeed = typewriterSpeed;
         SpeakerText.text = "";
         CurDialogueText = dialogueFrag.Text;
-        ValidAOTargets = validAOTargets;
+        CurDialogueOptions = dialogueOptions;
+        CurValidAOTargets = validAOTargets;
         if (TypewriterCoroutine != null ) StopCoroutine(TypewriterCoroutine);
         TypewriterCoroutine = StartCoroutine(TypewriterEffect());
-        
-        foreach (GameObject go in DialogueOptions) go.SetActive(false);
+
+        //foreach (GameObject go in DialogueOptions) go.SetActive(false);
+        ShutOffButtons();
         IsInteractive = true;
         if(IsInteractive == true)
         {
-            int numDO = (dialogueOptions != null ? dialogueOptions.Count : validAOTargets.Count);
+            TurnOnValidButtons();
+            /*int numDO = (dialogueOptions != null ? dialogueOptions.Count : validAOTargets.Count);
             for (int i = 0; i < numDO; i++)
             {
                 DialogueOptions[i].SetActive(true);
@@ -102,7 +106,7 @@ public class ConvoUI : MonoBehaviour
                 {
                     DialogueOptions[i].GetComponentInChildren<Text>().text = "Continue";
                 }
-            }
+            }*/
         }
 
         // VO stuff
@@ -125,6 +129,28 @@ public class ConvoUI : MonoBehaviour
         else
         {
             SpeakerText.color = Color.white;
+        }
+    }
+
+    public void ShutOffButtons()
+    {
+        foreach (GameObject go in DialogueOptions) go.SetActive(false);
+    }
+    public void TurnOnValidButtons()
+    {
+        int numDO = (CurDialogueOptions != null ? CurDialogueOptions.Count : CurValidAOTargets.Count);
+        for (int i = 0; i < numDO; i++)
+        {
+            DialogueOptions[i].SetActive(true);
+            DialogueFragment df = (CurDialogueOptions != null ? CurDialogueOptions[i].Target as DialogueFragment : CurValidAOTargets[i] as DialogueFragment);
+            if (df != null)
+            {
+                DialogueOptions[i].GetComponentInChildren<Text>().text = df.MenuText;
+            }
+            else
+            {
+                DialogueOptions[i].GetComponentInChildren<Text>().text = "Continue";
+            }
         }
     }
 
@@ -157,7 +183,7 @@ public class ConvoUI : MonoBehaviour
         foreach (GameObject go in DialogueOptions) go.GetComponent<Button>().enabled = true;
         // Debug.Log("NextDialogueFragmentDelay() b");
         ArticyObject target = null;
-        if (ValidAOTargets != null) target = ValidAOTargets[0];
+        if (CurValidAOTargets != null) target = CurValidAOTargets[0];
         ArticyFlow.ConvoButtonClicked(0, target);
     }
 
@@ -174,16 +200,16 @@ public class ConvoUI : MonoBehaviour
         }
     }
 
-    public void PauseConversation()
+   /* public void PauseConversation()
     {
         // conversation isn't over, but we want to temporarily shut it off while a character moves somewhere.
         //Debug.Log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ PauseConversation()");
         this.gameObject.SetActive(false);
        // Player.ToggleMovementBlocked(true);
-    }
+    }*/
     public void EndConversation()
     { 
-        //Debug.Log("----------------------- EndConversation()");
+        //Debug.LogError("----------------------- EndConversation()");
         this.gameObject.SetActive(false);
         this.MCP.TMP_ToggleBurger(true);
         //Player.ToggleMovementBlocked(false);        
@@ -194,7 +220,7 @@ public class ConvoUI : MonoBehaviour
         //Debug.LogError("OnClickDialogueButton() buttonIndex: " + buttonIndex + ", ArticyFlow hash: " + ArticyFlow.GetHashCode());
         
         ArticyObject target = null;
-        if (ValidAOTargets != null) target = ValidAOTargets[buttonIndex];
+        if (CurValidAOTargets != null) target = CurValidAOTargets[buttonIndex];
         ArticyFlow.ConvoButtonClicked(buttonIndex, target);
     }
     

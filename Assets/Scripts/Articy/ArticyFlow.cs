@@ -304,8 +304,9 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                     }
                     
                     SetArticyState(eArticyState.FREE_ROAM);
+                    ConvoUI.EndConversation();
                     FlowFragsVisited.Clear();
-                    if (this.MiniGameMCP != null) this.MiniGameMCP.CurrentDiaogueEnded();
+                    if (this.MiniGameMCP != null) this.MiniGameMCP.CurrentDiaogueEnded();                   
                 }
                 else
                 {   // We're on a Hub that has an actual target, so that means we're in a dialogue that's going to continue                    
@@ -560,12 +561,26 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             }
         }
     }
+    bool WaitingOnALLastFrame = false;
     // Update is called once per frame
     void Update()
-    {
+    {        
         bool waitingOnAL = WaitingOnActionList();
         FlowDebug(waitingOnAL);
 
+        if (waitingOnAL == true)
+        {
+            ConvoUI.ShutOffButtons();
+        }
+        else
+        {
+            if(WaitingOnALLastFrame == true && waitingOnAL == false)
+            {
+                ConvoUI.TurnOnValidButtons();
+            }            
+        }
+        WaitingOnALLastFrame = waitingOnAL;
+        
         if (NextBranch != null && waitingOnAL == false)
         {   // we have a NextBranch assigned and we're not waiting on the Action List so continue the flow on the NextBranch
             StaticStuff.PrintFlowBranchesUpdate(this.name + ": going to next branch via Update", this);            
@@ -612,14 +627,14 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         {
             StaticStuff.PrintUI("Next thing is a Character_Actions_List_Template, so shut off the UI and let the action list do it's thing.");
             //Debug.Log("---------------------------Next thing is a Character_Actions_List_Template, so shut off the UI and let the action list do it's thing.");
-            ConvoUI.EndConversation();
+            //ConvoUI.EndConversation();
         }
         else
         {
            // Debug.Log("type is: " + CurBranches[buttonIndex].Target.GetType());                                          
             StaticStuff.PrintUI("Chosen branch isn't a DialogueFragment or a Character_Movement so for now just assume we're done talking and shut off the UI");
             //Debug.Log("----------------------------------- Chosen branch isn't a DialogueFragment or a Character_Movement so for now just assume we're done talking and shut off the UI");
-            ConvoUI.EndConversation();            
+           // ConvoUI.EndConversation();            
         }
     }
     string DefaultDes = "none";
@@ -651,47 +666,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             DebugText.text += StageDirectionPlayer.GetShutOffAINames();
         }
     }
-    /*public Text debugText;
-    private void OnGUI()
-    {
-        if(GUI.Button(new Rect(Screen.width-100,300,100,100), "feh"))
-        {                        
-            string s = "OnGUI() branch hash code: " + CurBranches[0].GetHashCode() + ", CurBranches hash code: " + CurBranches.GetHashCode() + ", this hash code: " + this.GetHashCode();
-            int numAF = FindObjectsOfType<ArticyFlow>().Length;
-            int numAFP = FindObjectsOfType<ArticyFlowPlayer>().Length;
-            s += ", numAF: " + numAF + ", numAFP: " + numAFP;
-            Debug.LogError(s);
-        }
-
-        if (debugText == null)
-        {
-            GameObject go = GameObject.Find("debugText");
-            if (go != null) debugText = go.GetComponent<Text>();            
-        }
-        else
-        {
-            string s = "num branches: " + CurBranches.Count + "\n";
-            foreach (Branch b in CurBranches)
-            {
-                s += "branchID: " + b.BranchId + ", Target type: " + b.Target.GetType() + "\n";
-
-                if (CurBranches[0].Target.GetType() == typeof(Articy.The_Captain_s_Chair.OutputPin))
-                {
-                    string techName = ((ArticyObject)CurPauseObject).TechnicalName;
-                    Debug.LogError("WHAT THE FUCK 3 we're in OnGUI printing out all the branches and we have an OutputPin: " + CurBranches[0].DefaultDescription + ", CurPauseObject: " + techName);
-                }
-            }
-
-            int numAF = FindObjectsOfType<ArticyFlow>().Length;
-            int numAFP = FindObjectsOfType<ArticyFlowPlayer>().Length;
-
-            s += "numAF: " + numAF + ", numAFP : " + numAFP + "\n";            
-            int branchHashCode = (CurBranches.Count > 0 ? CurBranches[0].GetHashCode() : -987654321);
-            s += "branch hash code: " + branchHashCode + ", CurBranches has code: " + CurBranches.GetHashCode() + ", this hash code: " + this.GetHashCode();
-
-            debugText.text = s;
-        }                
-    }*/
+    
 
     /// <summary>
     /// Bails on the current dialogue right away.  Currently called from MiniGames once they've finished a puzzle
@@ -699,13 +674,13 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     public void QuitCurDialogue()
     {
         SetArticyState(eArticyState.FREE_ROAM);
+        ConvoUI.EndConversation();
         CurPauseObject = null;
         NextFragment = null;
         NextBranch = null;
         FlowFragsVisited.Clear();
         ActiveCALPauseObjects.Clear();
-        if (Player != null) Player.ToggleMovementBlocked(false);
-        ConvoUI.EndConversation();
+        if (Player != null) Player.ToggleMovementBlocked(false);        
     }    
     #endregion
     
@@ -761,5 +736,47 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     #endregion    
 
     public float GetDefaultTypewriterSpeed() { return ConvoUI.DefaultTypewriterSpeed; }
+
+    /*public Text debugText;
+    private void OnGUI()
+    {
+        if(GUI.Button(new Rect(Screen.width-100,300,100,100), "feh"))
+        {                        
+            string s = "OnGUI() branch hash code: " + CurBranches[0].GetHashCode() + ", CurBranches hash code: " + CurBranches.GetHashCode() + ", this hash code: " + this.GetHashCode();
+            int numAF = FindObjectsOfType<ArticyFlow>().Length;
+            int numAFP = FindObjectsOfType<ArticyFlowPlayer>().Length;
+            s += ", numAF: " + numAF + ", numAFP: " + numAFP;
+            Debug.LogError(s);
+        }
+
+        if (debugText == null)
+        {
+            GameObject go = GameObject.Find("debugText");
+            if (go != null) debugText = go.GetComponent<Text>();            
+        }
+        else
+        {
+            string s = "num branches: " + CurBranches.Count + "\n";
+            foreach (Branch b in CurBranches)
+            {
+                s += "branchID: " + b.BranchId + ", Target type: " + b.Target.GetType() + "\n";
+
+                if (CurBranches[0].Target.GetType() == typeof(Articy.The_Captain_s_Chair.OutputPin))
+                {
+                    string techName = ((ArticyObject)CurPauseObject).TechnicalName;
+                    Debug.LogError("WHAT THE FUCK 3 we're in OnGUI printing out all the branches and we have an OutputPin: " + CurBranches[0].DefaultDescription + ", CurPauseObject: " + techName);
+                }
+            }
+
+            int numAF = FindObjectsOfType<ArticyFlow>().Length;
+            int numAFP = FindObjectsOfType<ArticyFlowPlayer>().Length;
+
+            s += "numAF: " + numAF + ", numAFP : " + numAFP + "\n";            
+            int branchHashCode = (CurBranches.Count > 0 ? CurBranches[0].GetHashCode() : -987654321);
+            s += "branch hash code: " + branchHashCode + ", CurBranches has code: " + CurBranches.GetHashCode() + ", this hash code: " + this.GetHashCode();
+
+            debugText.text = s;
+        }                
+    }*/
 }
 

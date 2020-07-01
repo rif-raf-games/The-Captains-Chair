@@ -14,7 +14,7 @@ public class BackgroundMusic : MonoBehaviour
     public void PlayMusic(string musicName)
     {
         AudioClip clip = Resources.Load<AudioClip>("Bacground Music/" + musicName);
-        if(clip == null) { Debug.LogError("trying to play background music that isn't in the Resources/Background Music folder: " + musicName); return; }
+        if(clip == null) { Debug.LogWarning("trying to play background music that isn't in the Resources/Background Music folder: " + musicName); return; }
         this.AudioSource.Stop();
         this.AudioSource.clip = clip;
         this.AudioSource.Play();

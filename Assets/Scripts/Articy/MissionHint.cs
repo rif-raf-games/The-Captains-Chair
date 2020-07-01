@@ -23,7 +23,7 @@ public class MissionHint : MonoBehaviour
         List<IOutgoingConnection> outCons = inputPin.GetOutgoingConnections();
         OutgoingConnection outCon = outCons[0] as OutgoingConnection;
         HintsFlowStart = outCon.Target;
-        Debug.LogError("type: " + HintsFlowStart.GetType() + ", articyType: " + HintsFlowStart.GetArticyType());
+        //Debug.LogError("type: " + HintsFlowStart.GetType() + ", articyType: " + HintsFlowStart.GetArticyType());
     }
     public void SetupHint()
     {

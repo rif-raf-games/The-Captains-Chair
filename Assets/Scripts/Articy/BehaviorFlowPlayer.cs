@@ -34,7 +34,7 @@ public class BehaviorFlowPlayer : MonoBehaviour
     string ThisName;
     public void StartBehaviorFlow(Character_Action_List_Template behavior, GameObject callingObject)
     {
-        if(this.name.Contains("Captain")) Debug.LogError("*************************************** " + this.name + ": BehaviorFlowPlayer.StartBehaviorFlow(): " + behavior.DisplayName);
+        if(this.name.Contains("Captain")) Debug.Log("*************************************** " + this.name + ": BehaviorFlowPlayer.StartBehaviorFlow(): " + behavior.DisplayName);
 
         ThisName = behavior.DisplayName;
 
