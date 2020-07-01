@@ -31,10 +31,13 @@ public class BehaviorFlowPlayer : MonoBehaviour
         ExecutingActions = false;
     }
 
+    string ThisName;
     public void StartBehaviorFlow(Character_Action_List_Template behavior, GameObject callingObject)
     {
-        if(this.name.Contains("Captain")) Debug.Log(this.name + ": BehaviorFlowPlayer.StartBehaviorFlow(): " + behavior.DisplayName);
-        
+        if(this.name.Contains("Captain")) Debug.LogError("*************************************** " + this.name + ": BehaviorFlowPlayer.StartBehaviorFlow(): " + behavior.DisplayName);
+
+        ThisName = behavior.DisplayName;
+
         CurBehavior = behavior;
         CurCallingObject = callingObject;
         CurActions.Clear();
@@ -156,9 +159,14 @@ public class BehaviorFlowPlayer : MonoBehaviour
 
         StaticStuff.PrintBehaviorFlow(this.name + ": we've got " + newValidTargets.Count + " new targets after the last set", this);
         if (newValidTargets.Count == 0)
-        {
-            // Debug.LogError("no valid targets on behavior: " + CurBehavior.DisplayName);
+        {            
             Debug.LogError(this.name + ": we should always have at least 1 target, even if it's the end of the flow, so check the flow on this npc please: " + this.name);
+            Debug.LogError("ThisName: " + ThisName);
+            if (CurBehavior == null) Debug.LogError("CurBehavior is null");
+            else Debug.LogError("CurBehavior name: " + CurBehavior.DisplayName);
+
+            if (this.GetComponent<BehaviorFlowPlayer>().CurBehavior == null) Debug.LogError("regetting all null");
+            else Debug.LogError("reget CurBehavior name: " + this.GetComponent<BehaviorFlowPlayer>().CurBehavior.DisplayName);
             return;
         }
         PrepActions(newValidTargets);
