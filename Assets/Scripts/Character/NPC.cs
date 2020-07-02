@@ -128,21 +128,53 @@ public class NPC : CharacterEntity
             BarkText.transform.Rotate(0f, 180, 0f);
         }
     }
-  
 
+  /*  public GameObject DestObject;
+    private void OnGUI()
+    {
+        if(this.name.Contains("Mall"))
+        {
+            if(GUI.Button(new Rect(0,Screen.height/2-25, 50, 50), "OMall"))
+            {
+                Debug.Log("go to the new spot Omally");                
+                SetNavMeshDest(DestObject.transform.position);
+            }
+            if (GUI.Button(new Rect(0, Screen.height / 2 + 25, 50, 50), "stop"))
+            {
+                Debug.Log("FUCKING STOP");
+                SetNavMeshDest(transform.position);
+                SetIsStopped(true);
+                Rigidbody rb = GetComponent<Rigidbody>();
+                rb.velocity = Vector3.zero;
+
+            }
+        }
+        if(this.name.Contains("Stu"))
+        {
+            if (GUI.Button(new Rect(Screen.width-50, Screen.height - 50, 50, 50), "Stu"))
+            {
+                Debug.Log("go to the new spot Stu");
+                SetStoppingDist(0f);
+                SetNavMeshDest(DestObject.transform.position);
+            }
+        }
+    }*/
+
+   // public GameObject DestSphere;
     // Update is called once per frame
     public override void Update()
     {
         base.Update();
-        if (DebugText == null) return;
-        if (CurBehavior == null) DebugText.text = "null CurBehavior\n";
-        else DebugText.text = "CurBehavior: " + CurBehavior.DisplayName + "\n";
-        /*DebugText.text = this.name + "\n";
+        /*if (DebugText == null) return;
+        DebugText.text = this.name + "\n";
+        if (CurBehavior == null) DebugText.text += "null CurBehavior\n";
+        else DebugText.text += "CurBehavior: " + CurBehavior.DisplayName + "\n";        
         if (NavMeshAgent.navMeshOwner == null) DebugText.text += "no navMeshOwner\n";
         else DebugText.text += NavMeshAgent.navMeshOwner.name + "\n";
         DebugText.text += "autoBraking: " + NavMeshAgent.autoBraking + "\n";
         DebugText.text += "autoRepath: " + NavMeshAgent.autoRepath + "\n";
         DebugText.text += "destination: " + NavMeshAgent.destination + "\n";
+        if (DestSphere != null) DestSphere.transform.position = NavMeshAgent.destination;
         DebugText.text += "hasPath: " + NavMeshAgent.hasPath + "\n";
         DebugText.text += "isActiveAndEnabled: " + NavMeshAgent.isActiveAndEnabled + "\n";
         DebugText.text += "isOnNavMesh: " + NavMeshAgent.isOnNavMesh + "\n";

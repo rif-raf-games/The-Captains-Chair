@@ -240,7 +240,8 @@ public class MiniGameMCP : MonoBehaviour
         {   // if we're here, then we've gotten a list of dialogues from an articy ref, so use that
             if (PuzzleDialogues.Count == 0 || PuzzleDialogues.Count - 1 < CurPuzzle)
             {
-                Debug.LogError("You don't have the Mini_Game_Jump set up properly because there's no entry in the Dialogues To Play list for this puzzle");                
+                // no dialogue but keep this in case we need this
+                //Debug.LogError("You don't have the Mini_Game_Jump set up properly because there's no entry in the Dialogues To Play list for this puzzle");                
             }
             else
             {

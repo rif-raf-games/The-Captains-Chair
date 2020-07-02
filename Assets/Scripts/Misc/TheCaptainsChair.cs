@@ -46,7 +46,7 @@ public class TheCaptainsChair : MonoBehaviour
         bool forceDialogueStart = false;
         if(this.MCP == null)
         {
-            Debug.LogWarning("TheCaptainsChair.Start() getting MCP");
+            //Debug.LogWarning("TheCaptainsChair.Start() getting MCP");
             this.MCP = FindObjectOfType<MCP>();
             this.MCP.TMP_ShutOffUI();
             forceDialogueStart = true;
@@ -124,7 +124,7 @@ public class TheCaptainsChair : MonoBehaviour
         if (dialogueToStartOn == null) { Debug.LogError("We've got no Dialogue to start on in this scene"); return; }
         if(forceDialogueStart == true)
         {
-            Debug.LogWarning("We're forcing the start of the dialogue since we had no MCP when this started");
+           // Debug.LogWarning("We're forcing the start of the dialogue since we had no MCP when this started");
             Player.GetComponent<ArticyFlow>().CheckIfDialogueShouldStart(dialogueToStartOn, Player.gameObject);
             //Joystick.gameObject.transform.parent.gameObject.SetActive(true);
             this.MCP.TMP_GetJoystick().gameObject.transform.parent.gameObject.SetActive(true);            
@@ -133,6 +133,7 @@ public class TheCaptainsChair : MonoBehaviour
         {
             this.MCP.SetDialogueToStartSceneOn(dialogueToStartOn);
         }
+        
 
         string playerLoc = ArticyGlobalVariables.Default.Save_Info.Last_Player_Position;
         if (!(playerLoc.Equals("null") || playerLoc.Equals("")))

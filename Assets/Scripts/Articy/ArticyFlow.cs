@@ -434,7 +434,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         d += "lpp: " + ArticyGlobalVariables.Default.Save_Info.Last_Player_Position + "\n";
         d += "return scene: " + savePoint.Template.Save_Info.ReturnScene + ", ";
         d += "analytics: " + savePoint.Template.Save_Info.AnalyticsToTrack;
-        Debug.Log(d);
+       // Debug.Log(d);
 
         string[] analytics = savePoint.Template.Save_Info.AnalyticsToTrack.Split(',');
         foreach (string a in analytics)
@@ -518,7 +518,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                 ArticyObject curAO = CurPauseObject as ArticyObject;
               //  int numCheck = 0;
                 bool iSaySo = true;
-                Debug.Log("*************************************skip");
+                //Debug.Log("*************************************skip");
                 while (iSaySo == true)
                 {
                    // numCheck++;

@@ -92,8 +92,8 @@ static public class StaticStuff
         SaveSaveData("StaticStuff.CreateSaveData()");
     }
     static public void SaveSaveData(string s)
-    {
-        Debug.Log("SaveSaveData(): " + s + ", stack track: " + Environment.StackTrace);
+    {       
+       // Debug.Log("SaveSaveData(): " + s + ", stack track: " + Environment.StackTrace);
         SaveDataDic saveData = new SaveDataDic();
         saveData.saveData = ArticyDatabase.DefaultGlobalVariables.Variables;
 
@@ -112,7 +112,7 @@ static public class StaticStuff
     }
 
     static public void LoadSaveData()
-    {
+    {        
         if (SaveDataExists() == true)
         {
             BinaryFormatter bf = new BinaryFormatter();
@@ -128,7 +128,7 @@ static public class StaticStuff
     }
 
     static public void DeleteSaveData()
-    {
+    {        
         if( SaveDataExists() == true )
         {
             File.Delete(Application.persistentDataPath + "/globalVars.dat");
@@ -137,7 +137,7 @@ static public class StaticStuff
     }
 
     static public bool SaveDataExists()
-    {
+    {        
         return File.Exists(Application.persistentDataPath + "/globalVars.dat");
     }
     #endregion
@@ -162,7 +162,7 @@ static public class StaticStuff
     }
     static public void PrintBehaviorFlow(string s, BehaviorFlowPlayer player)
     {
-       // if(player.name.Contains("Captain")) Debug.Log(s);
+        if(player.name.Contains("O'Mally")) Debug.Log("-----------------BF: " + s);
     }
     static public void PrintUI(string s)
     {
@@ -183,6 +183,8 @@ static public class StaticStuff
     {
         //Debug.Log(s);
     }
+
+    
 
     static public void PrintCAL(string s)
     {
@@ -225,7 +227,8 @@ static public class StaticStuff
     }
     public static void TrackEvent(string e, Dictionary<string, object> parameters = null)
     {
-        if (parameters == null) parameters = new Dictionary<string, object>();
+        return;
+      /*  if (parameters == null) parameters = new Dictionary<string, object>();
         
         
         string platform = "Unknown";
@@ -240,7 +243,7 @@ static public class StaticStuff
         //parameters.Add("stack", Environment.StackTrace);
         AnalyticsResult ar = Analytics.CustomEvent(e, parameters);
         Debug.Log("##################################################################RifRafLookHere---------Analytic: " + e + " has result: " + ar.ToString());
-        if (ar != AnalyticsResult.Ok) Debug.LogError("ERROR: we have a screwed up analytics event tracking: " + ar.ToString());
+        if (ar != AnalyticsResult.Ok) Debug.LogError("ERROR: we have a screwed up analytics event tracking: " + ar.ToString());*/
     }
 
 }

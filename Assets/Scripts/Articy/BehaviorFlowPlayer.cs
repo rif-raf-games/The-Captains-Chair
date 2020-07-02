@@ -34,10 +34,15 @@ public class BehaviorFlowPlayer : MonoBehaviour
     string ThisName;
     public void StartBehaviorFlow(Character_Action_List_Template behavior, GameObject callingObject)
     {
-        if(this.name.Contains("Captain")) Debug.Log("*************************************** " + this.name + ": BehaviorFlowPlayer.StartBehaviorFlow(): " + behavior.DisplayName);
+        StaticStuff.PrintBehaviorFlow(this.name + ": BehaviorFlowPlayer.StartBehaviorFlow(): " + behavior.DisplayName, this);
+      //p  Debug.LogWarning(this.name + ": BehaviorFlowPlayer.StartBehaviorFlow(): " + behavior.DisplayName, this);
+        if (ExecutingActions == true)
+        {
+            Debug.LogError("ok WTF: " + this.name + ": BehaviorFlowPlayer.StartBehaviorFlow(): " + behavior.DisplayName + ", the current behavrior is: " + ThisName);
+        }
 
+        ExecutingActions = true;
         ThisName = behavior.DisplayName;
-
         CurBehavior = behavior;
         CurCallingObject = callingObject;
         CurActions.Clear();
@@ -218,7 +223,7 @@ public class BehaviorFlowPlayer : MonoBehaviour
         {
             string displayName = CurBehavior.DisplayName;
             //StaticStuff.PrintBehaviorFlow(this.name + ": we've got no ActionsToTake so bail", this);
-            if (this.name.Contains("Captain")) Debug.Log(this.name + ": with behavior: " + displayName + ": we've got no ActionsToTake so bail");
+           // if (this.name.Contains("Captain")) Debug.Log(this.name + ": with behavior: " + displayName + ": we've got no ActionsToTake so bail");
             foreach (KeyValuePair<CharacterEntity, EntitySaveData> entry in CurCALEntitySaveData)
             {
                 entry.Key.SetStoppingDist(entry.Value.NavMeshStoppingDist);
@@ -231,6 +236,7 @@ public class BehaviorFlowPlayer : MonoBehaviour
             CurBehaviorCoroutine = null;
             int numNodes = NumNodesInPath();
             ThisPath.Clear();
+            ExecutingActions = false;
             if (GetComponent<NPC>() != null) GetComponent<NPC>().EndCAL(numNodes, IdleOrFollow);
             else if (GetComponent<ArticyFlow>() != null) GetComponent<ArticyFlow>().EndCAL(this.name, displayName);
             else if (GetComponent<AmbientTrigger>() != null) GetComponent<AmbientTrigger>().EndCAL();
@@ -261,7 +267,24 @@ public class BehaviorFlowPlayer : MonoBehaviour
     {
         if (DebugText2 != null)
         {
-            DebugText2.text = ThisPath.Count + "\n";
+            string s = this.name + "\n";
+                s += "ExecutingActions: " + ExecutingActions.ToString() + "\n";
+            s += "ThisName: " + ThisName + "\n";
+            s += (CurBehavior == null ? "Null CurBehavior\n" : "CurBehavior name: " + CurBehavior.name + ", TechnicalName: " + CurBehavior.TechnicalName + ", DisplayName: " + CurBehavior.DisplayName + "\n");
+            s += (CurCallingObject == null ? "Null CurCallingObject\n" : "CurCallingObject: " + CurCallingObject.name + "\n");
+            foreach(Character_Action_Template cat in CurActions)
+            {
+                s += "cat: " + cat.name + "\n";
+            }
+            s += Time.time + "\n";
+            DebugText2.text = s;
+           /* ExecutingActions = true;
+            ThisName = behavior.DisplayName;
+            CurBehavior = behavior;
+            CurCallingObject = callingObject;
+            CurActions.Clear();
+            ThisPath.Clear();*/
+            /*DebugText2.text = ThisPath.Count + "\n";
             foreach (List<Character_Action_Template> l in ThisPath)
             {
                 foreach (Character_Action_Template cat in l)
@@ -269,7 +292,7 @@ public class BehaviorFlowPlayer : MonoBehaviour
                     DebugText2.text += cat.DisplayName + ", ";
                 }
                 DebugText2.text += "\n";
-            }
+            }*/
         }
     }
 
@@ -321,7 +344,7 @@ public class BehaviorFlowPlayer : MonoBehaviour
             }            
         }
         //Debug.Log(this.name + ": setting EA to true in ExecuteActions");
-        ExecutingActions = true;
+        //ExecutingActions = true;
         while (AllActionsDone(ActionsStates) == false)
         {                        
             foreach (ActionState actionState in ActionsStates)
@@ -330,11 +353,11 @@ public class BehaviorFlowPlayer : MonoBehaviour
                 {                    
                     if (actionState.delayDone == false)
                     {                        
-                        if (DebugText != null)
+                       /* if (DebugText != null)
                         {
                             DebugText.text = "ExecutingActions: " + ExecutingActions + "\n";
                             DebugText.text += CurCallingObject.name + " is delaying for: " + actionState.delayTime.ToString("F2") + ", we're at: " + actionState.timer.ToString("F2");// + ", active?: " + IsActive;
-                        }                        
+                        }  */                      
                         actionState.timer += Time.deltaTime;
                         if (actionState.timer >= actionState.delayTime)
                         {                            
@@ -345,11 +368,11 @@ public class BehaviorFlowPlayer : MonoBehaviour
                     }
                     else
                     {                        
-                        if (DebugText != null)
+                       /* if (DebugText != null)
                         {
                             DebugText.text = "ExecutingActions: " + ExecutingActions + "\n";
                             DebugText.text += CurCallingObject.name + " is now on to the action!: " + actionState.action;// + ", active?: " + IsActive;
-                        }
+                        }*/
                     }                    
                     switch (actionState.action)
                     {
@@ -357,7 +380,7 @@ public class BehaviorFlowPlayer : MonoBehaviour
                             actionState.isActionDone = actionState.actionObject.GetComponent<CharacterEntity>().NavMeshDone();
                             break;
                         case Action.WalkToObject:
-                            actionState.isActionDone = actionState.actionObject.GetComponent<CharacterEntity>().NavMeshDone();
+                            actionState.isActionDone = actionState.actionObject.GetComponent<CharacterEntity>().NavMeshDone();                            
                             break;
                         case Action.Animation:
                             actionState.timer += Time.deltaTime;
@@ -407,7 +430,7 @@ public class BehaviorFlowPlayer : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
         //Debug.Log(this.name + ": setting EA to false in ExecuteActions");
-        ExecutingActions = false;
+        //ExecutingActions = false;
         //Debug.Log(this.name + ": all actions are done");
         CurrentActionsDone();
     }
@@ -632,7 +655,7 @@ public class BehaviorFlowPlayer : MonoBehaviour
         }
         CurCallingObject = null;
         //Debug.Log(this.name + ": setting EA to false in StopBehavior");
-        ExecutingActions = false;
+        //ExecutingActions = false;
         ActionsToTake.Clear();
         foreach (ActionState actionState in ActionsStates)
         {
