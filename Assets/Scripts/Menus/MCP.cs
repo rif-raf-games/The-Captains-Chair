@@ -202,7 +202,8 @@ public class MCP : MonoBehaviour
 
     public void ToggleJoystick(bool val)
     {
-       // Debug.Log("ToggleJoystick() val: " + val);
+        // Debug.Log("ToggleJoystick() val: " + val);
+        this.Joystick.ResetInput();
         Joystick.gameObject.transform.parent.gameObject.SetActive(val);
     }
 
