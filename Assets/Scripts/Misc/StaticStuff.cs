@@ -226,11 +226,9 @@ static public class StaticStuff
         material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
     }
     public static void TrackEvent(string e, Dictionary<string, object> parameters = null)
-    {
-        return;
-      /*  if (parameters == null) parameters = new Dictionary<string, object>();
-        
-        
+    {       
+        if (parameters == null) parameters = new Dictionary<string, object>();
+                
         string platform = "Unknown";
 #if UNITY_EDITOR
         platform = "Editor";
@@ -242,8 +240,8 @@ static public class StaticStuff
         parameters.Add("Platform", platform);
         //parameters.Add("stack", Environment.StackTrace);
         AnalyticsResult ar = Analytics.CustomEvent(e, parameters);
-        Debug.Log("##################################################################RifRafLookHere---------Analytic: " + e + " has result: " + ar.ToString());
-        if (ar != AnalyticsResult.Ok) Debug.LogError("ERROR: we have a screwed up analytics event tracking: " + ar.ToString());*/
+       // Debug.Log("##################################################################RifRafLookHere---------Analytic: " + e + " has result: " + ar.ToString());
+        if (ar != AnalyticsResult.Ok) Debug.LogError("ERROR: we have a screwed up analytics event tracking: " + ar.ToString());
     }
 
 }
