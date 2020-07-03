@@ -442,7 +442,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             string x = ArticyGlobalVariables.Default.GetVariableByString<string>(a);
             Dictionary<string, object> trackingParameters = new Dictionary<string, object>();
             trackingParameters.Add("value at save", x);
-            StaticStuff.TrackEvent("TESTING_" + a, trackingParameters);
+            StaticStuff.TrackEvent(a, trackingParameters);
         }
         StaticStuff.SaveSaveData("ArticyFlow.HandleSavePoint()");        
     }

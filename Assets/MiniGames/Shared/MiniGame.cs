@@ -74,7 +74,7 @@ public class MiniGame : MonoBehaviour
         Dictionary<string, object> parameters = new Dictionary<string, object>();
         parameters.Add("Total Time To Solve", time);
         string tag = (didFinish == true ? "_solved" : "_quit");
-        StaticStuff.TrackEvent("debug_" + SceneName + tag, parameters);
+        StaticStuff.TrackEvent(SceneName + tag, parameters);
 
 
     }
