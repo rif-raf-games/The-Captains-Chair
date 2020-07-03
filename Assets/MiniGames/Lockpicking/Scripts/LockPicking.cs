@@ -79,9 +79,10 @@ public class LockPicking : MiniGame
     {
         //Debug.Log("LockPicking.Init()");
         base.Init(mcp, sceneName);
-        if (ResultsText == null) ResultsText = MiniGameMCP.ResultsText;
+        /*if (ResultsText == null) ResultsText = MiniGameMCP.ResultsText;
         if (DebugText == null) DebugText = MiniGameMCP.DebugText;
-        ResultsText.gameObject.SetActive(false);
+        ResultsText.gameObject.SetActive(false);*/
+        if(ResultsText != null) ResultsText.gameObject.SetActive(false);
     }
 
     public override void Awake()
@@ -118,7 +119,7 @@ public class LockPicking : MiniGame
         }
         if (IsSolo == true)
         {
-            ResultsText.gameObject.SetActive(false);
+            if (ResultsText != null) ResultsText.gameObject.SetActive(false);
             BeginPuzzleStartTime();
         }                
     }
@@ -137,7 +138,7 @@ public class LockPicking : MiniGame
     {
         SetGameState(eGameState.ON); 
         Diode.Moving = true;
-        ResultsText.gameObject.SetActive(false);
+        if (ResultsText != null) ResultsText.gameObject.SetActive(false);
         GameTime = 0f;
         // Diode tuning stuff
         EvilSpawnBegan = false;
@@ -214,19 +215,29 @@ public class LockPicking : MiniGame
         if (MiniGameMCP != null) MiniGameMCP.SavePuzzlesProgress(success);
         if(success == true) EndPuzzleTime(true);
         SetGameState(eGameState.OFF); 
-        ResultsText.gameObject.SetActive(true);
-        ResultsText.text = result;
+
+        if(MiniGameMCP != null)
+        {
+            MiniGameMCP.ShowResultsText(result);
+        }
+        else if (ResultsText != null)
+        {
+            ResultsText.gameObject.SetActive(true);
+            ResultsText.text = result;
+        }
+        
         Diode.Moving = false;
         foreach (Diode d in EvilDiodes) d.Moving = false;
         yield return new WaitForSeconds(3);
-        ResultsText.gameObject.SetActive(false);
+        if (ResultsText != null) ResultsText.gameObject.SetActive(false);
+        if (MiniGameMCP != null) MiniGameMCP.HideResultsText();
         if (success == true)
         {
             if (MiniGameMCP != null)
             {
                 MiniGameMCP.PuzzleFinished();
             }
-            else
+            else if (ResultsText != null)
             {
                 ResultsText.gameObject.SetActive(true);
                 ResultsText.text = "You beat the level but are not part of an MCP so restart.";

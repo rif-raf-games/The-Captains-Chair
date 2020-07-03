@@ -39,20 +39,20 @@ public class Parking : MiniGame
     {
         //Debug.Log("Parking.Init()");
         base.Init(mcp, sceneName);
-        if (ResultsText == null) ResultsText = MiniGameMCP.ResultsText;
+        /*if (ResultsText == null) ResultsText = MiniGameMCP.ResultsText;
         if (DebugText == null && MiniGameMCP.DebugText != null)
         {
             DebugText = MiniGameMCP.DebugText;
             DebugText.text = "";
-        }
-        ResultsText.gameObject.SetActive(false);
+        }*/
+        if(ResultsText != null ) ResultsText.gameObject.SetActive(false);
     }
 
     private void Start()
     {        
         if (IsSolo == true)
-        {            
-            ResultsText.gameObject.SetActive(false);
+        {
+            if (ResultsText != null) ResultsText.gameObject.SetActive(false);
             BeginPuzzleStartTime();
         }
     }
@@ -107,17 +107,33 @@ public class Parking : MiniGame
         if (MiniGameMCP != null) MiniGameMCP.SavePuzzlesProgress(success);
         if (success == true) EndPuzzleTime(true);
         SetGameState(eGameState.OFF);
-        ResultsText.gameObject.SetActive(true);
-        ResultsText.text = result;
+
+        if(MiniGameMCP != null)
+        {
+            MiniGameMCP.ShowResultsText(result);
+        }
+        else if(ResultsText != null)
+        {
+            ResultsText.gameObject.SetActive(true);
+            ResultsText.text = result;
+        }                
         yield return new WaitForSeconds(3f);
-        ResultsText.gameObject.SetActive(false);
+        if (MiniGameMCP != null)
+        {
+            MiniGameMCP.HideResultsText();
+        }
+        else if(ResultsText != null)
+        {
+            ResultsText.gameObject.SetActive(false);
+        }
+            
         if (success == true)
         {
             if (MiniGameMCP != null)
             {
                 MiniGameMCP.PuzzleFinished();
             }
-            else
+            else if(ResultsText != null)
             {                
                 ResultsText.gameObject.SetActive(true);
                 ResultsText.text = "You beat the level but are not part of an MCP so restart.";

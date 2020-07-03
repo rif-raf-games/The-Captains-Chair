@@ -199,7 +199,7 @@ public class Diode : MonoBehaviour
     void ChangeDir()
     {
         m_MoveDir = (m_MoveDir == eMoveDir.FORWARD ? eMoveDir.BACKWARD : eMoveDir.FORWARD);
-        Debug.Log(this.name + " ChangeDir() to " + m_MoveDir);
+       // Debug.Log(this.name + " ChangeDir() to " + m_MoveDir);
     }
 
     public void OnDrawGizmos()

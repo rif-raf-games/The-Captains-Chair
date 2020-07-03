@@ -58,7 +58,7 @@ public class MiniGameMCP : MonoBehaviour
         float startTime = Time.time;        
         if(ArticyGlobalVariables.Default.Mini_Games.Coming_From_Main_Game == true)
         {            
-            Debug.Log("coming from a main game so get the puzzles from the articy data");
+            //Debug.Log("coming from a main game so get the puzzles from the articy data");
             ArticyGlobalVariables.Default.Mini_Games.Coming_From_Main_Game = false;
             Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
             string[] puzzleNums = jumpSave.Template.Mini_Game_Puzzles_To_Play.Puzzle_Numbers.Split(',');
@@ -84,7 +84,7 @@ public class MiniGameMCP : MonoBehaviour
             {
                 puzzleName = PuzzleNameRoot + PuzzlesToLoad[i].ToString("D3");
             }            
-            Debug.Log("load puzzle: " + puzzleName);
+            //Debug.Log("load puzzle: " + puzzleName);
             AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(puzzleName, LoadSceneMode.Additive);
             while (!asyncLoad.isDone)
             {
@@ -276,6 +276,19 @@ public class MiniGameMCP : MonoBehaviour
 
         Puzzles[CurPuzzle].BeginPuzzleStartTime();
         GameState = eGameState.PLAYING;        
+    }
+
+    public void ShowResultsText(string result)
+    {
+        MCP mcp = FindObjectOfType<MCP>();
+        if(mcp == null) { Debug.LogError("Trying to show results on the MCP UI that isn't here."); return; }
+        mcp.ShowResultsText(result);
+    }
+    public void HideResultsText()
+    {
+        MCP mcp = FindObjectOfType<MCP>();
+        if (mcp == null) { Debug.LogError("Trying to hide results on the MCP UI that isn't here."); return; }
+        mcp.HideResultsText();
     }
 
     public void SavePuzzlesProgress(bool success)

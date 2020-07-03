@@ -198,6 +198,15 @@ public class MCP : MonoBehaviour
         InGamePopUp.TMP_TurnOnBurger();
     }
 
+    public void ShowResultsText(string result)
+    {
+        InGamePopUp.ShowResultsText(result);
+    }
+    public void HideResultsText()
+    {
+        InGamePopUp.HideResultsText();
+    }
+
     Dialogue DialogueToStartOnThisScene = null;
     public void SetDialogueToStartSceneOn(Dialogue dialogueToStartOn)
     {

@@ -70,13 +70,13 @@ public class Repair : MiniGame
     {
         //Debug.Log("Repair.Init()");
         base.Init(mcp, sceneName);
-        ResultsText = MiniGameMCP.ResultsText;
+        /*ResultsText = MiniGameMCP.ResultsText;
         ResultsText.text = "";
         if (DebugText == null && MiniGameMCP.DebugText != null)
         {
             DebugText = MiniGameMCP.DebugText;
             DebugText.text = "";
-        }
+        }*/
         
     }
     
@@ -101,7 +101,7 @@ public class Repair : MiniGame
         ScanLines.ResetLines();
         if (IsSolo == true)
         {
-            ResultsText.text = "";
+            //ResultsText.text = "";
             BeginPuzzleStartTime();
         }        
     }
@@ -126,7 +126,7 @@ public class Repair : MiniGame
     {
        // Debug.Log("BeginPUzzle()");
         base.BeginPuzzleStartTime();
-        ResultsText.text = "";
+        //ResultsText.text = "";
         SetGameState(eGameState.OFF); 
         AllPieces = GameObject.FindObjectsOfType<RepairPiece>().ToList<RepairPiece>();        
         foreach (RepairPiece terminal in Terminals)
@@ -851,7 +851,7 @@ public class Repair : MiniGame
         bool puzzleSolved = false;
         bool brokenPathFound = false;
         string msg = "";
-        ResultsText.text = "";
+        //ResultsText.text = "";
         foreach (RepairPiece terminal in Terminals)
         {
             if (terminal.ReachedOnPath == true) continue;
@@ -932,12 +932,13 @@ public class Repair : MiniGame
     }
 
     IEnumerator ShowResults(string result, bool success)
-    {        
-        ResultsText.text = result;
+    {
+        if (MiniGameMCP != null) MiniGameMCP.ShowResultsText(result);
+        else ResultsText.text = result;
         if (MiniGameMCP != null) MiniGameMCP.SavePuzzlesProgress(success);
         if (success == true) EndPuzzleTime(true);
         SetGameState(eGameState.OFF);
-        Debug.LogWarning("ShowResults FuelDoor.Open");
+        //Debug.LogWarning("ShowResults FuelDoor.Open");
         //FuelDoor.Open();
         if (success == true) SetLights(0);
         else SetLights(2);
@@ -947,6 +948,7 @@ public class Repair : MiniGame
             if (MiniGameMCP != null)
             {
                 MiniGameMCP.PuzzleFinished();
+               // MiniGameMCP.ShowResultsText("You beat the level but are not part of an MCP so restart.");
             }
             else
             {
@@ -959,7 +961,8 @@ public class Repair : MiniGame
             SetGameState(eGameState.ON); 
             SetLights(1);
             ResetPuzzleState(true);
-            ResultsText.text = "";
+            if (MiniGameMCP != null) MiniGameMCP.HideResultsText();
+            else ResultsText.text = "";
             PathErrorSphere.transform.position = new Vector3(-9999f, 0f, -9999f);
             if (EndColPiece != null)
             {

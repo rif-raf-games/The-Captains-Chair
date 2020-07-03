@@ -49,6 +49,17 @@ public class RifRafInGamePopUp : MonoBehaviour
         }
         MissionHint.gameObject.SetActive(isActive);
     }
+
+    public void ShowResultsText(string result)
+    {
+        MissionHint.gameObject.SetActive(true);
+        MissionHint.HintText.text = result;
+    }
+    public void HideResultsText()
+    {
+        MissionHint.gameObject.SetActive(false);
+    }
+
     public void ToggleExchangeBoard(bool isActive)
     {
         if(isActive == true) ExchangeBoard.FillBoard();
