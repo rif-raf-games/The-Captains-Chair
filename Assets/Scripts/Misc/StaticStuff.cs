@@ -77,7 +77,7 @@ static public class StaticStuff
         
         if (returnScene.Equals("null") || returnScene.Equals(""))
         {            
-            GameObject.FindObjectOfType<MCP>().LoadNextScene("Ep1.S1");
+            GameObject.FindObjectOfType<MCP>().LoadNextScene("E1.Intro");
         }
         else
         {         
