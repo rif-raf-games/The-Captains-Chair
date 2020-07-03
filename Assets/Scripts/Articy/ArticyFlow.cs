@@ -434,16 +434,19 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         d += "lpp: " + ArticyGlobalVariables.Default.Save_Info.Last_Player_Position + "\n";
         d += "return scene: " + savePoint.Template.Save_Info.ReturnScene + ", ";
         d += "analytics: " + savePoint.Template.Save_Info.AnalyticsToTrack;
-       // Debug.Log(d);
+        // Debug.Log(d);
 
-        string[] analytics = savePoint.Template.Save_Info.AnalyticsToTrack.Split(',');
-        foreach (string a in analytics)
+        if (savePoint.Template.Save_Info.AnalyticsToTrack != "")
         {
-            string x = ArticyGlobalVariables.Default.GetVariableByString<string>(a);
-            Dictionary<string, object> trackingParameters = new Dictionary<string, object>();
-            trackingParameters.Add("value at save", x);
-            StaticStuff.TrackEvent(a, trackingParameters);
-        }
+            string[] analytics = savePoint.Template.Save_Info.AnalyticsToTrack.Split(',');
+            foreach (string a in analytics)
+            {
+                string x = ArticyGlobalVariables.Default.GetVariableByString<string>(a);
+                Dictionary<string, object> trackingParameters = new Dictionary<string, object>();
+                trackingParameters.Add("value at save", x);
+                StaticStuff.TrackEvent(a, trackingParameters);
+            }
+        }        
         StaticStuff.SaveSaveData("ArticyFlow.HandleSavePoint()");        
     }
 

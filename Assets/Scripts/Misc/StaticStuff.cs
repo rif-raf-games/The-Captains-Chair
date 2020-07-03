@@ -227,6 +227,7 @@ static public class StaticStuff
     }
     public static void TrackEvent(string e, Dictionary<string, object> parameters = null)
     {       
+        if(e == "") { Debug.LogWarning("Blank analytics event"); return; }
         if (parameters == null) parameters = new Dictionary<string, object>();
                 
         string platform = "Unknown";
