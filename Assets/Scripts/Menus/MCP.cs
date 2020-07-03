@@ -193,9 +193,17 @@ public class MCP : MonoBehaviour
         {
             FindObjectOfType<TheCaptainsChair>().CheckStartDialogue(DialogueToStartOnThisScene);
         }
-        Joystick.gameObject.transform.parent.gameObject.SetActive(true);        
+        
+        if(FindObjectOfType<MiniGameMCP>() == null) Joystick.gameObject.transform.parent.gameObject.SetActive(true);
+        else Joystick.gameObject.transform.parent.gameObject.SetActive(false);
         InGamePopUp.TogglePopUpPanel(true);
         InGamePopUp.TMP_TurnOnBurger();
+    }
+
+    public void ToggleJoystick(bool val)
+    {
+        Debug.Log("ToggleJoystick() val: " + val);
+        Joystick.gameObject.transform.parent.gameObject.SetActive(val);
     }
 
     public void ShowResultsText(string result)
