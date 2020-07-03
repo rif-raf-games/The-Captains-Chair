@@ -119,6 +119,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         IsDialogueFragmentsInteractive = true;
         FlowPlayer.StartOn = convoStart;
         if (Player != null) Player.ToggleMovementBlocked(true);
+        FindObjectOfType<MCP>().ToggleJoystick(false);
         return true;
     }
 
@@ -304,6 +305,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                     }
                     
                     SetArticyState(eArticyState.FREE_ROAM);
+                    FindObjectOfType<MCP>().ToggleJoystick(true);
                     ConvoUI.EndConversation();
                     FlowFragsVisited.Clear();
                     if (this.MiniGameMCP != null) this.MiniGameMCP.CurrentDiaogueEnded();                   
@@ -564,12 +566,15 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             }
         }
     }
+    MCP OurMCP;
     bool WaitingOnALLastFrame = false;
     // Update is called once per frame
     void Update()
     {        
         bool waitingOnAL = WaitingOnActionList();
         FlowDebug(waitingOnAL);
+        if (OurMCP == null) OurMCP = FindObjectOfType<MCP>();
+        if (CurArticyState == eArticyState.DIALOGUE) OurMCP.ToggleJoystick(false);
 
         if (waitingOnAL == true)
         {
@@ -677,6 +682,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     public void QuitCurDialogue()
     {
         SetArticyState(eArticyState.FREE_ROAM);
+        FindObjectOfType<MCP>().ToggleJoystick(true);
         ConvoUI.EndConversation();
         CurPauseObject = null;
         NextFragment = null;
