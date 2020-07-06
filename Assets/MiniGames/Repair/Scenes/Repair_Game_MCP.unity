@@ -197,6 +197,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 572515082208248951, guid: f0bafdf91787d5b4fb06af2f2f56d7e3,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f0bafdf91787d5b4fb06af2f2f56d7e3, type: 3}
 --- !u!114 &245322856 stripped
@@ -406,6 +411,7 @@ MonoBehaviour:
   FlowPlayer: {fileID: 0}
   NextFragment: {fileID: 0}
   DebugText: {fileID: 0}
+  DebugDF: {fileID: 0}
   MyOutputPin:
     id: 0
     mText:
@@ -900,7 +906,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2113044569}
   - component: {fileID: 2113044568}
-  - component: {fileID: 2113044567}
   m_Layer: 0
   m_Name: Camera
   m_TagString: MainCamera
@@ -908,14 +913,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &2113044567
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2113044566}
-  m_Enabled: 0
 --- !u!20 &2113044568
 Camera:
   m_ObjectHideFlags: 0
@@ -942,7 +939,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 1
+  orthographic: 0
   orthographic size: 7.4
   m_Depth: 0
   m_CullingMask:
