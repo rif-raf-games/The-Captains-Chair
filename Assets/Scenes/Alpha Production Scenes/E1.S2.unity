@@ -121,6 +121,50 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &26684355
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 26684356}
+  - component: {fileID: 26684357}
+  m_Layer: 26
+  m_Name: Sickbay_Computer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &26684356
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 26684355}
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: -0.7071068}
+  m_LocalPosition: {x: -75.12, y: 13.5, z: -19.95}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2113492419}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &26684357
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 26684355}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &38994700
 GameObject:
   m_ObjectHideFlags: 0
@@ -572,7 +616,7 @@ PrefabInstance:
     - target: {fileID: 7954063964686557625, guid: 102c0d52f8eeb41f9a35125f0b620d09,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.2919693
+      value: 10.72
       objectReference: {fileID: 0}
     - target: {fileID: 7954063964686557625, guid: 102c0d52f8eeb41f9a35125f0b620d09,
         type: 3}
@@ -582,7 +626,7 @@ PrefabInstance:
     - target: {fileID: 7954063964686557625, guid: 102c0d52f8eeb41f9a35125f0b620d09,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -42.32
+      value: -39.25
       objectReference: {fileID: 0}
     - target: {fileID: 7954063964686557625, guid: 102c0d52f8eeb41f9a35125f0b620d09,
         type: 3}
@@ -681,7 +725,7 @@ PrefabInstance:
     - target: {fileID: 109637909580498883, guid: 5181004de69434b128d9f9e4cda296e6,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.3
+      value: -15
       objectReference: {fileID: 0}
     - target: {fileID: 109637909580498883, guid: 5181004de69434b128d9f9e4cda296e6,
         type: 3}
@@ -691,7 +735,7 @@ PrefabInstance:
     - target: {fileID: 109637909580498883, guid: 5181004de69434b128d9f9e4cda296e6,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -27.15
+      value: -32.3
       objectReference: {fileID: 0}
     - target: {fileID: 109637909580498883, guid: 5181004de69434b128d9f9e4cda296e6,
         type: 3}
@@ -848,7 +892,7 @@ GameObject:
   - component: {fileID: 394631463}
   - component: {fileID: 394631464}
   m_Layer: 26
-  m_Name: Grunfeld_Stand
+  m_Name: Loop_Stand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -862,7 +906,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 394631462}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -74.585, y: 12.99, z: -13.22}
+  m_LocalPosition: {x: -74.89, y: 14.73, z: -16.45}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2113492419}
@@ -876,7 +920,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 394631462}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0, y: 1, z: 1}
@@ -2151,6 +2195,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Captain
       objectReference: {fileID: 0}
+    - target: {fileID: 503849595924545994, guid: 36be333067f4fbb4ab2137db090d54e6,
+        type: 3}
+      propertyPath: DebugDestPos
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 503849595924545994, guid: 36be333067f4fbb4ab2137db090d54e6,
+        type: 3}
+      propertyPath: Joystick
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 503849595924545993, guid: 36be333067f4fbb4ab2137db090d54e6,
         type: 3}
       propertyPath: ConvoUI
@@ -2210,16 +2264,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 503849595924545994, guid: 36be333067f4fbb4ab2137db090d54e6,
-        type: 3}
-      propertyPath: DebugDestPos
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 503849595924545994, guid: 36be333067f4fbb4ab2137db090d54e6,
-        type: 3}
-      propertyPath: Joystick
-      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7740752020716406416, guid: 36be333067f4fbb4ab2137db090d54e6,
         type: 3}
@@ -2510,7 +2554,7 @@ GameObject:
   - component: {fileID: 1130272389}
   - component: {fileID: 1130272388}
   m_Layer: 26
-  m_Name: Medicine_Cabinet
+  m_Name: Sickbay_Computer_Stand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2537,7 +2581,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1130272387}
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: -0.7071068}
-  m_LocalPosition: {x: -66.38508, y: 14.423252, z: -18.195}
+  m_LocalPosition: {x: -75.12, y: 13.5, z: -16.46}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2113492419}
@@ -2712,7 +2756,7 @@ PrefabInstance:
     - target: {fileID: 4889070530262827532, guid: 40fdf4a1c7c930441b2c41824b70c61e,
         type: 3}
       propertyPath: VisualFXList.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4889070530262827532, guid: 40fdf4a1c7c930441b2c41824b70c61e,
         type: 3}
@@ -2725,6 +2769,11 @@ PrefabInstance:
       propertyPath: VisualFXList.Array.data[1].FX
       value: 
       objectReference: {fileID: 156936, guid: cf43a7dd258b42b41a217fc2f452aeda, type: 3}
+    - target: {fileID: 4889070530262827532, guid: 40fdf4a1c7c930441b2c41824b70c61e,
+        type: 3}
+      propertyPath: VisualFXList.Array.data[2].FX
+      value: 
+      objectReference: {fileID: 126754, guid: db1ef0db102f5864986443fb43fd0f64, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 40fdf4a1c7c930441b2c41824b70c61e, type: 3}
 --- !u!1001 &1182114442
@@ -4122,7 +4171,7 @@ PrefabInstance:
     - target: {fileID: 2937821610879069394, guid: 112d4332ffeff42058cf89477f5c8459,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 8.083969
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 2937821610879069394, guid: 112d4332ffeff42058cf89477f5c8459,
         type: 3}
@@ -4132,7 +4181,7 @@ PrefabInstance:
     - target: {fileID: 2937821610879069394, guid: 112d4332ffeff42058cf89477f5c8459,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -41.65
+      value: -39.46
       objectReference: {fileID: 0}
     - target: {fileID: 2937821610879069394, guid: 112d4332ffeff42058cf89477f5c8459,
         type: 3}
@@ -4642,6 +4691,7 @@ Transform:
   - {fileID: 709292674}
   - {fileID: 1318421095}
   - {fileID: 394631463}
+  - {fileID: 26684356}
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
