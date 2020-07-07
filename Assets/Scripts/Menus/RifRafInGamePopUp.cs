@@ -39,7 +39,11 @@ public class RifRafInGamePopUp : MonoBehaviour
             if(ArticyGlobalVariables.Default.Episode_01.First_Exchange == false)
             {
                 ExchangeBoardButton.SetActive(false);
-            }           
+            }
+            else
+            {
+                ExchangeBoardButton.SetActive(true);
+            }
         }
         else
         {

@@ -192,7 +192,7 @@ public class ConvoUI : MonoBehaviour
     {
         if(TextTyping == true && IsInteractive == true && Input.GetMouseButtonUp(0))
         {
-            //Debug.Log("shut off via button");
+          //  Debug.LogError("shut off via button");
             StopCoroutine(TypewriterCoroutine);
             SpeakerText.text = CurDialogueText;
             foreach (GameObject go in DialogueOptions) go.GetComponent<Button>().enabled = true;
