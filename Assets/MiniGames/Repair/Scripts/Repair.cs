@@ -246,7 +246,18 @@ public class Repair : MiniGame
             {   // if we were in PIECE type movement, check to see if we need to rotate the piece
                 if (TapTimer <= TAP_TIME)
                 {   // tap/click time was fast enough so rotate
-                    HeldPiece.transform.Rotate(0f, 60f, 0f);                   
+                   // Debug.Log("a");
+                    HeldPiece.transform.Rotate(0f, 60f, 0f);
+                    if (HeldPiece.transform.parent == BoardPieces)
+                    {
+                      //  Debug.Log("d");
+                        HeldPiece.GetComponentInChildren<MeshRenderer>().material = OnBoardMaterial;
+                    }
+                    else
+                    {
+                      //  Debug.Log("e");
+                        HeldPiece.GetComponentInChildren<MeshRenderer>().material = RegMaterial;
+                    }
                 }
                 else
                 {   // ok we've released our touch after moving a piece around, so figure out what to do
@@ -255,10 +266,12 @@ public class Repair : MiniGame
                     {
                         if (HeldPiece.transform.parent == BoardPieces)
                         {
+                         //   Debug.Log("b");
                             HeldPiece.GetComponentInChildren<MeshRenderer>().material = OnBoardMaterial;
                         }
                         else
                         {
+                          //  Debug.Log("c");
                             HeldPiece.GetComponentInChildren<MeshRenderer>().material = RegMaterial;
                         }
                     }
@@ -495,7 +508,7 @@ public class Repair : MiniGame
     /// </summary>    
     bool PushPiecesToMakeSpace(GameObject beltAnchor, int initialIndexStop, int indexAdj)
     {
-        Debug.Log("PushPiecesToMakeSpace() beltAnchor: " + beltAnchor.name + ", initialIndexStop: " + initialIndexStop + ", indexAdj: " + indexAdj);
+        //Debug.Log("PushPiecesToMakeSpace() beltAnchor: " + beltAnchor.name + ", initialIndexStop: " + initialIndexStop + ", indexAdj: " + indexAdj);
         int baIndex = BeltAnchors.IndexOf(beltAnchor);
        // Debug.Log("PushPiecesToMakeSpace() baIndex: " + baIndex);
         if (baIndex == -1) { Debug.LogError("we're trying to PushPiecesToMakeSpace but the beltAnchor isn't in the list: " + beltAnchor.name); return false; }
@@ -511,7 +524,7 @@ public class Repair : MiniGame
             {               
                 spotFound = true;
                 foundSpotIndex = i;
-                Debug.Log("spot found.  foundSpotIndex: " + foundSpotIndex);
+              //  Debug.Log("spot found.  foundSpotIndex: " + foundSpotIndex);
                 hit.collider.name = "index: " + foundSpotIndex;
                 break;
             }
