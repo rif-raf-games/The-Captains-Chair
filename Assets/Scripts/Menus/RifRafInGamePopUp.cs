@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Articy.The_Captain_s_Chair.GlobalVariables;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,6 +7,7 @@ using UnityEngine.UI;
 public class RifRafInGamePopUp : MonoBehaviour
 {
     public GameObject PopUpPanel;
+    public GameObject ExchangeBoardButton;
     public MissionHint MissionHint;
     public RifRafExchangeJobBoard ExchangeBoard;    
     public MCP MCP;
@@ -34,6 +36,10 @@ public class RifRafInGamePopUp : MonoBehaviour
         {
             GetComponentInChildren<Slider>().value = this.MCP.GetAudioVolume();
             SetAudioVolumeToggle();
+            if(ArticyGlobalVariables.Default.Episode_01.First_Exchange == false)
+            {
+                ExchangeBoardButton.SetActive(false);
+            }           
         }
         else
         {

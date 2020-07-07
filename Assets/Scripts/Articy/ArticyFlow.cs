@@ -305,7 +305,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                     }
                     
                     SetArticyState(eArticyState.FREE_ROAM);
-                    FindObjectOfType<MCP>().ToggleJoystick(true);
+                    if (FindObjectOfType<MiniGameMCP>() == null) FindObjectOfType<MCP>().ToggleJoystick(true);
                     ConvoUI.EndConversation();
                     FlowFragsVisited.Clear();
                     if (this.MiniGameMCP != null) this.MiniGameMCP.CurrentDiaogueEnded();                   
@@ -354,7 +354,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                 jumpSave.Template.Success_Save_Fragment.SaveFragment = curJump.Template.Success_Save_Fragment.SaveFragment;                
 
                 ArticyGlobalVariables.Default.Mini_Games.Coming_From_Main_Game = true;
-                Debug.Log("About to start a mini game: " + curJump.Template.Mini_Game_Scene.Scene_Name);
+                //Debug.Log("About to start a mini game: " + curJump.Template.Mini_Game_Scene.Scene_Name);
                 //SceneManager.LoadScene(curJump.Template.Mini_Game_Scene.Scene_Name);
                 FindObjectOfType<MCP>().LoadNextScene(curJump.Template.Mini_Game_Scene.Scene_Name);
             }

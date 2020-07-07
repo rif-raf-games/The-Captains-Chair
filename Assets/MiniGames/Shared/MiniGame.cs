@@ -16,7 +16,7 @@ public class MiniGame : MonoBehaviour
     public Text DebugText;
     public virtual void Awake()
     {
-        Debug.Log("MiniGame.Awake()");
+      //  Debug.Log("MiniGame.Awake()");
         DialogueActive = false;
         MiniGameMCP mcp = FindObjectOfType<MiniGameMCP>();
         if(mcp == null)

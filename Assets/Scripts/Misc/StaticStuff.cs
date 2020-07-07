@@ -162,7 +162,7 @@ static public class StaticStuff
     }
     static public void PrintBehaviorFlow(string s, BehaviorFlowPlayer player)
     {
-        if(player.name.Contains("O'Mally")) Debug.Log("-----------------BF: " + s);
+      //  if(player.name.Contains("O'Mally")) Debug.Log("-----------------BF: " + s);
     }
     static public void PrintUI(string s)
     {

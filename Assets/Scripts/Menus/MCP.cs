@@ -45,7 +45,7 @@ public class MCP : MonoBehaviour
         ExchangeJobBoard.gameObject.SetActive(false);
         LoadingScreen.SetActive(false);
         LoadingAlien.SetActive(false);
-        SetFadeAlpha(0f);
+        SetFadeAlpha(0f);        
         Joystick.gameObject.transform.parent.gameObject.SetActive(false);
 
         SoundFXPlayer.Init(SoundFX, GetAudioVolume());
@@ -193,16 +193,25 @@ public class MCP : MonoBehaviour
         {
             FindObjectOfType<TheCaptainsChair>().CheckStartDialogue(DialogueToStartOnThisScene);
         }
-        
-        if(FindObjectOfType<MiniGameMCP>() == null) Joystick.gameObject.transform.parent.gameObject.SetActive(true);
-        else Joystick.gameObject.transform.parent.gameObject.SetActive(false);
+
+        if (FindObjectOfType<MiniGameMCP>() == null)
+        {
+            //Debug.Log("Joystick on");
+            Joystick.gameObject.transform.parent.gameObject.SetActive(true);
+        }
+        else
+        {
+           // Debug.Log("Joystick off");
+            Joystick.gameObject.transform.parent.gameObject.SetActive(false);
+        }
         InGamePopUp.TogglePopUpPanel(true);
         InGamePopUp.TMP_TurnOnBurger();
     }
 
     public void ToggleJoystick(bool val)
     {
-        // Debug.Log("ToggleJoystick() val: " + val);
+        // monote - this gets called a lot during the articy flow stuff, so get rid of that
+      //  Debug.Log("ToggleJoystick() val: " + val);
         this.Joystick.ResetInput();
         Joystick.gameObject.transform.parent.gameObject.SetActive(val);
     }
