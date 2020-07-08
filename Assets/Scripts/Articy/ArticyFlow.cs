@@ -509,7 +509,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         }
     }
 
-    public DialogueFragment DebugDF = null;
+    /*public DialogueFragment DebugDF = null;
     void OnGUI()
     {
         if (CurArticyState == eArticyState.DIALOGUE && CurPauseObject != null)
@@ -565,7 +565,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                 }
             }
         }
-    }
+    }*/
     MCP OurMCP;
     bool WaitingOnALLastFrame = false;
     // Update is called once per frame
