@@ -74,7 +74,7 @@ static public class StaticStuff
         string playerLoc = ArticyGlobalVariables.Default.Save_Info.Last_Player_Position;
         //Debug.Log("returnScene: " + returnScene + ", playerLoc: " + playerLoc);
         //GameObject.FindObjectOfType<MCP>().LoadNextScene(DEBUG_SCENE_TO_LOAD); //("Ep1.S1 Mo");
-        
+        //
         if (returnScene.Equals("null") || returnScene.Equals(""))
         {            
             GameObject.FindObjectOfType<MCP>().LoadNextScene("E1.Intro");
