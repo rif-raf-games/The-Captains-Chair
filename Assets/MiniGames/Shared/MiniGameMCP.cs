@@ -17,6 +17,7 @@ public class MiniGameMCP : MonoBehaviour
     public ArticyRef[] PuzzleDialogueRefs;
     public List<ArticyObject> PuzzleDialogues;
     public Vector3[] CameraPositions;
+    public Quaternion[] CameraRotations;
     MiniGame[] Puzzles;
     string ProgressVarName;
     int CurPuzzle;
@@ -72,6 +73,7 @@ public class MiniGameMCP : MonoBehaviour
         }
         Puzzles = new MiniGame[PuzzlesToLoad.Length];
         CameraPositions = new Vector3[PuzzlesToLoad.Length];
+        CameraRotations = new Quaternion[PuzzlesToLoad.Length];
         for (int i = 0; i < PuzzlesToLoad.Length; i++)
         {
             //Debug.Log("LoadScene: " + PuzzlesToLoad[i]);
@@ -94,15 +96,21 @@ public class MiniGameMCP : MonoBehaviour
             UnityEngine.SceneManagement.Scene puzzleScene = SceneManager.GetSceneAt(2);
             MiniGame newPuzzle = null;
             Vector3 camPos = Vector3.zero;
+            Quaternion camRot = Quaternion.identity;
             GameObject[] newPuzzleObjs = puzzleScene.GetRootGameObjects();
             foreach (GameObject go in newPuzzleObjs)
             {
                 if(newPuzzle == null) newPuzzle = go.GetComponent<MiniGame>();
-                if (go.GetComponent<Camera>() != null) camPos = go.transform.position;
+                if (go.GetComponent<Camera>() != null)
+                {
+                    camPos = go.transform.position;
+                    camRot = go.transform.rotation;
+                }
             }
             Puzzles[i] = newPuzzle;
             Puzzles[i].transform.parent = this.transform;
             CameraPositions[i] = camPos;
+            CameraRotations[i] = camRot;
             asyncLoad = SceneManager.UnloadSceneAsync(puzzleScene);
             while (!asyncLoad.isDone)
             {
@@ -150,6 +158,7 @@ public class MiniGameMCP : MonoBehaviour
         CurPuzzle = progress - 1; Debug.Log("CurPuzzle: " + CurPuzzle);
         Puzzles[CurPuzzle].gameObject.SetActive(true);
         Camera.main.transform.position = CameraPositions[CurPuzzle];
+       // Camera.main.transform.rotation = CameraRotations[CurPuzzle];
 
         
         float endTime = Time.time;
@@ -209,6 +218,7 @@ public class MiniGameMCP : MonoBehaviour
             CurPuzzle++;
             Puzzles[CurPuzzle].gameObject.SetActive(true);
             Camera.main.transform.position = CameraPositions[CurPuzzle];
+           // Camera.main.transform.rotation = CameraRotations[CurPuzzle];
             SetupLerpFade(1f, 0f, 1.5f);
             GameState = eGameState.FADE_IN;
         }
