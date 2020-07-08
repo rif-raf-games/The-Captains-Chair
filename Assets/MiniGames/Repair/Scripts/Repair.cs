@@ -907,23 +907,26 @@ public class Repair : MiniGame
             if (pieceNotReached == null)
             {
                 puzzleSolved = true;
-                msg = "CONGRATS WE HAVE REACHED EVERY TERMINAL ON THE PUZZLE SO WE WIN!!!!!!";
+                msg = "You Win, Congratulations!!";
             }
             else
             {
                 puzzleSolved = false;
-                msg = "WE HAVE AT LEAST 1 TERMINAL " + pieceNotReached.name + " THAT HAS NOT BEEN REACHED SO WE FAIL!!!!!!";
+                //msg = "WE HAVE AT LEAST 1 TERMINAL " + pieceNotReached.name + " THAT HAS NOT BEEN REACHED SO WE FAIL!!!!!!";
+                msg = "There is at least one Terminal that has not been connected. Try again!";
                 PathErrorSphere.transform.position = pieceNotReached.transform.position + new Vector3(0f, .5f, 0f);
             }
         }
         string result = "";
         if (puzzleSolved == false)
         {
-            result = "epic FAIL because: " + msg + ", took " + NumChecks + " to do it";
+            //result = "epic FAIL because: " + msg + ", took " + NumChecks + " to do it";
+            result = "Result Failed because: " + msg;
         }
         else
         {
-            result = "epic WIN because: " + msg + ", took " + NumChecks + " to do it";
+            //result = "epic WIN because: " + msg + ", took " + NumChecks + " to do it";
+            result = "Result Success: " + msg;
         }
         StartCoroutine(ShowResults(result, puzzleSolved));
         return puzzleSolved;
