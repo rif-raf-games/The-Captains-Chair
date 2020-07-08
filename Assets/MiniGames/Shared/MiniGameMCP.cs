@@ -160,7 +160,7 @@ public class MiniGameMCP : MonoBehaviour
         SetupLerpFade(1f, 0f, 1.5f);
         GameState = eGameState.FADE_IN;        
     }
-    private void OnGUI()
+   /* private void OnGUI()
     {
         if(GUI.Button(new Rect(Screen.width - 100, Screen.height/2 - 100, 100, 100), "Win"))
         {
@@ -172,7 +172,7 @@ public class MiniGameMCP : MonoBehaviour
             string sceneName = jumpSave.Template.Quit_Mini_Game_Result.SceneName;
             FindObjectOfType<MCP>().LoadNextScene(sceneName);
         }
-    }
+    }*/
 
     IEnumerator FadePause()
     {
