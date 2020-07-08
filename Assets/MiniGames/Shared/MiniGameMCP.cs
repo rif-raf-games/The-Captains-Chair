@@ -143,6 +143,7 @@ public class MiniGameMCP : MonoBehaviour
         {
             progress = 1;
             ArticyGlobalVariables.Default.SetVariableByString(ProgressVarName, progress);
+            Debug.LogError("******************************** Setting the var (b): " + ProgressVarName + " to " + progress);
             StaticStuff.SaveSaveData("We went from progress on variable: " + ProgressVarName + ", so save");
         }
         
@@ -299,7 +300,7 @@ public class MiniGameMCP : MonoBehaviour
             int progress = int.Parse(var);
             progress++;
             ArticyGlobalVariables.Default.SetVariableByString(ProgressVarName, progress);
-            Debug.LogError("******************************** Setting the var: " + ProgressVarName + " to " + progress);
+            Debug.LogError("******************************** Setting the var (a): " + ProgressVarName + " to " + progress);
             StaticStuff.SaveSaveData("MiniGameMCP.SavePuzzlesProgress()");
         }       
     }
