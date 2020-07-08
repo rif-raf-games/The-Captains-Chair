@@ -60,7 +60,7 @@ public class LockPicking : MiniGame
     {
         if (IsDeathNode(pathNode))
         {
-            if (diode.Evil == false) StartCoroutine(ShowResults("You Lost.", false));
+            if (diode.Evil == false) StartCoroutine(ShowResults("You got caught by an enemy Diode!", false));
             else StartCoroutine(EvilDiodeRespawn(diode));
         }
     }
@@ -192,13 +192,13 @@ public class LockPicking : MiniGame
         //if (true)
         if(GatesThisGame.Count == 0)        
         {
-            StartCoroutine(ShowResults("You Won.", true));
+            StartCoroutine(ShowResults("You Win, congratulations!!", true));
         }        
     }
 
     public void HitEvilDiode(Diode evilDiode)        
     {
-        StartCoroutine(ShowResults("You were killed by an evil diode.", false));
+        StartCoroutine(ShowResults("You got caught by an enemy Diode!", false));
     }
     public bool IsDeathNode(PathNode pathNode)
     {
@@ -207,7 +207,7 @@ public class LockPicking : MiniGame
 
     public override void TMP_WinGame()
     {
-        StartCoroutine(ShowResults("You are using a debug cheat to win.\nMo is making you lazy.", true));
+        StartCoroutine(ShowResults("You are using a debug cheat to win.", true));
     }
 
     IEnumerator ShowResults(string result, bool success)

@@ -941,7 +941,7 @@ public class Repair : MiniGame
     
     public override void TMP_WinGame()
     {
-        StartCoroutine(ShowResults("You are using a debug cheat to win.\nMo is making you lazy.", true));
+        StartCoroutine(ShowResults("You are using a debug cheat to win.", true));
     }
 
     IEnumerator ShowResults(string result, bool success)

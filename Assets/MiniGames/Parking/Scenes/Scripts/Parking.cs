@@ -559,7 +559,7 @@ public class Parking : MiniGame
         string result;
         if (allTargetShipsContainedLiftPad == true)
         {
-            result = "All TARGET ships are on the Lift Pad, so you win";
+            result = "You win, congratulations!!";
             StartCoroutine(ShowResults(result, allTargetShipsContainedLiftPad));
         }        
     }
