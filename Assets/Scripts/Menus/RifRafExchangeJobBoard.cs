@@ -119,7 +119,7 @@ public class RifRafExchangeJobBoard : MonoBehaviour
         s += varName + "\n";
         string var = ArticyGlobalVariables.Default.GetVariableByString<string>(varName);
         s += var + "\n";
-        Debug.Log("**********************LOOK HERE FOR SCENE LOADING ISSUES!!!!!!!!!! " + s);
+        Debug.LogError("**********************LOOK HERE FOR SCENE LOADING ISSUES!!!!!!!!!! " + s);
 
         int progress = int.Parse(var);
         s += "int prog: " + progress + "\n";
