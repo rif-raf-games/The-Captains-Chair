@@ -385,6 +385,50 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugDrawRadius: 1
+--- !u!1 &186807584
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 186807586}
+  - component: {fileID: 186807585}
+  m_Layer: 0
+  m_Name: Hustler_Exit
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!65 &186807585
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 186807584}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!4 &186807586
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 186807584}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -75.76, y: 0.94, z: -62.76}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 20
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &192296470
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -813,15 +857,15 @@ PrefabInstance:
       propertyPath: ArticyAIReference.highId
       value: 16777224
       objectReference: {fileID: 0}
-    - target: {fileID: 6706618710637255608, guid: 8ebadf776109343069adec7fb8d32e7c,
-        type: 3}
-      propertyPath: m_IsKinematic
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 796509496558512672, guid: 8ebadf776109343069adec7fb8d32e7c,
         type: 3}
       propertyPath: m_Radius
       value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6706618710637255608, guid: 8ebadf776109343069adec7fb8d32e7c,
+        type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8ebadf776109343069adec7fb8d32e7c, type: 3}
@@ -1377,6 +1421,11 @@ PrefabInstance:
       propertyPath: Joystick
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 503849595924545995, guid: 36be333067f4fbb4ab2137db090d54e6,
+        type: 3}
+      propertyPath: m_Acceleration
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6047020611072982369, guid: 36be333067f4fbb4ab2137db090d54e6,
         type: 3}
       propertyPath: m_Name
@@ -1436,11 +1485,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 503849595924545995, guid: 36be333067f4fbb4ab2137db090d54e6,
-        type: 3}
-      propertyPath: m_Acceleration
-      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 36be333067f4fbb4ab2137db090d54e6, type: 3}
@@ -2541,7 +2585,7 @@ PrefabInstance:
     - target: {fileID: 7543263052143636935, guid: daad0913a0d8a449c9b4b09c7485075a,
         type: 3}
       propertyPath: m_Name
-      value: Guard_Exit
+      value: The Hustler
       objectReference: {fileID: 0}
     - target: {fileID: 7543263052143636935, guid: daad0913a0d8a449c9b4b09c7485075a,
         type: 3}
@@ -3592,15 +3636,15 @@ PrefabInstance:
       propertyPath: ArticyAIReference.highId
       value: 16777224
       objectReference: {fileID: 0}
-    - target: {fileID: 428928113340102007, guid: 112d4332ffeff42058cf89477f5c8459,
-        type: 3}
-      propertyPath: m_IsKinematic
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1324219674674773885, guid: 112d4332ffeff42058cf89477f5c8459,
         type: 3}
       propertyPath: m_Radius
       value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 428928113340102007, guid: 112d4332ffeff42058cf89477f5c8459,
+        type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 112d4332ffeff42058cf89477f5c8459, type: 3}
