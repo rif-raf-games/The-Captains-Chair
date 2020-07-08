@@ -20,7 +20,7 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.7490196, g: 0.7490196, b: 0.7490196, a: 1}
+  m_AmbientSkyColor: {r: 1.0592737, g: 1.0592737, b: 1.0592737, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.45111454, g: 0.5009125, b: 0.5740085, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -51,7 +51,7 @@ LightmapSettings:
     m_IndirectOutputScale: 1
     m_AlbedoBoost: 1
     m_EnvironmentLightingMode: 0
-    m_EnableBakedLightmaps: 1
+    m_EnableBakedLightmaps: 0
     m_EnableRealtimeLightmaps: 0
   m_LightmapEditorSettings:
     serializedVersion: 12
@@ -96,8 +96,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
-  m_LightingDataAsset: {fileID: 112000000, guid: 6c273c62295c08644a1c173881916339,
-    type: 2}
+  m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
@@ -2195,16 +2194,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Captain
       objectReference: {fileID: 0}
-    - target: {fileID: 503849595924545994, guid: 36be333067f4fbb4ab2137db090d54e6,
-        type: 3}
-      propertyPath: DebugDestPos
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 503849595924545994, guid: 36be333067f4fbb4ab2137db090d54e6,
-        type: 3}
-      propertyPath: Joystick
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 503849595924545993, guid: 36be333067f4fbb4ab2137db090d54e6,
         type: 3}
       propertyPath: ConvoUI
@@ -2264,6 +2253,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 503849595924545994, guid: 36be333067f4fbb4ab2137db090d54e6,
+        type: 3}
+      propertyPath: DebugDestPos
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 503849595924545994, guid: 36be333067f4fbb4ab2137db090d54e6,
+        type: 3}
+      propertyPath: Joystick
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7740752020716406416, guid: 36be333067f4fbb4ab2137db090d54e6,
         type: 3}
@@ -5002,6 +5001,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7955077165260457943, guid: 4e1f412311528429298a027188bab769,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1530267984037815939, guid: 4e1f412311528429298a027188bab769,
         type: 3}
       propertyPath: m_LocalPosition.z
@@ -5011,11 +5015,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.z
       value: 1.36
-      objectReference: {fileID: 0}
-    - target: {fileID: 7955077165260457943, guid: 4e1f412311528429298a027188bab769,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6108997326933279935, guid: 4e1f412311528429298a027188bab769,
         type: 3}
