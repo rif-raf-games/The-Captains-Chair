@@ -30,13 +30,13 @@ public class ShipAreasCollider : MonoBehaviour
         {
             if (level == Player.GetCurFloor())
             {
-                Debug.Log("set player's floor opacity: " + level);
+                Debug.LogError("set player's floor opacity: " + level);
                 //ShipLevels[level - 1].SetPlayerLevelRoomsAlpha(true);
                 ShipLevels[level - 1].SetRoomsAlpha(1f, true);
             }
             else
             {
-                Debug.Log("turn level " + level + " to 0%");
+                Debug.LogError("turn level " + level + " to 0%");
                 ShipLevels[level - 1].SetRoomsAlpha(alpha, true);
             }            
         }
@@ -131,13 +131,13 @@ public class ShipAreasCollider : MonoBehaviour
         }
         foreach(GameObject hit in hitsToRemove)
         {
-            Debug.Log("remove this: " + hit.name + " from dimmed list");
+           // Debug.Log("remove this: " + hit.name + " from dimmed list");
             DimmedRoomsViaRaycast.Remove(hit);
         }
         if(removedRoomFromList == true && DimmedRoomsViaRaycast.Count == 1)
         {
             room = DimmedRoomsViaRaycast[0].GetComponent<Room>();
-            Debug.Log("turn transparent room " + room.name + " back to 20%");
+           // Debug.Log("turn transparent room " + room.name + " back to 20%");
             room.ToggleAlpha(RoomFadeOpacity, false);
         }
 
@@ -161,8 +161,8 @@ public class ShipAreasCollider : MonoBehaviour
         ShipLevel shipLevel = other.GetComponent<ShipLevel>();        
         if(shipLevel != null)
         {
-            StaticStuff.PrintTriggerEnter("collided with a shiplevel: " + other.name);            
-            Player.SetFloor(shipLevel.Level);
+            StaticStuff.PrintTriggerEnter("collided with a shiplevel: " + other.name);              
+            Player.SetFloor(shipLevel.Level, other.name);
             CheckFloorColliders();
             //shipLevel.SetPlayerLevelRoomsAlpha();
             shipLevel.SetRoomsAlpha(1f);

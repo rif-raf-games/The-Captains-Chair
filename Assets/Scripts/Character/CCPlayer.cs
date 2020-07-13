@@ -97,9 +97,10 @@ public class CCPlayer : CharacterEntity
     
     public override void LateUpdate()
     {
-        if(CurControlType == eControlType.POINT_CLICK || DealingWithElevator == true ||
-            CaptainArticyFlow.CurArticyState == ArticyFlow.eArticyState.DIALOGUE)
+        if (DebugText != null) DebugText.text = this.name + ", LateUpdate()";
+        if(DealingWithElevator == true || CaptainArticyFlow.CurArticyState == ArticyFlow.eArticyState.DIALOGUE)
         {
+            // if we're here then we're under some kind of external control so make sure the animations will update properly
             base.LateUpdate();
         }        
     }

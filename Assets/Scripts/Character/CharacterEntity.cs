@@ -78,8 +78,36 @@ public class CharacterEntity : MonoBehaviour
         CalcCurrentFloor();
     }
 
-    void CalcCurrentFloor()
+    
+    public IEnumerator CheckPostTeleportTransparency()
     {
+        Debug.LogError(this.name + ": CheckPostTeleportTransparency()");
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        CalcCurrentFloor();
+        int captainFloor = FindObjectOfType<CCPlayer>().GetCurFloor();
+        Debug.LogError(this.name + ": new Current Floor: " + CurFloor + ", captainFloor: " + captainFloor);
+        float alpha;
+        if (captainFloor == CurFloor) alpha = 1f;
+        else alpha = 0f;
+        Renderer[] childRs = this.GetComponentsInChildren<Renderer>();
+        foreach (Renderer mr in childRs)
+        {
+            List<Material> mrMaterials = new List<Material>();
+            mr.GetMaterials(mrMaterials);
+            foreach (Material material in mrMaterials)
+            {
+                //  Debug.Log("material in this NPC: " + material.name);
+                //material.shader = UnityEngine.Shader.Find("RifRafStandard");                
+                material.color = new Color(material.color.r, material.color.g, material.color.b, alpha);
+            }
+        }
+    }
+    public void CalcCurrentFloor()
+    {
+       // if (this.name.Contains("Stu")) Debug.LogError(this.name +" CalcCurrentFloor()");
         if (GetComponent<CapsuleCollider>() != null)
         {
             Vector3 center = GetComponent<CapsuleCollider>().bounds.center;
@@ -88,20 +116,42 @@ public class CharacterEntity : MonoBehaviour
             RaycastHit hit;
             Physics.Raycast(rayPos, center - rayPos, out hit, Mathf.Infinity, layerMask);
             if (hit.collider != null)
-            {                
+            {
+              //  if (this.name.Contains("Stu")) Debug.LogError(this.name + ": hit a floor: " + hit.collider.name);
                 SetFloor(hit.collider.GetComponent<ShipLevel>().Level);
             }
         }
+        else Debug.LogError(this.name + ": No CapsuleCollider on this NPC: " + this.name);
     }
 
     public int GetCurFloor()
     {
         return CurFloor;
     }
-    public void SetFloor(int newFloor)
+    private void OnGUI()
     {
+        if(this.name.Contains("Captain"))
+        {
+            if (GUI.Button(new Rect(Screen.width - 100, Screen.height / 2 - 150, 100, 100), "set"))
+            {
+                this.transform.rotation = DebugPlayerRot;
+            }
+        }
+        
+    }
+    public Quaternion DebugPlayerRot = Quaternion.identity;
+    public void SetFloor(int newFloor, string floorName = "")
+    {
+        /*if(this.name.Contains("Stu")) Debug.LogError(this.name + ": setting " + this.name + "'s floor to: " + newFloor);
+        if(this.name.Contains("Captain"))
+        {
+            Debug.LogError("**** transform: " + this.transform.position.ToString("F3") + ", rot: " + this.transform.rotation.ToString("F2"));
+            Debug.LogError("*********************************************CAPTAIN setting " + this.name + "'s floor to: " + newFloor + " after coliding with: " + floorName + ": " + Time.time);
+            DebugPlayerRot = this.transform.rotation;
+            int x = 5;
+            x++;
+        }*/
         CurFloor = newFloor;
-        //Debug.Log("setting " + this.name + "'s floor to: " + CurFloor);
     }
 
     IEnumerator AnimStartDelay()
@@ -123,8 +173,13 @@ public class CharacterEntity : MonoBehaviour
             ForwardDir = transform.forward;
 
             // determines whether or not we go to the WALK bit
-            Speed = DeltaPos.magnitude * 10f;
+            if (DeltaPos.y >= .01f) Speed = 0f;
+            else Speed = DeltaPos.magnitude * 10f;
             Animator.SetFloat("Vertical", Speed);
+            if(DebugText != null)
+            {
+                DebugText.text = this.name + "-DeltaPos.magnitude: " + DeltaPos.magnitude.ToString("F2") + ", MoveDir: " + MoveDir.ToString("F2") + ", FowardDir: " + ForwardDir.ToString("F2") + ", Speed: " + Speed.ToString("F2");
+            }
 
             // determines how much of the WalkForward and WalkBackward we play
             /*WalkDir = Vector3.Angle(ForwardDir, MoveDir) / 180f; // 0 = forward, 1 = backward

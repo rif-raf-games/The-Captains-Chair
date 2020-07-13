@@ -394,6 +394,7 @@ public class BehaviorFlowPlayer : MonoBehaviour
                             actionState.actionObject.transform.rotation = Quaternion.Lerp(actionState.LerpRotStart, actionState.LerpRotEnd, actionState.timer);
                             if (actionState.timer > 1f)
                             {
+                                if (this.name.Contains("Captain")) Debug.LogError("TurnTowards is done");
                                 actionState.actionObject.transform.rotation = actionState.LerpRotEnd;
                                 actionState.isActionDone = true;
                             }
@@ -439,6 +440,10 @@ public class BehaviorFlowPlayer : MonoBehaviour
     {
         CharacterEntity ce;
 
+        /*if(this.name.Contains("Captain"))
+        {
+            Debug.LogError("SetupActionState() actionInfo: " + actionState.actionInfo);
+        }*/
         if (delayRangeString.Equals(""))
         {
             StaticStuff.PrintCAL("delay blank, so no delay");
@@ -510,7 +515,9 @@ public class BehaviorFlowPlayer : MonoBehaviour
                 if (ce == null) { Debug.LogError("Can't call an animation on an object that's not a Player/NPC: " + actionState.actionObject.name); return false; }
                 break;
             case Action.TurnTowards:
+                if (this.name.Contains("Captain")) Debug.LogError("******** start setting up captain TurnTowards: " + Time.time);
                 if (SetTurnTowards(actionState.actionInfo, actionState) == false) { return false; }
+                if (this.name.Contains("Captain")) Debug.LogError("******** end setting up captain TurnTowards: " + Time.time);
                 break;
             case Action.TurnTowardsEachOther:
                 if (actionState.actionInfo.Equals("Dialogue_NPC")) //actionState.actionInfo = DialogueNPC.name;
@@ -566,8 +573,10 @@ public class BehaviorFlowPlayer : MonoBehaviour
                 if (agent != null) agent.enabled = false;
                 actionState.actionObject.transform.position = actionState.infoObject.transform.position;
                 if (agent != null) agent.enabled = true;
+                ce = actionState.actionObject.GetComponent<CharacterEntity>();
+                if (ce != null) StartCoroutine(ce.CheckPostTeleportTransparency());/*ce.CheckPostTeleportTransparency();*/ else { Debug.LogError("No CharacterEntity on this: " + this.name); return false; }
                 actionState.delayDone = true;
-                actionState.isActionDone = true;                
+                actionState.isActionDone = true;                     
                 break;
             default:                
                 Debug.LogError("ERROR: we don't have code for this action: " + actionState.action);
@@ -669,6 +678,8 @@ public class BehaviorFlowPlayer : MonoBehaviour
         GameObject objectToLookAt = GameObject.Find(objectNameToLookAt);
         if (objectToLookAt == null) { Debug.LogError("No object in the scene to look at called: " + objectNameToLookAt); return false; }
         actionState.LerpRotStart = actionState.actionObject.transform.rotation;
+        Transform t = objectToLookAt.transform;
+        t.position = new Vector3(t.position.x, this.transform.position.y, t.position.z);
         actionState.actionObject.transform.LookAt(objectToLookAt.transform);
         actionState.LerpRotEnd = actionState.actionObject.transform.rotation;
         actionState.actionObject.transform.rotation = actionState.LerpRotStart;
