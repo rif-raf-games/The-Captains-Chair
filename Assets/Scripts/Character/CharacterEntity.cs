@@ -128,7 +128,7 @@ public class CharacterEntity : MonoBehaviour
     {
         return CurFloor;
     }
-    private void OnGUI()
+    /*private void OnGUI()
     {
         if(this.name.Contains("Captain"))
         {
@@ -138,7 +138,7 @@ public class CharacterEntity : MonoBehaviour
             }
         }
         
-    }
+    }*/
     public Quaternion DebugPlayerRot = Quaternion.identity;
     public void SetFloor(int newFloor, string floorName = "")
     {

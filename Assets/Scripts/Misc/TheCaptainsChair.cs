@@ -82,7 +82,7 @@ public class TheCaptainsChair : MonoBehaviour
             Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
             if (ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success == true)
             {
-                Debug.Log("We were a success so do the success thing");
+               // Debug.Log("We were a success so do the success thing");
                 flowStartAO = jumpSave.Template.Success_Mini_Game_Result.Dialogue; //jumpSave.Template.Flow_Start_Success.ReferenceSlot;
                                                                                    // Debug.Log("flow start: " + flowStartAO.TechnicalName);
                                                                                    // Player.GetComponent<ArticyFlow>().CheckIfDialogueShouldStart(flowStartAO as Dialogue, Player.gameObject);
@@ -94,7 +94,7 @@ public class TheCaptainsChair : MonoBehaviour
                                                                                 // Debug.Log("flow start: " + flowStartAO.TechnicalName);
                                                                                 //Player.GetComponent<ArticyFlow>().CheckIfDialogueShouldStart(flowStartAO as Dialogue, Player.gameObject);
             }
-            Debug.Log("flow start: " + flowStartAO.TechnicalName);
+         //   Debug.Log("flow start: " + flowStartAO.TechnicalName);
             //Player.GetComponent<ArticyFlow>().CheckIfDialogueShouldStart(flowStartAO as Dialogue, Player.gameObject);
             dialogueToStartOn = flowStartAO as Dialogue;
 
@@ -133,15 +133,8 @@ public class TheCaptainsChair : MonoBehaviour
         {
             this.MCP.SetDialogueToStartSceneOn(dialogueToStartOn);
         }
-        
 
-        string playerLoc = ArticyGlobalVariables.Default.Save_Info.Last_Player_Position;
-        if (!(playerLoc.Equals("null") || playerLoc.Equals("")))
-        {
-            string[] loc = playerLoc.Split(',');
-            Vector3 pos = new Vector3(float.Parse(loc[0]), float.Parse(loc[1]), float.Parse(loc[2]));
-            Player.transform.position = pos;
-        }
+        
 
        // SoundFX soundFX = FindObjectOfType<SoundFX>();
        // SoundFXPlayer.Init(soundFX, this.MCP.GetAudioVolume());

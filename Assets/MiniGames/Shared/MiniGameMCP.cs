@@ -20,7 +20,8 @@ public class MiniGameMCP : MonoBehaviour
     public Quaternion[] CameraRotations;
     MiniGame[] Puzzles;
     string ProgressVarName;
-    int CurPuzzle;
+    string FinishedVarName;
+    int CurPuzzleIndex;
 
     TheCaptainsChair CaptainsChair;
     // UI
@@ -132,12 +133,15 @@ public class MiniGameMCP : MonoBehaviour
         {
             case 1: // parking
                 ProgressVarName = "Activity.Progress_Parking";
+                FinishedVarName = "Activity.Finished_Parking";
                 break;
             case 2: // lockpick
                 ProgressVarName = "Activity.Progress_Lockpick";
+                FinishedVarName = "Activity.Finished_Lockpick";
                 break;
             case 3: // repair
                 ProgressVarName = "Activity.Progress_Repair";
+                FinishedVarName = "Activity.Finished_Repair";
                 break;
             default:
                 Debug.LogError("ERROR, we don't have a valid Activity ID: " + ArticyGlobalVariables.Default.Activity.ID);
@@ -151,14 +155,14 @@ public class MiniGameMCP : MonoBehaviour
         {
             progress = 1;
             ArticyGlobalVariables.Default.SetVariableByString(ProgressVarName, progress);
-            Debug.LogError("******************************** Setting the var (b): " + ProgressVarName + " to " + progress);
+            Debug.LogError("moprog01 ******************************** Setting the var (b): " + ProgressVarName + " to " + progress + " because the current progress for the variable is 0");
             StaticStuff.SaveSaveData("We went from progress on variable: " + ProgressVarName + ", so save");
         }
         
-        CurPuzzle = progress - 1; Debug.Log("CurPuzzle: " + CurPuzzle);
-        Puzzles[CurPuzzle].gameObject.SetActive(true);
-        Camera.main.transform.position = CameraPositions[CurPuzzle];
-       // Camera.main.transform.rotation = CameraRotations[CurPuzzle];
+        CurPuzzleIndex = progress - 1; Debug.Log("CurPuzzleIndex: " + CurPuzzleIndex);
+        Puzzles[CurPuzzleIndex].gameObject.SetActive(true);
+        Camera.main.transform.position = CameraPositions[CurPuzzleIndex];
+       // Camera.main.transform.rotation = CameraRotations[CurPuzzleIndex];
 
         
         float endTime = Time.time;
@@ -170,11 +174,11 @@ public class MiniGameMCP : MonoBehaviour
         SetupLerpFade(1f, 0f, 1.5f);
         GameState = eGameState.FADE_IN;        
     }
-   /* private void OnGUI()
+    private void OnGUI()
     {
         if(GUI.Button(new Rect(Screen.width - 100, Screen.height/2 - 100, 100, 100), "Win"))
         {
-            Puzzles[CurPuzzle].TMP_WinGame();
+            Puzzles[CurPuzzleIndex].TMP_WinGame();
         }
         if (GUI.Button(new Rect(Screen.width - 100, Screen.height / 2, 100, 100), "Quit"))
         {
@@ -182,7 +186,7 @@ public class MiniGameMCP : MonoBehaviour
             string sceneName = jumpSave.Template.Quit_Mini_Game_Result.SceneName;
             FindObjectOfType<MCP>().LoadNextScene(sceneName);
         }
-    }*/
+    }
 
     IEnumerator FadePause()
     {
@@ -192,9 +196,9 @@ public class MiniGameMCP : MonoBehaviour
     }
     void EndCurrentPuzzle()
     {
-        if (CurPuzzle == Puzzles.Length - 1)
+        if (CurPuzzleIndex == Puzzles.Length - 1)
         {
-            Debug.Log("we're done with all puzzles");
+            Debug.LogError("moprog03 ********************************  we're done with all puzzles and this code is only called if we finished them all but this is AFTER the code to save needs to be handled");            
             ArticyGlobalVariables.Default.Mini_Games.Returning_From_Mini_Game = true;
             ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success = true;
             if(PuzzleDialogues != null)
@@ -214,11 +218,11 @@ public class MiniGameMCP : MonoBehaviour
         }
         else
         {
-            Puzzles[CurPuzzle].gameObject.SetActive(false);
-            CurPuzzle++;
-            Puzzles[CurPuzzle].gameObject.SetActive(true);
-            Camera.main.transform.position = CameraPositions[CurPuzzle];
-           // Camera.main.transform.rotation = CameraRotations[CurPuzzle];
+            Puzzles[CurPuzzleIndex].gameObject.SetActive(false);
+            CurPuzzleIndex++;
+            Puzzles[CurPuzzleIndex].gameObject.SetActive(true);
+            Camera.main.transform.position = CameraPositions[CurPuzzleIndex];
+           // Camera.main.transform.rotation = CameraRotations[CurPuzzleIndex];
             SetupLerpFade(1f, 0f, 1.5f);
             GameState = eGameState.FADE_IN;
         }
@@ -243,49 +247,49 @@ public class MiniGameMCP : MonoBehaviour
 
     public void CurrentDiaogueEnded()
     {
-        Puzzles[CurPuzzle].DialogueEnded();
+        Puzzles[CurPuzzleIndex].DialogueEnded();
     }
     void StartCurrentPuzzle()
     {
         if(PuzzleDialogues != null)
         {   // if we're here, then we've gotten a list of dialogues from an articy ref, so use that
-            if (PuzzleDialogues.Count == 0 || PuzzleDialogues.Count - 1 < CurPuzzle)
+            if (PuzzleDialogues.Count == 0 || PuzzleDialogues.Count - 1 < CurPuzzleIndex)
             {
                 // no dialogue but keep this in case we need this
                 //Debug.LogError("You don't have the Mini_Game_Jump set up properly because there's no entry in the Dialogues To Play list for this puzzle");                
             }
             else
             {
-                Dialogue d = PuzzleDialogues[CurPuzzle] as Dialogue;
+                Dialogue d = PuzzleDialogues[CurPuzzleIndex] as Dialogue;
                 if (d != null)
                 {                    
                     bool dialogueActive = MiniGameArticyFlow.CheckIfDialogueShouldStart(d, null);
-                    Puzzles[CurPuzzle].SetDialogueActive(dialogueActive);
+                    Puzzles[CurPuzzleIndex].SetDialogueActive(dialogueActive);
                 }
-                else Debug.LogError("The articy object for this Dialogue in the Mini_Game_Jump Dialogues To Play list isn't a Dialogue: " + PuzzleDialogues[CurPuzzle].GetArticyType());
+                else Debug.LogError("The articy object for this Dialogue in the Mini_Game_Jump Dialogues To Play list isn't a Dialogue: " + PuzzleDialogues[CurPuzzleIndex].GetArticyType());
             }
         }
         else
         {   // if we're here, then we're doing either a straight MCP run or a demo run, so use the lsit set up in Unity
-            if (PuzzleDialogueRefs == null || PuzzleDialogueRefs.Length == 0 || PuzzleDialogueRefs.Length - 1 < CurPuzzle)
+            if (PuzzleDialogueRefs == null || PuzzleDialogueRefs.Length == 0 || PuzzleDialogueRefs.Length - 1 < CurPuzzleIndex)
             {
                 Debug.LogError("You don't have the Mini_Game_Jump set up properly because there's no entry in the Dialogues To Play list for this puzzle");
             }
             else
             {
                 //Debug.Log("trying to start mini game dialogue");
-                Dialogue d = PuzzleDialogueRefs[CurPuzzle].GetObject() as Dialogue;
+                Dialogue d = PuzzleDialogueRefs[CurPuzzleIndex].GetObject() as Dialogue;
                 if (d != null)
                 {
                     bool dialogueActive = MiniGameArticyFlow.CheckIfDialogueShouldStart(d, null);
-                    Puzzles[CurPuzzle].SetDialogueActive(dialogueActive);
+                    Puzzles[CurPuzzleIndex].SetDialogueActive(dialogueActive);
                 }
-                else Debug.LogError("No dialogue specified for this mini game level: " + CurPuzzle);
+                else Debug.LogError("No dialogue specified for this mini game level: " + CurPuzzleIndex);
             }
         }
         
 
-        Puzzles[CurPuzzle].BeginPuzzleStartTime();
+        Puzzles[CurPuzzleIndex].BeginPuzzleStartTime();
         GameState = eGameState.PLAYING;        
     }
 
@@ -302,15 +306,32 @@ public class MiniGameMCP : MonoBehaviour
         mcp.HideResultsText();
     }
 
-    public void SavePuzzlesProgress(bool success)
+    public void SavePuzzlesProgress(bool success, string cameFrom = "not set in call")
     {
+        Debug.LogError("SavePuzzleProgress() success: " + success + ", cameFrom: " + cameFrom);
         if(success == true)
         {
             string var = ArticyGlobalVariables.Default.GetVariableByString<string>(ProgressVarName);
             int progress = int.Parse(var);
             progress++;
-            ArticyGlobalVariables.Default.SetVariableByString(ProgressVarName, progress);
-            Debug.LogError("******************************** Setting the var (a): " + ProgressVarName + " to " + progress);
+            ArticyGlobalVariables.Default.SetVariableByString(ProgressVarName, progress);            
+            Debug.LogError("moprog02 ******************************** Setting the var (a): " + ProgressVarName + " to " + progress);
+
+           // string var = ArticyGlobalVariables.Default.GetVariableByString<string>(ProgressVarName);
+          //  int progress = int.Parse(var);
+            //progress++;
+           // Debug.LogError("The current ProgressVarName: " + ProgressVarName + " has a value of: " + progress);
+            if (progress > 2)
+            {
+                Debug.LogError("Progress is more than 2, so we're done with the mission so set var: " + FinishedVarName + " to true");
+                ArticyGlobalVariables.Default.SetVariableByString(FinishedVarName, true);
+            }
+            if (CurPuzzleIndex == Puzzles.Length - 1)
+            {
+                Debug.LogError("We are done with all the puzzles so reset the value to zero done with all the puzzles set the progress of " + ProgressVarName + " back to zero");
+                ArticyGlobalVariables.Default.SetVariableByString(ProgressVarName, 0);
+            }
+            
             StaticStuff.SaveSaveData("MiniGameMCP.SavePuzzlesProgress()");
         }       
     }

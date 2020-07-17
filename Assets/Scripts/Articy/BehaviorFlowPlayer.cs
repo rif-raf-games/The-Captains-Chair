@@ -394,7 +394,7 @@ public class BehaviorFlowPlayer : MonoBehaviour
                             actionState.actionObject.transform.rotation = Quaternion.Lerp(actionState.LerpRotStart, actionState.LerpRotEnd, actionState.timer);
                             if (actionState.timer > 1f)
                             {
-                                if (this.name.Contains("Captain")) Debug.LogError("TurnTowards is done");
+                              //  if (this.name.Contains("Captain")) Debug.LogError("TurnTowards is done");
                                 actionState.actionObject.transform.rotation = actionState.LerpRotEnd;
                                 actionState.isActionDone = true;
                             }
@@ -515,9 +515,9 @@ public class BehaviorFlowPlayer : MonoBehaviour
                 if (ce == null) { Debug.LogError("Can't call an animation on an object that's not a Player/NPC: " + actionState.actionObject.name); return false; }
                 break;
             case Action.TurnTowards:
-                if (this.name.Contains("Captain")) Debug.LogError("******** start setting up captain TurnTowards: " + Time.time);
+            //    if (this.name.Contains("Captain")) Debug.LogError("******** start setting up captain TurnTowards: " + Time.time);
                 if (SetTurnTowards(actionState.actionInfo, actionState) == false) { return false; }
-                if (this.name.Contains("Captain")) Debug.LogError("******** end setting up captain TurnTowards: " + Time.time);
+              //  if (this.name.Contains("Captain")) Debug.LogError("******** end setting up captain TurnTowards: " + Time.time);
                 break;
             case Action.TurnTowardsEachOther:
                 if (actionState.actionInfo.Equals("Dialogue_NPC")) //actionState.actionInfo = DialogueNPC.name;

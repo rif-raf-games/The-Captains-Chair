@@ -13,7 +13,7 @@ using UnityEngine.SceneManagement;
 
 static public class StaticStuff 
 {
-    static string DEBUG_SCENE_TO_LOAD = "E1.Intro";
+    static string DEBUG_SCENE_TO_LOAD = "E1.Plaza";
     public enum eOrientation { LANDSCAPE, PORTRAIT };
 
     static public void SetOrientation(eOrientation orientation, string screenName)
@@ -69,19 +69,26 @@ static public class StaticStuff
 
     static public void CheckSceneLoadSave() // Called from RifRafMenuUI
     {
+        // Debug.LogError("()()()()(() Take out next line"); StaticStuff.DeleteSaveData();        
+        //Debug.LogError("CheckSceneLoadSave()");
         StaticStuff.LoadSaveData();
+       // Debug.LogError("()()()()(() Take out next line"); ArticyGlobalVariables.Default.Episode_01.First_Exchange = true;
+
         string returnScene = ArticyGlobalVariables.Default.Save_Info.Return_Scene;
-        string playerLoc = ArticyGlobalVariables.Default.Save_Info.Last_Player_Position;
-        //Debug.Log("returnScene: " + returnScene + ", playerLoc: " + playerLoc);
-        //GameObject.FindObjectOfType<MCP>().LoadNextScene(DEBUG_SCENE_TO_LOAD); //("Ep1.S1 Mo");
-        //
+        string posToSave = ArticyGlobalVariables.Default.Save_Info.Positions_To_Save;
+        string savedPos = ArticyGlobalVariables.Default.Save_Info.Saved_Positions;
+        
+        //GameObject.FindObjectOfType<MCP>().LoadNextScene(DEBUG_SCENE_TO_LOAD); 
+        //  return;
         if (returnScene.Equals("null") || returnScene.Equals(""))
-        {            
-            GameObject.FindObjectOfType<MCP>().LoadNextScene("E1.Intro");
+        {
+            Debug.Log("Loading default start scene");
+            GameObject.FindObjectOfType<MCP>().LoadNextScene("E1.Plaza", posToSave, savedPos);
         }
         else
-        {         
-            GameObject.FindObjectOfType<MCP>().LoadNextScene(returnScene);
+        {
+            Debug.Log("loading returnScene: " + returnScene);
+            GameObject.FindObjectOfType<MCP>().LoadNextScene(returnScene, posToSave, savedPos);
         }
     }
 
@@ -181,7 +188,7 @@ static public class StaticStuff
 
     static public void PrintRifRafUI(string s)
     {
-        //Debug.Log(s);
+      //  Debug.LogWarning("===============================PrintRifRafUI(): " + s);
     }
 
     

@@ -104,7 +104,7 @@ public class Parking : MiniGame
 
     IEnumerator ShowResults(string result, bool success)
     {
-        if (MiniGameMCP != null) MiniGameMCP.SavePuzzlesProgress(success);
+        if (MiniGameMCP != null) MiniGameMCP.SavePuzzlesProgress(success, "ShowResults()");
         if (success == true) EndPuzzleTime(true);
         SetGameState(eGameState.OFF);
 
@@ -542,20 +542,20 @@ public class Parking : MiniGame
             //CreateSphere(ContainGO.transform, "_checkMax", Color.blue);
             checkPoints.Add(ContainGO.transform.position);
 
-            Debug.Log("this: " + this.name + ", checkPoints[0], checkPoints[1]: " + checkPoints[0].ToString("F2") + ", " + checkPoints[1].ToString("F2"));
+           // Debug.Log("this: " + this.name + ", checkPoints[0], checkPoints[1]: " + checkPoints[0].ToString("F2") + ", " + checkPoints[1].ToString("F2"));
             bool inLiftPad = box.bounds.Contains(checkPoints[0]) && box.bounds.Contains(checkPoints[1]);
             if (inLiftPad)
             {
-                Debug.Log("ship: " + ship.name + " is fully contained within the lift pad");
+               // Debug.Log("ship: " + ship.name + " is fully contained within the lift pad");
             }
             else
             {
-                Debug.Log("ship: " + ship.name + " is NOT fully contained within the lift pad so can't lift no matter what");
+               // Debug.Log("ship: " + ship.name + " is NOT fully contained within the lift pad so can't lift no matter what");
                 allTargetShipsContainedLiftPad = false;
                 break;
             }
         }
-        Debug.Log("are all TARGET ships contained in the lift?: " + allTargetShipsContainedLiftPad);
+      //  Debug.Log("are all TARGET ships contained in the lift?: " + allTargetShipsContainedLiftPad);
         string result;
         if (allTargetShipsContainedLiftPad == true)
         {

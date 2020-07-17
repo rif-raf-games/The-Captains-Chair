@@ -36,7 +36,9 @@ public class RifRafInGamePopUp : MonoBehaviour
         {
             GetComponentInChildren<Slider>().value = this.MCP.GetAudioVolume();
             SetAudioVolumeToggle();
-            if(ArticyGlobalVariables.Default.Episode_01.First_Exchange == false)
+            //Debug.LogError("remove this"); ArticyGlobalVariables.Default.Episode_01.First_Exchange = true;
+
+            if (ArticyGlobalVariables.Default.Episode_01.First_Exchange == false)
             {
                 ExchangeBoardButton.SetActive(false);
             }
@@ -54,7 +56,7 @@ public class RifRafInGamePopUp : MonoBehaviour
     {
         if (isActive == true)
         {
-            Debug.LogWarning("Get the hint ready");
+           // Debug.LogWarning("Get the hint ready");
             MissionHint.SetupHint();
         }
         MissionHint.gameObject.SetActive(isActive);
@@ -70,11 +72,7 @@ public class RifRafInGamePopUp : MonoBehaviour
         MissionHint.gameObject.SetActive(false);
     }
 
-    public void ToggleExchangeBoard(bool isActive)
-    {
-        if(isActive == true) ExchangeBoard.FillBoard();
-        ExchangeBoard.gameObject.SetActive(isActive);
-    }
+    
 
     bool PopupActiveCheck()
     {
@@ -94,6 +92,12 @@ public class RifRafInGamePopUp : MonoBehaviour
         this.gameObject.SetActive(true);
         TogglePopUpPanel(false);
         ToggleMissionHint(false);
+    }
+
+    public void ToggleExchangeBoard(bool isActive)
+    {
+        if (isActive == true) ExchangeBoard.FillBoard();
+        ExchangeBoard.gameObject.SetActive(isActive);
     }
 
     public void OnClickExchangeBoard()

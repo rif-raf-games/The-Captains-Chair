@@ -46,13 +46,25 @@ public class RifRafExchangeJobBoard : MonoBehaviour
         Exchange_MissionsTemplate emt;
         Exchange_MissionFeature emf;
         int buttonIndex = 0;
+        foreach (Button b in JobButtons) b.gameObject.SetActive(false);
         foreach (ArticyObject ao in jobs)
         {
             em = ao as Exchange_Missions;
+            Debug.LogError("this job's prog var is: " + em.Template.Exchange_Mission.ProgressVariable);
+            string varName = "Activity.Finished_" + em.Template.Exchange_Mission.ProgressVariable;
+            string var = ArticyGlobalVariables.Default.GetVariableByString<string>(varName);
+            Debug.LogError("varName: " + varName + " has value: " + var);
+            if (var.Equals("True"))
+            {
+                Debug.Log("skip this");
+                continue;
+            }
+           // ArticyGlobalVariables.Default.SetVariableByString(varName, true);
             string s = em.DisplayName + "\n";
             emt = em.Template;
             emf = em.Template.Exchange_Mission;
             Button b = JobButtons[buttonIndex++];
+            b.gameObject.SetActive(true);
             b.gameObject.transform.GetChild(2).GetComponent<Text>().text = emf.Job_Name;
         }
 

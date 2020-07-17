@@ -417,26 +417,36 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             return;
         }
         ArticyGlobalVariables.Default.Save_Info.Return_Scene = savePoint.Template.Save_Info.ReturnScene;
-        if (savePoint.Template.Save_Info.SavePlayerPosition == true)
-        {
-            if (Player != null)
+
+        //Debug.LogError("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! mosavepos01 HandleSavePoint()");
+        if(savePoint.Template.Save_Info.PositionsToSave != "")
+        {            
+           // Debug.LogError("we want to save these positions: " + savePoint.Template.Save_Info.PositionsToSave);
+            ArticyGlobalVariables.Default.Save_Info.Positions_To_Save = savePoint.Template.Save_Info.PositionsToSave;
+            string[] characters = savePoint.Template.Save_Info.PositionsToSave.Split(',');
+            string charPositions = "";            
+            foreach (string name in characters)
             {
-                Vector3 playerPos = Player.transform.position;
-                string s = playerPos.x.ToString("F5") + "," + playerPos.y.ToString("F5") + "," + playerPos.z.ToString("F5");
-                ArticyGlobalVariables.Default.Save_Info.Last_Player_Position = s;
+                string pos;
+               // Debug.LogError("looking for character: " + name);
+                GameObject go = GameObject.Find(name);
+                if (go == null)
+                {
+                    Debug.LogError("ERROR: this character: " + name + " is not in the scene");
+                    pos = "0,0,0";
+                }
+                pos = go.transform.position.x.ToString("F5") + "," + go.transform.position.y.ToString("F5") + "," + go.transform.position.z.ToString("F5");
+              //  Debug.LogError("saving position: " + pos);
+                charPositions += pos + ",";
             }
-            else Debug.LogError("Trying to save player position in a scene with no Player");
+            charPositions = charPositions.Remove(charPositions.Length - 1, 1);
+            ArticyGlobalVariables.Default.Save_Info.Saved_Positions = charPositions;
         }
         else
         {
-            ArticyGlobalVariables.Default.Save_Info.Last_Player_Position = "null";
-        }
-
-        string d = "spp? " + savePoint.Template.Save_Info.SavePlayerPosition + ", ";
-        d += "lpp: " + ArticyGlobalVariables.Default.Save_Info.Last_Player_Position + "\n";
-        d += "return scene: " + savePoint.Template.Save_Info.ReturnScene + ", ";
-        d += "analytics: " + savePoint.Template.Save_Info.AnalyticsToTrack;
-        // Debug.Log(d);
+            ArticyGlobalVariables.Default.Save_Info.Positions_To_Save = "";
+            ArticyGlobalVariables.Default.Save_Info.Saved_Positions = "";
+        }     
 
         if (savePoint.Template.Save_Info.AnalyticsToTrack != "")
         {
@@ -513,7 +523,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     public bool SHOW_SKIP_BUTTON = false;
     void OnGUI()
     {
-        if (SHOW_SKIP_BUTTON == false) return;
+      //  if (SHOW_SKIP_BUTTON == false) return;
         if (CurArticyState == eArticyState.DIALOGUE && CurPauseObject != null)
         {
             DialogueFragment df = CurPauseObject as DialogueFragment;
