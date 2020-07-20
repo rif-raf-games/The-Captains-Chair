@@ -83,7 +83,7 @@ static public class StaticStuff
         if (returnScene.Equals("null") || returnScene.Equals(""))
         {
             Debug.Log("Loading default start scene");
-            GameObject.FindObjectOfType<MCP>().LoadNextScene("E1.Plaza", posToSave, savedPos);
+            GameObject.FindObjectOfType<MCP>().LoadNextScene("E1.Intro", posToSave, savedPos);
         }
         else
         {
