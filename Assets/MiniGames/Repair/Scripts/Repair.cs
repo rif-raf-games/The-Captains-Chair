@@ -315,7 +315,7 @@ public class Repair : MiniGame
 
     private void OnGUI()
     {
-        if (GUI.Button(new Rect(0, 0, 100, 100), "Scan"))
+        if (GUI.Button(new Rect(330, 40, 130, 230),""))
         {
             OnClickScan();
         }
