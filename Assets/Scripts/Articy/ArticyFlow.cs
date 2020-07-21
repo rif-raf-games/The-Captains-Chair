@@ -336,6 +336,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             {   // Jump to the scene specified
                 Scene_Jump sj = CurPauseObject as Scene_Jump;
                 //SceneManager.Load Scene(sj.Template.Next_Game_Scene.Scene_Name);
+                this.ConvoUI.gameObject.SetActive(false); // don't use EndConversation because that also shuts off the burger menu temporarily.  This UI needs an enema
                 FindObjectOfType<MCP>().LoadNextScene(sj.Template.Next_Game_Scene.Scene_Name);
             }
             else if (CurPauseObject.GetType().Equals(typeof(Mini_Game_Jump)))
