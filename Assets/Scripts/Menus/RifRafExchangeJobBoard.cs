@@ -137,11 +137,11 @@ public class RifRafExchangeJobBoard : MonoBehaviour
         s += "int prog: " + progress + "\n";
         if(progress == 0)
         {
-            this.MCP.LoadNextScene(emf.ToGoSceneFirstTime);
+            this.MCP.LoadNextScene(emf.ToGoSceneFirstTime); // SJ: OnClickAcceptJob() progress == 0
         }
         else
         {
-            this.MCP.LoadNextScene(emf.ToGoSceneAfterFirstTime);
+            this.MCP.LoadNextScene(emf.ToGoSceneAfterFirstTime); // SJ: OnClickAcceptJob() progress != 0
         }
         Debug.LogError("**********************LOOK HERE FOR SCENE LOADING ISSUES!!!!!!!!!! " + s);
     }

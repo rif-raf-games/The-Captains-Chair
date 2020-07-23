@@ -337,7 +337,8 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                 Scene_Jump sj = CurPauseObject as Scene_Jump;
                 //SceneManager.Load Scene(sj.Template.Next_Game_Scene.Scene_Name);
                 this.ConvoUI.gameObject.SetActive(false); // don't use EndConversation because that also shuts off the burger menu temporarily.  This UI needs an enema
-                FindObjectOfType<MCP>().LoadNextScene(sj.Template.Next_Game_Scene.Scene_Name);
+                //Debug.Log("---- about to do a regular scene jump");
+                FindObjectOfType<MCP>().LoadNextScene(sj.Template.Next_Game_Scene.Scene_Name, sj); // SJ01: ArticyFlow().OnBranchesUpdate() - CurPauseObject = Scene_Jump
             }
             else if (CurPauseObject.GetType().Equals(typeof(Mini_Game_Jump)))
             {   // we're going to a mini game, so fill up the mini game info container with the current pause object's information, then start the mini game                
@@ -357,7 +358,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                 ArticyGlobalVariables.Default.Mini_Games.Coming_From_Main_Game = true;
                 //Debug.Log("About to start a mini game: " + curJump.Template.Mini_Game_Scene.Scene_Name);
                 //SceneManager.LoadScene(curJump.Template.Mini_Game_Scene.Scene_Name);
-                FindObjectOfType<MCP>().LoadNextScene(curJump.Template.Mini_Game_Scene.Scene_Name);
+                FindObjectOfType<MCP>().LoadNextScene(curJump.Template.Mini_Game_Scene.Scene_Name, null, curJump); // MGJ: ArticyFlow.OnBranchesUpdate() CurPauseObject = Mini_Game_Jump
             }
             else if(CurPauseObject.GetType().Equals(typeof(Save_Point)))
             {

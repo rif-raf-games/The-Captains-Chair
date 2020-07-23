@@ -1,5 +1,6 @@
 ﻿using Articy.The_Captain_s_Chair;
 using Articy.The_Captain_s_Chair.GlobalVariables;
+using Articy.Unity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -95,59 +96,33 @@ public class MCP : MonoBehaviour
     }*/
 
     #region SCENE_TRANSITIONS
-    public void LoadNextScene(string sceneName, string posToSave="", string savedPos="")
+    public void LoadNextScene(string sceneName = "", Scene_Jump sceneJump = null, Mini_Game_Jump miniGameJump = null, string posToSave ="", string savedPos="")
     {               
-        StartCoroutine(LoadNextSceneDelay(sceneName, posToSave, savedPos));        
+        StartCoroutine(LoadNextSceneDelay(sceneName, sceneJump, miniGameJump, posToSave, savedPos));        
     }
 
-    float FADE_TIME = 1f;
-    IEnumerator LoadNextSceneDelay(string sceneName, string posToSave="", string savedPos="")
+    public Text DebugText;
+    IEnumerator FadeObjects(List<RawImage> images, float fadeTime, float alphaStart)
     {
-      //  Debug.LogWarning("LoadNextSceneDelay() sceneName: " + sceneName + ", Time.timeScale: " + Time.timeScale);
-
-      //  Debug.LogWarning("1) Turn on loading screen, make curtain alpha 0, set alien to false");
-        // 1) Turn on loading screen, make curtain alpha 0, set alien to false
-        LoadingScreen.SetActive(true);
-        SpinWheel.gameObject.SetActive(true);
-        SpinWheel.color = new Color(1f, 1f, 1f, 0f);
-        LoadingImage.gameObject.SetActive(true);
-        LoadingImage.color = new Color(1f, 1f, 1f, 0f);
-        Curtain.color = new Color(0f, 0f, 0f, 0f);        
-
-     //   Debug.LogWarning("2) fade the curtain to opaque to cover up current scene");
-        yield return new WaitForSeconds(.1f);
-        // 2) fade the curtain to opaque to cover up current scene
-        float timer = 0f; 
-        while(timer < FADE_TIME)
+        foreach (RawImage image in images) image.color = new Color(1f, 1f, 1f, alphaStart);
+        float alphaEnd = 1f - alphaStart;
+        float timer = 0f;
+        while(timer < fadeTime)
         {
-            Curtain.color = new Color(0f, 0f, 0f, timer/FADE_TIME);
-            SpinWheel.color = new Color(1f, 1f, 1f, timer/FADE_TIME);
+            float percentage = timer / fadeTime;
+            float alpha = Mathf.Lerp(alphaStart, alphaEnd, percentage);
+            Color color = new Color(1f, 1f, 1f, alpha);
+            foreach (RawImage image in images) image.color = color;
+           // if(DebugText != null) DebugText.text = "percentage: " + percentage.ToString("F2") + ", timer: " + timer.ToString("F2") + ", color: " + color.ToString("F2"); 
             timer += Time.deltaTime;
             yield return new WaitForEndOfFrame();
         }
-        Curtain.color = new Color(0f, 0f, 0f, 1f);
-        SpinWheel.color = new Color(1f, 1f, 1f, 1f);
+        foreach (RawImage image in images) image.color = new Color(1f, 1f, 1f, alphaEnd);
+    }
 
-       // Debug.LogWarning("3) Shut off any menu ui's and popups.  Shut on the alien and move the camera forward");
-        // 3) Shut off any menu ui's and popups.  Shut on the alien and move the camera forward
-        ToggleMenuUI(false);
-        ToggleInGamePopUp(false);
-       // LoadingAlien.SetActive(true);
-        UICamera.depth = 100;       
-
-     //   Debug.LogWarning("4) Fade in to loading screen image"); // so far everything is ok
-        // 4) Fade in to loading screen        
-        timer = 0f;
-        while (timer < FADE_TIME)
-        {
-            LoadingImage.color = new Color(1f, 1f, 1f, timer);
-            timer += Time.deltaTime;
-            yield return new WaitForEndOfFrame();
-        }
-        LoadingImage.color = new Color(1f, 1f, 1f, 1f);
-
-        // 5) Begin unloading the old scene if necessary
-       // Debug.LogWarning("5) Begin unloading the old scene if necessary");
+    IEnumerator SceneUnloadLoad(string sceneName)
+    {
+        Debug.LogWarning("------ Begin scene unload: " + Time.time);
         string curSceneName = "";
         if (SceneManager.sceneCount > 1)
         {
@@ -155,58 +130,198 @@ public class MCP : MonoBehaviour
             curSceneName = SceneManager.GetSceneAt(sceneIndex).name;
             AsyncOperation asyncUnLoad = SceneManager.UnloadSceneAsync(SceneManager.GetSceneAt(sceneIndex));
             while (asyncUnLoad.isDone == false)
-            {                
+            {
                 yield return null;
             }
         }
-
-      //  Debug.LogWarning("5a) Scene should be done being unloaded but wait another .1 seconds");
-        yield return new WaitForSeconds(.1f);
-     //   Debug.LogWarning("5b) after the .1 seconds");
-     //   Debug.LogWarning("6) Begin loading the next scene");
-
-        // fade to black, fade in spinny        
-        // fade in image
-
-        // fade out image
-        // fade out black, fade out spinny
-
-        // 6) Begin loading the next scene
+        Debug.LogWarning("------ End scene unload");
+        Debug.LogWarning("----- begin scene load");
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
-        while(asyncLoad.isDone == false)
+        while (asyncLoad.isDone == false)
         {
             yield return null;
         }
-
-      //  Debug.LogWarning("6a) dont loading the next scene.  Do another .1f delay");
-        yield return new WaitForSeconds(.1f);
-        //  Debug.LogWarning("6b) after .1 second delay");
-
-        // Debug.LogError("I TOOK OUT SOME CODE SO MAKE SURE TO PUT IT BACK");
-        
-        if(posToSave != "" )
+        Debug.LogWarning("----- end scene load");
+        Pause = false;
+    }
+    
+    float FADE_TIME = 1f;
+    bool Pause;
+    IEnumerator LoadNextSceneDelay(string sceneName = "", Scene_Jump sceneJump = null, Mini_Game_Jump miniGameJump = null, string posToSave="", string savedPos="")
+    {
+       // Debug.LogWarning("LoadNextSceneDelay() sceneName: " + sceneName + ", Time.timeScale: " + Time.timeScale);
+        List<Texture> loadingTextures = new List<Texture>();
+        List<RawImage> curImages;      
+        float delayTime = 0f, fadeTime = 0f;        
+               
+        // 1) Init things and get the data from the Scene_Jump or Mini_Game_Jump
+        LoadingScreen.SetActive(true);
+        SpinWheel.gameObject.SetActive(true);
+        Curtain.gameObject.SetActive(true);
+        LoadingImage.gameObject.SetActive(false);        
+         
+        if (sceneJump != null)
         {
-        // Debug.LogError("!!!!!!!!!!! mosavepos02 - set up all the positions based on what was loaded");
-        // Debug.LogError("Positions_To_Save: " + posToSave);
-        // Debug.LogError("Saved_Positions: " + savedPos);
+            //Debug.Log("we have a non null Scene_Jump");
+            List<ArticyObject> loadingImageAOs = sceneJump.Template.Next_Game_Scene.LoadingImages;
+            foreach (ArticyObject imageAO in loadingImageAOs)
+            {
+                Sprite s = ((Asset)imageAO).LoadAssetAsSprite();
+                loadingTextures.Add(s.texture);
+            }
+
+            delayTime = sceneJump.Template.Next_Game_Scene.DisplayTime;            
+            fadeTime = sceneJump.Template.Next_Game_Scene.FadeTime;            
+        }
+       
+        if(loadingTextures.Count == 0 || delayTime == 0f || fadeTime == 0f)
+        {
+           // Debug.LogError("This SceneJump/MiniGameJump isn't set up properly. textures count: " + loadingTextures.Count + ", delayTime: " + delayTime + ", fadeTime: " + fadeTime);
+            loadingTextures.Add(LoadingImage.texture);
+            delayTime = 1f;
+            fadeTime = 1f;
+        }
+        
+        // 2) fade the curtain/spinwheel to opaque to cover up current scene    
+       // Debug.LogWarning("----- starting the fade in of curtain/spinwheel");
+        curImages = new List<RawImage>() { Curtain, SpinWheel };        
+        yield return StartCoroutine(FadeObjects(curImages, fadeTime, 0f));
+       // Debug.LogWarning("----- end of curtain/spinwheel fade in");
+        // do some cleanup
+        ToggleMenuUI(false);
+        ToggleInGamePopUp(false);
+
+        // 3) Fade in the first image        
+       // Debug.LogWarning("-------- fade in first image");
+        int curLoadingImageIndex = 0;
+        LoadingImage.texture = loadingTextures[curLoadingImageIndex];
+        curImages = new List<RawImage>() { LoadingImage };
+        LoadingImage.gameObject.SetActive(true);
+        yield return StartCoroutine(FadeObjects(curImages, fadeTime, 0f));
+       // Debug.LogWarning("------- done with fade in of first image");
+
+        // 4) Ok, now we're ready to do the unload of the current scene and loading the next.  For these two processes 
+        // I'm going to be keeping track of time manually during the unload and load, then just do a loop for the rests.
+        float totalImageTime = loadingTextures.Count * delayTime;
+        float curImageTime = 0f;        
+        string curSceneName = "";
+        float unloadStart = Time.time;
+        if (SceneManager.sceneCount > 1)
+        {
+            int sceneIndex = (SceneManager.GetSceneAt(1).name.Contains("Front") ? 0 : 1);
+            curSceneName = SceneManager.GetSceneAt(sceneIndex).name;            
+            AsyncOperation asyncUnLoad = SceneManager.UnloadSceneAsync(SceneManager.GetSceneAt(sceneIndex));
+            while (asyncUnLoad.isDone == false)
+            {                                
+                yield return null;
+            }            
+        }        
+        float unloadTime = Time.time - unloadStart;
+        curImageTime = unloadTime;
+        if (unloadTime >= delayTime) Debug.LogError("ERROR: the unload time for the scene was longer than the delay time so the delay time must be wack.  delayTime: " + delayTime + ", unloadTime: " + unloadTime);
+     //   Debug.LogWarning("---- finished unloading the scene with an unload time of: " + unloadTime);
+
+        // 5) Ok the scene is unloaded, so now load the next scene
+        // So the AsyncOperation is in two parts:
+        // first .9 - loading the scene
+        // last .1 to get to 1.0 - scene starting
+        // So since I turned off allowSceneActivation, when we're here the scene has been loaded but it has NOT 
+        // started.  So if we've taken longer to load the scene than the loading screen images time go ahead and
+        // start the scene. If not, wait until the loading images are done.
+      //  Debug.LogWarning("------ about to start the scene load");
+        float loadStart = Time.time;
+        AsyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+        AsyncLoad.allowSceneActivation = false;
+        while (AsyncLoad.isDone == false)
+        {
+         //   Debug.Log("load: " + AsyncLoad.progress);            
+            if (AsyncLoad.progress >= .9f) break;
+            yield return null;
+            curImageTime += Time.deltaTime;
+            if(curImageTime >= delayTime)
+            {
+            //    Debug.LogWarning("---- during the load, we went past the time for the current image so get the next one going");
+                curLoadingImageIndex++;
+                if(curLoadingImageIndex >= loadingTextures.Count)
+                {
+           //         Debug.LogError("---- ok we're actually done with loading screens, so just hang here and don't do anything");
+                    curImageTime = Mathf.NegativeInfinity;
+                }
+                else
+                {
+           //         Debug.LogError("----- ok we're ready to switch loading images so get the next one up there");
+                    LoadingImage.texture = loadingTextures[curLoadingImageIndex];
+                    curImageTime = curImageTime - delayTime;
+                }
+            }
+        }
+        float loadTime = Time.time - loadStart;
+      //  Debug.LogWarning("----- done with the scene load, progress is: " + AsyncLoad.progress);
+      //  Debug.LogWarning("---- loadTime: " + loadTime.ToString("F2"));
+        showLoadButton = true;
+        
+     //   Debug.LogWarning("---- after the first .9 of the asyncLoad operation (which means the scene is loaded but hasn't done any initialization");
+        // 6) Ok we're here, so the scene is loaded but it has not started or even initialized.  
+        // At this point check to see if we're done with the loading images or not.  If not, then just cycle thru them. If
+        // we are done, then get the curtain fade going.
+     //   Debug.LogWarning("------ curLoadingImageIndex: " + curLoadingImageIndex.ToString("F2")  + ", curImageTime: " + curImageTime.ToString("F2"));
+        if (curLoadingImageIndex >= loadingTextures.Count)
+        {
+      //      Debug.LogWarning("------ ok we're done with the scene load and we're all done with the images based on the curLoadingImageIndex so just get to the fade in");
+        }
+        else
+        {
+     //       Debug.LogWarning("------- done with scene load but we're not done with the images yet");
+            while(curLoadingImageIndex < loadingTextures.Count)
+            {
+                curImageTime += Time.deltaTime;
+                if(curImageTime >= delayTime)
+                {
+      //              Debug.LogWarning("----- we're post loading the scene and am going to check if we have more images");
+                    curLoadingImageIndex++;
+                    if (curLoadingImageIndex < loadingTextures.Count)
+                    {
+         //               Debug.LogError("---- not done with the images yet so get the next one up");
+                        LoadingImage.texture = loadingTextures[curLoadingImageIndex];
+                        curImageTime = curImageTime - delayTime;
+                    }                    
+                    else
+                    {
+         //               Debug.LogWarning("------ ok we're done with images post loading so just let the loop fall through");
+                    }
+                }
+                yield return new WaitForEndOfFrame();
+            }
+        }
+
+        // 7) ok we're here so the scene is loaded and the images have all been shown so just get the fade up going
+     //   Debug.LogWarning("------- ok we're done with loading and images so fade out the image");
+        curImages = new List<RawImage>() { LoadingImage };        
+        yield return StartCoroutine(FadeObjects(curImages, fadeTime, 1f));
+      //  Debug.LogWarning("----- done fading out the image, so start the scene");
+        AsyncLoad.allowSceneActivation = true;
+        while(AsyncLoad.isDone == false)
+        {
+            Debug.Log("starting: " + AsyncLoad.progress);
+            yield return new WaitForEndOfFrame();
+        }
+      //  Debug.LogWarning("Ok the scene has officially started so do any scene initting");
+        if (posToSave != "")
+        {
             string[] entityNames = posToSave.Split(',');
             string[] posVals = savedPos.Split(',');
             int index = 0;
-            foreach(string entityName in entityNames)
-            {
-            // Debug.LogError("try to find: " + entityName);
+            foreach (string entityName in entityNames)
+            {                
                 GameObject go = GameObject.Find(entityName);
-                if(go == null) { Debug.LogError("no entity called: " + entityName + " is in the game."); continue; }
-                Vector3 pos = new Vector3(float.Parse(posVals[index * 3]), float.Parse(posVals[index * 3 + 1]), float.Parse(posVals[index * 3 + 2]));
-            //  Debug.LogError("setting " + entityName + " to this position: " + pos.ToString("F5"));
+                if (go == null) { Debug.LogError("no entity called: " + entityName + " is in the game."); continue; }
+                Vector3 pos = new Vector3(float.Parse(posVals[index * 3]), float.Parse(posVals[index * 3 + 1]), float.Parse(posVals[index * 3 + 2]));             
                 go.transform.position = pos;
                 index++;
             }
-        }
-        // Debug.LogError("cur scene: " + curSceneName + ", next scene: " + sceneName);
-        if(curSceneName.Contains("E1.Exchange") && sceneName.Contains("E1.Plaza"))
+        }        
+        if (curSceneName.Contains("E1.Exchange") && sceneName.Contains("E1.Plaza"))
         {
-         //   Debug.LogWarning("You're about to set up the correct values in this special case");
             GameObject go = GameObject.Find("Captain");
             if (go == null) Debug.LogError("No object named Captain in this scene");
             else go.transform.position = new Vector3(-48f, 0f, 30f);
@@ -218,60 +333,46 @@ public class MCP : MonoBehaviour
             go.transform.position = new Vector3(-44f, 0f, -40f);
         }
 
-        float fadeTime = 1f;
-    //    Debug.LogWarning("7) Fade out loading screen image");
-        // 7) Fade out loading screen image             
-        timer = FADE_TIME;
-        while (timer > 0f)
-        {
-            LoadingImage.color = new Color(1f, 1f, 1f, timer);
-            timer -= Time.deltaTime/ fadeTime;
-            yield return new WaitForEndOfFrame();
-        }
-        LoadingImage.color = new Color(1f, 1f, 1f, 0f);
-
         ConvoUI.TMP_SetArticyFlow();
-
-     //    Debug.LogWarning("8) Move camera back and fade in to the in-game scene");
-        // 8) Move camera back and fade out the spinny and black curtain
-        UICamera.depth = -2;        
-        timer = FADE_TIME;
-        while (timer > 0f)
+        if (FindObjectOfType<TheCaptainsChair>() != null)
         {
-            Curtain.color = new Color(0f, 0f, 0f, timer);
-            SpinWheel.color = new Color(1f, 1f, 1f, timer);
-            timer -= Time.deltaTime/ fadeTime;
-            yield return new WaitForEndOfFrame();
-        }
-     //   Debug.LogWarning("8a) done with fade");
-        Curtain.color = new Color(0f, 0f, 0f, 0f);
-        SpinWheel.color = new Color(1f, 1f, 1f, 0f);
-     //   Debug.LogWarning("9a) turn LoadingScreen off");
-        LoadingScreen.SetActive(false);
-
-        if(FindObjectOfType<TheCaptainsChair>() != null)
-        {
-       //     Debug.LogWarning("10a) Check start dialogue");
+            //     Debug.LogWarning("10a) Check start dialogue");
             FindObjectOfType<TheCaptainsChair>().CheckStartDialogue(DialogueToStartOnThisScene);
         }
 
         if (FindObjectOfType<MiniGameMCP>() == null)
         {
-      //      Debug.Log("10b) turn joystick on");
+            //      Debug.Log("10b) turn joystick on");
             Joystick.gameObject.transform.parent.gameObject.SetActive(true);
         }
         else
         {
-     //       Debug.Log("10b) turn joystick off");
+            //       Debug.Log("10b) turn joystick off");
             Joystick.gameObject.transform.parent.gameObject.SetActive(false);
         }
 
-     //   Debug.LogWarning("11a) TogglePopUpPanel(true)");
+        //   Debug.LogWarning("11a) TogglePopUpPanel(true)");
         InGamePopUp.TogglePopUpPanel(true);
-     //   Debug.LogWarning("11b) TMP_TurnOnBurger");
+        //   Debug.LogWarning("11b) TMP_TurnOnBurger");
         InGamePopUp.TMP_TurnOnBurger();
+
+
+        curImages = new List<RawImage>() { Curtain, SpinWheel };
+        yield return StartCoroutine(FadeObjects(curImages, fadeTime, 1f));
+      //  Debug.LogError("---- ok by now we're done!!!!");
     }
 
+    AsyncOperation AsyncLoad;
+    bool showLoadButton = false;
+    private void OnGUI()
+    {
+        if (showLoadButton == false) return;
+        if(GUI.Button(new Rect(0,500, 100, 100), "feh"))
+        {
+            Debug.Log("do your thing");
+            AsyncLoad.allowSceneActivation = true;
+        }
+    }
     public void ToggleJoystick(bool val)
     {
         // monote - this gets called a lot during the articy flow stuff, so get rid of that

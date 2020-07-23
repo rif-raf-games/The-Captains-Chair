@@ -184,7 +184,7 @@ public class MiniGameMCP : MonoBehaviour
         {
             Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
             string sceneName = jumpSave.Template.Quit_Mini_Game_Result.SceneName;
-            FindObjectOfType<MCP>().LoadNextScene(sceneName);
+            FindObjectOfType<MCP>().LoadNextScene(sceneName, null, jumpSave); // MGJ: MiniGameMCP.OnGUI() debug "Quit" button
         }
     }
 
@@ -206,7 +206,7 @@ public class MiniGameMCP : MonoBehaviour
                 Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");                
                 MiniGameArticyFlow.HandleSavePoint(jumpSave.Template.Success_Save_Fragment.SaveFragment as Save_Point);
                 //SceneManager.Load Scene(jumpSave.Template.Success_Mini_Game_Result.SceneName);
-                FindObjectOfType<MCP>().LoadNextScene(jumpSave.Template.Success_Mini_Game_Result.SceneName);
+                FindObjectOfType<MCP>().LoadNextScene(jumpSave.Template.Success_Mini_Game_Result.SceneName, null, jumpSave); // MGJ: MiniGameMCP.EndCurrentPuzzle() - done with all the puzzles for this set
             }
             else
             {
