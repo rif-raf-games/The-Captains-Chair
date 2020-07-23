@@ -388,6 +388,7 @@ public class MCP : MonoBehaviour
         curImages = new List<RawImage>() { Curtain, SpinWheel };
         yield return StartCoroutine(FadeObjects(curImages, fadeTime, 1f));
         LoadingImage.texture = defaultTexture;
+        LoadingScreen.SetActive(false);
         //  Debug.LogError("---- ok by now we're done!!!!");
     }
 
