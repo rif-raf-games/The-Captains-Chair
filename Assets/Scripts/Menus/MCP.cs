@@ -149,10 +149,13 @@ public class MCP : MonoBehaviour
     bool Pause;
     IEnumerator LoadNextSceneDelay(string sceneName = "", Scene_Jump sceneJump = null, Mini_Game_Jump miniGameJump = null, string posToSave="", string savedPos="")
     {
-       // Debug.LogWarning("LoadNextSceneDelay() sceneName: " + sceneName + ", Time.timeScale: " + Time.timeScale);
+        Debug.LogWarning("LoadNextSceneDelay() sceneName: " + sceneName + ", Time.timeScale: " + Time.timeScale);
+       
         List<Texture> loadingTextures = new List<Texture>();
+        List<ArticyObject> loadingImageAOs = new List<ArticyObject>();
         List<RawImage> curImages;      
-        float delayTime = 0f, fadeTime = 0f;        
+        float delayTime = 0f, fadeTime = 0f;
+        Texture defaultTexture = LoadingImage.texture;
                
         // 1) Init things and get the data from the Scene_Jump or Mini_Game_Jump
         LoadingScreen.SetActive(true);
@@ -161,20 +164,45 @@ public class MCP : MonoBehaviour
         LoadingImage.gameObject.SetActive(false);        
          
         if (sceneJump != null)
-        {
-            //Debug.Log("we have a non null Scene_Jump");
-            List<ArticyObject> loadingImageAOs = sceneJump.Template.Next_Game_Scene.LoadingImages;
-            foreach (ArticyObject imageAO in loadingImageAOs)
-            {
-                Sprite s = ((Asset)imageAO).LoadAssetAsSprite();
-                loadingTextures.Add(s.texture);
-            }
-
-            delayTime = sceneJump.Template.Next_Game_Scene.DisplayTime;            
-            fadeTime = sceneJump.Template.Next_Game_Scene.FadeTime;            
+        {            
+            loadingImageAOs = sceneJump.Template.LoadingScreen.LoadingImages;                     
+            delayTime = sceneJump.Template.LoadingScreen.DisplayTime;
+            fadeTime = sceneJump.Template.LoadingScreen.FadeTime;
         }
-       
-        if(loadingTextures.Count == 0 || delayTime == 0f || fadeTime == 0f)
+        else if(miniGameJump != null)
+        {
+           // Debug.LogWarning("miniGameJump: " + miniGameJump.TechnicalName);
+            if(ArticyGlobalVariables.Default.Mini_Games.Coming_From_Main_Game == true)
+            {               
+                loadingImageAOs = miniGameJump.Template.LoadingScreen.LoadingImages;
+                delayTime = miniGameJump.Template.LoadingScreen.DisplayTime;
+                fadeTime = miniGameJump.Template.LoadingScreen.FadeTime;
+            }            
+            else
+            {
+                if(ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success == true)
+                {             
+                    loadingImageAOs = miniGameJump.Template.Success_Mini_Game_Result.LoadingImages;
+                    delayTime = miniGameJump.Template.Success_Mini_Game_Result.DisplayTime;
+                    fadeTime = miniGameJump.Template.Success_Mini_Game_Result.FadeTime;
+                }
+                else
+                {                    
+                    loadingImageAOs = miniGameJump.Template.Quit_Mini_Game_Result.LoadingImages;
+                    delayTime = miniGameJump.Template.Quit_Mini_Game_Result.DisplayTime;
+                    fadeTime = miniGameJump.Template.Quit_Mini_Game_Result.FadeTime;
+                }
+            }
+        }
+
+        foreach (ArticyObject imageAO in loadingImageAOs)
+        {
+            Sprite s = ((Asset)imageAO).LoadAssetAsSprite();
+            loadingTextures.Add(s.texture);
+        }
+
+
+        if (loadingTextures.Count == 0 || delayTime == 0f || fadeTime == 0f)
         {
            // Debug.LogError("This SceneJump/MiniGameJump isn't set up properly. textures count: " + loadingTextures.Count + ", delayTime: " + delayTime + ", fadeTime: " + fadeTime);
             loadingTextures.Add(LoadingImage.texture);
@@ -302,7 +330,7 @@ public class MCP : MonoBehaviour
         AsyncLoad.allowSceneActivation = true;
         while(AsyncLoad.isDone == false)
         {
-            Debug.Log("starting: " + AsyncLoad.progress);
+           // Debug.Log("starting: " + AsyncLoad.progress);
             yield return new WaitForEndOfFrame();
         }
       //  Debug.LogWarning("Ok the scene has officially started so do any scene initting");
@@ -359,12 +387,13 @@ public class MCP : MonoBehaviour
 
         curImages = new List<RawImage>() { Curtain, SpinWheel };
         yield return StartCoroutine(FadeObjects(curImages, fadeTime, 1f));
-      //  Debug.LogError("---- ok by now we're done!!!!");
+        LoadingImage.texture = defaultTexture;
+        //  Debug.LogError("---- ok by now we're done!!!!");
     }
 
     AsyncOperation AsyncLoad;
     bool showLoadButton = false;
-    private void OnGUI()
+   /* private void OnGUI()
     {
         if (showLoadButton == false) return;
         if(GUI.Button(new Rect(0,500, 100, 100), "feh"))
@@ -372,7 +401,7 @@ public class MCP : MonoBehaviour
             Debug.Log("do your thing");
             AsyncLoad.allowSceneActivation = true;
         }
-    }
+    }*/
     public void ToggleJoystick(bool val)
     {
         // monote - this gets called a lot during the articy flow stuff, so get rid of that

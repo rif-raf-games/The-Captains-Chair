@@ -61,7 +61,7 @@ public class Parking : MiniGame
     public override void BeginPuzzleStartTime()
     {
         base.BeginPuzzleStartTime();
-        Debug.Log("Parking.BeginPuzzle()");
+       // Debug.Log("Parking.BeginPuzzle()");
         TouchState = eTouchState.NONE;
         SetGameState(eGameState.NORMAL);
         ContainGO = new GameObject();
