@@ -55,7 +55,7 @@ public class SoundFX : MonoBehaviour
     public void PlayFX(string fxID )
     {
         int fxIndex = SoundFXNames.IndexOf(fxID);
-        if(fxIndex == -1) { Debug.LogWarning("Trying to play a sound effect that doesn't exist: " + fxID); return; }
+        if(fxIndex == -1) { /*Debug.LogWarning("Trying to play a sound effect that doesn't exist: " + fxID); */ return; }
 
         this.AudioSource.PlayOneShot(SoundFXList[fxIndex].Clip);      
     }
