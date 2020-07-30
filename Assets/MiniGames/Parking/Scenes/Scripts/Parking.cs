@@ -35,10 +35,10 @@ public class Parking : MiniGame
     //[Header("Debug")]
     //public Text DebugText;
 
-    public override void Init(MiniGameMCP mcp, string sceneName)
+    public override void Init(MiniGameMCP mcp, string sceneName, List<SoundFX.FXInfo> soundFXUsedInScene)
     {
         //Debug.Log("Parking.Init()");
-        base.Init(mcp, sceneName);
+        base.Init(mcp, sceneName, soundFXUsedInScene);
         /*if (ResultsText == null) ResultsText = MiniGameMCP.ResultsText;
         if (DebugText == null && MiniGameMCP.DebugText != null)
         {
@@ -46,6 +46,38 @@ public class Parking : MiniGame
             DebugText.text = "";
         }*/
         if(ResultsText != null ) ResultsText.gameObject.SetActive(false);
+
+        if(FindObjectOfType<MCP>() != null)
+        {
+            FindObjectOfType<MCP>().SetupSceneSound(SoundFXUsedInScene);
+        }
+    }
+
+    MCP MCP;
+  //  [Header("Sound")]
+   // public List<SoundFX.FXInfo> SoundFXUsedInScene;
+    private void Awake()
+    {
+        base.Awake();       
+
+        this.MCP = FindObjectOfType<MCP>();
+        if (this.MCP == null)
+        {
+            Debug.LogWarning("no MCP yet so load it up");
+            StaticStuff.CreateMCPScene();
+            StartCoroutine(ShutOffUI());
+        }
+    }
+
+    IEnumerator ShutOffUI()
+    {
+        while (FindObjectOfType<MCP>() == null)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+        this.MCP = FindObjectOfType<MCP>();
+        this.MCP.TMP_ShutOffUI();
+        this.MCP.SetupSceneSound(SoundFXUsedInScene);
     }
 
     private void Start()
@@ -104,6 +136,7 @@ public class Parking : MiniGame
 
     IEnumerator ShowResults(string result, bool success)
     {
+        if (success == true) SoundFXPlayer.Play("zapsplat_multimedia_game_sound_simple_dreamy_sine_bell_positive_double_chime_53823");
         if (MiniGameMCP != null) MiniGameMCP.SavePuzzlesProgress(success, "ShowResults()");
         if (success == true) EndPuzzleTime(true);
         SetGameState(eGameState.OFF);
@@ -291,6 +324,9 @@ public class Parking : MiniGame
                 {
                     TouchState = eTouchState.HOLD;
                     SetActiveShip(ClickedShip);
+                    int val = Random.Range(0, 2);
+                    if (val < 1) SoundFXPlayer.Play("zapsplat_office_chair_lever_down_slide_hydraulic_001_47271");
+                    else SoundFXPlayer.Play("zapsplat_sound_design_frequency_modulation_slightly_lofi_rising_tone_whine_39118");
                     ActiveShip.BeginHold(RaiserLowerTime);
                     CurTouchPos = Input.mousePosition;
                     LastTouchPos = Input.mousePosition;
@@ -374,12 +410,16 @@ public class Parking : MiniGame
             InputTimer += Time.deltaTime;
             if (ActiveShip != null)
             {
-                //Debug.Log("GMU() BeginLower: " + InputTimer);
+                //Debug.Log("GMU() BeginLower: " + InputTimer);                
+                int val = Random.Range(0, 2);
+                if (val < 1) SoundFXPlayer.Play("smartsound_CINEMATIC_IMPACT_Slam_05");
+                else SoundFXPlayer.Play("yfs_Budapest_Hungary_Elevatorride_DoorsOpeningAndClosing_037");
                 ActiveShip.BeginLower(RaiserLowerTime);
             }            
             if (TouchingRotatePad == true && InputTimer <= HoldTime)
             {
-               // Debug.Log("GMU() Rotate: " + InputTimer);
+                // Debug.Log("GMU() Rotate: " + InputTimer);                
+                SoundFXPlayer.Play("zapsplat_industrial_10_litre_plastic_drum_water_heavy_slide_002_53290");
                 RotateGridPlatform();
             }
             TouchingRotatePad = false;

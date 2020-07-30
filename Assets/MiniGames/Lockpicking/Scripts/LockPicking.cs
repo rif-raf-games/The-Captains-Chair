@@ -28,6 +28,7 @@ public class LockPicking : MiniGame
     Vector3 LastWorldTouchPos = Vector3.zero;
     float LastCenterToWorldAngle;
     public Text ResultsText;
+    MCP MCP;
     //public Text DebugText;
 
     Diode EvilDiodePrefab;
@@ -60,7 +61,11 @@ public class LockPicking : MiniGame
     {
         if (IsDeathNode(pathNode))
         {
-            if (diode.Evil == false) StartCoroutine(ShowResults("You got caught by an enemy Diode!", false));
+            if (diode.Evil == false)
+            {
+                SoundFXPlayer.Play("zapsplat_sound_design_frequency_modulation_short_sharp_laser_style_hit_with_delay_39114");
+                StartCoroutine(ShowResults("You got caught by an enemy Diode!", false));
+            }
             else StartCoroutine(EvilDiodeRespawn(diode));
         }
     }
@@ -75,15 +80,23 @@ public class LockPicking : MiniGame
         }
     }
 
-    public override void Init(MiniGameMCP mcp, string sceneName)
+    public override void Init(MiniGameMCP mcp, string sceneName, List<SoundFX.FXInfo> soundFXUsedInScene)
     {
         //Debug.Log("LockPicking.Init()");
-        base.Init(mcp, sceneName);
+        base.Init(mcp, sceneName, soundFXUsedInScene);
         /*if (ResultsText == null) ResultsText = MiniGameMCP.ResultsText;
         if (DebugText == null) DebugText = MiniGameMCP.DebugText;
         ResultsText.gameObject.SetActive(false);*/
         if(ResultsText != null) ResultsText.gameObject.SetActive(false);
+
+        if (FindObjectOfType<MCP>() != null)
+        {
+            FindObjectOfType<MCP>().SetupSceneSound(SoundFXUsedInScene);
+        }
     }
+
+    [Header("Sound")]
+    public List<SoundFX.FXInfo> SoundFXUsedInScene;
 
     public override void Awake()
     {
@@ -101,6 +114,25 @@ public class LockPicking : MiniGame
         {
             d.SetLockPickingComponent(this);
         }
+
+        this.MCP = FindObjectOfType<MCP>();
+        if (this.MCP == null)
+        {
+            Debug.LogWarning("no MCP yet so load it up");
+            StaticStuff.CreateMCPScene();
+            StartCoroutine(ShutOffUI());
+        }
+    }
+
+    IEnumerator ShutOffUI()
+    {
+        while(FindObjectOfType<MCP>() == null)
+        {            
+            yield return new WaitForEndOfFrame();
+        }
+        this.MCP = FindObjectOfType<MCP>();
+        this.MCP.TMP_ShutOffUI();
+        this.MCP.SetupSceneSound(SoundFXUsedInScene);
     }
 
     private void Start()
@@ -186,10 +218,10 @@ public class LockPicking : MiniGame
 
     public void CollectGate(Gate gate)
     {
-        // Debug.Log("found gate: " + gate.name);
+        Debug.Log("found gate: " + gate.name);
         GatesThisGame.Remove(gate);
         gate.gameObject.SetActive(false);
-        //if (true)
+        SoundFXPlayer.Play("impact_glass_lightbulb_smash_001");
         if(GatesThisGame.Count == 0)        
         {
             StartCoroutine(ShowResults("You Win, congratulations!!", true));
@@ -209,9 +241,26 @@ public class LockPicking : MiniGame
     {
         StartCoroutine(ShowResults("You are using a debug cheat to win.", true));
     }
-
+    private void OnGUI()
+    {
+        if (GUI.Button(new Rect(Screen.width - 100, Screen.height / 2 - 100, 100, 100), "Win"))
+        {
+            TMP_WinGame();
+        }
+        if (GUI.Button(new Rect(Screen.width - 100, Screen.height / 2, 100, 100), "Quit"))
+        {
+           /* Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
+            ArticyGlobalVariables.Default.Mini_Games.Coming_From_Main_Game = false;
+            ArticyGlobalVariables.Default.Mini_Games.Returning_From_Mini_Game = true;
+            ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success = false;
+            string sceneName = jumpSave.Template.Quit_Mini_Game_Result.SceneName;
+            FindObjectOfType<MCP>().LoadNextScene(sceneName, null, jumpSave); // MGJ: MiniGameMCP.OnGUI() debug "Quit" button*/
+        }
+    }
     IEnumerator ShowResults(string result, bool success)
     {
+        if (success == true) SoundFXPlayer.Play("zapsplat_multimedia_game_sound_childrens_short_soft_warm_chime_positive_001_49763");
+        else SoundFXPlayer.Play("zapsplat_impacts_metal_big_hit_chime_resonate_designed_001_48574");
         if (MiniGameMCP != null) MiniGameMCP.SavePuzzlesProgress(success);
         if(success == true) EndPuzzleTime(true);
         SetGameState(eGameState.OFF); 
@@ -402,6 +451,7 @@ public class LockPicking : MiniGame
                 d.ResetDiodeForGame(evilNode);
             }
         }
+        SoundFXPlayer.Play("esm_mechanical_computer_processor_short_sequence_futuristic_mobile_app_pick_up_sci_fi_mechanical_glitch");
         return true;
     }
 

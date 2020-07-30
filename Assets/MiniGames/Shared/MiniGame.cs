@@ -12,6 +12,9 @@ public class MiniGame : MonoBehaviour
     protected bool DialogueActive;
     public string SceneName;
 
+    [Header("Sound")]
+    public List<SoundFX.FXInfo> SoundFXUsedInScene;
+
     [Header("Debug")]
     public Text DebugText;
     public virtual void Awake()
@@ -31,11 +34,12 @@ public class MiniGame : MonoBehaviour
             IsSolo = false;
         }                        
     }
-    public virtual void Init(MiniGameMCP mcp, string sceneName)
+    public virtual void Init(MiniGameMCP mcp, string sceneName, List<SoundFX.FXInfo> soundFXUsedInScene)
     {
         //Debug.Log("MiniGame.Init()");
         this.MiniGameMCP = mcp;
         SceneName = sceneName;
+        this.SoundFXUsedInScene = soundFXUsedInScene;
     } 
     
     public virtual void TMP_WinGame()

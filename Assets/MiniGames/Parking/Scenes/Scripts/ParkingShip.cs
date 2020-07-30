@@ -111,7 +111,7 @@ public class ParkingShip : MonoBehaviour
     }
     public void BeginHold(float lerpPosTime)
     {
-        SoundFXPlayer.Play("Raise");
+        //SoundFXPlayer.Play("Raise");
         CurState = eParkingShipState.RAISING;
         LerpPosStart = transform.position;
         LerpPosEnd = new Vector3(transform.position.x, .5f, transform.position.z);
@@ -120,7 +120,7 @@ public class ParkingShip : MonoBehaviour
     }
     public void BeginLower(float lerpPosTime)
     {
-        SoundFXPlayer.Play("Lower");
+        //SoundFXPlayer.Play("Lower");
         transform.position = Parking.GetClosestCenteredPoint(this.gameObject);
         MoveDir = eMoveDir.NONE;
         CurState = eParkingShipState.LOWERING;

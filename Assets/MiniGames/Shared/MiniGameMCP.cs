@@ -27,6 +27,9 @@ public class MiniGameMCP : MonoBehaviour
     // UI
     ArticyFlow MiniGameArticyFlow;
 
+    [Header("Sound")]
+    public List<SoundFX.FXInfo> SoundFXUsedInScene;
+
     [Header("Misc Stuff")]
     public Text ResultsText;
     public Text DebugText;
@@ -39,7 +42,9 @@ public class MiniGameMCP : MonoBehaviour
         CaptainsChair = GameObject.FindObjectOfType<TheCaptainsChair>();
         PuzzleDialogues = null;
         if (this.name.Contains("LockPick")) StaticStuff.SetOrientation(StaticStuff.eOrientation.PORTRAIT, this.name);        
-        else StaticStuff.SetOrientation(StaticStuff.eOrientation.LANDSCAPE, this.name);                     
+        else StaticStuff.SetOrientation(StaticStuff.eOrientation.LANDSCAPE, this.name);
+
+        
     }
     // Start is called before the first frame update
     public virtual void Start()
@@ -118,7 +123,7 @@ public class MiniGameMCP : MonoBehaviour
                 yield return null;
             }
            // Debug.Log("Unload Done: " + puzzleScene);
-            Puzzles[i].Init(this, puzzleName);                        
+            Puzzles[i].Init(this, puzzleName, SoundFXUsedInScene);                        
         }
 
         for (int i = 0; i < Puzzles.Length; i++)

@@ -64,26 +64,47 @@ public class Repair : MiniGame
     public List<GameObject> BeltAnchors = new List<GameObject>();
     int NumChecks = 0;
     int PiecesAndBeltMask;
+    MCP MCP;
     //int FuelDoorMask;
 
-    public override void Init(MiniGameMCP mcp, string sceneName)
+    public override void Init(MiniGameMCP mcp, string sceneName, List<SoundFX.FXInfo> soundFXUsedInScene)
     {
         //Debug.Log("Repair.Init()");
-        base.Init(mcp, sceneName);
-        /*ResultsText = MiniGameMCP.ResultsText;
-        ResultsText.text = "";
-        if (DebugText == null && MiniGameMCP.DebugText != null)
-        {
-            DebugText = MiniGameMCP.DebugText;
-            DebugText.text = "";
-        }*/
+        base.Init(mcp, sceneName, soundFXUsedInScene);
         
+        if (FindObjectOfType<MCP>() != null)
+        {
+            FindObjectOfType<MCP>().SetupSceneSound(SoundFXUsedInScene);
+        }
+
     }
-    
+
+    [Header("Sound")]
+    public List<SoundFX.FXInfo> SoundFXUsedInScene;
+
     private void Awake()
     {
         base.Awake();
-        SetLights(-1);        
+        SetLights(-1);
+
+        this.MCP = FindObjectOfType<MCP>();
+        if (this.MCP == null)
+        {
+            Debug.LogWarning("no MCP yet so load it up");
+            StaticStuff.CreateMCPScene();
+            StartCoroutine(ShutOffUI());
+        }
+    }
+
+    IEnumerator ShutOffUI()
+    {
+        while (FindObjectOfType<MCP>() == null)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+        this.MCP = FindObjectOfType<MCP>();
+        this.MCP.TMP_ShutOffUI();
+        this.MCP.SetupSceneSound(SoundFXUsedInScene);
     }
 
     void SetLights(int val)
@@ -197,8 +218,16 @@ public class Repair : MiniGame
                         StartHeldPieceWorldPos = HeldPiece.transform.position; // used for knowing where to put the piece back if it's an invalid move
                         StartWorldTouchPos = LastWorldTouchPos;  //  used for the angle that determines whether we move the piece or the belt
                         TapTimer = 0f;  // reset tap timer
-                        if (HeldPiece.transform.parent == BoardPieces) MoveType = eMoveType.PIECE;   // if we're on the board, then we're automatically moving the piece
-                        else MoveType = eMoveType.WAITING_FOR_TYPE; // if we're on the belt, we don't know if we're moving the belt or the piece yet
+                        if (HeldPiece.transform.parent == BoardPieces)
+                        {
+                            SoundFXPlayer.Play("soundbits_FOS1_Glitch_Dirt_SFX_011");
+                            MoveType = eMoveType.PIECE;   // if we're on the board, then we're automatically moving the piece
+                        }
+                        else
+                        {
+                            SoundFXPlayer.Play("zapsplat_sound_design_frequency_modulation_short_pulse_39112");
+                            MoveType = eMoveType.WAITING_FOR_TYPE; // if we're on the belt, we don't know if we're moving the belt or the piece yet
+                        }
                     }                                                            
                 }
                 else
@@ -246,7 +275,8 @@ public class Repair : MiniGame
             {   // if we were in PIECE type movement, check to see if we need to rotate the piece
                 if (TapTimer <= TAP_TIME)
                 {   // tap/click time was fast enough so rotate
-                   // Debug.Log("a");
+                    // Debug.Log("a");
+                    SoundFXPlayer.Play("weapon_gun_1911_A_12");
                     HeldPiece.transform.Rotate(0f, 60f, 0f);
                     if (HeldPiece.transform.parent == BoardPieces)
                     {
@@ -266,12 +296,12 @@ public class Repair : MiniGame
                     {
                         if (HeldPiece.transform.parent == BoardPieces)
                         {
-                         //   Debug.Log("b");
+                            SoundFXPlayer.Play("zapsplat_foley_metal_heavy_chunky_item_set_down_on_hard_floor_004_53519");
                             HeldPiece.GetComponentInChildren<MeshRenderer>().material = OnBoardMaterial;
                         }
                         else
                         {
-                          //  Debug.Log("c");
+                            SoundFXPlayer.Play("zapsplat_foley_metal_frame_short_sharp_bash_hit_003_53389");
                             HeldPiece.GetComponentInChildren<MeshRenderer>().material = RegMaterial;
                         }
                     }
@@ -324,6 +354,7 @@ public class Repair : MiniGame
     public void OnClickScan()
     {
         Debug.Log("I JUST CLICKED THE SCAN BUTTON");
+        SoundFXPlayer.Play("pm_gc_sparkly_short_glitch_13");
         SetGameState(eGameState.OFF);
         ScanLines.Scan(CheckPuzzleComplete);
     }
@@ -949,6 +980,8 @@ public class Repair : MiniGame
 
     IEnumerator ShowResults(string result, bool success)
     {
+        if (success == true) SoundFXPlayer.Play("jessey_drake_synth_melody_sci_fi_space_sting_distorted_glitches_snth_jd");
+        else SoundFXPlayer.Play("pm_gc_sparkly_short_glitch_1");
         if (MiniGameMCP != null) MiniGameMCP.ShowResultsText(result);
         else ResultsText.text = result;
         if (MiniGameMCP != null) MiniGameMCP.SavePuzzlesProgress(success);
