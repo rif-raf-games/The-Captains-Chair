@@ -545,6 +545,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
 
     public DialogueFragment DebugDF = null;
     public bool SHOW_SKIP_BUTTON = false;
+#if false
     void OnGUI()
     {
       //  if (SHOW_SKIP_BUTTON == false) return;
@@ -602,6 +603,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             }
         }
     }
+#endif
     MCP OurMCP;
     bool WaitingOnALLastFrame = false;
     // Update is called once per frame
@@ -640,8 +642,8 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             FlowPlayer.StartOn = nf;
         }
     }    
-    #endregion
-    #region UI_DIALOGUE    
+#endregion
+#region UI_DIALOGUE    
     public OutputPin MyOutputPin;
     public void ConvoButtonClicked(int buttonIndex, ArticyObject nextFragment = null)
     {        
@@ -727,9 +729,9 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         ActiveCALPauseObjects.Clear();
         if (Player != null) Player.ToggleMovementBlocked(false);        
     }    
-    #endregion
+#endregion
     
-    #region ARTICY_VAR_FUNCTION_CALLBACKS
+#region ARTICY_VAR_FUNCTION_CALLBACKS
     /// <summary>
     /// Called from Articy when a variable changes
     /// </summary>    
@@ -753,9 +755,9 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             Debug.Log("-------------------------------------------------------------- OpenCaptainDoor(): Do NOT open door, we're just forecasting");
         }
     }
-    #endregion
+#endregion
 
-    #region MISC
+#region MISC
     /// <summary>
     /// Wrapper function to send things to this ArticyFlow's StageDirectionPlayer
     /// </summary>
@@ -778,7 +780,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     {
         return (CurArticyState == eArticyState.FREE_ROAM);
     }
-    #endregion    
+#endregion
 
     public float GetDefaultTypewriterSpeed() { return ConvoUI.DefaultTypewriterSpeed; }
 
