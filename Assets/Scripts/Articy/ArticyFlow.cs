@@ -51,8 +51,11 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     [Header("Debug")]
     public Text DebugText;
 
+    public bool StartCalled = false;
+    //public bool AwakeCalled = false;
     void Start()
-    {        
+    {
+        Debug.Log("ArticyFlow.Start(): " + this.gameObject.GetInstanceID());
         SetArticyState(eArticyState.NUM_ARTICY_STATES);
         Player = GameObject.FindObjectOfType<CCPlayer>();
         CaptainsChair = GameObject.FindObjectOfType<TheCaptainsChair>();
@@ -63,6 +66,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         TypewriterSpeed = ConvoUI.DefaultTypewriterSpeed;
         ArticyDatabase.DefaultGlobalVariables.Notifications.AddListener("*.*", MyGameStateVariablesChanged);
         ActiveCALPauseObjects.Clear();
+        StartCalled = true;
     }
     
     
@@ -510,6 +514,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     /// <param name="newState"></param>
     void SetArticyState(eArticyState newState)
     {
+        Debug.Log("SetArticyState: " + newState + ", " + this.gameObject.GetInstanceID());
         CurArticyState = newState;
         if (Player != null && newState == eArticyState.DIALOGUE)
         {

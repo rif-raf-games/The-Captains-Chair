@@ -333,6 +333,7 @@ public class MCP : MonoBehaviour
            // Debug.Log("starting: " + AsyncLoad.progress);
             yield return new WaitForEndOfFrame();
         }
+        int num = 0;
         //  Debug.LogWarning("Ok the scene has officially started so do any scene initting");
         if (FindObjectOfType<TheCaptainsChair>() != null)
         {
@@ -341,10 +342,19 @@ public class MCP : MonoBehaviour
          //   Debug.Log("avatar: " + avatar);
             LoadedCaptain = Resources.Load<GameObject>("Prefabs\\Characters\\Crew\\Captain_0" + avatar.ToString());
             LoadedCaptain = Instantiate(LoadedCaptain, captain.transform.position, captain.transform.rotation);
-            Debug.Log("loaded up captain: " + LoadedCaptain.name);
+          //  Debug.Log("loaded up captain: " + LoadedCaptain.name);            
             LoadedCaptain.name = "Captain";
             Destroy(captain);
+            
+            while(LoadedCaptain.GetComponent<ArticyFlow>().StartCalled == false)
+            {
+                yield return null;
+                num++;
+                if (num > 100) break;
+            }
+            FindObjectOfType<TheCaptainsChair>().Player = LoadedCaptain.GetComponent<CCPlayer>();
         }
+      //  Debug.Log(num);
             
         if (posToSave != "")
         {
@@ -420,7 +430,7 @@ public class MCP : MonoBehaviour
     public void ToggleJoystick(bool val)
     {
         // monote - this gets called a lot during the articy flow stuff, so get rid of that
-      //  Debug.Log("ToggleJoystick() val: " + val);
+        //Debug.Log("ToggleJoystick() val: " + val);
         this.Joystick.ResetInput();
         Joystick.gameObject.transform.parent.gameObject.SetActive(val);
     }

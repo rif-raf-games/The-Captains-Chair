@@ -10,7 +10,7 @@ using Articy.The_Captain_s_Chair.GlobalVariables;
 
 public class TheCaptainsChair : MonoBehaviour
 {    
-    CCPlayer Player;
+    public CCPlayer Player;
     MCP MCP;
     public ArticyRef DialogueToStartOn;
 

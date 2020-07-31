@@ -184,14 +184,15 @@ public class RifRafMenuUI : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
-               // Debug.Log("button down");
+                // Debug.Log("button down");
+                LastCameraPos = Input.mousePosition;
                 Ray ray = UICamera.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit, Mathf.Infinity))
                 {
                   //  Debug.Log("clicked on: " + hit.collider.name);
                     SelectedCaptain = hit.collider.gameObject;
-                    LastCameraPos = Input.mousePosition;
+                    
                 }
             }
             else if (Input.GetMouseButton(0))
@@ -236,6 +237,7 @@ public class RifRafMenuUI : MonoBehaviour
                 StaticStuff.CreateNewSaveData(avatar);
                 ArticyGlobalVariables.Default.TheCaptain.Avatar = avatar;
                 StaticStuff.CheckSceneLoadSave();
+                CurActiveMenu = eMenuType.MAIN;
             }
         }
     }
