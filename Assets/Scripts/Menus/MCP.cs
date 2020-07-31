@@ -335,7 +335,7 @@ public class MCP : MonoBehaviour
         }
         int num = 0;
         //  Debug.LogWarning("Ok the scene has officially started so do any scene initting");
-        if (FindObjectOfType<TheCaptainsChair>() != null)
+        /*if (FindObjectOfType<TheCaptainsChair>() != null)
         {
             GameObject captain = GameObject.Find("Captain");
             int avatar = ArticyGlobalVariables.Default.TheCaptain.Avatar;
@@ -358,7 +358,7 @@ public class MCP : MonoBehaviour
             {
                 entities[i].TMP_ResetFollow();
             }
-        }
+        }*/
       //  Debug.Log(num);
             
         if (posToSave != "")
