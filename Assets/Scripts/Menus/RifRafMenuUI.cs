@@ -238,7 +238,7 @@ public class RifRafMenuUI : MonoBehaviour
                 ArticyGlobalVariables.Default.TheCaptain.Avatar = avatar;
                 StaticStuff.CheckSceneLoadSave();                
                 ToggleMenu(eMenuType.AVATAR_SELECT, false);
-                UICamera.gameObject.SetActive(false);
+                
                 CurActiveMenu = eMenuType.MAIN;
             }
         }

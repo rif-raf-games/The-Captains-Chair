@@ -383,6 +383,8 @@ public class MCP : MonoBehaviour
             go.transform.position = new Vector3(-44f, 0f, -40f);
         }
 
+        MenuUI.UICamera.gameObject.SetActive(false);
+
         ConvoUI.TMP_SetArticyFlow();
         if (FindObjectOfType<TheCaptainsChair>() != null)
         {
