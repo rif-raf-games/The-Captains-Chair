@@ -236,7 +236,8 @@ public class RifRafMenuUI : MonoBehaviour
                 avatar = int.Parse(captainName[9].ToString());
                 StaticStuff.CreateNewSaveData(avatar);
                 ArticyGlobalVariables.Default.TheCaptain.Avatar = avatar;
-                StaticStuff.CheckSceneLoadSave();
+                StaticStuff.CheckSceneLoadSave();                
+                ToggleMenu(eMenuType.AVATAR_SELECT, false);
                 CurActiveMenu = eMenuType.MAIN;
             }
         }
