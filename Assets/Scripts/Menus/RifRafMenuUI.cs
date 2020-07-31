@@ -22,6 +22,7 @@ public class RifRafMenuUI : MonoBehaviour
     public MCP MCP;
 
     public Image MenuBG;
+    public GameObject CaptainContainer;
 
     private void Awake()
     {
@@ -199,7 +200,7 @@ public class RifRafMenuUI : MonoBehaviour
                 {
                     float deltaX = Input.mousePosition.x - LastCameraPos.x;
                     //Debug.Log("deltaX: " + deltaX);
-                    Menus[(int)eMenuType.AVATAR_SELECT].gameObject.transform.Rotate(new Vector3(0f, -deltaX/10f, 0f));
+                    CaptainContainer.transform.Rotate(new Vector3(0f, -deltaX/10f, 0f));
                     LastCameraPos = Input.mousePosition;
                 }
             }
