@@ -40,6 +40,7 @@ public class CharacterEntity : MonoBehaviour
     }
     public void SetEntityToFollow(GameObject followEntity)
     {
+       // Debug.Log("SetEntityToFollow: " + followEntity.name);
         EntityToFollow = followEntity;
         ShouldFollowEntity = true;
     }
@@ -52,6 +53,14 @@ public class CharacterEntity : MonoBehaviour
         }
         return false;
     }    
+
+    public void TMP_ResetFollow()
+    {
+        if(ShouldFollowEntity == true && EntityToFollow == null)
+        {
+            EntityToFollow = FindObjectOfType<CCPlayer>().gameObject;
+        }
+    }
 
     // Start is called before the first frame update
     public virtual void Start()

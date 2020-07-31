@@ -55,7 +55,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     //public bool AwakeCalled = false;
     void Start()
     {
-        Debug.Log("ArticyFlow.Start(): " + this.gameObject.GetInstanceID());
+       // Debug.Log("ArticyFlow.Start(): " + this.gameObject.GetInstanceID());
         SetArticyState(eArticyState.NUM_ARTICY_STATES);
         Player = GameObject.FindObjectOfType<CCPlayer>();
         CaptainsChair = GameObject.FindObjectOfType<TheCaptainsChair>();
@@ -514,7 +514,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     /// <param name="newState"></param>
     void SetArticyState(eArticyState newState)
     {
-        Debug.Log("SetArticyState: " + newState + ", " + this.gameObject.GetInstanceID());
+       // Debug.Log("SetArticyState: " + newState + ", " + this.gameObject.GetInstanceID());
         CurArticyState = newState;
         if (Player != null && newState == eArticyState.DIALOGUE)
         {

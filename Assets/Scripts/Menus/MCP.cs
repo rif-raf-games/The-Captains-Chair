@@ -333,7 +333,7 @@ public class MCP : MonoBehaviour
            // Debug.Log("starting: " + AsyncLoad.progress);
             yield return new WaitForEndOfFrame();
         }
-        /*int num = 0;
+        int num = 0;
         //  Debug.LogWarning("Ok the scene has officially started so do any scene initting");
         if (FindObjectOfType<TheCaptainsChair>() != null)
         {
@@ -353,7 +353,12 @@ public class MCP : MonoBehaviour
                 if (num > 100) break;
             }
             FindObjectOfType<TheCaptainsChair>().Player = LoadedCaptain.GetComponent<CCPlayer>();
-        }*/
+            CharacterEntity[] entities = FindObjectsOfType<CharacterEntity>();
+            for(int i=0; i<entities.Length; i++)
+            {
+                entities[i].TMP_ResetFollow();
+            }
+        }
       //  Debug.Log(num);
             
         if (posToSave != "")
