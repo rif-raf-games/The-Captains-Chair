@@ -404,7 +404,7 @@ public class LockPicking : MiniGame
         int numToSpawn;
         if (respawnDiode == null) numToSpawn = (int)Mathf.Min((float)NumSpawnAtATime, (float)(MaxEvilDiodes - EvilDiodes.Count));
         else numToSpawn = 1;
-        Debug.Log("SpawnEvilDiodes() numToSpawn: " + numToSpawn);
+        //Debug.Log("SpawnEvilDiodes() numToSpawn: " + numToSpawn);
         if(numToSpawn == 0)
         {
             Debug.Log("there's no room to spawn any more evil nodes");
@@ -413,12 +413,12 @@ public class LockPicking : MiniGame
         List<PathNode> availStartNodes = new List<PathNode>(StartNodes);
         if (StartNodes.Contains(Diode.CurPath.Start)) availStartNodes.Remove(Diode.CurPath.Start);
         foreach(Diode d in EvilDiodes) if(StartNodes.Contains(d.CurPath.Start)) availStartNodes.Remove(d.CurPath.Start);
-        Debug.Log("num avail start Nodes: " + availStartNodes.Count);        
+      //  Debug.Log("num avail start Nodes: " + availStartNodes.Count);        
         for (int i=0; i<numToSpawn; i++)
         {
             if(availStartNodes.Count == 0)
             {
-                Debug.Log("No more available nodes to spawn an evil diode");
+           //     Debug.Log("No more available nodes to spawn an evil diode");
                 return false;
             }
             Diode d;

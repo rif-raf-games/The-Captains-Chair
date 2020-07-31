@@ -74,7 +74,7 @@ public class StageDirectionPlayer : MonoBehaviour
                     this.ArticyFlow.IsDialogueFragmentsInteractive = false;
                     break;
                 case Direction.Background_Track_Change:
-                    Debug.Log("case Direction.Background_Track_Change:");
+                  //  Debug.Log("case Direction.Background_Track_Change:");
                     BackgroundMusicPlayer.Play(sdf.Direction_Info);
                     break;
                 case Direction.Ambient_Sound:

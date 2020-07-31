@@ -92,10 +92,11 @@ static public class StaticStuff
         }
     }
 
-    static public void CreateNewSaveData()
+    static public void CreateNewSaveData(int avatar=1)
     {
         FileStream file;
-        DeleteSaveData();        
+        DeleteSaveData();
+        ArticyGlobalVariables.Default.TheCaptain.Avatar = avatar;
         SaveSaveData("StaticStuff.CreateSaveData()");
     }
     static public void SaveSaveData(string s)
@@ -187,8 +188,8 @@ static public class StaticStuff
     }
 
     static public void PrintRifRafUI(string s)
-    {
-      //  Debug.LogWarning("===============================PrintRifRafUI(): " + s);
+    { 
+      // Debug.LogWarning("===============================PrintRifRafUI(): " + s);
     }
 
     

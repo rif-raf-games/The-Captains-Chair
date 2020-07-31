@@ -9,10 +9,7 @@ using System.Linq;
 using Articy.The_Captain_s_Chair.GlobalVariables;
 
 public class TheCaptainsChair : MonoBehaviour
-{
-    // DEBUG - set the Activty.ID  to EXCHANGE
-    // Start on scene that allows you to begin having jobs.  - Ep1.Exchange
-    // have the bool unlock the jobs are available bit
+{    
     CCPlayer Player;
     MCP MCP;
     public ArticyRef DialogueToStartOn;
@@ -38,7 +35,7 @@ public class TheCaptainsChair : MonoBehaviour
         {
             Debug.LogWarning("no MCP yet so load it up");
             StaticStuff.CreateMCPScene();            
-        }        
+        }                        
     }
    
     void Start()
@@ -134,14 +131,8 @@ public class TheCaptainsChair : MonoBehaviour
             this.MCP.SetDialogueToStartSceneOn(dialogueToStartOn);
         }
 
-        
-
-       // SoundFX soundFX = FindObjectOfType<SoundFX>();
-       // SoundFXPlayer.Init(soundFX, this.MCP.GetAudioVolume());
         VisualFX visualFX = FindObjectOfType<VisualFX>();
-        VisualFXPlayer.Init(visualFX);
-       // BackgroundMusic bgMusic = FindObjectOfType<BackgroundMusic>();
-      //  BackgroundMusicPlayer.Init(bgMusic, this.MCP.GetAudioVolume());
+        VisualFXPlayer.Init(visualFX);       
 
         this.MCP.SetupSceneSound(SoundFXUsedInScene);
     }

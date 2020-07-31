@@ -333,7 +333,19 @@ public class MCP : MonoBehaviour
            // Debug.Log("starting: " + AsyncLoad.progress);
             yield return new WaitForEndOfFrame();
         }
-      //  Debug.LogWarning("Ok the scene has officially started so do any scene initting");
+        //  Debug.LogWarning("Ok the scene has officially started so do any scene initting");
+        if (FindObjectOfType<TheCaptainsChair>() != null)
+        {
+            GameObject captain = GameObject.Find("Captain");
+            int avatar = ArticyGlobalVariables.Default.TheCaptain.Avatar;
+         //   Debug.Log("avatar: " + avatar);
+            LoadedCaptain = Resources.Load<GameObject>("Prefabs\\Characters\\Crew\\Captain_0" + avatar.ToString());
+            LoadedCaptain = Instantiate(LoadedCaptain, captain.transform.position, captain.transform.rotation);
+            Debug.Log("loaded up captain: " + LoadedCaptain.name);
+            LoadedCaptain.name = "Captain";
+            Destroy(captain);
+        }
+            
         if (posToSave != "")
         {
             string[] entityNames = posToSave.Split(',');
@@ -391,6 +403,8 @@ public class MCP : MonoBehaviour
         LoadingScreen.SetActive(false);
         //  Debug.LogError("---- ok by now we're done!!!!");
     }
+
+    public GameObject LoadedCaptain;
 
     AsyncOperation AsyncLoad;
     bool showLoadButton = false;

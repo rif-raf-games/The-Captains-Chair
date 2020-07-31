@@ -1,11 +1,12 @@
-﻿using System.Collections;
+﻿using Articy.The_Captain_s_Chair.GlobalVariables;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class RifRafMenuUI : MonoBehaviour
 {    
-    public enum eMenuType { SPLASH, MAIN, COMING_SOON, ACHIEVEMENTS, TELL_FRIENDS, NUM_MENUS };
+    public enum eMenuType { SPLASH, MAIN, COMING_SOON, ACHIEVEMENTS, TELL_FRIENDS, AVATAR_SELECT, NUM_MENUS };
     [Header("Menus: Splash, Main, Coming Soon, Achievements, Tell Friends\n")]
     public GameObject[] Menus;
     public eMenuType CurActiveMenu;
@@ -19,6 +20,8 @@ public class RifRafMenuUI : MonoBehaviour
     public eSaveGameFunction CurActiveSaveGameFunction;
 
     public MCP MCP;
+
+    public Image MenuBG;
 
     private void Awake()
     {
@@ -170,14 +173,80 @@ public class RifRafMenuUI : MonoBehaviour
     }
     #endregion
 
+    public Camera UICamera;
+    GameObject SelectedCaptain = null;
+    Vector3 LastCameraPos;
+    #region CHARACTER_SELECT
+    private void Update()
+    {
+        if (CurActiveMenu == eMenuType.AVATAR_SELECT)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+               // Debug.Log("button down");
+                Ray ray = UICamera.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+                {
+                  //  Debug.Log("clicked on: " + hit.collider.name);
+                    SelectedCaptain = hit.collider.gameObject;
+                    LastCameraPos = Input.mousePosition;
+                }
+            }
+            else if (Input.GetMouseButton(0))
+            {
+                if(SelectedCaptain != null)
+                {
+                    float deltaX = Input.mousePosition.x - LastCameraPos.x;
+                    //Debug.Log("deltaX: " + deltaX);
+                    Menus[(int)eMenuType.AVATAR_SELECT].gameObject.transform.Rotate(new Vector3(0f, -deltaX/10f, 0f));
+                    LastCameraPos = Input.mousePosition;
+                }
+            }
+            else if (Input.GetMouseButtonUp(0))
+            {
+                /*string captainName = "none";
+                int avatar = -1; ;
+                if (SelectedCaptain != null)
+                {
+                    captainName = SelectedCaptain.name;
+                    avatar = int.Parse(captainName[9].ToString());                    
+                    StaticStuff.CreateNewSaveData();
+                    ArticyGlobalVariables.Default.TheCaptain.Avatar = avatar;
+                    StaticStuff.CheckSceneLoadSave();
+                }
+                Debug.Log("Button up.  Do we have a selected character: " + captainName + ", avatar: " + avatar);    */            
+               // SelectedCaptain = null;
+            }
+        }
+    }
+    #endregion
+
+    private void OnGUI()
+    {
+        if (CurActiveMenu == eMenuType.AVATAR_SELECT && SelectedCaptain != null)
+        {
+            string captainName = "none";
+            int avatar = -1; ;
+            if (GUI.Button(new Rect(0,Screen.height/50, 100, 100), "go"))
+            {
+                captainName = SelectedCaptain.name;
+                avatar = int.Parse(captainName[9].ToString());
+                StaticStuff.CreateNewSaveData(avatar);
+                ArticyGlobalVariables.Default.TheCaptain.Avatar = avatar;
+                StaticStuff.CheckSceneLoadSave();
+            }
+        }
+    }
     #region NEW_GAME_POPUP
     public void OnClickNewGameYes()
     {
         StaticStuff.PrintRifRafUI("OnClickNewGameYes");
-        //TogglePopUp(0, false);
-        //MCP.ToggleMenuUI(false);
-        StaticStuff.CreateNewSaveData();
-        StaticStuff.CheckSceneLoadSave();
+        TogglePopUp(ePopUpType.NEW_GAME, false);
+        ToggleMenu(eMenuType.AVATAR_SELECT, true);
+        MenuBG.enabled = false;
+      //  StaticStuff.CreateNewSaveData();
+       // StaticStuff.CheckSceneLoadSave();
     }
     public void OnClickNewGameNo()
     {
