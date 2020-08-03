@@ -335,32 +335,21 @@ public class MCP : MonoBehaviour
         }
         int num = 0;
         //  Debug.LogWarning("Ok the scene has officially started so do any scene initting");
-        /*if (FindObjectOfType<TheCaptainsChair>() != null)
-        {
+        if (FindObjectOfType<TheCaptainsChair>() != null)
+        //if(false)
+        {            
             GameObject captain = GameObject.Find("Captain");
             int avatar = ArticyGlobalVariables.Default.TheCaptain.Avatar;
-         //   Debug.Log("avatar: " + avatar);
-            LoadedCaptain = Resources.Load<GameObject>("Prefabs\\Characters\\Crew\\Captain_0" + avatar.ToString());
-            LoadedCaptain = Instantiate(LoadedCaptain, captain.transform.position, captain.transform.rotation);
-            Debug.Log("loaded up captain: " + LoadedCaptain.name);            
-            LoadedCaptain.name = "Captain";
-            Destroy(captain);
-            
-            while(LoadedCaptain.GetComponent<ArticyFlow>().StartCalled == false)
-            {
-                yield return null;
-                num++;
-                if (num > 100) break;
-            }
-            FindObjectOfType<TheCaptainsChair>().Player = LoadedCaptain.GetComponent<CCPlayer>();
-            CharacterEntity[] entities = FindObjectsOfType<CharacterEntity>();
-            for(int i=0; i<entities.Length; i++)
-            {
-                entities[i].TMP_ResetFollow();
-            }
-        }*/
-      //  Debug.Log(num);
-            
+            //int avatar = 2;
+            CaptainAssets = Resources.Load<GameObject>("Prefabs\\Characters\\Captain Assets\\Captain_0" + avatar.ToString() + "_Assets");
+            CaptainAssets = Instantiate(CaptainAssets);
+            Destroy(captain.transform.GetChild(1).gameObject);
+            CaptainAssets.transform.parent = captain.transform;
+            CaptainAssets.transform.localPosition = Vector3.zero;
+            yield return new WaitForEndOfFrame();
+            captain.GetComponent<Animator>().Rebind();            
+        }        
+
         if (posToSave != "")
         {
             string[] entityNames = posToSave.Split(',');
@@ -419,21 +408,20 @@ public class MCP : MonoBehaviour
         LoadingImage.texture = defaultTexture;
         LoadingScreen.SetActive(false);
         //  Debug.LogError("---- ok by now we're done!!!!");
+    }    
+
+    IEnumerator CaptainLoadStall(GameObject captain)
+    {
+        Debug.Log("CaptainLoadStall");        
+        yield return new WaitForEndOfFrame();
+        captain.GetComponent<Animator>().Rebind(); 
     }
 
-    public GameObject LoadedCaptain;
+    public GameObject CaptainAssets;
 
     AsyncOperation AsyncLoad;
     bool showLoadButton = false;
-   /* private void OnGUI()
-    {
-        if (showLoadButton == false) return;
-        if(GUI.Button(new Rect(0,500, 100, 100), "feh"))
-        {
-            Debug.Log("do your thing");
-            AsyncLoad.allowSceneActivation = true;
-        }
-    }*/
+   
     public void ToggleJoystick(bool val)
     {
         // monote - this gets called a lot during the articy flow stuff, so get rid of that

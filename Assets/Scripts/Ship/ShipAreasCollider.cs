@@ -20,7 +20,7 @@ public class ShipAreasCollider : MonoBehaviour
     {
         TheCaptainsChair cChair = FindObjectOfType<TheCaptainsChair>();
         RoomFadeOpacity = cChair.RoomFadeOpacity;
-        Player = GetComponentInParent<CCPlayer>();
+        Player = GetComponentInParent<CCPlayer>();        
     }
 
     public void ToggleShipFloors(bool val)
@@ -103,10 +103,10 @@ public class ShipAreasCollider : MonoBehaviour
             s += hit.collider.name + "\n";
             if(DimmedRoomsViaRaycast.Contains(room.gameObject) == false)
             {
-                Debug.Log("dim room via raycast: " + hit.collider.name);
+               // Debug.Log("dim room via raycast: " + hit.collider.name);
                 if(DimmedRoomsViaRaycast.Count == 1 )
                 {
-                    Debug.Log("dim the front room down to zero");
+                  //  Debug.Log("dim the front room down to zero");
                     DimmedRoomsViaRaycast[0].GetComponent<Room>().ToggleAlpha(0f, false);                    
                 }
                 
@@ -122,7 +122,7 @@ public class ShipAreasCollider : MonoBehaviour
         {            
             if(hitsGOs.Contains(hit) == false)
             {
-                Debug.Log("turn room back on via raycast leaving: "+ hit.name);
+              //  Debug.Log("turn room back on via raycast leaving: "+ hit.name);
                 hitsToRemove.Add(hit);
                 room = hit.GetComponent<Room>();
                 room.ToggleAlpha(1f, false);

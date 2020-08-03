@@ -545,7 +545,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
 
     public DialogueFragment DebugDF = null;
     public bool SHOW_SKIP_BUTTON = false;
-#if false
+#if true
     void OnGUI()
     {
       //  if (SHOW_SKIP_BUTTON == false) return;
