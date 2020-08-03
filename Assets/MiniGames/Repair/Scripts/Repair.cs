@@ -343,13 +343,13 @@ public class Repair : MiniGame
         }
     }*/
 
-    private void OnGUI()
+    /* private void OnGUI()
     {
-        if (GUI.Button(new Rect(330, 40, 130, 230),""))
+        if (GUI.Button(new Rect(0, 0, 130, 230),""))
         {
             OnClickScan();
         }
-    }
+    } */
 
     public void OnClickScan()
     {
