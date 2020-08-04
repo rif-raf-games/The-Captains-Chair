@@ -28,7 +28,7 @@ public class MissionHint : MonoBehaviour
     public void SetupHint()
     {
         //Debug.LogError("SetupHint()");        
-        ArticyGlobalVariables.Default.Episode_01.Scene = 1;
+        //ArticyGlobalVariables.Default.Episode_01.Scene = 1;
         ArticyObject CurHint = HintsFlowStart;
         
         int numCheck = 0;
