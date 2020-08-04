@@ -119,37 +119,12 @@ public class MCP : MonoBehaviour
         }
         foreach (RawImage image in images) image.color = new Color(1f, 1f, 1f, alphaEnd);
     }
-
-    IEnumerator SceneUnloadLoad(string sceneName)
-    {
-        Debug.LogWarning("------ Begin scene unload: " + Time.time);
-        string curSceneName = "";
-        if (SceneManager.sceneCount > 1)
-        {
-            int sceneIndex = (SceneManager.GetSceneAt(1).name.Contains("Front") ? 0 : 1);
-            curSceneName = SceneManager.GetSceneAt(sceneIndex).name;
-            AsyncOperation asyncUnLoad = SceneManager.UnloadSceneAsync(SceneManager.GetSceneAt(sceneIndex));
-            while (asyncUnLoad.isDone == false)
-            {
-                yield return null;
-            }
-        }
-        Debug.LogWarning("------ End scene unload");
-        Debug.LogWarning("----- begin scene load");
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
-        while (asyncLoad.isDone == false)
-        {
-            yield return null;
-        }
-        Debug.LogWarning("----- end scene load");
-        Pause = false;
-    }
     
     float FADE_TIME = 1f;
     bool Pause;
     IEnumerator LoadNextSceneDelay(string sceneName = "", Scene_Jump sceneJump = null, Mini_Game_Jump miniGameJump = null, string posToSave="", string savedPos="")
     {
-        Debug.LogWarning("LoadNextSceneDelay() sceneName: " + sceneName + ", Time.timeScale: " + Time.timeScale);
+       // Debug.LogWarning("LoadNextSceneDelay() sceneName: " + sceneName + ", Time.timeScale: " + Time.timeScale);
        
         List<Texture> loadingTextures = new List<Texture>();
         List<ArticyObject> loadingImageAOs = new List<ArticyObject>();

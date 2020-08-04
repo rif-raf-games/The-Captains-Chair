@@ -34,6 +34,7 @@ public class RifRafExchangeJobBoard : MonoBehaviour
         this.MCP = mcp;
     }
 
+    List<ArticyObject> ActiveJobs = new List<ArticyObject>();
     public void FillBoard()
     {
         ShutOffPopups();
@@ -46,20 +47,18 @@ public class RifRafExchangeJobBoard : MonoBehaviour
         Exchange_MissionsTemplate emt;
         Exchange_MissionFeature emf;
         int buttonIndex = 0;
+        ActiveJobs.Clear();
         foreach (Button b in JobButtons) b.gameObject.SetActive(false);
-        foreach (ArticyObject ao in jobs)
-        {
-            em = ao as Exchange_Missions;
-            Debug.LogError("this job's prog var is: " + em.Template.Exchange_Mission.ProgressVariable);
+        foreach (ArticyObject job in jobs)
+        {           
+            em = job as Exchange_Missions;           
             string varName = "Activity.Finished_" + em.Template.Exchange_Mission.ProgressVariable;
-            string var = ArticyGlobalVariables.Default.GetVariableByString<string>(varName);
-            Debug.LogError("varName: " + varName + " has value: " + var);
+            string var = ArticyGlobalVariables.Default.GetVariableByString<string>(varName);          
             if (var.Equals("True"))
-            {
-                Debug.Log("skip this");
+            {          
                 continue;
             }
-           // ArticyGlobalVariables.Default.SetVariableByString(varName, true);
+            ActiveJobs.Add(job);
             string s = em.DisplayName + "\n";
             emt = em.Template;
             emf = em.Template.Exchange_Mission;
@@ -70,6 +69,69 @@ public class RifRafExchangeJobBoard : MonoBehaviour
 
         JobIndex = 0;
         SetupDescription();        
+    }
+
+    void SetupDescription()
+    {
+        Exchange_Missions em;
+        //Exchange_MissionsTemplate emt;
+        Exchange_MissionFeature emf;
+        //FlowFragment jobContainer = JobBoardContainer.GetObject() as FlowFragment;
+        //List<ArticyObject> jobs = jobContainer.Children;
+        //ArticyObject job = jobs[JobIndex];
+        ArticyObject job = ActiveJobs[JobIndex];
+        em = job as Exchange_Missions;
+       //emt = em.Template;
+        emf = em.Template.Exchange_Mission;
+        JobName.text = emf.Job_Name;
+        JobLocation.text = emf.Job_Location;
+        PointOfContact.text = emf.Point_Of_Contact;
+        Description.text = emf.Job_Description;
+    }
+
+    public void OnClickAcceptJob()
+    {
+        // Debug.Log("RifRafExchangeJobBoard.OnClickAccpetJob().");
+
+        //  Debug.LogWarning("OK we now have a job set up so lets rock it");
+        this.MCP.TMP_ShutOffExchangeBoard();
+
+        Exchange_Missions em;
+        Exchange_MissionsTemplate emt;
+        Exchange_MissionFeature emf;
+
+        FlowFragment jobContainer = JobBoardContainer.GetObject() as FlowFragment;
+        List<ArticyObject> jobs = jobContainer.Children;
+        //ArticyObject job = jobs[JobIndex];
+        ArticyObject job = ActiveJobs[JobIndex];
+        em = job as Exchange_Missions;
+        emt = em.Template;
+        emf = em.Template.Exchange_Mission;
+
+        string s = emf.Job_Name + "\n";
+        s += emf.Job_Location + "\n"; ;
+        s += emf.Point_Of_Contact + "\n"; ;
+        s += emf.Job_Description + "\n"; ;
+        s += emf.ToGoSceneFirstTime + "\n";
+        s += emf.ToGoSceneAfterFirstTime + "\n";
+        s += emf.ProgressVariable + "\n";
+        string varName = "Activity.Progress_" + emf.ProgressVariable;
+        s += varName + "\n";
+        string var = ArticyGlobalVariables.Default.GetVariableByString<string>(varName);
+        s += var + "\n";
+
+
+        int progress = int.Parse(var);
+        s += "int prog: " + progress + "\n";
+        if (progress == 0)
+        {
+            this.MCP.LoadNextScene(emf.ToGoSceneFirstTime); // SJ: OnClickAcceptJob() progress == 0
+        }
+        else
+        {
+            this.MCP.LoadNextScene(emf.ToGoSceneAfterFirstTime); // SJ: OnClickAcceptJob() progress != 0
+        }
+       // Debug.LogError("**********************LOOK HERE FOR SCENE LOADING ISSUES!!!!!!!!!! " + s);
     }
 
     public void ShutOffPopups()
@@ -102,49 +164,7 @@ public class RifRafExchangeJobBoard : MonoBehaviour
         QuitPopup.SetActive(true);        
     }
 
-    public void OnClickAcceptJob()
-    {
-       // Debug.Log("RifRafExchangeJobBoard.OnClickAccpetJob().");
-
-      //  Debug.LogWarning("OK we now have a job set up so lets rock it");
-        this.MCP.TMP_ShutOffExchangeBoard();
-
-        Exchange_Missions em;
-        Exchange_MissionsTemplate emt;
-        Exchange_MissionFeature emf;
-
-        FlowFragment jobContainer = JobBoardContainer.GetObject() as FlowFragment;
-        List<ArticyObject> jobs = jobContainer.Children;
-        ArticyObject job = jobs[JobIndex];
-        em = job as Exchange_Missions;
-        emt = em.Template;
-        emf = em.Template.Exchange_Mission;
-
-        string s = emf.Job_Name + "\n";
-        s += emf.Job_Location + "\n"; ;
-        s += emf.Point_Of_Contact + "\n"; ;
-        s += emf.Job_Description + "\n"; ;
-        s += emf.ToGoSceneFirstTime + "\n";
-        s += emf.ToGoSceneAfterFirstTime + "\n";
-        s += emf.ProgressVariable + "\n";
-        string varName = "Activity.Progress_" + emf.ProgressVariable;
-        s += varName + "\n";
-        string var = ArticyGlobalVariables.Default.GetVariableByString<string>(varName);
-        s += var + "\n";
-        
-
-        int progress = int.Parse(var);
-        s += "int prog: " + progress + "\n";
-        if(progress == 0)
-        {
-            this.MCP.LoadNextScene(emf.ToGoSceneFirstTime); // SJ: OnClickAcceptJob() progress == 0
-        }
-        else
-        {
-            this.MCP.LoadNextScene(emf.ToGoSceneAfterFirstTime); // SJ: OnClickAcceptJob() progress != 0
-        }
-        Debug.LogError("**********************LOOK HERE FOR SCENE LOADING ISSUES!!!!!!!!!! " + s);
-    }
+    
 
     public void OnClickAcceptClose()
     {
@@ -158,21 +178,5 @@ public class RifRafExchangeJobBoard : MonoBehaviour
         AcceptPopup.SetActive(false);
     }
 
-    void SetupDescription()
-    {
-        Exchange_Missions em;
-        Exchange_MissionsTemplate emt;
-        Exchange_MissionFeature emf;
-
-        FlowFragment jobContainer = JobBoardContainer.GetObject() as FlowFragment;
-        List<ArticyObject> jobs = jobContainer.Children;
-        ArticyObject job = jobs[JobIndex];
-        em = job as Exchange_Missions;
-        emt = em.Template;
-        emf = em.Template.Exchange_Mission;
-        JobName.text = emf.Job_Name;
-        JobLocation.text = emf.Job_Location;
-        PointOfContact.text = emf.Point_Of_Contact;
-        Description.text = emf.Job_Description;
-    }
+    
 }

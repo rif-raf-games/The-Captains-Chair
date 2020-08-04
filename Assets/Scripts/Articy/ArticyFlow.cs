@@ -436,7 +436,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     {              
         if(savePoint == null)
         {
-            Debug.LogError("The save info is not set up in the articy nodes yet so we're temporarily skipping saving at this moment.");
+           // Debug.LogError("The save info is not set up in the articy nodes yet so we're temporarily skipping saving at this moment.");
             return;
         }
         ArticyGlobalVariables.Default.Save_Info.Return_Scene = savePoint.Template.Save_Info.ReturnScene;
