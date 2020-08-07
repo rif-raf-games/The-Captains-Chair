@@ -98,7 +98,7 @@ public class TheCaptainsChair : MonoBehaviour
             ArticyGlobalVariables.Default.Mini_Games.Returning_From_Mini_Game = false;
             ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success = false;
             ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Score = 0;
-            StaticStuff.SaveSaveData("TheCaptainsChair.Start() after finishing the \"return from mini game == true\" bit");
+            StaticStuff.SaveCurrentProfile("TheCaptainsChair.Start() after finishing the \"return from mini game == true\" bit");
         }
         else
         {
@@ -179,77 +179,3 @@ public class TheCaptainsChair : MonoBehaviour
         return npc;
     }
 }
-
-
-    /*private void OnGUI()
-    {
-        if (GUI.Button(new Rect(Screen.width - 100, Screen.height - 200, 100, 100), "Show Data Path"))
-        {
-            StaticStuff.ShowDataPath();
-        }
-        if (GUI.Button(new Rect(Screen.width-100, 0, 100, 100), "Sim Startup\nData Load"))
-        {
-            StaticStuff.CheckSceneLoadSave();
-        }
-        if (GUI.Button(new Rect(Screen.width - 100, Screen.height / 2 - 100, 100, 100), "Menu On"))
-        {
-            FindObjectOfType<MCP>().ToggleMenuUI(true);
-        }
-    }*/
-    //private void OnGUI()
-    // {
-    /*if (GUI.Button(new Rect(0, 0, 100, 100), "SaveData"))
-    {
-        SaveSaveData();
-    }
-    if (GUI.Button(new Rect(0, 100, 100, 100), "LoadData"))
-    {
-        LoadSaveData();
-    }*/
-    /*(if (GUI.Button(new Rect(0, 0, 100, 50), "Delete\nSave Data"))
-    {
-        DeleteSaveData();
-    }*/
-
-    // }
-
-    /* NOT USING THE BELOW STUFF YET BUT I'M KEEPING IT FOR REFERENCE
-    [System.Serializable]
-    public class SaveDataObj
-    {
-        public List<string> keys;
-        public List<object> values;
-
-        public SaveDataObj()
-        {
-            keys = new List<string>();
-            values = new List<object>();
-        }
-    }
-    
-    void SaveBinData()
-    {
-        Debug.Log("SaveBinData");
-        SaveDataObj saveData = new SaveDataObj();
-        foreach(KeyValuePair<string, object> pair in ArticyDatabase.DefaultGlobalVariables.Variables)
-        {
-            saveData.keys.Add(pair.Key);
-            saveData.values.Add(pair.Value);
-        }
-
-        BinaryFormatter bf = new BinaryFormatter();
-        FileStream file = File.Create(Application.persistentDataPath + "/globalVars.dat");
-        bf.Serialize(file, saveData);
-        file.Close();
-    }
-
-    void LoadBinData()
-    {
-        if(File.Exists(Application.persistentDataPath + "/globalVars.dat"))
-        {
-            BinaryFormatter bf = new BinaryFormatter();
-            FileStream file = File.Open(Application.persistentDataPath + "/globalVars.dat", FileMode.Open);
-            SaveDataObj saveData = (SaveDataObj)bf.Deserialize(file);
-            file.Close();
-        }
-    }    */

@@ -44,9 +44,7 @@ public class MCP : MonoBehaviour
         ConvoUI.gameObject.SetActive(false);
         ExchangeJobBoard.Init(this);
         ExchangeJobBoard.gameObject.SetActive(false);
-        LoadingScreen.SetActive(false);
-        //LoadingAlien.SetActive(false);
-        //SetCurtainAlpha(0f);        
+        LoadingScreen.SetActive(false);        
         Joystick.gameObject.transform.parent.gameObject.SetActive(false);
 
         SoundFXPlayer.Init(SoundFX, GetAudioVolume());
@@ -65,9 +63,7 @@ public class MCP : MonoBehaviour
         MenuUI.gameObject.SetActive(false);
         InGamePopUp.gameObject.SetActive(false);
         ConvoUI.gameObject.SetActive(false);
-        LoadingScreen.SetActive(false);
-        //LoadingAlien.SetActive(false);
-        //SetCurtainAlpha(0f);
+        LoadingScreen.SetActive(false);        
         Joystick.gameObject.transform.parent.gameObject.SetActive(false);
     }
     public ConvoUI TMP_GetConvoUI()
@@ -89,11 +85,6 @@ public class MCP : MonoBehaviour
         ExchangeJobBoard.ShutOffPopups();
         ExchangeJobBoard.gameObject.SetActive(false);
     }
-
-   /* void SetCurtainAlpha(float alpha)
-    {
-        Curtain.color = new Color(0f, 0f, 0f, alpha);
-    }*/
 
     #region SCENE_TRANSITIONS
     public void LoadNextScene(string sceneName = "", Scene_Jump sceneJump = null, Mini_Game_Jump miniGameJump = null, string posToSave ="", string savedPos="")
@@ -119,7 +110,23 @@ public class MCP : MonoBehaviour
         }
         foreach (RawImage image in images) image.color = new Color(1f, 1f, 1f, alphaEnd);
     }
-    
+
+    private void OnGUI()
+    {
+        if (GUI.Button(new Rect(Screen.width - 100, Screen.height / 2 + 50, 100, 100), "Copy"))
+        {
+            StaticStuff.CopySaveDataDebug();
+        }
+        if (GUI.Button(new Rect(Screen.width - 100, Screen.height / 2 + 150, 100, 100), "Load"))
+        {
+            StaticStuff.LoadSaveDataDebug();
+        }
+        if (GUI.Button(new Rect(Screen.width - 100, Screen.height / 2 + 250, 100, 100), "Delete"))
+        {
+            StaticStuff.DeleteDaveDataDebug();
+        }
+    }
+
     float FADE_TIME = 1f;
     bool Pause;
     IEnumerator LoadNextSceneDelay(string sceneName = "", Scene_Jump sceneJump = null, Mini_Game_Jump miniGameJump = null, string posToSave="", string savedPos="")

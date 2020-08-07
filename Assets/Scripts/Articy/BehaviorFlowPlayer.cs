@@ -166,7 +166,7 @@ public class BehaviorFlowPlayer : MonoBehaviour
         if (newValidTargets.Count == 0)
         {            
             Debug.LogError(this.name + ": we should always have at least 1 target, even if it's the end of the flow, so check the flow on this npc please: " + this.name);
-            Debug.LogError("ThisName: " + ThisName);
+          //  Debug.LogError("ThisName: " + ThisName);
             if (CurBehavior == null) Debug.LogError("CurBehavior is null");
             else Debug.LogError("CurBehavior name: " + CurBehavior.DisplayName);
 

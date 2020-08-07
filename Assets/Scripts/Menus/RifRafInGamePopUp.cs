@@ -49,7 +49,7 @@ public class RifRafInGamePopUp : MonoBehaviour
         }
         else
         {
-            StaticStuff.SaveSaveData("Closing In Game PopUp");
+            StaticStuff.SaveCurrentProfile("Closing In Game PopUp");
         }
     }
     public void ToggleMissionHint(bool isActive)

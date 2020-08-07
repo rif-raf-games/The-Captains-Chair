@@ -76,9 +76,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     /// </summary>
     public bool CheckIfDialogueShouldStart(Dialogue convoStart, GameObject collider)
     {
-        Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ CheckDialogue() with technical name: " + convoStart.TechnicalName + " on GameObject: " + this.gameObject.name + " but DON'T DO ANY CODE STUFF UNTIL WE KNOW WE'RE ACTUALLY COMMITTING  time: " + Time.time);// + ", convoStart: " + convoStart.name + ", collider: " + collider.name);
-
-
+       // Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ CheckDialogue() with technical name: " + convoStart.TechnicalName + " on GameObject: " + this.gameObject.name + " but DON'T DO ANY CODE STUFF UNTIL WE KNOW WE'RE ACTUALLY COMMITTING  time: " + Time.time);// + ", convoStart: " + convoStart.name + ", collider: " + collider.name);
         if (CurArticyState == eArticyState.DIALOGUE)
         {   // we're already in a dialogue, so bail
             return false;
@@ -377,7 +375,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                 ArticyGlobalVariables.Default.Mini_Games.Coming_From_Main_Game = true;                
                 ArticyGlobalVariables.Default.Mini_Games.Returning_From_Mini_Game = false;
                 ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success = false;
-                Debug.Log("About to start a mini game: " + curJump.Template.LoadingScreen.SceneToLoad);                
+                //Debug.Log("About to start a mini game: " + curJump.Template.LoadingScreen.SceneToLoad);                
                 //FindObjectOfType<MCP>().LoadNextScene(curJump.Template.Mini_Game_Scene.Scene_Name, null, curJump); // MGJ: ArticyFlow.OnBranchesUpdate() CurPauseObject = Mini_Game_Jump
                 FindObjectOfType<MCP>().LoadNextScene(curJump.Template.LoadingScreen.SceneToLoad, null, curJump); // MGJ: ArticyFlow.OnBranchesUpdate() CurPauseObject = Mini_Game_Jump
             }
@@ -482,7 +480,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                 StaticStuff.TrackEvent(a, trackingParameters);
             }
         }        
-        StaticStuff.SaveSaveData("ArticyFlow.HandleSavePoint()");        
+        StaticStuff.SaveCurrentProfile("ArticyFlow.HandleSavePoint()");        
     }
 
     /// <summary>

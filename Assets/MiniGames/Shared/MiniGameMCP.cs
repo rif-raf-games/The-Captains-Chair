@@ -161,7 +161,7 @@ public class MiniGameMCP : MonoBehaviour
             progress = 1;
             ArticyGlobalVariables.Default.SetVariableByString(ProgressVarName, progress);
            // Debug.LogError("moprog01 ******************************** Setting the var (b): " + ProgressVarName + " to " + progress + " because the current progress for the variable is 0");
-            StaticStuff.SaveSaveData("We went from progress on variable: " + ProgressVarName + ", so save");
+            StaticStuff.SaveCurrentProfile("We went from progress on variable: " + ProgressVarName + ", so save");
         }
         
         CurPuzzleIndex = progress - 1; 
@@ -344,7 +344,7 @@ public class MiniGameMCP : MonoBehaviour
                 ArticyGlobalVariables.Default.SetVariableByString(ProgressVarName, 0);
             }
             
-            StaticStuff.SaveSaveData("MiniGameMCP.SavePuzzlesProgress()");
+            StaticStuff.SaveCurrentProfile("MiniGameMCP.SavePuzzlesProgress()");
         }       
     }
     public void PuzzleFinished()

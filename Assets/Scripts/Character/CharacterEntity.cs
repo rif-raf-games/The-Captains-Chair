@@ -90,14 +90,14 @@ public class CharacterEntity : MonoBehaviour
     
     public IEnumerator CheckPostTeleportTransparency()
     {
-        Debug.LogError(this.name + ": CheckPostTeleportTransparency()");
+        //Debug.LogError(this.name + ": CheckPostTeleportTransparency()");
         yield return new WaitForEndOfFrame();
         yield return new WaitForEndOfFrame();
         yield return new WaitForEndOfFrame();
         yield return new WaitForEndOfFrame();
         CalcCurrentFloor();
         int captainFloor = FindObjectOfType<CCPlayer>().GetCurFloor();
-        Debug.LogError(this.name + ": new Current Floor: " + CurFloor + ", captainFloor: " + captainFloor);
+       // Debug.LogError(this.name + ": new Current Floor: " + CurFloor + ", captainFloor: " + captainFloor);
         float alpha;
         if (captainFloor == CurFloor) alpha = 1f;
         else alpha = 0f;

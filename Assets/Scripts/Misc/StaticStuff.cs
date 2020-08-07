@@ -16,6 +16,11 @@ static public class StaticStuff
     static string DEBUG_SCENE_TO_LOAD = "E1.Plaza";
     public enum eOrientation { LANDSCAPE, PORTRAIT };
 
+    
+    public const int NUM_PROFILES = 4;
+    public const string PROFILE_NAME_ROOT = "tcc_savegame_00";
+    public const string CURRENT_PROFILE_NAME = "tcc_savegameid";
+
     static public void SetOrientation(eOrientation orientation, string screenName)
     {
         //Debug.Log("=============================================== SetOrientation(): " + orientation.ToString() + " from: " + screenName);
@@ -67,87 +72,206 @@ static public class StaticStuff
         Debug.Log(Application.persistentDataPath);
     }
 
-    static public void CheckSceneLoadSave() // Called from RifRafMenuUI
+    static public void SaveCurrentProfile(string s)
     {
-        // Debug.LogError("()()()()(() Take out next line"); StaticStuff.DeleteSaveData();        
-        //Debug.LogError("CheckSceneLoadSave()");
-        StaticStuff.LoadSaveData();
-       // Debug.LogError("()()()()(() Take out next line"); ArticyGlobalVariables.Default.Episode_01.First_Exchange = true;
+        string saveName = GetProfileName(Current_Profile_Num);
+        //Debug.LogError("mosave - SaveCurrentProfile(): saveName: " + saveName + ", s: " + s + ", stack track: " + Environment.StackTrace);
 
-        string returnScene = ArticyGlobalVariables.Default.Save_Info.Return_Scene;
-        string posToSave = ArticyGlobalVariables.Default.Save_Info.Positions_To_Save;
-        string savedPos = ArticyGlobalVariables.Default.Save_Info.Saved_Positions;
-        
-        //GameObject.FindObjectOfType<MCP>().LoadNextScene(DEBUG_SCENE_TO_LOAD); 
-        //  return;
-        if (returnScene.Equals("null") || returnScene.Equals(""))
-        {
-            Debug.Log("Loading default start scene");
-            GameObject.FindObjectOfType<MCP>().LoadNextScene("E1.Intro", null, null, posToSave, savedPos); // SJ: MCP.CheckSceneLoad() default start scene
-        }
-        else
-        {
-            Debug.Log("loading returnScene: " + returnScene);
-            GameObject.FindObjectOfType<MCP>().LoadNextScene(returnScene, null, null, posToSave, savedPos); // SJ: MCP.CheckSceneLoad() return start scene
-        }
-    }
-
-    static public void CreateNewSaveData(int avatar=1)
-    {
-        FileStream file;
-        DeleteSaveData();
-        ArticyGlobalVariables.Default.TheCaptain.Avatar = avatar;
-        SaveSaveData("StaticStuff.CreateSaveData()");
-    }
-    static public void SaveSaveData(string s)
-    {       
-       // Debug.Log("SaveSaveData(): " + s + ", stack track: " + Environment.StackTrace);
         SaveDataDic saveData = new SaveDataDic();
+
+        ArticyGlobalVariables.Default.TheCaptain.SaveTime = DateTime.Now.ToString();
         saveData.saveData = ArticyDatabase.DefaultGlobalVariables.Variables;
 
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file;
-        if (SaveDataExists() == true)
+        if (ProfileExists(saveName) == true)
         {
-            file = File.Open(Application.persistentDataPath + "/globalVars.dat", FileMode.Open);
+            file = File.Open(saveName, FileMode.Open);
         }
         else
         {
-            file = File.Create(Application.persistentDataPath + "/globalVars.dat");
+            file = File.Create(saveName);
         }
         bf.Serialize(file, saveData);
         file.Close();
     }
 
-    static public void LoadSaveData()
-    {        
-        if (SaveDataExists() == true)
+    public static int Current_Profile_Num = 1;    
+    static public void CreateNewProfile(int avatar, int profile) // called from debug OnGUI() from avatar select
+    {
+        string saveName = GetProfileName(profile);
+        //Debug.LogError("mosave - CreateNewProfile() avatar: " + avatar + ", profile: " + profile + ", saveName: " + saveName);
+
+        if (ProfileExists(saveName) == true) { Debug.LogError("Cannot create new profile over existing profile data: " + profile); return; }
+
+        SetCurrentProfile(profile);
+        ArticyGlobalVariables.Default.ResetVariables();
+        ArticyGlobalVariables.Default.TheCaptain.Avatar = avatar;
+        
+        SaveCurrentProfile("StaticStuff.CreateSaveData()");
+    }
+
+    static public void SetCurrentProfile(int profile) // called from main menu Continue
+    {
+        Current_Profile_Num = profile;
+    }
+    static public void LoadCurrentProfile() // called from LoadProfileStartScene()
+    {
+        //Debug.LogError("mosave - LoadCurrentProfile()");
+        string saveName = GetProfileName(Current_Profile_Num);
+        if (ProfileExists(saveName) == false) { Debug.LogError("Trying to load current profile: " + saveName + " but it doesn't exist."); return; }
+
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream file = File.Open(saveName, FileMode.Open);
+        SaveDataDic saveData = (SaveDataDic)bf.Deserialize(file);
+        ArticyDatabase.DefaultGlobalVariables.Variables = saveData.saveData;
+        file.Close();
+    }
+    static public void LoadProfileStartScene() // called from avatar select AND main menu continue
+    {
+        //Debug.Log("mosave - LoadProfileStartScene()");
+        LoadCurrentProfile();     
+
+        string returnScene = ArticyGlobalVariables.Default.Save_Info.Return_Scene;
+        string posToSave = ArticyGlobalVariables.Default.Save_Info.Positions_To_Save;
+        string savedPos = ArticyGlobalVariables.Default.Save_Info.Saved_Positions;
+                        
+        if (returnScene.Equals("null") || returnScene.Equals(""))
         {
-            BinaryFormatter bf = new BinaryFormatter();
-            FileStream file = File.Open(Application.persistentDataPath + "/globalVars.dat", FileMode.Open);
-            SaveDataDic saveData = (SaveDataDic)bf.Deserialize(file);
-            ArticyDatabase.DefaultGlobalVariables.Variables = saveData.saveData;
-            file.Close();
+            //Debug.Log("Loading default start scene");
+            GameObject.FindObjectOfType<MCP>().LoadNextScene("E1.Intro", null, null, posToSave, savedPos); 
         }
         else
         {
-            Debug.LogError("Trying to LoadSaveData() but no save data exists");
+           // Debug.Log("loading returnScene: " + returnScene);
+            GameObject.FindObjectOfType<MCP>().LoadNextScene(returnScene, null, null, posToSave, savedPos); 
         }
     }
 
-    static public void DeleteSaveData()
-    {        
-        if( SaveDataExists() == true )
+    
+    public static ProfileInfo[] GetProfileInfo()
+    {
+        ProfileInfo[] profileInfos = new ProfileInfo[NUM_PROFILES];
+        for (int i = 0; i < profileInfos.Length; i++ ) profileInfos[i] = new ProfileInfo();
+        foreach(ProfileInfo pi in profileInfos ) {pi.Init(-1, "i am error"); }
+
+        string dirName = Application.persistentDataPath;
+        if (Directory.Exists(dirName) == true)
         {
-            File.Delete(Application.persistentDataPath + "/globalVars.dat");
+            string[] fileNames = Directory.GetFiles(dirName);
+            foreach (string fileName in fileNames)
+            {
+                if (fileName.Contains("savegame") == false) continue;
+                int profileNum = int.Parse(fileName[fileName.Length - 5].ToString());
+                BinaryFormatter bf = new BinaryFormatter();
+                FileStream file = File.Open(fileName, FileMode.Open);
+                SaveDataDic saveData = (SaveDataDic)bf.Deserialize(file);
+                int avatar = (int)saveData.saveData["TheCaptain.Avatar"];
+                string time = (string)saveData.saveData["TheCaptain.SaveTime"];
+                profileInfos[profileNum - 1].Init(avatar, time);
+                file.Close();
+            }
         }
-        ArticyDatabase.DefaultGlobalVariables.ResetVariables();
+        return profileInfos;
+    }
+    
+    public static bool[] GetValidProfiles()
+    {
+        bool[] saveFiles = new bool[NUM_PROFILES] { false, false, false, false };
+        string dirName = Application.persistentDataPath;
+        if (Directory.Exists(dirName) == true)
+        {
+            string[] fileNames = Directory.GetFiles(dirName);
+            foreach (string fileName in fileNames)
+            {
+                if (fileName.Contains("savegame") == false) continue;
+                int saveNum = int.Parse(fileName[fileName.Length - 5].ToString());
+                //Debug.Log("we have a saveNum: " + saveNum);
+                saveFiles[saveNum - 1] = true;
+            }            
+        }
+        return saveFiles;
+    }         
+    
+    static public string GetProfileName(int profileNum)
+    {
+        string s = Application.persistentDataPath + "/" + PROFILE_NAME_ROOT + profileNum.ToString() + ".dat";        
+        //Debug.LogError("mosave - GetProfileName(): " + s);
+        return s;            
+    }
+    
+
+    static public bool ProfileExists(int profileNum)
+    {
+        return File.Exists(GetProfileName(profileNum));
+    }
+    static public bool ProfileExists(string saveName)
+    {
+        return File.Exists(saveName);
+    }
+            
+    static public void DeleteProfileNum(int profileNum)
+    {        
+        string fileName = GetProfileName(profileNum);
+        //Debug.LogError("mosave - DeleteProfileNum(): " + fileName);
+        if (ProfileExists(fileName) == false) { Debug.LogError("Trying to delete a file that doesn't exist: " + fileName); return; }
+
+        File.Delete(fileName);
     }
 
-    static public bool SaveDataExists()
-    {        
-        return File.Exists(Application.persistentDataPath + "/globalVars.dat");
+    static public void CopySaveDataDebug()
+    {
+        //Debug.Log("mosave - CopySaveData()");
+        /* if (File.Exists(GetSaveFileName()) == true)
+         {
+             File.Copy(GetSaveFileName(), GetSaveFileCopyName(), true);
+         }
+         else Debug.LogWarning("Save file doesn't exist");*/
     }
+    public static void LoadSaveDataDebug()
+    {
+        //Debug.Log("mosave - LoadSaveData()");
+        /*  if (File.Exists(GetSaveFileName()) == true)
+          {
+              File.Copy(GetSaveFileCopyName(), GetSaveFileName(), true);
+              CheckSceneLoadSave(); // Load debug
+          }
+          else Debug.LogWarning("Save file copy doesn't exist");*/
+    }
+    public static void DeleteDaveDataDebug()
+    {
+        //Debug.Log("mosave - DeleteDaveDataDebug()");
+        /*  string dirName = Application.persistentDataPath;
+          if (Directory.Exists(dirName) == true)
+          {
+              string[] files = Directory.GetFiles(dirName);
+              foreach (string file in files)
+              {
+                  Debug.Log("Delete this file: " + file);
+                  File.Delete(file);
+              }
+              //Directory.Delete(dirName);
+          }*/
+    }
+    static public string GetSaveFileCopyName(int profileNum)
+    {
+        string s = Application.persistentDataPath + "/" + PROFILE_NAME_ROOT + profileNum.ToString() + "Copy.dat";
+        //Debug.Log("mosave - GetSaveFileCopyName(): " + s);
+        return s;
+    }
+
+    public class ProfileInfo
+    {
+        public int avatar;
+        public string time;
+
+        public void Init(int avatar, string time)
+        {
+            this.avatar = avatar;
+            this.time = time;
+        }
+    }
+
     #endregion
 
 
@@ -156,14 +280,7 @@ static public class StaticStuff
     {
         ArticyFlowToPrint = articyFlowToPrint;
     }
-    // Start is called before the first frame update
-    /*static public void PrintFlowPaused( string s, ArticyFlow articyFlowCaller)
-    {
-        if (ArticyFlowToPrint != null && (ArticyFlowToPrint == articyFlowCaller))
-        {
-            Debug.Log("caller: " + articyFlowCaller.name + ": " + s);
-        }            
-    }*/
+    
     static public void PrintFlowBranchesUpdate(string s, ArticyFlow articyFlowCaller)
     {
         //Debug.Log(articyFlowCaller.name + ": " + s);
@@ -189,7 +306,7 @@ static public class StaticStuff
 
     static public void PrintRifRafUI(string s)
     { 
-      // Debug.LogWarning("===============================PrintRifRafUI(): " + s);
+       //Debug.LogWarning("===============================PrintRifRafUI(): " + s);
     }
 
     
