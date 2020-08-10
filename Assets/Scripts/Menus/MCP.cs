@@ -111,7 +111,7 @@ public class MCP : MonoBehaviour
         foreach (RawImage image in images) image.color = new Color(1f, 1f, 1f, alphaEnd);
     }
 
-    private void OnGUI()
+  /*  private void OnGUI()
     {
         if (GUI.Button(new Rect(Screen.width - 100, Screen.height / 2 + 50, 100, 100), "Copy"))
         {
@@ -125,7 +125,7 @@ public class MCP : MonoBehaviour
         {
             StaticStuff.DeleteDaveDataDebug();
         }
-    }
+    }*/
 
     float FADE_TIME = 1f;
     bool Pause;

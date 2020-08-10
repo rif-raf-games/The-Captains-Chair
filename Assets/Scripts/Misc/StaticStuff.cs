@@ -75,7 +75,7 @@ static public class StaticStuff
     static public void SaveCurrentProfile(string s)
     {
         string saveName = GetProfileName(Current_Profile_Num);
-        //Debug.LogError("mosave - SaveCurrentProfile(): saveName: " + saveName + ", s: " + s + ", stack track: " + Environment.StackTrace);
+      //  Debug.LogError("mosave - SaveCurrentProfile(): saveName: " + saveName + ", s: " + s + ", stack track: " + Environment.StackTrace);
 
         SaveDataDic saveData = new SaveDataDic();
 
