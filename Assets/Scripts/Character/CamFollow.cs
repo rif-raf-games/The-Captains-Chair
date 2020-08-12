@@ -10,8 +10,9 @@ public class CamFollow : MonoBehaviour
     eCamState CurCamState = eCamState.FOLLOW;
 
     public CharacterEntity EntityToFollow;
-    public Vector3 CamOffset;
-    //public Vector3 CamRot = new Vector3(24, 180, 0);
+    public Vector3 CamOffset;    
+    public CameraSetting[] CameraSettings;
+    public int CameraSettingIndex = 0;
 
     private CCPlayer Player;    
     CharacterEntity EntityWasFollowing;
@@ -25,6 +26,7 @@ public class CamFollow : MonoBehaviour
     {
         Player = FindObjectOfType<CCPlayer>();
         this.ShipAreasCollider = FindObjectOfType<ShipAreasCollider>();
+        FindObjectOfType<MCP>().TMP_AssignCameraToggle(this);
     }
     private void LateUpdate()
     {
@@ -32,12 +34,35 @@ public class CamFollow : MonoBehaviour
         if(EntityToFollow != null)
         {
             transform.position = EntityToFollow.transform.position + CamOffset;
-        }   
-        /*if(DebugText != null)
-        {
-            DebugText.text = CurCamState.ToString();
-        }*/
+        }           
     }
+
+    IEnumerator LerpCamFollow(Vector3 newCamOffset, Quaternion newCamRot)
+    {
+        Quaternion lerpRotStart = transform.rotation;
+        Quaternion lerpRotEnd = newCamRot;
+        LerpStart = transform.position - EntityToFollow.transform.position;
+        LerpEnd = newCamOffset;
+        float timer = 0f;
+        while (timer < 1f)
+        {
+            CamOffset = Vector3.Lerp(LerpStart, LerpEnd, timer);
+            transform.rotation = Quaternion.Lerp(lerpRotStart, lerpRotEnd, timer);
+            timer += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+        CamOffset = newCamOffset;
+        transform.rotation = lerpRotEnd;
+    }
+
+    public void OnClickCameraToggle()
+    {
+        if (CameraSettings == null || CameraSettings.Length < 1 || CurCamState != eCamState.FOLLOW) return;
+        CameraSettingIndex = (CameraSettingIndex + 1) % CameraSettings.Length;
+        Vector3 newPos = CameraSettings[CameraSettingIndex].Position;
+        Quaternion newRot = Quaternion.Euler(CameraSettings[CameraSettingIndex].Rotation);
+        StartCoroutine(LerpCamFollow(newPos, newRot));
+    }  
 
     public void SetupNewCamFollow(CharacterEntity newEntityToFollow, Vector3 newCamOffset, Quaternion newCamRot)
     {        
@@ -184,7 +209,7 @@ public class CamFollow : MonoBehaviour
    // public Text DebugText;
     IEnumerator LerpCamZoom(Vector3 lerpPosStart, Vector3 lerpPosEnd, float lerpRotStart, float lerpRotEnd, eCamState lerpEndState)
     {
-        Debug.Log("LerpCamZoom() lerpPosStart: " + lerpPosStart.ToString("F2") + ", lerpPosEnd: " + lerpPosEnd.ToString("F2"));
+       // Debug.Log("LerpCamZoom() lerpPosStart: " + lerpPosStart.ToString("F2") + ", lerpPosEnd: " + lerpPosEnd.ToString("F2"));
         float lerpStartTime = Time.time;
         float lerpPercentage = 0f;
         while (lerpPercentage < 1f)
@@ -211,21 +236,10 @@ public class CamFollow : MonoBehaviour
         }        
     }
 
-    IEnumerator LerpCamFollow(Vector3 newCamOffset, Quaternion newCamRot)
+    [System.Serializable]
+    public class CameraSetting
     {
-        Quaternion lerpRotStart = transform.rotation;
-        Quaternion lerpRotEnd = newCamRot;
-        LerpStart = transform.position - EntityToFollow.transform.position;
-        LerpEnd = newCamOffset;                
-        float timer = 0f;
-        while (timer < 1f)
-        {
-            CamOffset = Vector3.Lerp(LerpStart, LerpEnd, timer);
-            transform.rotation = Quaternion.Lerp(lerpRotStart, lerpRotEnd, timer);
-            timer += Time.deltaTime;
-            yield return new WaitForEndOfFrame();
-        }
-        CamOffset = newCamOffset;
-        transform.rotation = lerpRotEnd;
-    }         
+        public Vector3 Position;
+        public Vector3 Rotation;
+    }
 }

@@ -97,7 +97,7 @@ public class CCPlayer : CharacterEntity
     
     public override void LateUpdate()
     {
-        if (DebugText != null) DebugText.text = this.name + ", LateUpdate()";
+       // if (DebugText != null) DebugText.text = this.name + ", LateUpdate()";
         if(DealingWithElevator == true || CaptainArticyFlow.CurArticyState == ArticyFlow.eArticyState.DIALOGUE)
         {
             // if we're here then we're under some kind of external control so make sure the animations will update properly
@@ -105,18 +105,7 @@ public class CCPlayer : CharacterEntity
         }        
     }
 
-    /*public CapsuleCollider testCap;
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Debug.Log(testCap.center);
-        Vector3 center = testCap.transform.TransformPoint(testCap.center);
-        Gizmos.DrawWireSphere(center, .5f);
-        Vector3 start = center + testCap.height / 2 * testCap.transform.forward;
-        Gizmos.DrawWireSphere(start, .5f);
-        Vector3 end = center - testCap.height / 2 * testCap.transform.forward;
-        Gizmos.DrawWireSphere(end, .5f);
-    }*/
+    
     // Update is called once per frame
     public override void Update()
     {
@@ -195,9 +184,7 @@ public class CCPlayer : CharacterEntity
                 {
                     inputH = Input.GetAxis("Horizontal");
                     inputV = Input.GetAxis("Vertical");                    
-                }
-                inputH = -inputH;
-                inputV = -inputV;
+                }            
 
                 float val = new Vector3(Mathf.Abs(inputH), Mathf.Abs(inputV)).magnitude;
                 Animator.SetFloat("Vertical", val);
@@ -205,16 +192,21 @@ public class CCPlayer : CharacterEntity
 
                 moveX = inputH * MoveSpeed * Time.deltaTime;
                 moveZ = inputV * MoveSpeed * Time.deltaTime;
-                rbody.velocity = new Vector3(moveX, 0, moveZ);
-
-                // note - some old stuff is copied below
-
-                Vector3 direction = rbody.velocity;
-                Vector3 newDir = Vector3.RotateTowards(transform.forward, direction, RotSpeed * Time.deltaTime, 0.0f);
-                Quaternion newRot = Quaternion.LookRotation(newDir);
-                transform.rotation = newRot;
-
-                
+                Vector3 newVel = new Vector3(moveX, 0, moveZ);               
+                Vector3 camRot = Camera.main.transform.rotation.eulerAngles;
+                newVel = Quaternion.Euler(0f, camRot.y, 0f) * newVel;                
+                rbody.velocity = newVel;                                     
+                Vector3 newDir = Vector3.RotateTowards(transform.forward, rbody.velocity, RotSpeed * Time.deltaTime, 0.0f);
+                transform.rotation = Quaternion.LookRotation(newDir);                
+               
+               /* if (DebugText != null)
+                {
+                    string s = "newVel: " + newVel.ToString("F2") + "\n";
+                    s += "camRot: " + camRot.ToString("F2") + "\n";
+                    //s += "adjVel: " + adjVel.ToString("F2") + "\n";
+                    DebugText.text = s;
+                }
+                else DebugText = GameObject.Find("Debug Output Text").GetComponent<Text>(); ;*/
             }
             else
               {   // point 'n click
@@ -257,6 +249,8 @@ public class CCPlayer : CharacterEntity
               }
           }          
     }
+
+    public int Adjustment = 0;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -524,3 +518,16 @@ public class CCPlayer : CharacterEntity
             Debug.Log("remaingDistance is 0" + ", frameNum: " + frameNum);
         }
         frameNum++;*/
+
+/*public CapsuleCollider testCap;
+private void OnDrawGizmos()
+{
+    Gizmos.color = Color.red;
+    Debug.Log(testCap.center);
+    Vector3 center = testCap.transform.TransformPoint(testCap.center);
+    Gizmos.DrawWireSphere(center, .5f);
+    Vector3 start = center + testCap.height / 2 * testCap.transform.forward;
+    Gizmos.DrawWireSphere(start, .5f);
+    Vector3 end = center - testCap.height / 2 * testCap.transform.forward;
+    Gizmos.DrawWireSphere(end, .5f);
+}*/

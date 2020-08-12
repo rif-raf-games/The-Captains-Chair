@@ -19,6 +19,7 @@ public class MCP : MonoBehaviour
     //public GameObject LoadingAlien;
     public RawImage Curtain, SpinWheel, LoadingImage;
     public FixedJoystick Joystick;
+    public Button CameraToggleButton;
 
     [Header("Sound")]
     public SoundFX SoundFX;
@@ -56,6 +57,12 @@ public class MCP : MonoBehaviour
     public void SetupSceneSound(List<SoundFX.FXInfo> soundFXUsedInScene)
     {
         SoundFX.SetupFXList(soundFXUsedInScene);
+    }
+
+    public void TMP_AssignCameraToggle(CamFollow camFollow)
+    {
+        CameraToggleButton.onClick.RemoveAllListeners();
+        CameraToggleButton.onClick.AddListener(camFollow.OnClickCameraToggle);
     }
 
     public void TMP_ShutOffUI()
