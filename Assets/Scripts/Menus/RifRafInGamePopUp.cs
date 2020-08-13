@@ -9,7 +9,9 @@ public class RifRafInGamePopUp : MonoBehaviour
     public GameObject PopUpPanel;
     public GameObject ExchangeBoardButton;
     public MissionHint MissionHint;
-    public RifRafExchangeJobBoard ExchangeBoard;    
+    public RifRafExchangeJobBoard ExchangeBoard;
+    public VolumeControl MusicVolume;
+    public VolumeControl SoundFXVolume;
     public MCP MCP;
 
     private void Awake()
@@ -34,9 +36,10 @@ public class RifRafInGamePopUp : MonoBehaviour
         PopUpPanel.SetActive(isActive);  
         if(isActive == true)
         {
-            GetComponentInChildren<Slider>().value = this.MCP.GetAudioVolume();
-            SetAudioVolumeToggle();
-            //Debug.LogError("remove this"); ArticyGlobalVariables.Default.Episode_01.First_Exchange = true;
+            MusicVolume.Slider.value = this.MCP.GetMusicVolume();
+            MusicVolume.Toggle.isOn = (MusicVolume.Slider.value > 0f);
+            SoundFXVolume.Slider.value = this.MCP.GetSoundFXVolume();
+            SoundFXVolume.Toggle.isOn = (SoundFXVolume.Slider.value > 0f);            
 
             if (ArticyGlobalVariables.Default.Episode_01.First_Exchange == false)
             {
@@ -79,7 +82,7 @@ public class RifRafInGamePopUp : MonoBehaviour
         return MissionHint.gameObject.activeSelf == false && ExchangeBoard.gameObject.activeSelf == false;
     }
 
-    #region MAIN_POPUP
+#region MAIN_POPUP
     public void OnClickResumeGame()
     {
         StaticStuff.PrintRifRafUI("OnClickResumeGame()");
@@ -122,50 +125,56 @@ public class RifRafInGamePopUp : MonoBehaviour
 
         this.MCP.TurnOnMainMenu();
     }
-
-    void SetAudioVolumeToggle()
-    {
-        if (this.MCP.GetAudioVolume() == 0)
-        {
-            GetComponentInChildren<Toggle>().isOn = false;
-        }
-        else
-        {
-            GetComponentInChildren<Toggle>().isOn = true;
-        }
-    }
+    
     public void OnSliderAudioVolume(Slider slider)
     {
         StaticStuff.PrintRifRafUI("OnSliderAudioVolume()");
-        
-        //Debug.Log(slider.value);
-        this.MCP.SetAudioVolume((int)slider.value);
-        SetAudioVolumeToggle();
+
+        if(slider == MusicVolume.Slider)
+        {
+            this.MCP.SetMusicVolume((int)slider.value);
+            MusicVolume.Toggle.isOn = (MusicVolume.Slider.value > 0f);
+        }
+        else
+        {
+            this.MCP.SetSoundFXVolume((int)slider.value);
+            SoundFXVolume.Toggle.isOn = (SoundFXVolume.Slider.value > 0f);
+        }        
     }
 
     public void OnToggleAudioVolume(Toggle toggle)
     {
-        if(toggle.isOn == true)
+        if(toggle == MusicVolume.Toggle)
         {
-            this.MCP.SetAudioVolume(100);
+            if (toggle.isOn == true) this.MCP.SetMusicVolume(100);
+            else this.MCP.SetMusicVolume(0);
+            MusicVolume.Slider.value = this.MCP.GetMusicVolume();
         }
         else
         {
-            this.MCP.SetAudioVolume(0);
-        }
-        GetComponentInChildren<Slider>().value = this.MCP.GetAudioVolume();
+            if (toggle.isOn == true) this.MCP.SetSoundFXVolume(100);
+            else this.MCP.SetSoundFXVolume(0);
+            SoundFXVolume.Slider.value = this.MCP.GetSoundFXVolume();
+        }        
     }
-    #endregion
+#endregion
 
-    #region EXCHANGE_BOARD
-    #endregion
+#region EXCHANGE_BOARD
+#endregion
 
-    #region MISSION_HINT
+#region MISSION_HINT
     public void OnClickMissionHintBack()
     {
         StaticStuff.PrintRifRafUI("OnClickMissionHintBack()");
 
         ToggleMissionHint(false);
     }
-    #endregion
+#endregion
+
+    [System.Serializable]
+    public class VolumeControl
+    {
+        public Slider Slider;
+        public Toggle Toggle;
+    }
 }

@@ -48,8 +48,8 @@ public class MCP : MonoBehaviour
         LoadingScreen.SetActive(false);        
         Joystick.gameObject.transform.parent.gameObject.SetActive(false);
 
-        SoundFXPlayer.Init(SoundFX, GetAudioVolume());
-        BackgroundMusicPlayer.Init(BGMusic, GetAudioVolume());
+        SoundFXPlayer.Init(SoundFX, GetMusicVolume());
+        BackgroundMusicPlayer.Init(BGMusic, GetMusicVolume());
 
         DontDestroyOnLoad(this.gameObject);
     }
@@ -463,15 +463,24 @@ public class MCP : MonoBehaviour
     }
 
     #region GAME_SETTINGS
-    public int GetAudioVolume()
-    {
-        return ArticyGlobalVariables.Default.Game_Settings.Audio_Volume;
+    public int GetMusicVolume()
+    { 
+        
+        return ArticyGlobalVariables.Default.Game_Settings.Music_Volume;
     }
-    public void SetAudioVolume(int vol)
+    public void SetMusicVolume(int vol)
     {
-        ArticyGlobalVariables.Default.Game_Settings.Audio_Volume = vol;
+        ArticyGlobalVariables.Default.Game_Settings.Music_Volume = vol;
+        BGMusic.SetVolume(vol);                
+    }
+    public int GetSoundFXVolume()
+    {
+        return ArticyGlobalVariables.Default.Game_Settings.SoundFX_Volume;
+    }
+    public void SetSoundFXVolume(int vol)
+    {
+        ArticyGlobalVariables.Default.Game_Settings.SoundFX_Volume = vol;
         SoundFX.SetVolume(vol);
-        BGMusic.SetVolume(vol);
     }
 
     #endregion    
