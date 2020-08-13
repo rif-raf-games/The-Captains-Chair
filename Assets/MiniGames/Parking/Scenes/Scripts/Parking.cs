@@ -247,7 +247,7 @@ public class Parking : MiniGame
         //Debug.Log("are all ships contained?: " + allShipsContained.ToString());
         if (allShipsContained == true || RotateShipList.Count == 0)
         {
-            SoundFXPlayer.Play("RotatePad");
+            SoundFXPlayer.Play("Cargo_Rotate");
             foreach (ParkingShip ship in RotateShipList)
             {
                 ship.transform.parent = RotateParent.transform;
