@@ -35,7 +35,7 @@ public class RifRafInGamePopUp : MonoBehaviour
 
     public void TogglePopUpPanel(bool isActive)
     {
-        Debug.Log("RifRafInGamePopUp.TogglePopUpPanel() isActive: " + isActive);
+      //  Debug.Log("RifRafInGamePopUp.TogglePopUpPanel() isActive: " + isActive);
         PopUpPanel.SetActive(isActive);
         if (isActive == true)
         {

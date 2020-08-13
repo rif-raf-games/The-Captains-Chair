@@ -62,9 +62,10 @@ public class ConvoUI : MonoBehaviour
             StaticStuff.PrintUI("this dialogue fragment has: " + dialogueOptions.Count + " options");
             DialogueFragment d = dialogueOptions[0].Target as DialogueFragment;
             if (d != null) StaticStuff.PrintUI(d.MenuText + ", " + d.Text + ", " + d.TechnicalName);
-        }        
+        }
 
-        // monote - this is sloppy, fix it
+
+        // monote - this is sloppy, fix it       
         this.gameObject.SetActive(true);
         this.MCP.TMP_ToggleBurger(false);
 
@@ -92,21 +93,7 @@ public class ConvoUI : MonoBehaviour
         IsInteractive = true;
         if(IsInteractive == true)
         {
-            TurnOnValidButtons();
-            /*int numDO = (dialogueOptions != null ? dialogueOptions.Count : validAOTargets.Count);
-            for (int i = 0; i < numDO; i++)
-            {
-                DialogueOptions[i].SetActive(true);
-                DialogueFragment df = (dialogueOptions != null ? dialogueOptions[i].Target as DialogueFragment : validAOTargets[i] as DialogueFragment);//dialogueOptions[i].Target as DialogueFragment;
-                if (df != null)
-                {
-                    DialogueOptions[i].GetComponentInChildren<Text>().text = df.MenuText;
-                }
-                else
-                {
-                    DialogueOptions[i].GetComponentInChildren<Text>().text = "Continue";
-                }
-            }*/
+            TurnOnValidButtons();            
         }
 
         // VO stuff

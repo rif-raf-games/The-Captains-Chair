@@ -62,6 +62,7 @@ public class MiniGameMCP : MonoBehaviour
 
     IEnumerator LoadPuzzleScenes()
     {
+       // Debug.Log("LoadPuzzleScenes()");
         float startTime = Time.time;        
         if(ArticyGlobalVariables.Default.Mini_Games.Coming_From_Main_Game == true)
         {            
@@ -254,6 +255,7 @@ public class MiniGameMCP : MonoBehaviour
     }
     void StartCurrentPuzzle()
     {
+      //  Debug.Log("StartCurrentPuzzle()");
         if(PuzzleDialogues != null)
         {   // if we're here, then we've gotten a list of dialogues from an articy ref, so use that
             if (PuzzleDialogues.Count == 0 || PuzzleDialogues.Count - 1 < CurPuzzleIndex)
