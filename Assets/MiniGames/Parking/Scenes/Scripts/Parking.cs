@@ -136,7 +136,7 @@ public class Parking : MiniGame
 
     IEnumerator ShowResults(string result, bool success)
     {
-        if (success == true) SoundFXPlayer.Play("zapsplat_multimedia_game_sound_simple_dreamy_sine_bell_positive_double_chime_53823");
+        if (success == true) SoundFXPlayer.Play("Cargo_WinGame");
         if (MiniGameMCP != null) MiniGameMCP.SavePuzzlesProgress(success, "ShowResults()");
         if (success == true) EndPuzzleTime(true);
         SetGameState(eGameState.OFF);
@@ -321,12 +321,12 @@ public class Parking : MiniGame
             if (TouchState == eTouchState.CLICK)
             {                
                 if (InputTimer >= HoldTime)
-                {
+                {                               //lift piece
                     TouchState = eTouchState.HOLD;
                     SetActiveShip(ClickedShip);
                     int val = Random.Range(0, 2);
-                    if (val < 1) SoundFXPlayer.Play("zapsplat_office_chair_lever_down_slide_hydraulic_001_47271");
-                    else SoundFXPlayer.Play("zapsplat_sound_design_frequency_modulation_slightly_lofi_rising_tone_whine_39118");
+                    if (val < 1) SoundFXPlayer.Play("Cargo_LiftPiece-A");
+                    else SoundFXPlayer.Play("Cargo_LiftPiece-B");
                     ActiveShip.BeginHold(RaiserLowerTime);
                     CurTouchPos = Input.mousePosition;
                     LastTouchPos = Input.mousePosition;
@@ -412,14 +412,14 @@ public class Parking : MiniGame
             {
                 //Debug.Log("GMU() BeginLower: " + InputTimer);                
                 int val = Random.Range(0, 2);
-                if (val < 1) SoundFXPlayer.Play("smartsound_CINEMATIC_IMPACT_Slam_05");
-                else SoundFXPlayer.Play("yfs_Budapest_Hungary_Elevatorride_DoorsOpeningAndClosing_037");
+                if (val < 1) SoundFXPlayer.Play("Cargo_DropPiece-A");
+                else SoundFXPlayer.Play("Cargo_DropPiece-B");
                 ActiveShip.BeginLower(RaiserLowerTime);
             }            
             if (TouchingRotatePad == true && InputTimer <= HoldTime)
             {
                 // Debug.Log("GMU() Rotate: " + InputTimer);                
-                SoundFXPlayer.Play("zapsplat_industrial_10_litre_plastic_drum_water_heavy_slide_002_53290");
+                SoundFXPlayer.Play("Cargo_Rotate");
                 RotateGridPlatform();
             }
             TouchingRotatePad = false;
