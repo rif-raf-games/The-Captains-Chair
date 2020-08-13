@@ -1,4 +1,6 @@
-﻿using Articy.The_Captain_s_Chair.GlobalVariables;
+﻿using Articy.The_Captain_s_Chair;
+using Articy.The_Captain_s_Chair.GlobalVariables;
+using Articy.Unity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +10,7 @@ public class RifRafInGamePopUp : MonoBehaviour
 {
     public GameObject PopUpPanel;
     public GameObject ExchangeBoardButton;
+    public GameObject ExchangeBoardText, SuspendJobText;
     public MissionHint MissionHint;
     public RifRafExchangeJobBoard ExchangeBoard;
     public VolumeControl MusicVolume;
@@ -32,14 +35,14 @@ public class RifRafInGamePopUp : MonoBehaviour
 
     public void TogglePopUpPanel(bool isActive)
     {
-        //Debug.Log("RifRafInGamePopUp.TogglePopUpPanel() isActive: " + isActive);
-        PopUpPanel.SetActive(isActive);  
-        if(isActive == true)
+        Debug.Log("RifRafInGamePopUp.TogglePopUpPanel() isActive: " + isActive);
+        PopUpPanel.SetActive(isActive);
+        if (isActive == true)
         {
             MusicVolume.Slider.value = this.MCP.GetMusicVolume();
             MusicVolume.Toggle.isOn = (MusicVolume.Slider.value > 0f);
             SoundFXVolume.Slider.value = this.MCP.GetSoundFXVolume();
-            SoundFXVolume.Toggle.isOn = (SoundFXVolume.Slider.value > 0f);            
+            SoundFXVolume.Toggle.isOn = (SoundFXVolume.Slider.value > 0f);
 
             if (ArticyGlobalVariables.Default.Episode_01.First_Exchange == false)
             {
@@ -48,6 +51,16 @@ public class RifRafInGamePopUp : MonoBehaviour
             else
             {
                 ExchangeBoardButton.SetActive(true);
+                if (FindObjectOfType<TheCaptainsChair>() != null)
+                {
+                    ExchangeBoardText.SetActive(true);
+                    SuspendJobText.SetActive(false);
+                }
+                else
+                {
+                    ExchangeBoardText.SetActive(false);
+                    SuspendJobText.SetActive(true);
+                }
             }
         }
         else
@@ -106,9 +119,22 @@ public class RifRafInGamePopUp : MonoBehaviour
     public void OnClickExchangeBoard()
     {
         StaticStuff.PrintRifRafUI("OnClickExchangeBoard()");
+        Debug.Log("OnClickExchangeBoard()");
         if (PopupActiveCheck() == false) return;
 
-        ToggleExchangeBoard(true);
+        if (FindObjectOfType<TheCaptainsChair>() != null)
+        {
+            ToggleExchangeBoard(true);
+        }
+        else
+        {
+            Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
+            ArticyGlobalVariables.Default.Mini_Games.Coming_From_Main_Game = false;
+            ArticyGlobalVariables.Default.Mini_Games.Returning_From_Mini_Game = true;
+            ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success = false;
+            string sceneName = jumpSave.Template.Quit_Mini_Game_Result.SceneName;
+            FindObjectOfType<MCP>().LoadNextScene(sceneName, null, jumpSave);
+        }
     }
     public void OnClickMissionHint()
     {
