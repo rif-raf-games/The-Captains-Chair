@@ -91,12 +91,12 @@ public class LockPicking : MiniGame
 
         if (FindObjectOfType<MCP>() != null)
         {
-            FindObjectOfType<MCP>().SetupSceneSound(SoundFXUsedInScene);
+            FindObjectOfType<MCP>().SetupSceneSound(soundFXUsedInScene);
         }
     }
 
-    [Header("Sound")]
-    public List<SoundFX.FXInfo> SoundFXUsedInScene;
+  //  [Header("Sound")]
+   // public List<SoundFX.FXInfo> SoundFXUsedInScene;
 
     public override void Awake()
     {
@@ -132,7 +132,7 @@ public class LockPicking : MiniGame
         }
         this.MCP = FindObjectOfType<MCP>();
         this.MCP.TMP_ShutOffUI();
-        this.MCP.SetupSceneSound(SoundFXUsedInScene);
+       // this.MCP.SetupSceneSound(SoundFXUsedInScene);
     }
 
     private void Start()

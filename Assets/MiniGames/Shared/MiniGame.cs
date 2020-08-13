@@ -12,8 +12,8 @@ public class MiniGame : MonoBehaviour
     protected bool DialogueActive;
     public string SceneName;
 
-    [Header("Sound")]
-    public List<SoundFX.FXInfo> SoundFXUsedInScene;
+    //[Header("Sound")]
+   // public List<SoundFX.FXInfo> SoundFXUsedInScene;
 
     [Header("Debug")]
     public Text DebugText;
@@ -39,7 +39,7 @@ public class MiniGame : MonoBehaviour
         //Debug.Log("MiniGame.Init()");
         this.MiniGameMCP = mcp;
         SceneName = sceneName;
-        this.SoundFXUsedInScene = soundFXUsedInScene;
+       // this.SoundFXUsedInScene = soundFXUsedInScene;
     } 
     
     public virtual void TMP_WinGame()
