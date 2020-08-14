@@ -182,7 +182,7 @@ public class CharacterEntity : MonoBehaviour
             ForwardDir = transform.forward;
 
             // determines whether or not we go to the WALK bit
-            if (DeltaPos.y >= .01f) Speed = 0f;
+            if (DeltaPos.y >= .01f || DeltaPos.y <= -.01f) Speed = 0f;
             else Speed = DeltaPos.magnitude * 10f;
             Animator.SetFloat("Vertical", Speed);
             if(DebugText != null)

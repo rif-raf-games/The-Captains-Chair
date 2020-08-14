@@ -168,76 +168,34 @@ public class CCPlayer : CharacterEntity
                     }
                 }
             }
-                        
-            if (CurControlType == eControlType.STICK)
-            {   // thumbstick control
-                Rigidbody rbody = GetComponent<Rigidbody>();
-                float moveX, moveZ;
-                float inputH, inputV;
-                
-                if(Joystick != null)
-                {
-                    inputH = Joystick.Horizontal;
-                    inputV = Joystick.Vertical;
-                }
-                else
-                {
-                    inputH = Input.GetAxis("Horizontal");
-                    inputV = Input.GetAxis("Vertical");                    
-                }            
 
-                float val = new Vector3(Mathf.Abs(inputH), Mathf.Abs(inputV)).magnitude;
-                Animator.SetFloat("Vertical", val);
-                Animator.SetFloat("Horizontal", inputH);
+            Rigidbody rbody = GetComponent<Rigidbody>();
+            float moveX, moveZ;
+            float inputH, inputV;
 
-                moveX = inputH * MoveSpeed * Time.deltaTime;
-                moveZ = inputV * MoveSpeed * Time.deltaTime;
-                Vector3 newVel = new Vector3(moveX, 0, moveZ);               
-                Vector3 camRot = Camera.main.transform.rotation.eulerAngles;
-                newVel = Quaternion.Euler(0f, camRot.y, 0f) * newVel;                
-                rbody.velocity = newVel;                                     
-                Vector3 newDir = Vector3.RotateTowards(transform.forward, rbody.velocity, RotSpeed * Time.deltaTime, 0.0f);
-                transform.rotation = Quaternion.LookRotation(newDir);                
-               
-               /* if (DebugText != null)
-                {
-                    string s = "newVel: " + newVel.ToString("F2") + "\n";
-                    s += "camRot: " + camRot.ToString("F2") + "\n";
-                    //s += "adjVel: " + adjVel.ToString("F2") + "\n";
-                    DebugText.text = s;
-                }
-                else DebugText = GameObject.Find("Debug Output Text").GetComponent<Text>(); ;*/
+            if (Joystick != null)
+            {
+                inputH = Joystick.Horizontal;
+                inputV = Joystick.Vertical;
             }
             else
-              {   // point 'n click
-                  if ( Input.GetMouseButtonDown(0) )
-                  {
-                      mask = 1 << LayerMask.NameToLayer("Floor");
-                      mask |= (1 << LayerMask.NameToLayer("Elevator"));
-                      ray = Camera.main.ScreenPointToRay(Input.mousePosition);                      
-                      if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask))
-                      {
-                          Vector3 dest = Vector3.zero;
-                          string layerClicked = LayerMask.LayerToName(hit.collider.gameObject.layer);
-                          if (layerClicked.Equals("Floor"))
-                          {
-                              // Debug.Log("layerClicked: " + layerClicked + " hit: " + hit.collider.gameObject.name);
-                              dest = hit.point;
-                              SelectedElevator = null;
-                          }
-                          else if (layerClicked.Equals("Elevator"))
-                          {
-                              //s Debug.Log("layerClicked: " + layerClicked + " hit: " + hit.collider.gameObject.name);
-                              dest = hit.point;
-                              if (hit.collider.gameObject.name.Contains("Lift")) SelectedElevator = hit.collider.GetComponent<Elevator>();
-                              else SelectedElevator = hit.collider.GetComponentInParent<Elevator>();
-                              if (SelectedElevator == null) Debug.LogError("Clicked on an Elevator with no Elevator component.");
-                          }
-                          SetNavMeshDest(dest);
-                          if (DebugDestPos != null) DebugDestPos.transform.position = dest;
-                      }
-                  }
-              }
+            {
+                inputH = Input.GetAxis("Horizontal");
+                inputV = Input.GetAxis("Vertical");
+            }
+
+            float val = new Vector3(Mathf.Abs(inputH), Mathf.Abs(inputV)).magnitude;
+            Animator.SetFloat("Vertical", val);
+            Animator.SetFloat("Horizontal", inputH);
+
+            moveX = inputH * MoveSpeed * Time.deltaTime;
+            moveZ = inputV * MoveSpeed * Time.deltaTime;
+            Vector3 newVel = new Vector3(moveX, 0, moveZ);
+            Vector3 camRot = Camera.main.transform.rotation.eulerAngles;
+            newVel = Quaternion.Euler(0f, camRot.y, 0f) * newVel;
+            rbody.velocity = newVel;
+            Vector3 newDir = Vector3.RotateTowards(transform.forward, rbody.velocity, RotSpeed * Time.deltaTime, 0.0f);
+            transform.rotation = Quaternion.LookRotation(newDir);
           }        
 
           if (WaitingForFollowersOnElevator == true)
