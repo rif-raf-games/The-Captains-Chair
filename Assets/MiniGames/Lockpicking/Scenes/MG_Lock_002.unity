@@ -475,13 +475,13 @@ MonoBehaviour:
     repetitionCount: 0
   m_EventPayload:
     m_IsEventExpanded: 1
-    m_StandardEventType: LevelComplete
+    m_StandardEventType: TutorialStart
     m_Parameters:
       m_Parameters:
-      - m_RequirementType: 1
-        m_GroupID: level
-        m_Tooltip: The level name. Either level_name or level_index is required.
-        m_Name: level_name
+      - m_RequirementType: 2
+        m_GroupID: 
+        m_Tooltip: The tutorial name or ID.
+        m_Name: tutorial_id
         m_Value:
           m_EditingCustomValue: 0
           m_PopupIndex: 0
@@ -500,30 +500,7 @@ MonoBehaviour:
             - System.String
             m_Type: System.String
             m_EnumType: 
-      - m_RequirementType: 1
-        m_GroupID: level
-        m_Tooltip: The order of this level within the game. Either level_name or level_index
-          is required.
-        m_Name: level_index
-        m_Value:
-          m_EditingCustomValue: 0
-          m_PopupIndex: 0
-          m_CustomValue: 
-          m_FixedType: 1
-          m_EnumType: 
-          m_EnumTypeIsCustomizable: 0
-          m_CanDisable: 1
-          m_PropertyType: 0
-          m_ValueType: System.Int32
-          m_Value: 
-          m_Target:
-            m_Target: {fileID: 0}
-            m_Path: 
-            m_ValidTypeNames:
-            - System.Int32
-            m_Type: System.Int32
-            m_EnumType: 
-    m_Name: level_complete
+    m_Name: tutorial_start
 --- !u!114 &401042788
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -539,7 +516,7 @@ MonoBehaviour:
   m_Trigger:
     m_IsTriggerExpanded: 1
     m_Type: 0
-    m_LifecycleEvent: 2
+    m_LifecycleEvent: 1
     m_ApplyRules: 0
     m_Rules:
       m_Rules: []
@@ -550,13 +527,13 @@ MonoBehaviour:
     repetitionCount: 0
   m_EventPayload:
     m_IsEventExpanded: 1
-    m_StandardEventType: LevelStart
+    m_StandardEventType: TutorialStart
     m_Parameters:
       m_Parameters:
-      - m_RequirementType: 1
-        m_GroupID: level
-        m_Tooltip: The level name. Either level_name or level_index is required.
-        m_Name: level_name
+      - m_RequirementType: 2
+        m_GroupID: 
+        m_Tooltip: The tutorial name or ID.
+        m_Name: tutorial_id
         m_Value:
           m_EditingCustomValue: 0
           m_PopupIndex: 0
@@ -575,30 +552,7 @@ MonoBehaviour:
             - System.String
             m_Type: System.String
             m_EnumType: 
-      - m_RequirementType: 1
-        m_GroupID: level
-        m_Tooltip: The order of this level within the game. Either level_name or level_index
-          is required.
-        m_Name: level_index
-        m_Value:
-          m_EditingCustomValue: 0
-          m_PopupIndex: 0
-          m_CustomValue: 
-          m_FixedType: 1
-          m_EnumType: 
-          m_EnumTypeIsCustomizable: 0
-          m_CanDisable: 1
-          m_PropertyType: 0
-          m_ValueType: System.Int32
-          m_Value: 
-          m_Target:
-            m_Target: {fileID: 0}
-            m_Path: 
-            m_ValidTypeNames:
-            - System.Int32
-            m_Type: System.Int32
-            m_EnumType: 
-    m_Name: level_start
+    m_Name: tutorial_start
 --- !u!4 &401042789
 Transform:
   m_ObjectHideFlags: 0
@@ -14814,7 +14768,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SceneName: 
-  SoundFXUsedInScene: []
   DebugText: {fileID: 1598353273}
   Diode: {fileID: 5851130552999056192}
   CenterBlock: {fileID: 7752345748807970283}
@@ -14856,7 +14809,6 @@ MonoBehaviour:
   MAX_DIODE_SPEED: 20
   SpeedAdjTime: 0.5
   SpeedAdjNumGates: 0.5
-  SoundFXUsedInScene: []
 --- !u!23 &2194249739126665591
 MeshRenderer:
   m_ObjectHideFlags: 0
