@@ -63,7 +63,7 @@ public class LockPicking : MiniGame
         {
             if (diode.Evil == false)
             {
-                SoundFXPlayer.Play("zapsplat_sound_design_frequency_modulation_short_sharp_laser_style_hit_with_delay_39114");
+                SoundFXPlayer.Play("Lock_HitByEnemy");
                 StartCoroutine(ShowResults("You got caught by an enemy Diode!", false));
             }
             else StartCoroutine(EvilDiodeRespawn(diode));
@@ -221,7 +221,7 @@ public class LockPicking : MiniGame
         Debug.Log("found gate: " + gate.name);
         GatesThisGame.Remove(gate);
         gate.gameObject.SetActive(false);
-        SoundFXPlayer.Play("impact_glass_lightbulb_smash_001");
+        SoundFXPlayer.Play("Lock_CollectFacet");
         if(GatesThisGame.Count == 0)        
         {
             StartCoroutine(ShowResults("You Win, congratulations!!", true));
@@ -259,8 +259,8 @@ public class LockPicking : MiniGame
     }
     IEnumerator ShowResults(string result, bool success)
     {
-        if (success == true) SoundFXPlayer.Play("zapsplat_multimedia_game_sound_childrens_short_soft_warm_chime_positive_001_49763");
-        else SoundFXPlayer.Play("zapsplat_impacts_metal_big_hit_chime_resonate_designed_001_48574");
+        if (success == true) SoundFXPlayer.Play("Lock_WinGame");
+        else SoundFXPlayer.Play("Lock_LoseGame");
         if (MiniGameMCP != null) MiniGameMCP.SavePuzzlesProgress(success);
         if(success == true) EndPuzzleTime(true);
         SetGameState(eGameState.OFF); 
@@ -451,7 +451,7 @@ public class LockPicking : MiniGame
                 d.ResetDiodeForGame(evilNode);
             }
         }
-        SoundFXPlayer.Play("esm_mechanical_computer_processor_short_sequence_futuristic_mobile_app_pick_up_sci_fi_mechanical_glitch");
+        SoundFXPlayer.Play("Lock_EnemySpawn");
         return true;
     }
 
