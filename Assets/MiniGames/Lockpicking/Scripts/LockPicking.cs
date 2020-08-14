@@ -246,16 +246,7 @@ public class LockPicking : MiniGame
         if (GUI.Button(new Rect(Screen.width - 100, Screen.height / 2 - 100, 100, 100), "Win"))
         {
             TMP_WinGame();
-        }
-        if (GUI.Button(new Rect(Screen.width - 100, Screen.height / 2, 100, 100), "Quit"))
-        {
-           /* Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
-            ArticyGlobalVariables.Default.Mini_Games.Coming_From_Main_Game = false;
-            ArticyGlobalVariables.Default.Mini_Games.Returning_From_Mini_Game = true;
-            ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success = false;
-            string sceneName = jumpSave.Template.Quit_Mini_Game_Result.SceneName;
-            FindObjectOfType<MCP>().LoadNextScene(sceneName, null, jumpSave); // MGJ: MiniGameMCP.OnGUI() debug "Quit" button*/
-        }
+        }        
     }
     IEnumerator ShowResults(string result, bool success)
     {
