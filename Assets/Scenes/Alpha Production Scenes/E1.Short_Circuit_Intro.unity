@@ -652,6 +652,188 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f73ac61b4f1e04c02bcc08f17d7ce5e3, type: 3}
+--- !u!1 &568043610
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 568043613}
+  - component: {fileID: 568043612}
+  - component: {fileID: 568043611}
+  m_Layer: 0
+  m_Name: Analytics Event Tracker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &568043611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 568043610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -745406591, guid: 220224b43fc464c28bc0e8de8f54a432, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Trigger:
+    m_IsTriggerExpanded: 1
+    m_Type: 0
+    m_LifecycleEvent: 4
+    m_ApplyRules: 0
+    m_Rules:
+      m_Rules: []
+    m_TriggerBool: 0
+    m_InitTime: 5
+    m_RepeatTime: 5
+    m_Repetitions: 0
+    repetitionCount: 0
+  m_EventPayload:
+    m_IsEventExpanded: 1
+    m_StandardEventType: LevelComplete
+    m_Parameters:
+      m_Parameters:
+      - m_RequirementType: 1
+        m_GroupID: level
+        m_Tooltip: The level name. Either level_name or level_index is required.
+        m_Name: level_name
+        m_Value:
+          m_EditingCustomValue: 0
+          m_PopupIndex: 0
+          m_CustomValue: 
+          m_FixedType: 1
+          m_EnumType: 
+          m_EnumTypeIsCustomizable: 0
+          m_CanDisable: 1
+          m_PropertyType: 1
+          m_ValueType: System.String
+          m_Value: E1.Short_Circuit_Intro_end
+          m_Target:
+            m_Target: {fileID: 0}
+            m_Path: 
+            m_ValidTypeNames:
+            - System.String
+            m_Type: System.String
+            m_EnumType: 
+      - m_RequirementType: 1
+        m_GroupID: level
+        m_Tooltip: The order of this level within the game. Either level_name or level_index
+          is required.
+        m_Name: level_index
+        m_Value:
+          m_EditingCustomValue: 0
+          m_PopupIndex: 0
+          m_CustomValue: 
+          m_FixedType: 1
+          m_EnumType: 
+          m_EnumTypeIsCustomizable: 0
+          m_CanDisable: 1
+          m_PropertyType: 0
+          m_ValueType: System.Int32
+          m_Value: 
+          m_Target:
+            m_Target: {fileID: 0}
+            m_Path: 
+            m_ValidTypeNames:
+            - System.Int32
+            m_Type: System.Int32
+            m_EnumType: 
+    m_Name: level_complete
+--- !u!114 &568043612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 568043610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -745406591, guid: 220224b43fc464c28bc0e8de8f54a432, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Trigger:
+    m_IsTriggerExpanded: 1
+    m_Type: 0
+    m_LifecycleEvent: 1
+    m_ApplyRules: 0
+    m_Rules:
+      m_Rules: []
+    m_TriggerBool: 0
+    m_InitTime: 5
+    m_RepeatTime: 5
+    m_Repetitions: 0
+    repetitionCount: 0
+  m_EventPayload:
+    m_IsEventExpanded: 1
+    m_StandardEventType: LevelStart
+    m_Parameters:
+      m_Parameters:
+      - m_RequirementType: 1
+        m_GroupID: level
+        m_Tooltip: The level name. Either level_name or level_index is required.
+        m_Name: level_name
+        m_Value:
+          m_EditingCustomValue: 0
+          m_PopupIndex: 0
+          m_CustomValue: 
+          m_FixedType: 1
+          m_EnumType: 
+          m_EnumTypeIsCustomizable: 0
+          m_CanDisable: 1
+          m_PropertyType: 1
+          m_ValueType: System.String
+          m_Value: E1.Short_Circuit_Intro_start
+          m_Target:
+            m_Target: {fileID: 0}
+            m_Path: 
+            m_ValidTypeNames:
+            - System.String
+            m_Type: System.String
+            m_EnumType: 
+      - m_RequirementType: 1
+        m_GroupID: level
+        m_Tooltip: The order of this level within the game. Either level_name or level_index
+          is required.
+        m_Name: level_index
+        m_Value:
+          m_EditingCustomValue: 0
+          m_PopupIndex: 0
+          m_CustomValue: 
+          m_FixedType: 1
+          m_EnumType: 
+          m_EnumTypeIsCustomizable: 0
+          m_CanDisable: 1
+          m_PropertyType: 0
+          m_ValueType: System.Int32
+          m_Value: 
+          m_Target:
+            m_Target: {fileID: 0}
+            m_Path: 
+            m_ValidTypeNames:
+            - System.Int32
+            m_Type: System.Int32
+            m_EnumType: 
+    m_Name: level_start
+--- !u!4 &568043613
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 568043610}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -34.993904, y: -20.799591, z: 155.6387}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 20
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &643290162
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1802,6 +1984,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EntityToFollow: {fileID: 1614348972}
   CamOffset: {x: 0, y: 24, z: 45}
+  CameraSettings: []
+  CameraSettingIndex: 0
   DebugText: {fileID: 0}
   CamTransitionTime: 3
   ShipZoomedMoveSpeed: 0.1
