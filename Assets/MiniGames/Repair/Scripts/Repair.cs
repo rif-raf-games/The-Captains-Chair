@@ -276,7 +276,7 @@ public class Repair : MiniGame
                 if (TapTimer <= TAP_TIME)
                 {   // tap/click time was fast enough so rotate
                     // Debug.Log("a");
-                    SoundFXPlayer.Play("Repair_Rotate Piece");
+                    // SoundFXPlayer.Play("Repair_Rotate Piece"); [Commenting this out for now, too many sfx at once - Brent]
                     HeldPiece.transform.Rotate(0f, 60f, 0f);
                     if (HeldPiece.transform.parent == BoardPieces)
                     {
