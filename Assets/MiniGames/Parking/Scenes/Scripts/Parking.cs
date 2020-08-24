@@ -326,7 +326,7 @@ public class Parking : MiniGame
                     SetActiveShip(ClickedShip);
                     int val = Random.Range(0, 2);
                     if (val < 1) SoundFXPlayer.Play("Cargo_LiftPiece-A");
-                    else SoundFXPlayer.Play("Cargo_LiftPiece-B");
+                    else SoundFXPlayer.Play("Cargo_LiftPiece-A");
                     ActiveShip.BeginHold(RaiserLowerTime);
                     CurTouchPos = Input.mousePosition;
                     LastTouchPos = Input.mousePosition;
@@ -412,7 +412,7 @@ public class Parking : MiniGame
             {
                 //Debug.Log("GMU() BeginLower: " + InputTimer);                
                 int val = Random.Range(0, 2);
-                if (val < 1) SoundFXPlayer.Play("Cargo_DropPiece-A");
+                if (val < 1) SoundFXPlayer.Play("Cargo_DropPiece-B");
                 else SoundFXPlayer.Play("Cargo_DropPiece-B");
                 ActiveShip.BeginLower(RaiserLowerTime);
             }            
