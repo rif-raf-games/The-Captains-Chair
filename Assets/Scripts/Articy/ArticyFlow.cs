@@ -544,7 +544,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     public DialogueFragment DebugDF = null;
     public bool SHOW_SKIP_BUTTON = false;
 #if true
-   /* void OnGUI()
+    void OnGUI()
     {
       //  if (SHOW_SKIP_BUTTON == false) return;
         if (CurArticyState == eArticyState.DIALOGUE && CurPauseObject != null)
@@ -600,7 +600,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                 }
             }
         }
-    }*/
+    }
 #endif
     MCP OurMCP;
     bool WaitingOnALLastFrame = false;
@@ -782,8 +782,8 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
 
     public float GetDefaultTypewriterSpeed() { return ConvoUI.DefaultTypewriterSpeed; }
 
-    /*public Text debugText;
-    private void OnGUI()
+    public Text debugText;
+    /*private void OnGUI()
     {
         if(GUI.Button(new Rect(Screen.width-100,300,100,100), "feh"))
         {                        
