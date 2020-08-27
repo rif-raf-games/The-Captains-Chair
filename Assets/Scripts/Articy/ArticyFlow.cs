@@ -76,7 +76,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     /// </summary>
     public bool CheckIfDialogueShouldStart(Dialogue convoStart, GameObject collider)
     {
-      //  Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ CheckDialogue() with technical name: " + convoStart.TechnicalName + " on GameObject: " + this.gameObject.name + " but DON'T DO ANY CODE STUFF UNTIL WE KNOW WE'RE ACTUALLY COMMITTING  time: " + Time.time);// + ", convoStart: " + convoStart.name + ", collider: " + collider.name);
+        Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ CheckDialogue() with technical name: " + convoStart.TechnicalName + " on GameObject: " + this.gameObject.name + " but DON'T DO ANY CODE STUFF UNTIL WE KNOW WE'RE ACTUALLY COMMITTING  time: " + Time.time);// + ", convoStart: " + convoStart.name + ", collider: " + collider.name);
         if (CurArticyState == eArticyState.DIALOGUE)
         {   // we're already in a dialogue, so bail
             return false;
@@ -699,10 +699,10 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             DebugText.text += "num active CAL pause objects: " + ActiveCALPauseObjects.Count + "\n";
             foreach (ArticyObject ao in ActiveCALPauseObjects) DebugText.text += "\t" + ao.TechnicalName + "\n";
             DebugText.text += "WaitingOnActionList()? " + waitingOnAL + "\n";
-            foreach (string s in FlowFragsVisited)
+           /* foreach (string s in FlowFragsVisited)
             {
                 // DebugText.text += s + "\n";
-            }
+            }*/
             DebugText.text += "ShutOffAI's:\n";
             DebugText.text += StageDirectionPlayer.GetShutOffAINames();
         }
