@@ -26,7 +26,7 @@ public class CamFollow : MonoBehaviour
     {
         Player = FindObjectOfType<CCPlayer>();
         this.ShipAreasCollider = FindObjectOfType<ShipAreasCollider>();
-        FindObjectOfType<MCP>().TMP_AssignCameraToggle(this);
+        FindObjectOfType<MCP>().AssignCameraToggleListeners(this);
     }
     private void LateUpdate()
     {
@@ -55,6 +55,10 @@ public class CamFollow : MonoBehaviour
         transform.rotation = lerpRotEnd;
     }
 
+    public bool ShouldShowCameraToggle()
+    {
+        return (!(CameraSettings == null || CameraSettings.Length < 1));        
+    }
     public void OnClickCameraToggle()
     {
         if (CameraSettings == null || CameraSettings.Length < 1 || CurCamState != eCamState.FOLLOW) return;

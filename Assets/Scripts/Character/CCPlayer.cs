@@ -37,7 +37,7 @@ public class CCPlayer : CharacterEntity
     {
         base.Start();
 
-        Joystick = FindObjectOfType<MCP>().TMP_GetJoystick();
+        Joystick = FindObjectOfType<MCP>().GetJoystick();
         CaptainArticyFlow = GetComponent<ArticyFlow>();
         CaptainsChair = FindObjectOfType<TheCaptainsChair>();
         RigidBody = GetComponent<Rigidbody>();        

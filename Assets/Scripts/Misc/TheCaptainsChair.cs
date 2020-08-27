@@ -45,7 +45,7 @@ public class TheCaptainsChair : MonoBehaviour
         {
             //Debug.LogWarning("TheCaptainsChair.Start() getting MCP");
             this.MCP = FindObjectOfType<MCP>();
-            this.MCP.TMP_ShutOffUI();
+            this.MCP.ShutOffAllUI();
             forceDialogueStart = true;
         }        
 
@@ -122,9 +122,8 @@ public class TheCaptainsChair : MonoBehaviour
         if(forceDialogueStart == true)
         {
            // Debug.LogWarning("We're forcing the start of the dialogue since we had no MCP when this started");
-            Player.GetComponent<ArticyFlow>().CheckIfDialogueShouldStart(dialogueToStartOn, Player.gameObject);
-            //Joystick.gameObject.transform.parent.gameObject.SetActive(true);
-            this.MCP.TMP_GetJoystick().gameObject.transform.parent.gameObject.SetActive(true);            
+            Player.GetComponent<ArticyFlow>().CheckIfDialogueShouldStart(dialogueToStartOn, Player.gameObject);            
+            this.MCP.ToggleJoystick(true);            
         }
         else
         {

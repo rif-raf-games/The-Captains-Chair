@@ -18,8 +18,9 @@ public class MCP : MonoBehaviour
     public GameObject LoadingScreen;
     //public GameObject LoadingAlien;
     public RawImage Curtain, SpinWheel, LoadingImage;
-    public FixedJoystick Joystick;
+    public FixedJoystick Joystick;    
     public Button CameraToggleButton;
+    public Sprite CaptainAvatar;
 
     [Header("Sound")]
     public SoundFX SoundFX;
@@ -45,8 +46,8 @@ public class MCP : MonoBehaviour
         ConvoUI.gameObject.SetActive(false);
         ExchangeJobBoard.Init(this);
         ExchangeJobBoard.gameObject.SetActive(false);
-        LoadingScreen.SetActive(false);        
-        Joystick.gameObject.transform.parent.gameObject.SetActive(false);
+        LoadingScreen.SetActive(false);                
+        ToggleJoystick(false);
 
         SoundFXPlayer.Init(SoundFX, GetMusicVolume());
         BackgroundMusicPlayer.Init(BGMusic, GetMusicVolume());
@@ -54,39 +55,44 @@ public class MCP : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
     }
 
+    public void LoadCaptainAvatar(int avatar)
+    {
+        ArticyObject imageAO = ArticyDatabase.GetObject("Captain_0" + avatar.ToString() + "_Avatar");
+        CaptainAvatar = ((Asset)imageAO).LoadAssetAsSprite();
+    }    
+
     public void SetupSceneSound(List<SoundFX.FXInfo> soundFXUsedInScene)
     {
         SoundFX.SetupFXList(soundFXUsedInScene);
     }
 
-    public void TMP_AssignCameraToggle(CamFollow camFollow)
+    public void AssignCameraToggleListeners(CamFollow camFollow)
     {
         CameraToggleButton.onClick.RemoveAllListeners();
         CameraToggleButton.onClick.AddListener(camFollow.OnClickCameraToggle);
     }
 
-    public void TMP_ShutOffUI()
+    public void ToggleInGameUI(bool isActive)
+    {
+        //Debug.LogError("ToggleInGameUI() isActive: " + isActive);         moui
+        InGamePopUp.gameObject.SetActive(isActive);
+        ToggleJoystick(isActive);
+    }
+
+    public void ShutOffAllUI()
     {
         MenuUI.gameObject.SetActive(false);
         InGamePopUp.gameObject.SetActive(false);
         ConvoUI.gameObject.SetActive(false);
-        LoadingScreen.SetActive(false);        
-        Joystick.gameObject.transform.parent.gameObject.SetActive(false);
+        LoadingScreen.SetActive(false);
+        ToggleJoystick(false);
     }
     public ConvoUI TMP_GetConvoUI()
     {
         return this.ConvoUI;
     }
-    public FixedJoystick TMP_GetJoystick()
-    {
-        return this.Joystick;
-    }
-    public void TMP_ToggleBurger(bool isActive)
-    {
-        MenuUI.gameObject.SetActive(false);
-        if (isActive == false) InGamePopUp.gameObject.SetActive(false);
-        else InGamePopUp.TMP_TurnOnBurger();
-    }
+    
+   
     public void TMP_ShutOffExchangeBoard()
     {
         ExchangeJobBoard.ShutOffPopups();
@@ -237,7 +243,7 @@ public class MCP : MonoBehaviour
         float unloadTime = Time.time - unloadStart;
         curImageTime = unloadTime;
         if (unloadTime >= delayTime) Debug.LogError("ERROR: the unload time for the scene was longer than the delay time so the delay time must be wack.  delayTime: " + delayTime + ", unloadTime: " + unloadTime);
-      //  Debug.LogWarning("---- finished unloading the scene with an unload time of: " + unloadTime);
+        //  Debug.LogWarning("---- finished unloading the scene with an unload time of: " + unloadTime);
 
         // 5) Ok the scene is unloaded, so now load the next scene
         // So the AsyncOperation is in two parts:
@@ -246,71 +252,75 @@ public class MCP : MonoBehaviour
         // So since I turned off allowSceneActivation, when we're here the scene has been loaded but it has NOT 
         // started.  So if we've taken longer to load the scene than the loading screen images time go ahead and
         // start the scene. If not, wait until the loading images are done.
-      //  Debug.LogWarning("------ about to start the scene load");
-        float loadStart = Time.time;
-        AsyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
-        AsyncLoad.allowSceneActivation = false;
-        while (AsyncLoad.isDone == false)
+         //  Debug.LogWarning("------ about to start the scene load");
+        if(sceneName.Contains("Front") == false)
         {
-           // Debug.Log("load: " + AsyncLoad.progress);            
-            if (AsyncLoad.progress >= .9f) break;
-            yield return null;
-            curImageTime += Time.deltaTime;
-            if(curImageTime >= delayTime)
+            float loadStart = Time.time;
+            AsyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+            AsyncLoad.allowSceneActivation = false;
+            while (AsyncLoad.isDone == false)
             {
-              //  Debug.LogWarning("---- during the load, we went past the time for the current image so get the next one going");
-                curLoadingImageIndex++;
-                if(curLoadingImageIndex >= loadingTextures.Count)
-                {
-                  //  Debug.LogError("---- ok we're actually done with loading screens, so just hang here and don't do anything");
-                    curImageTime = Mathf.NegativeInfinity;
-                }
-                else
-                {
-                   // Debug.LogError("----- ok we're ready to switch loading images so get the next one up there");
-                    LoadingImage.texture = loadingTextures[curLoadingImageIndex];
-                    curImageTime = curImageTime - delayTime;
-                }
-            }
-        }
-        float loadTime = Time.time - loadStart;
-      //  Debug.LogWarning("----- done with the scene load, progress is: " + AsyncLoad.progress);
-      //  Debug.LogWarning("---- loadTime: " + loadTime.ToString("F2"));
-        showLoadButton = true;
-        
-       // Debug.LogWarning("---- after the first .9 of the asyncLoad operation (which means the scene is loaded but hasn't done any initialization");
-        // 6) Ok we're here, so the scene is loaded but it has not started or even initialized.  
-        // At this point check to see if we're done with the loading images or not.  If not, then just cycle thru them. If
-        // we are done, then get the curtain fade going.
-      //  Debug.LogWarning("------ curLoadingImageIndex: " + curLoadingImageIndex.ToString("F2")  + ", curImageTime: " + curImageTime.ToString("F2"));
-        if (curLoadingImageIndex >= loadingTextures.Count)
-        {
-       //     Debug.LogWarning("------ ok we're done with the scene load and we're all done with the images based on the curLoadingImageIndex so just get to the fade in");
-        }
-        else
-        {
-      //      Debug.LogWarning("------- done with scene load but we're not done with the images yet");
-            while(curLoadingImageIndex < loadingTextures.Count)
-            {
+                // Debug.Log("load: " + AsyncLoad.progress);            
+                if (AsyncLoad.progress >= .9f) break;
+                yield return null;
                 curImageTime += Time.deltaTime;
-                if(curImageTime >= delayTime)
+                if (curImageTime >= delayTime)
                 {
-      //              Debug.LogWarning("----- we're post loading the scene and am going to check if we have more images");
+                    //  Debug.LogWarning("---- during the load, we went past the time for the current image so get the next one going");
                     curLoadingImageIndex++;
-                    if (curLoadingImageIndex < loadingTextures.Count)
+                    if (curLoadingImageIndex >= loadingTextures.Count)
                     {
-         //               Debug.LogError("---- not done with the images yet so get the next one up");
-                        LoadingImage.texture = loadingTextures[curLoadingImageIndex];
-                        curImageTime = curImageTime - delayTime;
-                    }                    
+                        //  Debug.LogError("---- ok we're actually done with loading screens, so just hang here and don't do anything");
+                        curImageTime = Mathf.NegativeInfinity;
+                    }
                     else
                     {
-         //               Debug.LogWarning("------ ok we're done with images post loading so just let the loop fall through");
+                        // Debug.LogError("----- ok we're ready to switch loading images so get the next one up there");
+                        LoadingImage.texture = loadingTextures[curLoadingImageIndex];
+                        curImageTime = curImageTime - delayTime;
                     }
                 }
-                yield return new WaitForEndOfFrame();
+            }
+            float loadTime = Time.time - loadStart;
+            //  Debug.LogWarning("----- done with the scene load, progress is: " + AsyncLoad.progress);
+            //  Debug.LogWarning("---- loadTime: " + loadTime.ToString("F2"));
+            showLoadButton = true;
+
+            // Debug.LogWarning("---- after the first .9 of the asyncLoad operation (which means the scene is loaded but hasn't done any initialization");
+            // 6) Ok we're here, so the scene is loaded but it has not started or even initialized.  
+            // At this point check to see if we're done with the loading images or not.  If not, then just cycle thru them. If
+            // we are done, then get the curtain fade going.
+            //  Debug.LogWarning("------ curLoadingImageIndex: " + curLoadingImageIndex.ToString("F2")  + ", curImageTime: " + curImageTime.ToString("F2"));
+            if (curLoadingImageIndex >= loadingTextures.Count)
+            {
+                //     Debug.LogWarning("------ ok we're done with the scene load and we're all done with the images based on the curLoadingImageIndex so just get to the fade in");
+            }
+            else
+            {
+                //      Debug.LogWarning("------- done with scene load but we're not done with the images yet");
+                while (curLoadingImageIndex < loadingTextures.Count)
+                {
+                    curImageTime += Time.deltaTime;
+                    if (curImageTime >= delayTime)
+                    {
+                        //              Debug.LogWarning("----- we're post loading the scene and am going to check if we have more images");
+                        curLoadingImageIndex++;
+                        if (curLoadingImageIndex < loadingTextures.Count)
+                        {
+                            //               Debug.LogError("---- not done with the images yet so get the next one up");
+                            LoadingImage.texture = loadingTextures[curLoadingImageIndex];
+                            curImageTime = curImageTime - delayTime;
+                        }
+                        else
+                        {
+                            //               Debug.LogWarning("------ ok we're done with images post loading so just let the loop fall through");
+                        }
+                    }
+                    yield return new WaitForEndOfFrame();
+                }
             }
         }
+        
 
         // 7) ok we're here so the scene is loaded and the images have all been shown so just get the fade up going
      //   Debug.LogWarning("------- ok we're done with loading and images so fade out the image");
@@ -367,37 +377,33 @@ public class MCP : MonoBehaviour
             go.transform.position = new Vector3(-44f, 0f, -40f);
         }
 
-        MenuUI.UICamera.gameObject.SetActive(false);
-
-        ConvoUI.TMP_SetArticyFlow();
-        if (FindObjectOfType<TheCaptainsChair>() != null)
+        if (sceneName.Contains("Front") == false)
         {
-            //     Debug.LogWarning("10a) Check start dialogue");
-            FindObjectOfType<TheCaptainsChair>().CheckStartDialogue(DialogueToStartOnThisScene);
-        }
-
-        if (FindObjectOfType<MiniGameMCP>() == null)
-        {
-            //      Debug.Log("10b) turn joystick on");
-            Joystick.gameObject.transform.parent.gameObject.SetActive(true);
+            MenuUI.UICamera.gameObject.SetActive(false);
+            ConvoUI.SetSceneArticyFlowObject();
+            if (FindObjectOfType<TheCaptainsChair>() != null)
+            {
+                FindObjectOfType<TheCaptainsChair>().CheckStartDialogue(DialogueToStartOnThisScene);
+            }
+            if (FindObjectOfType<MiniGameMCP>() != null)
+            {
+                ToggleJoystick(false);
+            }
         }
         else
-        {
-            //       Debug.Log("10b) turn joystick off");
-            Joystick.gameObject.transform.parent.gameObject.SetActive(false);
+        {            
+            MenuUI.UICamera.gameObject.SetActive(true);
+            ToggleMenuUI(true);            
+            ToggleInGamePopUp(false);            
+            MenuUI.ToggleMenu(RifRafMenuUI.eMenuType.MAIN, true);                       
+            ToggleInGameUI(false);
         }
-
-        //   Debug.LogWarning("11a) TogglePopUpPanel(true)");
-        InGamePopUp.TogglePopUpPanel(true);
-        //   Debug.LogWarning("11b) TMP_TurnOnBurger");
-        InGamePopUp.TMP_TurnOnBurger();
-
+                    
 
         curImages = new List<RawImage>() { Curtain, SpinWheel };
         yield return StartCoroutine(FadeObjects(curImages, fadeTime, 1f));
         LoadingImage.texture = defaultTexture;
-        LoadingScreen.SetActive(false);
-        //  Debug.LogError("---- ok by now we're done!!!!");
+        LoadingScreen.SetActive(false);        
     }    
 
     IEnumerator CaptainLoadStall(GameObject captain)
@@ -411,13 +417,25 @@ public class MCP : MonoBehaviour
 
     AsyncOperation AsyncLoad;
     bool showLoadButton = false;
-   
-    public void ToggleJoystick(bool val)
+
+    public FixedJoystick GetJoystick()
     {
-        // monote - this gets called a lot during the articy flow stuff, so get rid of that
-        //Debug.Log("ToggleJoystick() val: " + val);
-        this.Joystick.ResetInput();
+        return this.Joystick;
+    }
+    public void ToggleJoystick(bool val)
+    {        
+        //Debug.Log("ToggleJoystick() val: " + val); moui
+        Joystick.ResetInput();
         Joystick.gameObject.transform.parent.gameObject.SetActive(val);
+        // take care of camera toggle thing
+        if(val == true && FindObjectOfType<CamFollow>() != null && FindObjectOfType<CamFollow>().ShouldShowCameraToggle() == true)
+        {
+            CameraToggleButton.gameObject.SetActive(true);
+        }
+        else
+        {
+            CameraToggleButton.gameObject.SetActive(false);
+        }
     }
 
     public void ShowResultsText(string result)

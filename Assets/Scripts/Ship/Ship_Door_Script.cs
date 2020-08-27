@@ -79,7 +79,7 @@ public class Ship_Door_Script : MonoBehaviour {
         if(Mathf.Abs(curTime) < .5f)
         {
             startTime = Mathf.Abs(curTime);
-            Debug.Log("redoing Open startTime to " + startTime);
+            //Debug.Log("redoing Open startTime to " + startTime);
         }
 
         SoundFXPlayer.Play("Door_Open");

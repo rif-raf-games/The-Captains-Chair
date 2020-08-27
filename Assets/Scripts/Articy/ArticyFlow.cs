@@ -120,9 +120,9 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
 
         // start the dialogue
         IsDialogueFragmentsInteractive = true;
+        FindObjectOfType<MCP>().ToggleInGameUI(false);
         FlowPlayer.StartOn = convoStart;
-        if (Player != null) Player.ToggleMovementBlocked(true);
-        FindObjectOfType<MCP>().ToggleJoystick(false);
+        if (Player != null) Player.ToggleMovementBlocked(true);        
         return true;
     }
 
@@ -307,8 +307,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                         StageDirectionPlayer.ShutOnAllAIs();
                     }
                     
-                    SetArticyState(eArticyState.FREE_ROAM);
-                    if (FindObjectOfType<MiniGameMCP>() == null) FindObjectOfType<MCP>().ToggleJoystick(true);
+                    SetArticyState(eArticyState.FREE_ROAM);                    
                     ConvoUI.EndConversation();
                     FlowFragsVisited.Clear();
                     if (this.MiniGameMCP != null) this.MiniGameMCP.CurrentDiaogueEnded();                   
@@ -608,9 +607,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     void Update()
     {        
         bool waitingOnAL = WaitingOnActionList();
-        FlowDebug(waitingOnAL);
-        if (OurMCP == null) OurMCP = FindObjectOfType<MCP>();
-        if (CurArticyState == eArticyState.DIALOGUE) OurMCP.ToggleJoystick(false);
+        FlowDebug(waitingOnAL);        
 
         if (waitingOnAL == true)
         {
@@ -715,10 +712,10 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     /// <summary>
     /// Bails on the current dialogue right away.  Currently called from MiniGames once they've finished a puzzle
     /// </summary>
-    public void QuitCurDialogue()
+    public void EndMiniGameDialogues()
     {
-        SetArticyState(eArticyState.FREE_ROAM);
-        FindObjectOfType<MCP>().ToggleJoystick(true);
+        Debug.LogError("EndMiniGameDialogues()");
+        SetArticyState(eArticyState.FREE_ROAM);        
         ConvoUI.EndConversation();
         CurPauseObject = null;
         NextFragment = null;

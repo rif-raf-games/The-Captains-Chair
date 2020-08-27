@@ -1,4 +1,6 @@
-﻿using Articy.The_Captain_s_Chair.GlobalVariables;
+﻿using Articy.The_Captain_s_Chair;
+using Articy.The_Captain_s_Chair.GlobalVariables;
+using Articy.Unity;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,36 +14,40 @@ public class RifRafMenuUI : MonoBehaviour
     public GameObject[] Menus;
     public eMenuType CurActiveMenu;
 
-    public enum ePopUpType { PROFILES, NEW_GAME, DELETE_GAME, DELETE_CONFIRM, NUM_POPUPS };
-    [Header("PopUps: Saved Games, New, Delete, Delete Confirm")]
+    public enum ePopUpType { PROFILES, NEW_GAME, CONTINUE_GAME, DELETE_GAME, DELETE_CONFIRM, NUM_POPUPS };
+    [Header("PopUps: Saved Games, New, Continue, Delete, Delete Confirm")]
     public GameObject[] PopUps;
     public ePopUpType CurActivePopup;
 
     public enum eMainMenuButtons { NEW, CONTINUE, DELETE, NUM_MENU_MENU_BUTTONS };
-    [Header("Main Menu Buttons")]
-    public Text[] MainMenuButtonsText;
+    [Header("Main Menu Buttons: New, Continue, Delete")]
+    // public Text[] MainMenuButtonsText;
+    public Button[] MainMenuButtons;
+    [Header("Save Games")]
+    public Button[] ProfilesButtons;
+    public Text[] ProfilesText;
+    public Image[] ProfilesImages;
+
+    [Header("Misc")]
+    public Button BackButton;
+    public Sprite DefaultProfileIcon;
 
     public enum eSaveGameFunction { NEW, CONTINUE, DELETE, NUM_SAVE_GAME_FUNCTIONS };
     public eSaveGameFunction CurActiveSaveGameFunction;
 
-    public Text[] ProfilesText;
+    
 
-    public MCP MCP;
+    MCP MCP;
 
     public Image MenuBG;
     public GameObject CaptainContainer;
 
-    public Text DebugText;
-    #region DEBUG
-    public void DebugButton1()
-    {
-        Debug.Log("DebugButton1()");
-        string s = Time.time.ToString();
-        Debug.Log(s);
-    }
+    int CurNumActiveProfiles = 0;
+    bool[] ProfileFileStatus;
+    StaticStuff.ProfileInfo[] ProfilesInfo;
+    int CurProfileSlot = 0;
 
-    
-    #endregion
+    public Text DebugText;    
 
     private void Awake()
     {
@@ -49,10 +55,8 @@ public class RifRafMenuUI : MonoBehaviour
         CurActiveMenu = eMenuType.NUM_MENUS;
         foreach (GameObject go in PopUps) go.SetActive(false);
         CurActivePopup = ePopUpType.NUM_POPUPS;
-
         CurActiveSaveGameFunction = eSaveGameFunction.NUM_SAVE_GAME_FUNCTIONS;
     }
-
  
     public void Init(MCP mcp)
     {
@@ -76,46 +80,25 @@ public class RifRafMenuUI : MonoBehaviour
         CurActivePopup = (isActive == true ? popUpID : ePopUpType.NUM_POPUPS);
     }
 
-    bool MenusActiveCheck()
-    {
-        return CurActivePopup == ePopUpType.NUM_POPUPS;
-    }
-
-    #region SPLASH
-    public void OnClickTapToBegin()
-    {        
-        StaticStuff.PrintRifRafUI("OnClickTapToBegin()");
-        // moUI01 - clicked "Tap to begin"
-        if (MenusActiveCheck() == false) return;
-
-        ToggleMenu(eMenuType.MAIN, true);
-        InitMainMenu();
-    }
-
-
-    #endregion
-
-    #region MAIN_MENU
-
-    int CurNumActiveProfiles = 0;
-    bool[] ProfileFileStatus;
-    StaticStuff.ProfileInfo[] ProfilesInfo;
-    int CurProfileSlot = 0;
+    #region MAIN_MENU        
     void InitMainMenu()
-    {        
-        RefreshProfileInfo();       
-        foreach (Text t in MainMenuButtonsText) t.color = Color.black;
+    {   //ToggleMenu(eMenuType.MAIN, true);
+        //InitMainMenu();
+        
+        RefreshProfileInfo();
+        BackButton.gameObject.SetActive(false);
+        foreach (Button b in MainMenuButtons) b.interactable = false;       
         switch (CurNumActiveProfiles)
         {
-            case 0:
-                MainMenuButtonsText[(int)eMainMenuButtons.NEW].color = Color.white;
+            case 0:                
+                MainMenuButtons[(int)eMainMenuButtons.NEW].interactable = true;                
                 break;
-            case StaticStuff.NUM_PROFILES: 
-                MainMenuButtonsText[(int)eMainMenuButtons.CONTINUE].color = Color.white;
-                MainMenuButtonsText[(int)eMainMenuButtons.DELETE].color = Color.white;
+            case StaticStuff.NUM_PROFILES:               
+                MainMenuButtons[(int)eMainMenuButtons.CONTINUE].interactable = true;
+                MainMenuButtons[(int)eMainMenuButtons.DELETE].interactable = true;                
                 break;            
-            default:
-                foreach (Text t in MainMenuButtonsText) t.color = Color.white;
+            default:               
+                foreach (Button b in MainMenuButtons) b.interactable = true;                
                 break;
         }
     }
@@ -136,17 +119,34 @@ public class RifRafMenuUI : MonoBehaviour
         for (int i = 0; i < ProfileFileStatus.Length; i++)
         {
             if (ProfileFileStatus[i] == true)
-            {
-                ProfilesText[i].color = Color.white;
-                //ProfilesText[i].text = "Mo Finish This";
-                ProfilesText[i].text = ProfilesInfo[i].avatar.ToString() + ": " + ProfilesInfo[i].time;
+            {                
+                ProfilesText[i].text = ProfilesInfo[i].time;
+                ArticyObject imageAO = ArticyDatabase.GetObject("Captain_0" + ProfilesInfo[i].avatar.ToString() + "_Avatar");
+                Sprite s = ((Asset)imageAO).LoadAssetAsSprite();                
+                ProfilesImages[i].sprite = s;
+                if (CurActiveSaveGameFunction == eSaveGameFunction.NEW) ProfilesButtons[i].interactable = false;
+                else ProfilesButtons[i].interactable = true;                
             }
             else
             {
-                ProfilesText[i].color = Color.black;
+                ProfilesButtons[i].interactable = false;
                 ProfilesText[i].text = "Unused " + (i+1).ToString();
+                ProfilesImages[i].sprite = DefaultProfileIcon;
+                if (CurActiveSaveGameFunction == eSaveGameFunction.NEW) ProfilesButtons[i].interactable = true;
+                else ProfilesButtons[i].interactable = false;
             }
         }
+    }
+    
+    // camera button shouldnt show up unless needed
+    // burger menu isn't showing up
+    public void OnClickCloseProfiles()
+    {        
+        TogglePopUp(ePopUpType.PROFILES, false);
+    }
+    public void OnClickCloseCreateGame()
+    {
+        TogglePopUp(ePopUpType.NEW_GAME, false);
     }
     public void OnClickNewGame()
     {
@@ -235,9 +235,8 @@ public class RifRafMenuUI : MonoBehaviour
                 break;
             case eSaveGameFunction.CONTINUE:
                 if (StaticStuff.ProfileExists(CurProfileSlot) == false) return;
-                StaticStuff.SetCurrentProfile(slotNum);
-                StaticStuff.LoadProfileStartScene();
-                TogglePopUp(0, false);
+
+                TogglePopUp(ePopUpType.CONTINUE_GAME, true);                
                 break;
             case eSaveGameFunction.DELETE:
                 if (StaticStuff.ProfileExists(CurProfileSlot) == false) return;
@@ -262,6 +261,7 @@ public class RifRafMenuUI : MonoBehaviour
             {
                 captainName = SelectedCaptain.name;
                 avatar = int.Parse(captainName[9].ToString());
+                this.MCP.LoadCaptainAvatar(avatar);
                 StaticStuff.CreateNewProfile(avatar, CurProfileSlot);
                 StaticStuff.LoadProfileStartScene();     // Avatar select       
                 ToggleMenu(eMenuType.AVATAR_SELECT, false);
@@ -343,6 +343,21 @@ public class RifRafMenuUI : MonoBehaviour
     }
     #endregion
 
+    #region CONTINUE_GAME_POPUP
+    public void OnClickContinueGameYes()
+    {
+        StaticStuff.PrintRifRafUI("OnClickContinueGameYes");
+        StaticStuff.SetCurrentProfile(CurProfileSlot);
+        StaticStuff.LoadProfileStartScene();
+        TogglePopUp(0, false);
+    }
+    public void OnClickContinueGameNo()
+    {
+        StaticStuff.PrintRifRafUI("OnClickContinueGameNo");
+        TogglePopUp(0, false);
+    }
+    #endregion
+
     #region DELETE_GAME_POPUP
     public void OnClickDeleteGameYes()
     {
@@ -371,5 +386,32 @@ public class RifRafMenuUI : MonoBehaviour
         
         TogglePopUp(0, false);
     }
+    #endregion
+
+    bool MenusActiveCheck()
+    {
+        return CurActivePopup == ePopUpType.NUM_POPUPS;
+    }
+
+    #region SPLASH
+    public void OnClickTapToBegin()
+    {
+        StaticStuff.PrintRifRafUI("OnClickTapToBegin()");
+        if (MenusActiveCheck() == false) return;
+
+        ToggleMenu(eMenuType.MAIN, true);
+        InitMainMenu();
+    }
+
+    public void InitFromGame()
+    {
+        Debug.LogError("InitFromGame()");
+        ArticyGlobalVariables.Default.ResetVariables();
+        this.gameObject.SetActive(true);
+        this.MCP.ToggleInGameUI(false);
+        ToggleMenu(eMenuType.MAIN, true);
+        InitMainMenu();
+    }
+
     #endregion
 }

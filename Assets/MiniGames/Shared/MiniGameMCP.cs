@@ -342,7 +342,7 @@ public class MiniGameMCP : MonoBehaviour
     }
     public void PuzzleFinished()
     {                
-        MiniGameArticyFlow.QuitCurDialogue();
+        MiniGameArticyFlow.EndMiniGameDialogues();
         GameState = eGameState.FADE_OUT;
         SetupLerpFade(0f, 1f, 1.5f);
     }

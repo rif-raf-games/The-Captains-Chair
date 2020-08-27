@@ -12,6 +12,7 @@ public class RifRafInGamePopUp : MonoBehaviour
     public GameObject ExchangeBoardButton;
     public GameObject ExchangeBoardText, SuspendJobText;
     public MissionHint MissionHint;
+    public GameObject QuitConfirmPopup;
     public RifRafExchangeJobBoard ExchangeBoard;
     public VolumeControl MusicVolume;
     public VolumeControl SoundFXVolume;
@@ -19,12 +20,16 @@ public class RifRafInGamePopUp : MonoBehaviour
 
     private void Awake()
     {
+        StaticStuff.PrintRifRafUI("RifRafInGamePopUp.Awake()");
         PopUpPanel.SetActive(false);
         this.MissionHint.Init();
         MissionHint.gameObject.SetActive(false);
+        ExchangeBoard.gameObject.SetActive(false);
+        QuitConfirmPopup.gameObject.SetActive(false);
     }
     public void Init(MCP mcp)
     {
+        StaticStuff.PrintRifRafUI("RifRafInGamePopUp.Init()");
         this.MCP = mcp;
     }
     public void OnClickBurger()
@@ -35,7 +40,7 @@ public class RifRafInGamePopUp : MonoBehaviour
 
     public void TogglePopUpPanel(bool isActive)
     {
-      //  Debug.Log("RifRafInGamePopUp.TogglePopUpPanel() isActive: " + isActive);
+        StaticStuff.PrintRifRafUI("RifRafInGamePopUp.TogglePopUpPanel() isActive: " + isActive);
         PopUpPanel.SetActive(isActive);
         if (isActive == true)
         {
@@ -92,7 +97,7 @@ public class RifRafInGamePopUp : MonoBehaviour
 
     bool PopupActiveCheck()
     {
-        return MissionHint.gameObject.activeSelf == false && ExchangeBoard.gameObject.activeSelf == false;
+        return MissionHint.gameObject.activeSelf == false && ExchangeBoard.gameObject.activeSelf == false && QuitConfirmPopup.gameObject.activeSelf == false;
     }
 
 #region MAIN_POPUP
@@ -103,12 +108,7 @@ public class RifRafInGamePopUp : MonoBehaviour
 
         TogglePopUpPanel(false);
     }
-    public void TMP_TurnOnBurger()
-    {
-        this.gameObject.SetActive(true);
-        TogglePopUpPanel(false);
-        ToggleMissionHint(false);
-    }
+    
 
     public void ToggleExchangeBoard(bool isActive)
     {
@@ -144,12 +144,13 @@ public class RifRafInGamePopUp : MonoBehaviour
         ToggleMissionHint(true);
     }
 
-    public void OnClickMainMenu()
+    public void OnClickQuitToMainMenu()
     {
-        StaticStuff.PrintRifRafUI("OnClickMainMenu()");
+        StaticStuff.PrintRifRafUI("OnClickQuitToMainMenu()");
         if (PopupActiveCheck() == false) return;
 
-        this.MCP.TurnOnMainMenu();
+        this.MCP.LoadNextScene("Front End Launcher");
+        //QuitConfirmPopup.gameObject.SetActive(true);
     }
     
     public void OnSliderAudioVolume(Slider slider)

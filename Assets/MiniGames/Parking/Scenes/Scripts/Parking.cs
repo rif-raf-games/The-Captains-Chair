@@ -76,7 +76,7 @@ public class Parking : MiniGame
             yield return new WaitForEndOfFrame();
         }
         this.MCP = FindObjectOfType<MCP>();
-        this.MCP.TMP_ShutOffUI();
+        this.MCP.ShutOffAllUI();
        // this.MCP.SetupSceneSound(SoundFXUsedInScene);
     }
 

@@ -40,10 +40,10 @@ public class ConvoUI : MonoBehaviour
        // Debug.LogError("ConvoUI.Start() ArticyFlow hash: " + hash);
     }
 
-    public void TMP_SetArticyFlow()
+    public void SetSceneArticyFlowObject()
     {
         ArticyFlow = GameObject.FindObjectOfType<ArticyFlow>();
-        string hash = (ArticyFlow == null ? "no ArticyFlow" : ArticyFlow.GetHashCode().ToString());
+        //string hash = (ArticyFlow == null ? "no ArticyFlow" : ArticyFlow.GetHashCode().ToString());
        // Debug.LogError("TMP_SetArticyFlow.Start() ArticyFlow hash: " + hash);
     }
     public void Init(MCP mcp)
@@ -57,17 +57,15 @@ public class ConvoUI : MonoBehaviour
     public void ShowDialogueFragment(DialogueFragment dialogueFrag, IFlowObject flowObj, IList<Branch> dialogueOptions, bool isInteractive, float typewriterSpeed, List<ArticyObject> validAOTargets = null)
     {
         StaticStuff.PrintUI("going to set up a dialogue fragment with speaker: " + dialogueFrag.Speaker + " with text: " + dialogueFrag.Text + ", tech name: " + dialogueFrag.TechnicalName);
-        if(dialogueOptions != null)
+
+        this.gameObject.SetActive(true); // due to the fact that Articy handles stuff behind the scenes it's easiest to just make sure it gets turned on the same frame
+        if (dialogueOptions != null)
         {   // if dialogeOptions is null then we're calling this from a debug spot
             StaticStuff.PrintUI("this dialogue fragment has: " + dialogueOptions.Count + " options");
             DialogueFragment d = dialogueOptions[0].Target as DialogueFragment;
             if (d != null) StaticStuff.PrintUI(d.MenuText + ", " + d.Text + ", " + d.TechnicalName);
         }
-
-
-        // monote - this is sloppy, fix it       
-        this.gameObject.SetActive(true);
-        this.MCP.TMP_ToggleBurger(false);
+        
 
         Entity speakerEntity = ((Entity)dialogueFrag.Speaker);
         if (speakerEntity == null) Debug.LogError("THIS DIALOGUE HAS NO ENTITY");
@@ -78,6 +76,10 @@ public class ConvoUI : MonoBehaviour
             if (speakerEntity.PreviewImage.Asset != null) SpeakerImage.sprite = speakerEntity.PreviewImage.Asset.LoadAssetAsSprite();
             else SpeakerImage.sprite = null;
             SpeakerName.text = speakerEntity.DisplayName;
+            if(SpeakerName.text.Contains("Captain"))
+            {
+                SpeakerImage.sprite = this.MCP.CaptainAvatar;
+            }
         }        
         IsInteractive = isInteractive;
         TypewriterSpeed = typewriterSpeed;
@@ -186,20 +188,12 @@ public class ConvoUI : MonoBehaviour
             TextTyping = false;
         }
     }
-
-   /* public void PauseConversation()
-    {
-        // conversation isn't over, but we want to temporarily shut it off while a character moves somewhere.
-        //Debug.Log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ PauseConversation()");
-        this.gameObject.SetActive(false);
-       // Player.ToggleMovementBlocked(true);
-    }*/
+   
     public void EndConversation()
     { 
-        //Debug.LogError("----------------------- EndConversation()");
+       // Debug.LogError("----------------------- EndConversation()");
         this.gameObject.SetActive(false);
-        this.MCP.TMP_ToggleBurger(true);
-        //Player.ToggleMovementBlocked(false);        
+        this.MCP.ToggleInGameUI(true);
     }
     
     public void OnClickDialogueButton(int buttonIndex)
