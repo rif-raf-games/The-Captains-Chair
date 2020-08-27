@@ -218,7 +218,7 @@ public class LockPicking : MiniGame
 
     public void CollectGate(Gate gate)
     {
-        Debug.Log("found gate: " + gate.name);
+        //Debug.Log("found gate: " + gate.name);
         GatesThisGame.Remove(gate);
         gate.gameObject.SetActive(false);
         SoundFXPlayer.Play("Lock_CollectFacet");

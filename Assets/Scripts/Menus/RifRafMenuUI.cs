@@ -121,8 +121,11 @@ public class RifRafMenuUI : MonoBehaviour
             if (ProfileFileStatus[i] == true)
             {                
                 ProfilesText[i].text = ProfilesInfo[i].time;
-                ArticyObject imageAO = ArticyDatabase.GetObject("Captain_0" + ProfilesInfo[i].avatar.ToString() + "_Avatar");
-                Sprite s = ((Asset)imageAO).LoadAssetAsSprite();                
+                string avatarAssetName = "Captain_0" + ProfilesInfo[i].avatar.ToString() + "_Avatar";
+                ArticyObject imageAO = ArticyDatabase.GetObject(avatarAssetName);
+                if (imageAO == null) Debug.LogError("This error is REAL this time I mean it, there's a problem with the captain avatar image assets: " + avatarAssetName);
+                Sprite s = ((Asset)imageAO).LoadAssetAsSprite();
+                if (s == null) Debug.LogError("This might be redundant but still real: " + avatarAssetName);
                 ProfilesImages[i].sprite = s;
                 if (CurActiveSaveGameFunction == eSaveGameFunction.NEW) ProfilesButtons[i].interactable = false;
                 else ProfilesButtons[i].interactable = true;                

@@ -714,7 +714,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     /// </summary>
     public void EndMiniGameDialogues()
     {
-        Debug.LogError("EndMiniGameDialogues()");
+        //Debug.LogError("EndMiniGameDialogues()");
         SetArticyState(eArticyState.FREE_ROAM);        
         ConvoUI.EndConversation();
         CurPauseObject = null;

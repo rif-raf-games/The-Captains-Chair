@@ -76,7 +76,14 @@ public class MCP : MonoBehaviour
     {
         //Debug.LogError("ToggleInGameUI() isActive: " + isActive);         moui
         InGamePopUp.gameObject.SetActive(isActive);
-        ToggleJoystick(isActive);
+        if (FindObjectOfType<MiniGameMCP>() != null)
+        {
+            ToggleJoystick(false);
+        }
+        else
+        {
+            ToggleJoystick(isActive);
+        }        
     }
 
     public void ShutOffAllUI()

@@ -149,8 +149,17 @@ public class RifRafInGamePopUp : MonoBehaviour
         StaticStuff.PrintRifRafUI("OnClickQuitToMainMenu()");
         if (PopupActiveCheck() == false) return;
 
+        //this.MCP.LoadNextScene("Front End Launcher");
+        QuitConfirmPopup.gameObject.SetActive(true);
+    }
+    public void OnClickQuitToMainCancel()
+    {
+        QuitConfirmPopup.gameObject.SetActive(false);
+    }
+    public void OnClickQuitToMainConfirm()
+    {
+        QuitConfirmPopup.gameObject.SetActive(false);
         this.MCP.LoadNextScene("Front End Launcher");
-        //QuitConfirmPopup.gameObject.SetActive(true);
     }
     
     public void OnSliderAudioVolume(Slider slider)
