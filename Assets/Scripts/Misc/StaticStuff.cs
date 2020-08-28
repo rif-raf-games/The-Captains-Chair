@@ -111,7 +111,7 @@ static public class StaticStuff
         SaveCurrentProfile("StaticStuff.CreateSaveData()");
     }
 
-    static public void SetCurrentProfile(int profile) // called from main menu Continue
+    static public void SetCurrentProfile(int profile) // called from main menu Continue and CreateNewProfile
     {
         Current_Profile_Num = profile;
     }
