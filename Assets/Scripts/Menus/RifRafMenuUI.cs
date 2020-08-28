@@ -367,6 +367,7 @@ public class RifRafMenuUI : MonoBehaviour
         
         StaticStuff.DeleteProfileNum(CurProfileSlot);
         RefreshProfileInfo();
+        InitMainMenu();
         TogglePopUp(0, false);
     }
     public void OnClickDeleteConfirmNo()
