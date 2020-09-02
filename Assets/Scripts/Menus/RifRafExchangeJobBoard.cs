@@ -62,9 +62,13 @@ public class RifRafExchangeJobBoard : MonoBehaviour
             string s = em.DisplayName + "\n";
             emt = em.Template;
             emf = em.Template.Exchange_Mission;
+            Debug.Log("button index: " + buttonIndex);
             Button b = JobButtons[buttonIndex++];
             b.gameObject.SetActive(true);
-            b.gameObject.transform.GetChild(2).GetComponent<Text>().text = emf.Job_Name;
+            Transform trans = b.gameObject.transform.GetChild(2);
+            Text text = trans.GetComponent<Text>();
+            text.text = emf.Job_Name;
+           // b.gameObject.transform.GetChild(1).GetComponent<Text>().text = emf.Job_Name;
         }
 
         JobIndex = 0;

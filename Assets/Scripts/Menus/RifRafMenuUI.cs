@@ -254,7 +254,7 @@ public class RifRafMenuUI : MonoBehaviour
 
     private void OnGUI()
     {
-        if (CurActiveMenu == eMenuType.AVATAR_SELECT && CapRayCaster.HasCaptainSelected() == true/*&& SelectedCaptain != null*/)
+       /* if (CurActiveMenu == eMenuType.AVATAR_SELECT && CapRayCaster.HasCaptainSelected() == true)
         {
             string captainName = "none";
             int avatar = -1; ;
@@ -269,11 +269,25 @@ public class RifRafMenuUI : MonoBehaviour
                 CapRayCaster.gameObject.SetActive(false);
                 CurActiveMenu = eMenuType.MAIN;
             }
-        }
+        }*/
+    }
+
+    public void OnClickCaptainSelectConfirm()
+    {
+        string captainName = "none";
+        int avatar = -1;
+        captainName = CapRayCaster.GetSelectedCaptainName();
+        avatar = int.Parse(captainName[9].ToString());
+        this.MCP.LoadCaptainAvatar(avatar);
+        StaticStuff.CreateNewProfile(avatar, CurProfileSlot);
+        StaticStuff.LoadProfileStartScene();      
+        ToggleMenu(eMenuType.AVATAR_SELECT, false);
+        CapRayCaster.gameObject.SetActive(false);
+        CurActiveMenu = eMenuType.MAIN;
     }
 
     public Camera UICamera;
-    //GameObject SelectedCaptain = null;
+    int CaptainIndex = 0;
     Vector3 LastCameraPos;
     #region CHARACTER_SELECT
     private void Update()
@@ -282,36 +296,41 @@ public class RifRafMenuUI : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {                
-                LastCameraPos = Input.mousePosition;
-                /*Ray ray = UICamera.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
-                if (Physics.Raycast(ray, out hit, Mathf.Infinity))
-                {
-                  //  Debug.Log("clicked on: " + hit.collider.name);
-                    SelectedCaptain = hit.collider.gameObject;
-                    
-                }*/
+                LastCameraPos = Input.mousePosition;                
             }
             else if (Input.GetMouseButton(0))
             {
                 float deltaX = Input.mousePosition.x - LastCameraPos.x;
                 CaptainContainer.transform.Rotate(new Vector3(0f, -deltaX / 10f, 0f));
-                LastCameraPos = Input.mousePosition;
-                /*if(SelectedCaptain != null)
-                {
-                    float deltaX = Input.mousePosition.x - LastCameraPos.x;                    
-                    CaptainContainer.transform.Rotate(new Vector3(0f, -deltaX/10f, 0f));
-                    LastCameraPos = Input.mousePosition;
-                }*/
-            }            
+                LastCameraPos = Input.mousePosition;                
+            }       
+            else if(Input.GetMouseButtonUp(0))
+            {
+                Vector3 rot = CaptainContainer.gameObject.transform.eulerAngles;
+                CaptainIndex = (int)Mathf.Round(rot.y / 45f);
+                if (CaptainIndex == 8) CaptainIndex = 0;
+                float newRot = CaptainIndex * 45f;
+                CaptainContainer.gameObject.transform.eulerAngles = new Vector3(rot.x, newRot, rot.z);
+                CapRayCaster.SetSelectedCaptain(CaptainContainer.transform.GetChild(CaptainIndex).gameObject);
+            }
         }
 
-        if(DebugText != null)
+       /* if(DebugText != null)
         {            
             string s = "CurActiveMenu: " + CurActiveMenu.ToString() + "\n";
-            if (CapRayCaster.HasCaptainSelected() == true) s += CapRayCaster.GetSelectedCaptainName() + "\n";
+            s += CapRayCaster.GetSelectedCaptainName() + "\n";
+            Vector3 rot = CaptainContainer.gameObject.transform.eulerAngles;
+            s += rot.y.ToString("F2") + "\n";
+            float num = rot.y / 45f;
+            s += num.ToString("F2") + "\n";
+            s += Mathf.Round(num).ToString("F2") + "\n";
+            int index = (int)Mathf.Round(rot.y / 45f);
+            if (index == 8) index = 0;
+            s += index.ToString() + "\n";
+            //rot = CaptainContainer.gameObject.transform.localEulerAngles;
+            //s += rot.y.ToString("F2") + "\n";
             DebugText.text = s;
-       }
+       }*/
     }
     #endregion
 
@@ -323,6 +342,8 @@ public class RifRafMenuUI : MonoBehaviour
         TogglePopUp(ePopUpType.NEW_GAME, false);
         ToggleMenu(eMenuType.AVATAR_SELECT, true);
         CapRayCaster.gameObject.SetActive(true);
+        CaptainIndex = 0;
+        CapRayCaster.SetSelectedCaptain(CaptainContainer.transform.GetChild(CaptainIndex).gameObject);
         MenuBG.enabled = false;      
     }
     public void OnClickNewGameNo()
