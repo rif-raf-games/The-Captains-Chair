@@ -87,14 +87,14 @@ public class RifRafMenuUI : MonoBehaviour
     {           
         RefreshProfileInfo();
         BackButton.gameObject.SetActive(false);
-        foreach (Button b in MainMenuButtons) b.interactable = true;
+        //foreach (Button b in MainMenuButtons) b.interactable = true;
         MainMenuButtons[(int)eMainMenuButtons.NEW].onClick.RemoveAllListeners();
         MainMenuButtons[(int)eMainMenuButtons.CONTINUE].onClick.RemoveAllListeners();
         foreach (Button b in MainMenuButtons) b.interactable = false;
         switch (CurNumActiveProfiles)
         {
             case 0:
-                Debug.Log("No saves");
+                //Debug.Log("No saves");
                 MainMenuButtons[(int)eMainMenuButtons.NEW].interactable = true;
                 
                 MainMenuButtons[(int)eMainMenuButtons.NEW].onClick.AddListener(OnClickNewGame);
@@ -104,8 +104,8 @@ public class RifRafMenuUI : MonoBehaviour
                 MainMenuButtonsText[(int)eMainMenuButtons.CONTINUE].text = "Continue Game";
                 break;
             case StaticStuff.NUM_PROFILES:
-                Debug.Log("4 saves");
-                MainMenuButtons[(int)eMainMenuButtons.CONTINUE].interactable = true;
+               // Debug.Log("4 saves");
+                MainMenuButtons[(int)eMainMenuButtons.NEW].interactable = true;
                 MainMenuButtons[(int)eMainMenuButtons.DELETE].interactable = true;
 
                 MainMenuButtons[(int)eMainMenuButtons.NEW].onClick.AddListener(OnClickContinueGame);
@@ -115,7 +115,7 @@ public class RifRafMenuUI : MonoBehaviour
                 MainMenuButtonsText[(int)eMainMenuButtons.CONTINUE].text = "New Game";
                 break;            
             default:
-                Debug.Log("< 4 saves");
+               // Debug.Log("< 4 saves");
                 foreach (Button b in MainMenuButtons) b.interactable = true;
 
                 MainMenuButtons[(int)eMainMenuButtons.NEW].onClick.AddListener(OnClickContinueGame);
