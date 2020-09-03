@@ -20,9 +20,9 @@ public class RifRafMenuUI : MonoBehaviour
     public ePopUpType CurActivePopup;
 
     public enum eMainMenuButtons { NEW, CONTINUE, DELETE, NUM_MENU_MENU_BUTTONS };
-    [Header("Main Menu Buttons: New, Continue, Delete")]
-    // public Text[] MainMenuButtonsText;
+    [Header("Main Menu Buttons: New, Continue, Delete")]    
     public Button[] MainMenuButtons;
+    public Text[] MainMenuButtonsText;
     [Header("Save Games")]
     public Button[] ProfilesButtons;
     public Text[] ProfilesText;
@@ -80,25 +80,49 @@ public class RifRafMenuUI : MonoBehaviour
         foreach (GameObject go in PopUps) go.SetActive(false);
         PopUps[(int)popUpID].SetActive(isActive);
         CurActivePopup = (isActive == true ? popUpID : ePopUpType.NUM_POPUPS);
-    }
+    }    
 
     #region MAIN_MENU        
     void InitMainMenu()
     {           
         RefreshProfileInfo();
         BackButton.gameObject.SetActive(false);
-        foreach (Button b in MainMenuButtons) b.interactable = false;       
+        foreach (Button b in MainMenuButtons) b.interactable = true;
+        MainMenuButtons[(int)eMainMenuButtons.NEW].onClick.RemoveAllListeners();
+        MainMenuButtons[(int)eMainMenuButtons.CONTINUE].onClick.RemoveAllListeners();
+        foreach (Button b in MainMenuButtons) b.interactable = false;
         switch (CurNumActiveProfiles)
         {
-            case 0:                
-                MainMenuButtons[(int)eMainMenuButtons.NEW].interactable = true;                
+            case 0:
+                Debug.Log("No saves");
+                MainMenuButtons[(int)eMainMenuButtons.NEW].interactable = true;
+                
+                MainMenuButtons[(int)eMainMenuButtons.NEW].onClick.AddListener(OnClickNewGame);
+                MainMenuButtonsText[(int)eMainMenuButtons.NEW].text = "New Game";
+                
+                MainMenuButtons[(int)eMainMenuButtons.CONTINUE].onClick.AddListener(OnClickContinueGame);
+                MainMenuButtonsText[(int)eMainMenuButtons.CONTINUE].text = "Continue Game";
                 break;
-            case StaticStuff.NUM_PROFILES:               
+            case StaticStuff.NUM_PROFILES:
+                Debug.Log("4 saves");
                 MainMenuButtons[(int)eMainMenuButtons.CONTINUE].interactable = true;
-                MainMenuButtons[(int)eMainMenuButtons.DELETE].interactable = true;                
+                MainMenuButtons[(int)eMainMenuButtons.DELETE].interactable = true;
+
+                MainMenuButtons[(int)eMainMenuButtons.NEW].onClick.AddListener(OnClickContinueGame);
+                MainMenuButtonsText[(int)eMainMenuButtons.NEW].text = "Continue Game";
+
+                MainMenuButtons[(int)eMainMenuButtons.CONTINUE].onClick.AddListener(OnClickNewGame);
+                MainMenuButtonsText[(int)eMainMenuButtons.CONTINUE].text = "New Game";
                 break;            
-            default:               
-                foreach (Button b in MainMenuButtons) b.interactable = true;                
+            default:
+                Debug.Log("< 4 saves");
+                foreach (Button b in MainMenuButtons) b.interactable = true;
+
+                MainMenuButtons[(int)eMainMenuButtons.NEW].onClick.AddListener(OnClickContinueGame);
+                MainMenuButtonsText[(int)eMainMenuButtons.NEW].text = "Continue Game";
+
+                MainMenuButtons[(int)eMainMenuButtons.CONTINUE].onClick.AddListener(OnClickNewGame);
+                MainMenuButtonsText[(int)eMainMenuButtons.CONTINUE].text = "New Game";
                 break;
         }
     }
@@ -251,26 +275,7 @@ public class RifRafMenuUI : MonoBehaviour
         CurActiveSaveGameFunction = eSaveGameFunction.NUM_SAVE_GAME_FUNCTIONS;
     }
     #endregion
-
-    private void OnGUI()
-    {
-       /* if (CurActiveMenu == eMenuType.AVATAR_SELECT && CapRayCaster.HasCaptainSelected() == true)
-        {
-            string captainName = "none";
-            int avatar = -1; ;
-            if (GUI.Button(new Rect(0, Screen.height / 50, 100, 100), "go"))
-            {
-                captainName = CapRayCaster.GetSelectedCaptainName();
-                avatar = int.Parse(captainName[9].ToString());
-                this.MCP.LoadCaptainAvatar(avatar);
-                StaticStuff.CreateNewProfile(avatar, CurProfileSlot);
-                StaticStuff.LoadProfileStartScene();     // Avatar select       
-                ToggleMenu(eMenuType.AVATAR_SELECT, false);
-                CapRayCaster.gameObject.SetActive(false);
-                CurActiveMenu = eMenuType.MAIN;
-            }
-        }*/
-    }
+   
 
     public void OnClickCaptainSelectConfirm()
     {
@@ -315,22 +320,7 @@ public class RifRafMenuUI : MonoBehaviour
             }
         }
 
-       /* if(DebugText != null)
-        {            
-            string s = "CurActiveMenu: " + CurActiveMenu.ToString() + "\n";
-            s += CapRayCaster.GetSelectedCaptainName() + "\n";
-            Vector3 rot = CaptainContainer.gameObject.transform.eulerAngles;
-            s += rot.y.ToString("F2") + "\n";
-            float num = rot.y / 45f;
-            s += num.ToString("F2") + "\n";
-            s += Mathf.Round(num).ToString("F2") + "\n";
-            int index = (int)Mathf.Round(rot.y / 45f);
-            if (index == 8) index = 0;
-            s += index.ToString() + "\n";
-            //rot = CaptainContainer.gameObject.transform.localEulerAngles;
-            //s += rot.y.ToString("F2") + "\n";
-            DebugText.text = s;
-       }*/
+       
     }
     #endregion
 
@@ -449,4 +439,21 @@ public class RifRafMenuUI : MonoBehaviour
             s += "Current_Profile_Num: " + StaticStuff.Current_Profile_Num.ToString() + "\n";
             DebugText.text = s;
        }
-     */
+
+    /* if(DebugText != null)
+        {            
+            string s = "CurActiveMenu: " + CurActiveMenu.ToString() + "\n";
+            s += CapRayCaster.GetSelectedCaptainName() + "\n";
+            Vector3 rot = CaptainContainer.gameObject.transform.eulerAngles;
+            s += rot.y.ToString("F2") + "\n";
+            float num = rot.y / 45f;
+            s += num.ToString("F2") + "\n";
+            s += Mathf.Round(num).ToString("F2") + "\n";
+            int index = (int)Mathf.Round(rot.y / 45f);
+            if (index == 8) index = 0;
+            s += index.ToString() + "\n";
+            //rot = CaptainContainer.gameObject.transform.localEulerAngles;
+            //s += rot.y.ToString("F2") + "\n";
+            DebugText.text = s;
+       }*/
+     
