@@ -93,6 +93,7 @@ public class MCP : MonoBehaviour
         ConvoUI.gameObject.SetActive(false);
         LoadingScreen.SetActive(false);
         ToggleJoystick(false);
+        MenuUI.UICamera.gameObject.SetActive(false);
     }
     public ConvoUI TMP_GetConvoUI()
     {
@@ -386,6 +387,7 @@ public class MCP : MonoBehaviour
 
         if (sceneName.Contains("Front") == false)
         {
+           // Debug.Log("a");
             MenuUI.UICamera.gameObject.SetActive(false);
             ConvoUI.SetSceneArticyFlowObject();
             if (FindObjectOfType<TheCaptainsChair>() != null)
@@ -398,7 +400,8 @@ public class MCP : MonoBehaviour
             }
         }
         else
-        {            
+        {
+           // Debug.Log("b");
             MenuUI.UICamera.gameObject.SetActive(true);
             ToggleMenuUI(true);            
             ToggleInGamePopUp(false);            
@@ -412,6 +415,11 @@ public class MCP : MonoBehaviour
         LoadingImage.texture = defaultTexture;
         LoadingScreen.SetActive(false);        
     }    
+
+    public void ShutOffUICamera()
+    {
+        
+    }
 
     IEnumerator CaptainLoadStall(GameObject captain)
     {
