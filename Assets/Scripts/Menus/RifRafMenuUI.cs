@@ -275,14 +275,15 @@ public class RifRafMenuUI : MonoBehaviour
         CurActiveSaveGameFunction = eSaveGameFunction.NUM_SAVE_GAME_FUNCTIONS;
     }
     #endregion
-   
 
+    
     public void OnClickCaptainSelectConfirm()
     {
         string captainName = "none";
         int avatar = -1;
         captainName = CapRayCaster.GetSelectedCaptainName();
         avatar = int.Parse(captainName[9].ToString());
+       // Debug.Log("OnClickCaptainSelectConfirm() captainName: " + captainName + ", avatar: " + avatar);
         this.MCP.LoadCaptainAvatar(avatar);
         StaticStuff.CreateNewProfile(avatar, CurProfileSlot);
         StaticStuff.LoadProfileStartScene();      
@@ -316,7 +317,7 @@ public class RifRafMenuUI : MonoBehaviour
                 if (CaptainIndex == 8) CaptainIndex = 0;
                 float newRot = CaptainIndex * 45f;
                 CaptainContainer.gameObject.transform.eulerAngles = new Vector3(rot.x, newRot, rot.z);
-                CapRayCaster.SetSelectedCaptain(CaptainContainer.transform.GetChild(CaptainIndex).gameObject);
+               // CapRayCaster.SetSelectedCaptain(CaptainContainer.transform.GetChild(CaptainIndex).gameObject);
             }
         }
 
@@ -333,7 +334,7 @@ public class RifRafMenuUI : MonoBehaviour
         ToggleMenu(eMenuType.AVATAR_SELECT, true);
         CapRayCaster.gameObject.SetActive(true);
         CaptainIndex = 0;
-        CapRayCaster.SetSelectedCaptain(CaptainContainer.transform.GetChild(CaptainIndex).gameObject);
+      //  CapRayCaster.SetSelectedCaptain(CaptainContainer.transform.GetChild(CaptainIndex).gameObject);
         MenuBG.enabled = false;      
     }
     public void OnClickNewGameNo()

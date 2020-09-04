@@ -4,29 +4,20 @@ using UnityEngine;
 
 public class CaptainSelectRayCaster : MonoBehaviour
 {
-    GameObject SelectedCaptain = null;
+    Collider SelectedCaptain = null;
     public GameObject Portal;
     private void OnTriggerEnter(Collider other)
     {
         //Debug.Log("CaptainSelectRayCaster.OnTriggerEnter() other: " + other.name);
-       // SelectedCaptain = other;
+        SelectedCaptain = other;
         Portal.SetActive(true);
     }
     private void OnTriggerExit(Collider other)
     {
        // Debug.Log("CaptainSelectRayCaster.OnTriggerExit() other: " + other.name);
-       // SelectedCaptain = null;
+        SelectedCaptain = null;
         Portal.SetActive(false);
     }
-
-    public void SetSelectedCaptain(GameObject captain)
-    {
-        SelectedCaptain = captain;
-    }
-    /*public bool HasCaptainSelected()
-    {
-        return (SelectedCaptain != null);
-    }*/
     
     public string GetSelectedCaptainName()
     {
