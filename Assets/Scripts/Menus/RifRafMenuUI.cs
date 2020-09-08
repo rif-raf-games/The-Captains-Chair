@@ -317,7 +317,7 @@ public class RifRafMenuUI : MonoBehaviour
         StaticStuff.PrintRifRafUI("OnClickNewGameYes");
         if(CaptainSelect == null)
         {
-            GameObject captainContainerPrefab = Resources.Load<GameObject>("Prefabs/Captain Selector Disc");
+            GameObject captainContainerPrefab = Resources.Load<GameObject>("Prefabs/Captain Selector Disc Prefab");
             CaptainSelect = Instantiate<GameObject>(captainContainerPrefab);
             CaptainSelect.transform.parent = Menus[(int)eMenuType.AVATAR_SELECT].transform;
             CapRayCaster = CaptainSelect.GetComponentInChildren<CaptainSelectRayCaster>();
@@ -325,7 +325,7 @@ public class RifRafMenuUI : MonoBehaviour
             Button confirm = CaptainSelect.transform.GetChild(5).GetChild(0).gameObject.GetComponent<Button>();
             confirm.onClick.RemoveAllListeners();
             confirm.onClick.AddListener(OnClickCaptainSelectConfirm);
-            DestroyImmediate(captainContainerPrefab, true);
+            ///Resources.UnloadAsset(captainContainerPrefab);            
         }        
         
         TogglePopUp(ePopUpType.NEW_GAME, false);
@@ -345,6 +345,7 @@ public class RifRafMenuUI : MonoBehaviour
         CaptainModelsContainer = null;
         CaptainSelect = null;
         CapRayCaster = null;
+        Resources.UnloadUnusedAssets();
         // Debug.Log("OnClickCaptainSelectConfirm() captainName: " + captainName + ", avatar: " + avatar);        
         this.MCP.LoadCaptainAvatar(avatar);
         StaticStuff.CreateNewProfile(avatar, CurProfileSlot);
