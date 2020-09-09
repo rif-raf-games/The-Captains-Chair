@@ -352,7 +352,7 @@ public class RifRafMenuUI : MonoBehaviour
         StaticStuff.CreateNewProfile(avatar, CurProfileSlot);
         StaticStuff.LoadProfileStartScene();
         ToggleMenu(eMenuType.AVATAR_SELECT, false);
-        CapRayCaster.gameObject.SetActive(false);
+        //CapRayCaster.gameObject.SetActive(false);
         CurActiveMenu = eMenuType.MAIN;
     }
     public void OnClickNewGameNo()
