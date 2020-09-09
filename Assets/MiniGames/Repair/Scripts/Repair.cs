@@ -20,7 +20,8 @@ public class Repair : MiniGame
     public List<RepairPiece> Terminals = new List<RepairPiece>();
     public RepairScanLines ScanLines;
     public Material OnBoardMaterial;
-    public Material RegMaterial;
+    public Material OnBeltLiftMaterial;
+    public Material NonMovableMaterial;
 
     RepairPiece CurTerminalStart;
     eFluidType CurTerminalStartFluidType;
@@ -79,9 +80,6 @@ public class Repair : MiniGame
 
     }
 
-   // [Header("Sound")]
-  //  public List<SoundFX.FXInfo> SoundFXUsedInScene;
-
     private void Awake()
     {
         base.Awake();
@@ -103,8 +101,7 @@ public class Repair : MiniGame
             yield return new WaitForEndOfFrame();
         }
         this.MCP = FindObjectOfType<MCP>();
-        this.MCP.ShutOffAllUI();
-       // this.MCP.SetupSceneSound(SoundFXUsedInScene);
+        this.MCP.ShutOffAllUI();       
     }
 
     void SetLights(int val)
@@ -186,15 +183,7 @@ public class Repair : MiniGame
     static float TAP_TIME = .1f;
     
     private void Update()
-    {
-        if(DebugText != null)
-        {
-            DebugText.text = CurGameState.ToString() + "\n";
-            DebugText.text += PuzzleStartTime + "\n";
-            //DebugText.text += TouchingDoor + "\n";
-           // DebugText.text += TapTimer + "\n";
-        }
-        //ResultText.text = "";
+    {        
         if (CurGameState == eGameState.OFF) return;
         float deltaZ=0f;
         Vector3 newWorldTouchPos = Vector3.zero;
@@ -214,7 +203,7 @@ public class Repair : MiniGame
                         if (p.transform.parent == null) { Debug.LogError("All RepairPieces need a parent"); return; }
                         // set up the data for the new held piece
                         HeldPiece = p;
-                        if(p.Type != eRepairPieceType.DAMAGED) p.GetComponentInChildren<MeshRenderer>().material = RegMaterial;
+                        if(p.Type != eRepairPieceType.DAMAGED) p.GetComponentInChildren<MeshRenderer>().material = OnBeltLiftMaterial;
                         StartHeldPieceWorldPos = HeldPiece.transform.position; // used for knowing where to put the piece back if it's an invalid move
                         StartWorldTouchPos = LastWorldTouchPos;  //  used for the angle that determines whether we move the piece or the belt
                         TapTimer = 0f;  // reset tap timer
@@ -234,13 +223,7 @@ public class Repair : MiniGame
                 {   // nope, we clicked on the belt so we know we're moving that from the start
                     MoveType = eMoveType.BELT;                    
                 }
-            }
-           /* else if (Physics.Raycast(ray, out hit, Mathf.Infinity, FuelDoorMask))
-            {
-                TouchingDoor = true;
-                TapTimer = 0;
-                DoorTouchPos = GetWorldPosFromTouchPos();
-            }*/
+            }           
         }        
         else if (Input.GetMouseButton(0))
         {
@@ -264,7 +247,7 @@ public class Repair : MiniGame
                 TapTimer += Time.deltaTime;
                 if(TapTimer > TAP_TIME)
                 {   // we're past tapping, so move
-                    HeldPiece.transform.position = new Vector3(newWorldTouchPos.x, 1f, newWorldTouchPos.z);
+                    HeldPiece.transform.position = new Vector3(newWorldTouchPos.x, raiseLevel, newWorldTouchPos.z);
                 }
             }
             LastWorldTouchPos = newWorldTouchPos; // update previous frame's touch pos
@@ -286,7 +269,7 @@ public class Repair : MiniGame
                     else
                     {
                       //  Debug.Log("e");
-                        HeldPiece.GetComponentInChildren<MeshRenderer>().material = RegMaterial;
+                        HeldPiece.GetComponentInChildren<MeshRenderer>().material = OnBeltLiftMaterial;
                     }
                 }
                 else
@@ -302,34 +285,19 @@ public class Repair : MiniGame
                         else
                         {
                             SoundFXPlayer.Play("Repair_DropPieceToolbox");
-                            HeldPiece.GetComponentInChildren<MeshRenderer>().material = RegMaterial;
+                            HeldPiece.GetComponentInChildren<MeshRenderer>().material = OnBeltLiftMaterial;
                         }
-                    }
-                    
-                    //SetHeldPiece(null, false);
-                }
-            }
-            /*else if(TouchingDoor == true)
-            {                
-                if(TapTimer <= TAP_TIME && CurGameState == eGameState.ON)
-                {
-                    Vector3 doorReleasePos = GetWorldPosFromTouchPos();
-                    if(doorReleasePos.z <= DoorTouchPos.z)
-                    {
-                        SetGameState(eGameState.OFF);
-                        Debug.LogWarning("OK this is where we just touched the door");
-                        //FuelDoor.Close(CheckPuzzleComplete);
                     }                    
                 }
-            }         */   
+            }           
             // reset all of the movement data
-            TapTimer = 0f;
-            // TouchingDoor = false;
-            
+            TapTimer = 0f;                        
             HeldPiece = null;
             MoveType = eMoveType.NO_MOVEMENT;
         }        
     }
+
+    public float raiseLevel = 1f;
    /* void SetHeldPiece(RepairPiece p)
     {
         if (p != null)
@@ -353,7 +321,7 @@ public class Repair : MiniGame
 
     public void OnClickScan()
     {
-        Debug.Log("I JUST CLICKED THE SCAN BUTTON");
+       // Debug.Log("I JUST CLICKED THE SCAN BUTTON");
         SoundFXPlayer.Play("Repair_StartScan");
         SetGameState(eGameState.OFF);
         ScanLines.Scan(CheckPuzzleComplete);
@@ -361,7 +329,7 @@ public class Repair : MiniGame
 
     public void SetBoardPiecesInEditor()
     {
-        Debug.Log("SetBoardPiecesInEditor()");
+      //  Debug.Log("SetBoardPiecesInEditor()");
 
         List<RepairPiece> allPieces = new List<RepairPiece>();
         allPieces = GameObject.FindObjectsOfType<RepairPiece>().ToList<RepairPiece>();
@@ -563,7 +531,7 @@ public class Repair : MiniGame
         }
         if (spotFound == true)
         {
-            Debug.Log("found an empty spot at index: " + foundSpotIndex + " so push pieces");
+           // Debug.Log("found an empty spot at index: " + foundSpotIndex + " so push pieces");
             i = baIndex;
             while(i != foundSpotIndex)
             {
@@ -678,7 +646,7 @@ public class Repair : MiniGame
             collPiece.transform.position = collider.transform.position;
         }
 
-        Debug.Log(err);
+        //Debug.Log(err);
         PieceConn newConn = new PieceConn(collPiece, curPiece);
         DEBUG_ConnsOnThisPath.Add(newConn);
     }    
@@ -768,7 +736,7 @@ public class Repair : MiniGame
                     else if( (curPiece.Type != eRepairPieceType.XOVER && curPiece.Type != eRepairPieceType.SPLITTER) && ( adjacentPiece.FluidType != eFluidType.NONE && adjacentPiece.FluidType != curPiece.FluidType ) )
                     {                                                
                         SetupPathError("we just crossed paths with a piece that already has a different fluid type attached so FAIL. curPiece type: " + curPiece.FluidType.ToString() + ", adjacent type: " + adjacentPiece.FluidType.ToString(), curPiece, hit.collider, rayDir);
-                        Debug.Log("fluid type fail. Cur: " + curPiece.name + ", " + curPiece.FluidType + ", adj: " + adjacentPiece.name + ", " + adjacentPiece.FluidType);
+                     //   Debug.Log("fluid type fail. Cur: " + curPiece.name + ", " + curPiece.FluidType + ", adj: " + adjacentPiece.name + ", " + adjacentPiece.FluidType);
                         return false;
                     }
                     else
@@ -783,7 +751,7 @@ public class Repair : MiniGame
                         }
                         else if(adjacentPiece.Type == eRepairPieceType.SPLITTER)
                         {           // moangleupdate                                                                                                                                         
-                            Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ HERE WE GO^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");                            
+                        //    Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ HERE WE GO^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");                            
                             
                             // First get the direction vec between the curPiece and the adjacentPiece
                             Vector3 dirVecBetweenPieces = adjacentPiece.transform.position - curPiece.transform.position;                                                                                    
@@ -874,15 +842,19 @@ public class Repair : MiniGame
                 if (piece == null) Debug.LogError(piece.name + ": null piece");
                 if (piece.GetComponentInChildren<MeshRenderer>() == null) Debug.LogError(piece.name + ": null mr");
                 if (piece.GetComponentInChildren<MeshRenderer>().material == null) Debug.LogError(piece.name + ": null material");
-                if (piece.Type != eRepairPieceType.DAMAGED && piece.Type != eRepairPieceType.BLOCKER)
+                if (piece.Type != eRepairPieceType.DAMAGED && piece.Type != eRepairPieceType.BLOCKER )
                 {
-                    if (piece.transform.parent == BoardPieces)
+                    if(piece.Movable == false)
+                    {
+                        piece.GetComponentInChildren<MeshRenderer>().material = NonMovableMaterial;
+                    }
+                    else if (piece.transform.parent == BoardPieces)
                     {
                         piece.GetComponentInChildren<MeshRenderer>().material = OnBoardMaterial;
                     }
                     else
                     {
-                        piece.GetComponentInChildren<MeshRenderer>().material = RegMaterial;
+                        piece.GetComponentInChildren<MeshRenderer>().material = OnBeltLiftMaterial;
                     }
                 }
             }
@@ -916,7 +888,7 @@ public class Repair : MiniGame
                     ConnsToCheck.Clear();
                     puzzleSolved = false;
                     brokenPathFound = true;
-                    Debug.Log("***************************************************bailed due to broken puzzle");
+                   // Debug.Log("***************************************************bailed due to broken puzzle");
                     msg = PathErrorMessage;
                     break;
                 }
@@ -987,8 +959,7 @@ public class Repair : MiniGame
         if (MiniGameMCP != null) MiniGameMCP.SavePuzzlesProgress(success);
         if (success == true) EndPuzzleTime(true);
         SetGameState(eGameState.OFF);
-        //Debug.LogWarning("ShowResults FuelDoor.Open");
-        //FuelDoor.Open();
+        
         if (success == true) SetLights(0);
         else SetLights(2);
         yield return new WaitForSeconds(3);
