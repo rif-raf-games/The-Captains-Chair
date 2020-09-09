@@ -254,70 +254,59 @@ public class Repair : MiniGame
         }
         else if (Input.GetMouseButtonUp(0))
         {   // we've released our touch, so lets see what's happenig
-            if (MoveType == eMoveType.PIECE && HeldPiece != null)
-            {   // if we were in PIECE type movement, check to see if we need to rotate the piece
-                if (TapTimer <= TAP_TIME)
-                {   // tap/click time was fast enough so rotate
-                    // Debug.Log("a");
-                    // SoundFXPlayer.Play("Repair_Rotate Piece"); [Commenting this out for now, too many sfx at once - Brent]
-                    HeldPiece.transform.Rotate(0f, 60f, 0f);
+            HandleTouchRelease();
+        }    
+        else if(Input.GetMouseButton(0) == false && HeldPiece != null)
+        {            
+            HandleTouchRelease();
+        }
+    }
+
+    void HandleTouchRelease()
+    {
+        if (MoveType == eMoveType.PIECE && HeldPiece != null)
+        {   // if we were in PIECE type movement, check to see if we need to rotate the piece
+            if (TapTimer <= TAP_TIME)
+            {   // tap/click time was fast enough so rotate
+                // Debug.Log("a");
+                // SoundFXPlayer.Play("Repair_Rotate Piece"); [Commenting this out for now, too many sfx at once - Brent]
+                HeldPiece.transform.Rotate(0f, 60f, 0f);
+                if (HeldPiece.transform.parent == BoardPieces)
+                {
+                    //  Debug.Log("d");
+                    HeldPiece.GetComponentInChildren<MeshRenderer>().material = OnBoardMaterial;
+                }
+                else
+                {
+                    //  Debug.Log("e");
+                    HeldPiece.GetComponentInChildren<MeshRenderer>().material = OnBeltLiftMaterial;
+                }
+            }
+            else
+            {   // ok we've released our touch after moving a piece around, so figure out what to do
+                SnapPieceIntoPlace(HeldPiece, StartHeldPieceWorldPos);
+                if (HeldPiece.Type != eRepairPieceType.DAMAGED)
+                {
                     if (HeldPiece.transform.parent == BoardPieces)
                     {
-                      //  Debug.Log("d");
+                        SoundFXPlayer.Play("Repair_DropPiece");
                         HeldPiece.GetComponentInChildren<MeshRenderer>().material = OnBoardMaterial;
                     }
                     else
                     {
-                      //  Debug.Log("e");
+                        SoundFXPlayer.Play("Repair_DropPieceToolbox");
                         HeldPiece.GetComponentInChildren<MeshRenderer>().material = OnBeltLiftMaterial;
                     }
                 }
-                else
-                {   // ok we've released our touch after moving a piece around, so figure out what to do
-                    SnapPieceIntoPlace(HeldPiece, StartHeldPieceWorldPos);
-                    if(HeldPiece.Type != eRepairPieceType.DAMAGED)
-                    {
-                        if (HeldPiece.transform.parent == BoardPieces)
-                        {
-                            SoundFXPlayer.Play("Repair_DropPiece");
-                            HeldPiece.GetComponentInChildren<MeshRenderer>().material = OnBoardMaterial;
-                        }
-                        else
-                        {
-                            SoundFXPlayer.Play("Repair_DropPieceToolbox");
-                            HeldPiece.GetComponentInChildren<MeshRenderer>().material = OnBeltLiftMaterial;
-                        }
-                    }                    
-                }
-            }           
-            // reset all of the movement data
-            TapTimer = 0f;                        
-            HeldPiece = null;
-            MoveType = eMoveType.NO_MOVEMENT;
-        }        
+            }
+        }
+        // reset all of the movement data
+        TapTimer = 0f;
+        HeldPiece = null;
+        MoveType = eMoveType.NO_MOVEMENT;
     }
 
-    public float raiseLevel = 1f;
-   /* void SetHeldPiece(RepairPiece p)
-    {
-        if (p != null)
-        {
-            HeldPiece = p;
-            p.GetComponentInChildren<MeshRenderer>().material = RegMaterial;
-        }
-        else
-        {
-            HeldPiece = null;
-        }
-    }*/
-
-    /* private void OnGUI()
-    {
-        if (GUI.Button(new Rect(0, 0, 130, 230),""))
-        {
-            OnClickScan();
-        }
-    } */
+    public float raiseLevel = 1f;   
 
     public void OnClickScan()
     {

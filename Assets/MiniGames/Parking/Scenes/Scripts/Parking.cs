@@ -264,12 +264,7 @@ public class Parking : MiniGame
 
     // Update is called once per frame
     void Update()
-    {        
-        if (DebugText != null)
-        {
-            DebugText.text = CurGameState.ToString() + "\n";
-            DebugText.text += PuzzleStartTime + "\n";            
-        }
+    {                
         if (CurGameState == eGameState.OFF) return;
         if(CurGameState == eGameState.ROTATE_PAD)
         {
@@ -407,38 +402,48 @@ public class Parking : MiniGame
         }
         else if (Input.GetMouseButtonUp(0))
         {
-            InputTimer += Time.deltaTime;
-            if (ActiveShip != null)
-            {
-                //Debug.Log("GMU() BeginLower: " + InputTimer);                
-                int val = Random.Range(0, 2);
-                if (val < 1) SoundFXPlayer.Play("Cargo_DropPiece-B");
-                else SoundFXPlayer.Play("Cargo_DropPiece-B");
-                ActiveShip.BeginLower(RaiserLowerTime);
-            }            
-            if (TouchingRotatePad == true && InputTimer <= HoldTime)
-            {
-                // Debug.Log("GMU() Rotate: " + InputTimer);                
-                SoundFXPlayer.Play("Cargo_Rotate");
-                RotateGridPlatform();
-            }
-            TouchingRotatePad = false;
-            InputTimer = 0f;
-            SetActiveShip(null);
-            TouchState = eTouchState.NONE;
+            HandleTouchRelease();
+        }
+        else if(Input.GetMouseButton(0) == false)
+        {
+            if (ActiveShip != null) HandleTouchRelease();
+            else if (ClickedShip != null) SetActiveShip(null);
         }
 
         if (DebugText != null)
         {
             string s = (ActiveShip == null ? "null ActiveShip" : ActiveShip.name) + "\n";
+            s += (ClickedShip == null ? "null ClickedShip" : ClickedShip.name) + "\n";
             DebugText.text = s;            
         }
         LastTouchPos = CurTouchPos;
     }
 
-    void SetActiveShip(ParkingShip ship)
+    void HandleTouchRelease()
     {
-        //if (ship != null) Debug.Log("SetActiveShip() " + ship.name);
+        InputTimer += Time.deltaTime;
+        if (ActiveShip != null)
+        {
+            //Debug.Log("GMU() BeginLower: " + InputTimer);                
+            int val = Random.Range(0, 2);
+            if (val < 1) SoundFXPlayer.Play("Cargo_DropPiece-B");
+            else SoundFXPlayer.Play("Cargo_DropPiece-B");
+            ActiveShip.BeginLower(RaiserLowerTime);
+        }
+        if (TouchingRotatePad == true && InputTimer <= HoldTime)
+        {
+            // Debug.Log("GMU() Rotate: " + InputTimer);                
+            SoundFXPlayer.Play("Cargo_Rotate");
+            RotateGridPlatform();
+        }
+        TouchingRotatePad = false;
+        InputTimer = 0f;
+        SetActiveShip(null);
+        TouchState = eTouchState.NONE;
+    }
+
+    void SetActiveShip(ParkingShip ship)
+    {        
         ActiveShip = ship;
         ClickedShip = null;
     }
