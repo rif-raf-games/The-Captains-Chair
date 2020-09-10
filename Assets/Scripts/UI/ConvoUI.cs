@@ -114,10 +114,12 @@ public class ConvoUI : MonoBehaviour
                 string[] colors = color.Split(',');
                 SpeakerText.color = new Color(int.Parse(colors[0]), int.Parse(colors[1]), int.Parse(colors[2]));
             }
+            SpeakerText.fontStyle = FontStyle.Italic;
         }
         else
         {
             SpeakerText.color = Color.white;
+            SpeakerText.fontStyle = FontStyle.Normal;
         }
     }
 
