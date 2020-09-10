@@ -16,8 +16,8 @@ public class MiniGameMCP : MonoBehaviour
     public int[] PuzzlesToLoad;
     public ArticyRef[] PuzzleDialogueRefs;
     public List<ArticyObject> PuzzleDialogues;
-    public Vector3[] CameraPositions;
-    public Quaternion[] CameraRotations;
+    Vector3[] CameraPositions;
+    Quaternion[] CameraRotations;
     MiniGame[] Puzzles;
     string ProgressVarName;
     string FinishedVarName;
@@ -168,7 +168,7 @@ public class MiniGameMCP : MonoBehaviour
         CurPuzzleIndex = progress - 1; 
         Puzzles[CurPuzzleIndex].gameObject.SetActive(true);
         Camera.main.transform.position = CameraPositions[CurPuzzleIndex];
-       // Camera.main.transform.rotation = CameraRotations[CurPuzzleIndex];
+        Camera.main.transform.rotation = CameraRotations[CurPuzzleIndex];
 
         
         float endTime = Time.time;
@@ -226,7 +226,7 @@ public class MiniGameMCP : MonoBehaviour
             CurPuzzleIndex++;
             Puzzles[CurPuzzleIndex].gameObject.SetActive(true);
             Camera.main.transform.position = CameraPositions[CurPuzzleIndex];
-           // Camera.main.transform.rotation = CameraRotations[CurPuzzleIndex];
+            Camera.main.transform.rotation = CameraRotations[CurPuzzleIndex];
             SetupLerpFade(1f, 0f, 1.5f);
             GameState = eGameState.FADE_IN;
         }
