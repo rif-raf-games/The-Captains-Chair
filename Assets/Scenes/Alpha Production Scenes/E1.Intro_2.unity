@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0011171733, g: 0.005907565, b: 0.011718691, a: 1}
+  m_IndirectSpecularColor: {r: 0.0011068572, g: 0.005937214, b: 0.01173668, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -512,6 +512,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5181004de69434b128d9f9e4cda296e6, type: 3}
+--- !u!114 &139861545 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1429123139107347583, guid: 5181004de69434b128d9f9e4cda296e6,
+    type: 3}
+  m_PrefabInstance: {fileID: 139861544}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95e343583cbff78429afad4ddeddc143, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &172327653 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5784361698410656494, guid: 4e1f412311528429298a027188bab769,
@@ -1702,11 +1714,6 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 1324219674674773885, guid: 112d4332ffeff42058cf89477f5c8459,
-        type: 3}
-      propertyPath: m_StoppingDistance
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 3393896756583112172, guid: 112d4332ffeff42058cf89477f5c8459,
         type: 3}
       propertyPath: ArticyEntityReference.lowId
@@ -1726,6 +1733,11 @@ PrefabInstance:
         type: 3}
       propertyPath: ArticyAIReference.highId
       value: 16777224
+      objectReference: {fileID: 0}
+    - target: {fileID: 1324219674674773885, guid: 112d4332ffeff42058cf89477f5c8459,
+        type: 3}
+      propertyPath: m_StoppingDistance
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2465132752707858130, guid: 112d4332ffeff42058cf89477f5c8459,
         type: 3}
@@ -2778,8 +2790,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b558217e064838d4a82286de2a0ced2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EntityToFollow: {fileID: 370308858}
-  CamOffset: {x: 126.36, y: 67.4, z: 249.1}
+  EntityToFollow: {fileID: 139861545}
+  CamOffset: {x: 0, y: 12, z: 24}
   CameraSettings: []
   CameraSettingIndex: 0
   DebugText: {fileID: 0}
@@ -2853,7 +2865,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1021267446}
   m_LocalRotation: {x: -0.000000038932193, y: 0.9781476, z: -0.20791169, w: -0.00000018316157}
-  m_LocalPosition: {x: -21.64, y: 103.32, z: 246.38}
+  m_LocalPosition: {x: -80.53, y: 23.48, z: 36.87}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -4175,11 +4187,6 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6170651535163877368, guid: 4e1f412311528429298a027188bab769,
-        type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 4294967294
-      objectReference: {fileID: 0}
     - target: {fileID: 274387444729421884, guid: 4e1f412311528429298a027188bab769,
         type: 3}
       propertyPath: m_StaticEditorFlags
@@ -4201,6 +4208,11 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7019998175826388423, guid: 4e1f412311528429298a027188bab769,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967294
+      objectReference: {fileID: 0}
+    - target: {fileID: 6170651535163877368, guid: 4e1f412311528429298a027188bab769,
         type: 3}
       propertyPath: m_StaticEditorFlags
       value: 4294967294
