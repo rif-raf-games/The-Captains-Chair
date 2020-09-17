@@ -113,40 +113,8 @@ public class MCP : MonoBehaviour
         StartCoroutine(LoadNextSceneDelay(sceneName, sceneJump, miniGameJump, posToSave, savedPos));        
     }
 
-    public Text DebugText;
-    IEnumerator FadeObjects(List<RawImage> images, float fadeTime, float alphaStart)
-    {
-        foreach (RawImage image in images) image.color = new Color(1f, 1f, 1f, alphaStart);
-        float alphaEnd = 1f - alphaStart;
-        float timer = 0f;
-        while(timer < fadeTime)
-        {
-            float percentage = timer / fadeTime;
-            float alpha = Mathf.Lerp(alphaStart, alphaEnd, percentage);
-            Color color = new Color(1f, 1f, 1f, alpha);
-            foreach (RawImage image in images) image.color = color;
-           // if(DebugText != null) DebugText.text = "percentage: " + percentage.ToString("F2") + ", timer: " + timer.ToString("F2") + ", color: " + color.ToString("F2"); 
-            timer += Time.deltaTime;
-            yield return new WaitForEndOfFrame();
-        }
-        foreach (RawImage image in images) image.color = new Color(1f, 1f, 1f, alphaEnd);
-    }
+    
 
-  /*  private void OnGUI()
-    {
-        if (GUI.Button(new Rect(Screen.width - 100, Screen.height / 2 + 50, 100, 100), "Copy"))
-        {
-            StaticStuff.CopySaveDataDebug();
-        }
-        if (GUI.Button(new Rect(Screen.width - 100, Screen.height / 2 + 150, 100, 100), "Load"))
-        {
-            StaticStuff.LoadSaveDataDebug();
-        }
-        if (GUI.Button(new Rect(Screen.width - 100, Screen.height / 2 + 250, 100, 100), "Delete"))
-        {
-            StaticStuff.DeleteDaveDataDebug();
-        }
-    }*/
 
     float FADE_TIME = 1f;
     bool Pause;
@@ -159,12 +127,16 @@ public class MCP : MonoBehaviour
         List<RawImage> curImages;      
         float delayTime = 0f, fadeTime = 0f;
         Texture defaultTexture = LoadingImage.texture;
+
                
         // 1) Init things and get the data from the Scene_Jump or Mini_Game_Jump
         LoadingScreen.SetActive(true);
         SpinWheel.gameObject.SetActive(true);
         Curtain.gameObject.SetActive(true);
-        LoadingImage.gameObject.SetActive(false);        
+        LoadingImage.gameObject.SetActive(false);
+
+        // start the music fade
+        BGMusic.StartFade();
          
         if (sceneJump != null)
         {            
@@ -413,8 +385,28 @@ public class MCP : MonoBehaviour
         curImages = new List<RawImage>() { Curtain, SpinWheel };
         yield return StartCoroutine(FadeObjects(curImages, fadeTime, 1f));
         LoadingImage.texture = defaultTexture;
-        LoadingScreen.SetActive(false);        
-    }    
+        LoadingScreen.SetActive(false);
+        BGMusic.ResetVolume();
+    }
+
+    public Text DebugText;
+    IEnumerator FadeObjects(List<RawImage> images, float fadeTime, float alphaStart)
+    {
+        foreach (RawImage image in images) image.color = new Color(1f, 1f, 1f, alphaStart);
+        float alphaEnd = 1f - alphaStart;
+        float timer = 0f;
+        while (timer < fadeTime)
+        {
+            float percentage = timer / fadeTime;
+            float alpha = Mathf.Lerp(alphaStart, alphaEnd, percentage);
+            Color color = new Color(1f, 1f, 1f, alpha);
+            foreach (RawImage image in images) image.color = color;
+            // if(DebugText != null) DebugText.text = "percentage: " + percentage.ToString("F2") + ", timer: " + timer.ToString("F2") + ", color: " + color.ToString("F2"); 
+            timer += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+        foreach (RawImage image in images) image.color = new Color(1f, 1f, 1f, alphaEnd);
+    }
 
     public void ShutOffUICamera()
     {

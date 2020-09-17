@@ -5,6 +5,8 @@ using UnityEngine;
 public class BackgroundMusic : MonoBehaviour
 {
     AudioSource AudioSource;
+    float SavedVol;
+    Coroutine FadeCoroutine;
 
     private void Awake()
     {
@@ -28,6 +30,36 @@ public class BackgroundMusic : MonoBehaviour
     {
         this.AudioSource.volume = vol / 100f;
     }
+    public float GetVolume()
+    {
+        return this.AudioSource.volume;
+    }
+
+    public IEnumerator FadeVolume()
+    {        
+        float startVol = this.AudioSource.volume;
+        float timer = 0f;
+        while(timer <= 1f)
+        {
+            float percentage = timer;
+            float vol = Mathf.Lerp(startVol, 0f, percentage);
+            this.AudioSource.volume = vol;
+            timer += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+    }
+    
+    public void StartFade()
+    {
+        SavedVol = this.AudioSource.volume;
+        FadeCoroutine = StartCoroutine(FadeVolume());
+    }
+    public void ResetVolume()
+    {
+        if (FadeCoroutine != null) StopCoroutine(FadeCoroutine);
+        FadeCoroutine = null;
+        this.AudioSource.volume = SavedVol;
+    }
 }
 
 public static class BackgroundMusicPlayer
@@ -46,4 +78,5 @@ public static class BackgroundMusicPlayer
         if (musicName.Equals("Off")) BGMusic.StopMusic();
         else BGMusic.PlayMusic(musicName);
     }
+        
 }
