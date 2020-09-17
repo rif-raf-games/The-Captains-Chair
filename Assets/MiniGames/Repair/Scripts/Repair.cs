@@ -31,32 +31,14 @@ public class Repair : MiniGame
     
     public static float PieceAnchorHeightValToUse = .3f;
 
-    public static Color[] Colors = { Color.red, Color.green, Color.blue, Color.yellow, Color.cyan, Color.magenta };
-
-    public Transform BoardPieces;
-    public Transform Belt;
-
+    public static Color[] Colors = { Color.red, Color.green, Color.blue, Color.yellow, Color.cyan, Color.magenta };    
     float BeltMoveRange;
-
     public Text ResultsText;
     public Material FuelMat;
     public Material CoolantMat;
     public Material NoneMat;
     public GameObject[] Lights;
-
-    class PieceConn
-    {
-        public RepairPiece Cur;
-        public RepairPiece From;
-        public string ID;
-
-        public PieceConn( RepairPiece cur, RepairPiece from)
-        {
-            Cur = cur;
-            From = from;
-            ID = "Cur: " + Cur.name + " From: " + From.name;
-        }
-    }
+    
     string PathErrorMessage = "";
     List<PieceConn> ConnsToCheck = new List<PieceConn>();
     List<PieceConn> AllConnsChecked = new List<PieceConn>();
@@ -79,7 +61,6 @@ public class Repair : MiniGame
         }
 
     }
-
     private void Awake()
     {
         base.Awake();
@@ -92,6 +73,100 @@ public class Repair : MiniGame
             StaticStuff.CreateMCPScene();
             StartCoroutine(ShutOffUI());
         }
+    }
+    private void Start()
+    {
+        BeltIndexAdjusts.Clear(); // this is a bullshit way around a bug but i'll do all the cleanup during next project pre-production i mean it        
+        BeltIndexAdjusts.Add(-1);
+        BeltIndexAdjusts.Add(1);
+        ScanLines.ResetLines();
+        if (IsSolo == true)
+        {
+            //ResultsText.text = "";
+            BeginPuzzleStartTime();
+        }
+    }
+
+    public Transform BoardPieces;
+    public Transform Belt;
+    
+    void ResetGame()
+    {                        
+        base.BeginPuzzleStartTime();     
+        foreach (RepairPiece piece in AllPieces) piece.ResetItem();
+        foreach (RepairPiece piece in AllPieces) SnapPieceIntoPlace(piece, Vector3.zero);
+        ResetPuzzleState(true);
+
+        SetGameState(eGameState.ON);
+        SetLights(1);
+        ScanLines.ResetLines();
+        if (MiniGameMCP != null) MiniGameMCP.HideResultsText();
+        else ResultsText.text = "";
+        PathErrorSphere.transform.position = new Vector3(-9999f, 0f, -9999f);
+        if (EndColPiece != null)
+        {
+            Destroy(EndColPiece);
+            EndColPiece = null;
+        }
+    }
+
+    void ResetPuzzleState(bool startOver)
+    {
+        NumChecks = 0;
+        CurTerminalStart = null;
+        CurTerminalStartFluidType = eFluidType.NONE;
+        ConnsToCheck.Clear();
+        AllConnsChecked.Clear();
+        DEBUG_ConnsOnThisPath.Clear();
+        ConnsResult.Clear();
+
+        if (startOver == true)
+        {
+            foreach (RepairPiece terminal in Terminals) terminal.ReachedOnPath = false;
+            foreach (RepairPiece piece in AllPieces)
+            {
+                if (piece == null) Debug.LogError(piece.name + ": null piece");
+                if (piece.GetComponentInChildren<MeshRenderer>() == null) Debug.LogError(piece.name + ": null mr");
+                if (piece.GetComponentInChildren<MeshRenderer>().material == null) Debug.LogError(piece.name + ": null material");
+                if (piece.Type != eRepairPieceType.DAMAGED && piece.Type != eRepairPieceType.BLOCKER)
+                {
+                    if (piece.Movable == false)
+                    {
+                        piece.GetComponentInChildren<MeshRenderer>().material = NonMovableMaterial;
+                    }
+                    else if (piece.transform.parent == BoardPieces)
+                    {
+                        piece.GetComponentInChildren<MeshRenderer>().material = OnBoardMaterial;
+                    }
+                    else
+                    {
+                        piece.GetComponentInChildren<MeshRenderer>().material = OnBeltLiftMaterial;
+                    }
+                }
+            }
+        }
+    }
+    public override void BeginPuzzleStartTime()
+    {
+        // Debug.Log("BeginPUzzle()");
+        base.BeginPuzzleStartTime();        
+        SetGameState(eGameState.OFF);
+        AllPieces = GameObject.FindObjectsOfType<RepairPiece>().ToList<RepairPiece>();
+        foreach (RepairPiece terminal in Terminals)
+        {
+            AllPieces.Remove(terminal);
+        }
+        Bounds beltBounds = Belt.GetComponent<BoxCollider>().bounds;
+        Vector3 beltTopWP = new Vector3(beltBounds.center.x, 0f, beltBounds.max.z);
+        Vector3 beltTopVP = Camera.main.WorldToViewportPoint(beltTopWP);
+        Vector3 vpDiff = new Vector3(0f, 0f, beltTopVP.y - 1f);
+        Vector3 wpDiff = Camera.main.ViewportToWorldPoint(vpDiff);
+        BeltMoveRange = Belt.GetComponent<BoxCollider>().size.z / 2f + wpDiff.z;
+
+        PiecesAndBeltMask = 1 << LayerMask.NameToLayer("Repair Piece");
+        PiecesAndBeltMask |= (1 << LayerMask.NameToLayer("Repair Piece Belt"));
+        
+        ScanLines.Scan(TurnGameOn);
     }
 
     IEnumerator ShutOffUI()
@@ -111,19 +186,6 @@ public class Repair : MiniGame
         Lights[val].SetActive(true);
     }
 
-    private void Start()
-    {
-        BeltIndexAdjusts.Clear(); // this is a bullshit way around a bug but i'll do all the cleanup during next project pre-production i mean it        
-        BeltIndexAdjusts.Add(-1);
-        BeltIndexAdjusts.Add(1);
-        ScanLines.ResetLines();
-        if (IsSolo == true)
-        {
-            //ResultsText.text = "";
-            BeginPuzzleStartTime();
-        }        
-    }
-
     eGameState DialogueSaveState;
     void SetGameState( eGameState newState )
     {
@@ -140,33 +202,6 @@ public class Repair : MiniGame
         CurGameState = DialogueSaveState;        
     }
 
-    public override void BeginPuzzleStartTime()
-    {
-       // Debug.Log("BeginPUzzle()");
-        base.BeginPuzzleStartTime();
-        //ResultsText.text = "";
-        SetGameState(eGameState.OFF); 
-        AllPieces = GameObject.FindObjectsOfType<RepairPiece>().ToList<RepairPiece>();        
-        foreach (RepairPiece terminal in Terminals)
-        {
-            AllPieces.Remove(terminal);
-        }        
-        Bounds beltBounds = Belt.GetComponent<BoxCollider>().bounds;
-        Vector3 beltTopWP = new Vector3(beltBounds.center.x, 0f, beltBounds.max.z);        
-        Vector3 beltTopVP = Camera.main.WorldToViewportPoint(beltTopWP);
-        Vector3 vpDiff = new Vector3(0f, 0f, beltTopVP.y - 1f);
-        Vector3 wpDiff = Camera.main.ViewportToWorldPoint(vpDiff);
-        BeltMoveRange = Belt.GetComponent<BoxCollider>().size.z/2f + wpDiff.z;        
-
-        PiecesAndBeltMask = 1 << LayerMask.NameToLayer("Repair Piece");
-        PiecesAndBeltMask |= (1 << LayerMask.NameToLayer("Repair Piece Belt"));
-
-       // FuelDoorMask = LayerMask.GetMask("Parking Rotate Platform"); // we ran out of tags so i'm re-using some from another game               
-        ScanLines.Scan(TurnGameOn);
-    }
-
-    
-
     List<int> InitialBeltIndexStops = new List<int>();
     List<int> BeltIndexAdjusts = new List<int>();
     RepairPiece HeldPiece;
@@ -174,8 +209,7 @@ public class Repair : MiniGame
     Vector3 StartWorldTouchPos;
     Vector3 StartHeldPieceWorldPos;
     float TapTimer;
-   // bool TouchingDoor = false;
-   // Vector3 DoorTouchPos;
+
     enum eMoveType { BELT, PIECE, WAITING_FOR_TYPE, NO_MOVEMENT };
     eMoveType MoveType = eMoveType.NO_MOVEMENT;
     enum eLocationType { BELT, BOARD, };
@@ -451,12 +485,14 @@ public class Repair : MiniGame
         if (newLocFound == false)
         {   // didn't find an empty spot, so put the piece back to where it started from           
             piece.transform.position = origPos;
+            Debug.Log("newLocFound is false, so put piece to original position");
         }        
         else
         {
             bool adjustmentMade = CheckBeltSorting();
-           // Debug.Log("piece found a new position, but was there an adjustment made to the belt?: " + adjustmentMade);
+            Debug.Log("piece found a new position, but was there an adjustment made to the belt?: " + adjustmentMade);
         }
+        
         return newLocFound;
     }
 
@@ -812,43 +848,7 @@ public class Repair : MiniGame
         return true;
     }
     
-    void ResetPuzzleState( bool startOver )
-    {   
-        NumChecks = 0;
-        CurTerminalStart = null;
-        CurTerminalStartFluidType = eFluidType.NONE;
-        ConnsToCheck.Clear();
-        AllConnsChecked.Clear();
-        DEBUG_ConnsOnThisPath.Clear();
-        ConnsResult.Clear();
-       
-
-        if (startOver == true)
-        {
-            foreach (RepairPiece terminal in Terminals) terminal.ReachedOnPath = false;
-            foreach (RepairPiece piece in AllPieces)
-            {
-                if (piece == null) Debug.LogError(piece.name + ": null piece");
-                if (piece.GetComponentInChildren<MeshRenderer>() == null) Debug.LogError(piece.name + ": null mr");
-                if (piece.GetComponentInChildren<MeshRenderer>().material == null) Debug.LogError(piece.name + ": null material");
-                if (piece.Type != eRepairPieceType.DAMAGED && piece.Type != eRepairPieceType.BLOCKER )
-                {
-                    if(piece.Movable == false)
-                    {
-                        piece.GetComponentInChildren<MeshRenderer>().material = NonMovableMaterial;
-                    }
-                    else if (piece.transform.parent == BoardPieces)
-                    {
-                        piece.GetComponentInChildren<MeshRenderer>().material = OnBoardMaterial;
-                    }
-                    else
-                    {
-                        piece.GetComponentInChildren<MeshRenderer>().material = OnBeltLiftMaterial;
-                    }
-                }
-            }
-        }
-    }
+    
 
     bool CheckPaths()
     {
@@ -1029,5 +1029,27 @@ public class Repair : MiniGame
             yield return new WaitForSeconds(1f);
         }
     }
-             
+
+    class PieceConn
+    {
+        public RepairPiece Cur;
+        public RepairPiece From;
+        public string ID;
+
+        public PieceConn(RepairPiece cur, RepairPiece from)
+        {
+            Cur = cur;
+            From = from;
+            ID = "Cur: " + Cur.name + " From: " + From.name;
+        }
+    }
+
+    public void OnGUI()
+    {
+        if (GUI.Button(new Rect(0, 200, 100, 100), "Reset"))
+        {
+            ResetGame();
+        }
+    }
+
 }

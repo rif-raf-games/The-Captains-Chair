@@ -79,7 +79,32 @@ public class MiniGame : MonoBehaviour
         parameters.Add("Total Time To Solve", time);
         string tag = (didFinish == true ? "_solved" : "_quit");
         StaticStuff.TrackEvent(SceneName + tag, parameters);
+    }
 
+    [System.Serializable]
+    public class MiniGameTransformSave
+    {
+        public Vector3 StartPos;
+        public Vector3 StartLocalPos;
+        public Vector3 StartLocalScale;
+        public Quaternion StartRot;
+        public Quaternion StartLocalRot;
 
+        public MiniGameTransformSave( Transform t )
+        {
+            StartPos = t.position;
+            StartLocalPos = t.localPosition;
+            StartLocalScale = t.localScale;
+            StartRot = t.rotation;
+            StartLocalRot = t.localRotation;
+        }
+        public void ResetTransform(Transform t)
+        {
+            t.position = StartPos;
+           // t.localPosition = StartLocalPos;
+            t.localScale = StartLocalScale;
+            t.rotation = StartRot;
+           // t.localRotation = StartLocalRot;
+        }
     }
 }

@@ -28,8 +28,7 @@ public class LockPicking : MiniGame
     Vector3 LastWorldTouchPos = Vector3.zero;
     float LastCenterToWorldAngle;
     public Text ResultsText;
-    MCP MCP;
-    //public Text DebugText;
+    MCP MCP;   
 
     Diode EvilDiodePrefab;
     float GameTime;
@@ -45,7 +44,161 @@ public class LockPicking : MiniGame
     public float MAX_DIODE_SPEED = 40f;         // Maximum speed a Diode can go
     public float SpeedAdjTime = 0f;             // Time goes on
     public float SpeedAdjNumGates = 1f;         // Number of gates collected        
-    
+
+    #region INIT_START_RESET
+    public override void Init(MiniGameMCP mcp, string sceneName, List<SoundFX.FXInfo> soundFXUsedInScene)
+    {
+        //Debug.Log("LockPicking.Init()");
+        base.Init(mcp, sceneName, soundFXUsedInScene);
+        if (ResultsText != null) ResultsText.gameObject.SetActive(false);
+        if (FindObjectOfType<MCP>() != null)
+        {
+            FindObjectOfType<MCP>().SetupSceneSound(soundFXUsedInScene);
+        }
+    }
+
+    public override void Awake()
+    {
+        base.Awake();
+        Physics.autoSimulation = true;
+        Diode.SetLockPickingComponent(this);
+        EvilDiodePrefab = Resources.Load<Diode>("LockPicking/Evil Diode");
+
+        List<Diode> diodes = FindObjectsOfType<Diode>().ToList();
+        foreach (Diode d in diodes)
+        {
+            if (d.Evil == true) EvilDiodes.Add(d);
+        }
+        foreach (Diode d in EvilDiodes)
+        {
+            d.SetLockPickingComponent(this);
+        }
+
+        this.MCP = FindObjectOfType<MCP>();
+        if (this.MCP == null)
+        {
+            Debug.LogWarning("no MCP yet so load it up");
+            StaticStuff.CreateMCPScene();
+            StartCoroutine(ShutOffUI());
+        }
+    }
+
+    private void Start()
+    {
+        for (int i = 0; i < Rings.Count; i++)
+        {
+            Ring r = Rings[i];
+            MeshCollider mc = r.transform.parent.transform.parent.GetComponent<MeshCollider>();
+            Bounds b = mc.bounds;
+            Vector3 brWorld = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, Camera.main.transform.position.y));
+            Vector3 size = brWorld * 2f;
+            float ratio = size.x / b.size.x;
+            float newY = Camera.main.transform.position.y / ratio;
+            //Debug.Log(i);
+            RingCamYs.Add(newY);
+        }
+        if (IsSolo == true)
+        {
+            if (ResultsText != null) ResultsText.gameObject.SetActive(false);
+            BeginPuzzleStartTime();
+        }
+    }
+    public override void BeginPuzzleStartTime()
+    {
+        //Debug.Log("Lockpicking.BeginPuzzle()");   
+        base.BeginPuzzleStartTime();
+        CenterBlock.transform.position = new Vector3(CenterBlock.transform.position.x, 0f, CenterBlock.transform.position.z);
+        LargestRingDiameter = Rings[Rings.Count - 1].GetComponent<MeshCollider>().bounds.extents.x;
+
+        StartGame();
+    }
+
+    void StartGame()
+    {
+        SetGameState(eGameState.ON);
+        Diode.Moving = true;
+        if (ResultsText != null) ResultsText.gameObject.SetActive(false);
+        GameTime = 0f;
+        // Diode tuning stuff
+        EvilSpawnBegan = false;
+        EvilDiodeTimer = 0f;
+        foreach (Diode d in EvilDiodes)
+        {
+            Destroy(d.gameObject);
+        }
+        EvilDiodes.Clear();
+
+        //List<PathNode> availStartNodes = new List<PathNode>(StartNodes);
+        GatesThisGame.Clear();
+        GatesThisGame = new List<Gate>(Gates);
+        if (Diode.DebugStartNode != null)
+        {
+            Diode.ResetDiodeForGame(Diode.DebugStartNode);
+        }
+        else
+        {
+            int startIndex = Random.Range(0, StartNodes.Count);
+            Diode.ResetDiodeForGame(StartNodes[startIndex]);
+            // usedPathNodes.Add(StartNodes[startIndex]);
+        }
+
+        foreach (Gate g in Gates)
+        {
+            g.gameObject.SetActive(true);
+        }
+    }
+
+    IEnumerator ShowResults(string result, bool success)
+    {
+        if (success == true) SoundFXPlayer.Play("Lock_WinGame");
+        else SoundFXPlayer.Play("Lock_LoseGame");
+        if (MiniGameMCP != null) MiniGameMCP.SavePuzzlesProgress(success);
+        if (success == true) EndPuzzleTime(true);
+        SetGameState(eGameState.OFF);
+
+        if (MiniGameMCP != null)
+        {
+            MiniGameMCP.ShowResultsText(result);
+        }
+        else if (ResultsText != null)
+        {
+            ResultsText.gameObject.SetActive(true);
+            ResultsText.text = result;
+        }
+
+        Diode.Moving = false;
+        foreach (Diode d in EvilDiodes) d.Moving = false;
+        yield return new WaitForSeconds(3);
+        if (ResultsText != null) ResultsText.gameObject.SetActive(false);
+        if (MiniGameMCP != null) MiniGameMCP.HideResultsText();
+        if (success == true)
+        {
+            if (MiniGameMCP != null)
+            {
+                MiniGameMCP.PuzzleFinished();
+            }
+            else if (ResultsText != null)
+            {
+                ResultsText.gameObject.SetActive(true);
+                ResultsText.text = "You beat the level but are not part of an MCP so restart.";
+            }
+        }
+        else
+        {
+            StartGame();
+        }
+    }
+    void SetGameState(eGameState newState)
+    {
+        DialogueSaveState = newState;
+        if (DialogueActive == false)
+        {
+            CurGameState = newState;
+        }
+    }
+    #endregion
+
+    #region DIODES
     public float AdjustDiodeSpeed(float startSpeed)
     {
         // time adjustment
@@ -79,142 +232,84 @@ public class LockPicking : MiniGame
             startNodeFound = SpawnEvilDiodes(evilDiode);
         }
     }
-
-    public override void Init(MiniGameMCP mcp, string sceneName, List<SoundFX.FXInfo> soundFXUsedInScene)
+    public void HitEvilDiode(Diode evilDiode)
     {
-        //Debug.Log("LockPicking.Init()");
-        base.Init(mcp, sceneName, soundFXUsedInScene);
-        /*if (ResultsText == null) ResultsText = MiniGameMCP.ResultsText;
-        if (DebugText == null) DebugText = MiniGameMCP.DebugText;
-        ResultsText.gameObject.SetActive(false);*/
-        if(ResultsText != null) ResultsText.gameObject.SetActive(false);
-
-        if (FindObjectOfType<MCP>() != null)
-        {
-            FindObjectOfType<MCP>().SetupSceneSound(soundFXUsedInScene);
-        }
+        StartCoroutine(ShowResults("You got caught by an enemy Diode!", false));
     }
 
-  //  [Header("Sound")]
-   // public List<SoundFX.FXInfo> SoundFXUsedInScene;
-
-    public override void Awake()
+    bool EvilSpawnBegan;
+    float EvilDiodeTimer;
+    bool SpawnEvilDiodes(Diode respawnDiode = null)
     {
-        base.Awake();
-        Physics.autoSimulation = true;
-        Diode.SetLockPickingComponent(this);
-        EvilDiodePrefab = Resources.Load<Diode>("LockPicking/Evil Diode");
-
-        List<Diode> diodes = FindObjectsOfType<Diode>().ToList();
-        foreach(Diode d in diodes)
+        //int numToSpawn = (int)Mathf.Min((float)NumSpawnAtATime, (float)(MaxEvilDiodes - EvilDiodes.Count));
+        int numToSpawn;
+        if (respawnDiode == null) numToSpawn = (int)Mathf.Min((float)NumSpawnAtATime, (float)(MaxEvilDiodes - EvilDiodes.Count));
+        else numToSpawn = 1;
+        //Debug.Log("SpawnEvilDiodes() numToSpawn: " + numToSpawn);
+        if (numToSpawn == 0)
         {
-            if (d.Evil == true) EvilDiodes.Add(d);
+            Debug.Log("there's no room to spawn any more evil nodes");
+            return false;
         }
-        foreach(Diode d in EvilDiodes)
+        List<PathNode> availStartNodes = new List<PathNode>(StartNodes);
+        if (StartNodes.Contains(Diode.CurPath.Start)) availStartNodes.Remove(Diode.CurPath.Start);
+        foreach (Diode d in EvilDiodes) if (StartNodes.Contains(d.CurPath.Start)) availStartNodes.Remove(d.CurPath.Start);
+        //  Debug.Log("num avail start Nodes: " + availStartNodes.Count);        
+        for (int i = 0; i < numToSpawn; i++)
         {
-            d.SetLockPickingComponent(this);
+            if (availStartNodes.Count == 0)
+            {
+                //     Debug.Log("No more available nodes to spawn an evil diode");
+                return false;
+            }
+            Diode d;
+            if (respawnDiode == null)
+            {
+                d = Object.Instantiate(EvilDiodePrefab, this.transform.parent);
+                EvilDiodes.Add(d);
+                d.SetLockPickingComponent(this);
+                d.StartSpeed = EvilDiodeSpeeds[EvilDiodes.Count - 1];
+            }
+            else
+            {
+                d = respawnDiode;
+            }
+            
+            d.CurSpeed = d.StartSpeed;
+            d.Moving = true;
+            if (d.DebugStartNode != null)
+            {
+                d.ResetDiodeForGame(d.DebugStartNode);
+            }
+            else
+            {
+                int startIndex = Random.Range(0, availStartNodes.Count);
+                PathNode evilNode = availStartNodes[startIndex];
+                availStartNodes.Remove(evilNode);
+                d.ResetDiodeForGame(evilNode);
+            }
         }
-
-        this.MCP = FindObjectOfType<MCP>();
-        if (this.MCP == null)
-        {
-            Debug.LogWarning("no MCP yet so load it up");
-            StaticStuff.CreateMCPScene();
-            StartCoroutine(ShutOffUI());
-        }
+        SoundFXPlayer.Play("Lock_EnemySpawn");
+        return true;
     }
+    #endregion        
 
+    eGameState DialogueSaveState;
     IEnumerator ShutOffUI()
     {
-        while(FindObjectOfType<MCP>() == null)
-        {            
+        while (FindObjectOfType<MCP>() == null)
+        {
             yield return new WaitForEndOfFrame();
         }
         this.MCP = FindObjectOfType<MCP>();
         this.MCP.ShutOffAllUI();
-       // this.MCP.SetupSceneSound(SoundFXUsedInScene);
     }
-
-    private void Start()
-    {
-        for (int i = 0; i < Rings.Count; i++)
-        {
-            Ring r = Rings[i];
-            MeshCollider mc = r.transform.parent.transform.parent.GetComponent<MeshCollider>();
-            Bounds b = mc.bounds;
-            Vector3 brWorld = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, Camera.main.transform.position.y));
-            Vector3 size = brWorld * 2f;
-            float ratio = size.x / b.size.x;
-            float newY = Camera.main.transform.position.y / ratio;
-            //Debug.Log(i);
-            RingCamYs.Add(newY);
-        }
-        if (IsSolo == true)
-        {
-            if (ResultsText != null) ResultsText.gameObject.SetActive(false);
-            BeginPuzzleStartTime();
-        }                
-    }
-    // Start is called before the first frame update
-    public override void BeginPuzzleStartTime()
-    {
-        //Debug.Log("Lockpicking.BeginPuzzle()");   
-        base.BeginPuzzleStartTime();
-        CenterBlock.transform.position = new Vector3(CenterBlock.transform.position.x, 0f, CenterBlock.transform.position.z);              
-        LargestRingDiameter = Rings[Rings.Count-1].GetComponent<MeshCollider>().bounds.extents.x;
-
-        StartGame();
-    }    
-
-    void StartGame()
-    {
-        SetGameState(eGameState.ON); 
-        Diode.Moving = true;
-        if (ResultsText != null) ResultsText.gameObject.SetActive(false);
-        GameTime = 0f;
-        // Diode tuning stuff
-        EvilSpawnBegan = false;
-        EvilDiodeTimer = 0f;
-        foreach(Diode d in EvilDiodes)
-        {
-            Destroy(d.gameObject);
-        }
-        EvilDiodes.Clear();
-
-        //List<PathNode> availStartNodes = new List<PathNode>(StartNodes);
-        GatesThisGame.Clear();
-        GatesThisGame = new List<Gate>(Gates);
-        if (Diode.DebugStartNode != null)
-        {
-            Diode.ResetDiodeForGame(Diode.DebugStartNode);
-        }
-        else
-        {
-            int startIndex = Random.Range(0, StartNodes.Count);
-            Diode.ResetDiodeForGame(StartNodes[startIndex]);
-           // usedPathNodes.Add(StartNodes[startIndex]);
-        }        
-
-        foreach(Gate g in Gates)
-        {
-            g.gameObject.SetActive(true);
-        }
-    }
-
-    eGameState DialogueSaveState;
     public override void ResetPostDialogueState()
     {
         base.ResetPostDialogueState();
         CurGameState = DialogueSaveState;
     }
-    void SetGameState(eGameState newState)
-    {
-        DialogueSaveState = newState;
-        if (DialogueActive == false)
-        {
-            CurGameState = newState;
-        }
-    }
+    
 
     public void CollectGate(Gate gate)
     {
@@ -228,10 +323,7 @@ public class LockPicking : MiniGame
         }        
     }
 
-    public void HitEvilDiode(Diode evilDiode)        
-    {
-        StartCoroutine(ShowResults("You got caught by an enemy Diode!", false));
-    }
+    
     public bool IsDeathNode(PathNode pathNode)
     {
         return DeathNodes.Contains(pathNode);
@@ -241,53 +333,8 @@ public class LockPicking : MiniGame
     {
         StartCoroutine(ShowResults("You are using a debug cheat to win.", true));
     }
-    private void OnGUI()
-    {
-        if (GUI.Button(new Rect(Screen.width - 100, Screen.height / 2 - 100, 100, 100), "Win"))
-        {
-            TMP_WinGame();
-        }        
-    }
-    IEnumerator ShowResults(string result, bool success)
-    {
-        if (success == true) SoundFXPlayer.Play("Lock_WinGame");
-        else SoundFXPlayer.Play("Lock_LoseGame");
-        if (MiniGameMCP != null) MiniGameMCP.SavePuzzlesProgress(success);
-        if(success == true) EndPuzzleTime(true);
-        SetGameState(eGameState.OFF); 
-
-        if(MiniGameMCP != null)
-        {
-            MiniGameMCP.ShowResultsText(result);
-        }
-        else if (ResultsText != null)
-        {
-            ResultsText.gameObject.SetActive(true);
-            ResultsText.text = result;
-        }
-        
-        Diode.Moving = false;
-        foreach (Diode d in EvilDiodes) d.Moving = false;
-        yield return new WaitForSeconds(3);
-        if (ResultsText != null) ResultsText.gameObject.SetActive(false);
-        if (MiniGameMCP != null) MiniGameMCP.HideResultsText();
-        if (success == true)
-        {
-            if (MiniGameMCP != null)
-            {
-                MiniGameMCP.PuzzleFinished();
-            }
-            else if (ResultsText != null)
-            {
-                ResultsText.gameObject.SetActive(true);
-                ResultsText.text = "You beat the level but are not part of an MCP so restart.";
-            }
-        }
-        else
-        {
-            StartGame();
-        }        
-    }
+    
+    
 
     private void FixedUpdate()
     {
@@ -389,71 +436,21 @@ public class LockPicking : MiniGame
         }        
         
     }
-    bool SpawnEvilDiodes(Diode respawnDiode = null)
+
+    void OnGUI()
     {
-        //int numToSpawn = (int)Mathf.Min((float)NumSpawnAtATime, (float)(MaxEvilDiodes - EvilDiodes.Count));
-        int numToSpawn;
-        if (respawnDiode == null) numToSpawn = (int)Mathf.Min((float)NumSpawnAtATime, (float)(MaxEvilDiodes - EvilDiodes.Count));
-        else numToSpawn = 1;
-        //Debug.Log("SpawnEvilDiodes() numToSpawn: " + numToSpawn);
-        if(numToSpawn == 0)
+        if (GUI.Button(new Rect(0, 100, 100, 100), "Reset"))
         {
-            Debug.Log("there's no room to spawn any more evil nodes");
-            return false;
+            StartGame();
         }
-        List<PathNode> availStartNodes = new List<PathNode>(StartNodes);
-        if (StartNodes.Contains(Diode.CurPath.Start)) availStartNodes.Remove(Diode.CurPath.Start);
-        foreach(Diode d in EvilDiodes) if(StartNodes.Contains(d.CurPath.Start)) availStartNodes.Remove(d.CurPath.Start);
-      //  Debug.Log("num avail start Nodes: " + availStartNodes.Count);        
-        for (int i=0; i<numToSpawn; i++)
+        if (GUI.Button(new Rect(Screen.width - 100, Screen.height / 2 - 100, 100, 100), "Win"))
         {
-            if(availStartNodes.Count == 0)
-            {
-           //     Debug.Log("No more available nodes to spawn an evil diode");
-                return false;
-            }
-            Diode d;
-            if (respawnDiode == null )
-            {
-                d = Object.Instantiate(EvilDiodePrefab, this.transform.parent);
-                EvilDiodes.Add(d);
-                d.SetLockPickingComponent(this);
-                d.StartSpeed = EvilDiodeSpeeds[EvilDiodes.Count - 1];
-            }
-            else
-            {
-                d = respawnDiode;
-            }
-            //Diode d = Object.Instantiate(EvilDiodePrefab, this.transform.parent);
-            //EvilDiodes.Add(d);
-            //d.SetLockPickingComponent(this);
-            //d.StartSpeed = EvilDiodeSpeeds[EvilDiodes.Count - 1];
-            d.CurSpeed = d.StartSpeed;
-            d.Moving = true;
-            if (d.DebugStartNode != null)
-            {
-                d.ResetDiodeForGame(d.DebugStartNode);
-            }
-            else
-            {
-                int startIndex = Random.Range(0, availStartNodes.Count);
-                PathNode evilNode = availStartNodes[startIndex];
-                availStartNodes.Remove(evilNode);
-                d.ResetDiodeForGame(evilNode);
-            }
+            TMP_WinGame();
         }
-        SoundFXPlayer.Play("Lock_EnemySpawn");
-        return true;
     }
-
-    
-
-    bool EvilSpawnBegan;
-    float EvilDiodeTimer;
-    
+ 
     // ou can rotate a direction Vector3 with a Quaternion by multiplying the quaternion with the direction(in that order)
     //    Then you just use Quaternion.AngleAxis to create the rotation
-
     public void RotateRings()
     {
         foreach (Ring r in Rings)

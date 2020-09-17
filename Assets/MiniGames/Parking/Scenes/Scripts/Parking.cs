@@ -17,34 +17,40 @@ public class Parking : MiniGame
 
     enum eGameState { OFF, NORMAL, ROTATE_PAD };
     eGameState CurGameState = eGameState.OFF;
-    
-    public ParkingShip ActiveShip = null;
+
+    #region RESET_DATA
+    ParkingShip ActiveShip = null;
     ParkingShip ClickedShip = null;
     bool TouchingRotatePad = false;
-
     Vector3 CurTouchPos = Vector3.zero;
     Vector3 LastTouchPos = Vector3.zero;
 
     public List<ParkingShip> AllShips = new List<ParkingShip>();
     public List<ParkingShip> TargetShips = new List<ParkingShip>();
     public GameObject LiftPad;
+
+    public GameObject RotatePlatform;
+    public BoxCollider RotateBox01;
+    public BoxCollider RotateBox02;
+    public GameObject RotateParent;
+    List<GameObject> DebugSpheres = new List<GameObject>();
+    public List<ParkingShip> RotateShipList = new List<ParkingShip>();
+    public List<ParkingShip> LiftPadShipList = new List<ParkingShip>();
+    GameObject ContainGO;
+    #endregion
+
     Quaternion LerpRotStart, LerpRotEnd;
     float LerpStartTime, LerpDurationTime;
 
     public Text ResultsText;
+    MCP MCP;
     //[Header("Debug")]
     //public Text DebugText;
 
     public override void Init(MiniGameMCP mcp, string sceneName, List<SoundFX.FXInfo> soundFXUsedInScene)
     {
         //Debug.Log("Parking.Init()");
-        base.Init(mcp, sceneName, soundFXUsedInScene);
-        /*if (ResultsText == null) ResultsText = MiniGameMCP.ResultsText;
-        if (DebugText == null && MiniGameMCP.DebugText != null)
-        {
-            DebugText = MiniGameMCP.DebugText;
-            DebugText.text = "";
-        }*/
+        base.Init(mcp, sceneName, soundFXUsedInScene);        
         if(ResultsText != null ) ResultsText.gameObject.SetActive(false);
 
         if(FindObjectOfType<MCP>() != null)
@@ -53,9 +59,6 @@ public class Parking : MiniGame
         }
     }
 
-    MCP MCP;
-  //  [Header("Sound")]
-   // public List<SoundFX.FXInfo> SoundFXUsedInScene;
     private void Awake()
     {
         base.Awake();       
@@ -69,31 +72,17 @@ public class Parking : MiniGame
         }
     }
 
-    IEnumerator ShutOffUI()
-    {
-        while (FindObjectOfType<MCP>() == null)
-        {
-            yield return new WaitForEndOfFrame();
-        }
-        this.MCP = FindObjectOfType<MCP>();
-        this.MCP.ShutOffAllUI();
-       // this.MCP.SetupSceneSound(SoundFXUsedInScene);
-    }
-
     private void Start()
-    {        
+    {
         if (IsSolo == true)
         {
             if (ResultsText != null) ResultsText.gameObject.SetActive(false);
             BeginPuzzleStartTime();
         }
     }
-
-    
     public override void BeginPuzzleStartTime()
     {
         base.BeginPuzzleStartTime();
-       // Debug.Log("Parking.BeginPuzzle()");
         TouchState = eTouchState.NONE;
         SetGameState(eGameState.NORMAL);
         ContainGO = new GameObject();
@@ -110,6 +99,35 @@ public class Parking : MiniGame
                 sphere.transform.localScale = new Vector3(.5f, .5f, .5f);
                 sphere.transform.parent = ship.transform;
             }
+        }
+    }    
+    void ResetGame()
+    {
+        ActiveShip = null;
+        ClickedShip = null;
+        TouchingRotatePad = false;
+        CurTouchPos = Vector3.zero;
+        LastTouchPos = Vector3.zero;
+        foreach(ParkingShip ship in AllShips)
+        {
+            ship.ResetItem();
+        }
+
+        RotateParent.transform.rotation = Quaternion.identity;
+        RotateShipList.Clear();
+        DebugSpheres.Clear();
+        RotateShipList.Clear();
+        LiftPadShipList.Clear();
+
+        base.BeginPuzzleStartTime();
+        SetGameState(eGameState.NORMAL);
+    }
+
+    public void OnGUI()
+    {
+        if (GUI.Button(new Rect(0, 200, 100, 100), "Reset"))
+        {
+            ResetGame();
         }
     }
 
@@ -472,6 +490,17 @@ public class Parking : MiniGame
 #endif
     }
 
+    IEnumerator ShutOffUI()
+    {
+        while (FindObjectOfType<MCP>() == null)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+        this.MCP = FindObjectOfType<MCP>();
+        this.MCP.ShutOffAllUI();
+        // this.MCP.SetupSceneSound(SoundFXUsedInScene);
+    }
+
     public Vector3 GetClosestCenteredPoint(GameObject item )
     {
        // Debug.Log("GetClosestCenteredPoint() " + item.name);
@@ -515,14 +544,7 @@ public class Parking : MiniGame
         return newRot;
     }
 
-    public GameObject RotatePlatform;
-    public BoxCollider RotateBox01;
-    public BoxCollider RotateBox02;
-    public GameObject RotateParent;
-    List<GameObject> DebugSpheres = new List<GameObject>();
-    public List<ParkingShip> RotateShipList = new List<ParkingShip>();
-    public List<ParkingShip> LiftPadShipList = new List<ParkingShip>();
-    GameObject ContainGO;    
+    
        
     bool AllShipsLowered()
     {

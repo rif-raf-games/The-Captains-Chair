@@ -16,12 +16,22 @@ public class ParkingShip : MonoBehaviour
 
     Vector3 LerpPosStart, LerpPosEnd;    
     float LerpStartTime, LerpDurationTime;
-
+    
+    MiniGame.MiniGameTransformSave StartingTrans;
+    
     private void Start()
     {
-        Parking = transform.parent.GetComponent<Parking>();//FindObjectOfType<Parking>();
+        Parking = transform.parent.GetComponent<Parking>();//FindObjectOfType<Parking>();        
+        StartingTrans = new MiniGame.MiniGameTransformSave(this.transform);
         CurState = eParkingShipState.LOWERED;
         MoveDir = eMoveDir.NONE;
+    }
+
+    public void ResetItem()
+    {
+        CurState = eParkingShipState.LOWERED;
+        MoveDir = eMoveDir.NONE;
+        StartingTrans.ResetTransform(this.transform);
     }
     
     public eParkingShipState GetState()
