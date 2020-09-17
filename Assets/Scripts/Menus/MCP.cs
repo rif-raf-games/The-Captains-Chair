@@ -386,7 +386,7 @@ public class MCP : MonoBehaviour
         yield return StartCoroutine(FadeObjects(curImages, fadeTime, 1f));
         LoadingImage.texture = defaultTexture;
         LoadingScreen.SetActive(false);
-        //BGMusic.ResetVolume();
+        BGMusic.ResetVolume();
     }
 
     public Text DebugText;
