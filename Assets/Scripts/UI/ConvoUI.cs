@@ -181,14 +181,14 @@ public class ConvoUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(TextTyping == true && IsInteractive == true && Input.GetMouseButtonUp(0))
+        /*if(TextTyping == true && IsInteractive == true && Input.GetMouseButtonUp(0))
         {
           //  Debug.LogError("shut off via button");
             StopCoroutine(TypewriterCoroutine);
             SpeakerText.text = CurDialogueText;
             foreach (GameObject go in DialogueOptions) go.GetComponent<Button>().enabled = true;
             TextTyping = false;
-        }
+        }*/
     }
    
     public void EndConversation()
