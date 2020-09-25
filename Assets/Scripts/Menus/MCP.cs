@@ -326,6 +326,7 @@ public class MCP : MonoBehaviour
             Destroy(captain.transform.GetChild(1).gameObject);
             CaptainAssets.transform.parent = captain.transform;
             CaptainAssets.transform.localPosition = Vector3.zero;
+            CaptainAssets.transform.localPosition = Quaternion.identity;
             yield return new WaitForEndOfFrame();
             captain.GetComponent<Animator>().Rebind();            
         }        
