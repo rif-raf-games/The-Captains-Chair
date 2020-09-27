@@ -18,7 +18,7 @@ public class CCPlayer : CharacterEntity
 
     private bool MovementBlocked = false;
     private bool DealingWithElevator = false;
-    private bool WaitingForFollowersOnElevator = false;
+  //  private bool WaitingForFollowersOnElevator = false;
     TheCaptainsChair CaptainsChair;
     Rigidbody RigidBody;
 
@@ -198,14 +198,14 @@ public class CCPlayer : CharacterEntity
             transform.rotation = Quaternion.LookRotation(newDir);
           }        
 
-          if (WaitingForFollowersOnElevator == true)
+         /* if (WaitingForFollowersOnElevator == true)
           {
               if(Loop.NavMeshDone())
               {
                  // Debug.Log("Loop is ready to rock");
                   StartElevatorRide();
               }
-          }          
+          } */         
     }
 
     public int Adjustment = 0;
@@ -267,7 +267,7 @@ public class CCPlayer : CharacterEntity
                         ToggleMovementBlocked(true);
                         if (IsLoopFollowing() == true)
                         {
-                            WaitingForFollowersOnElevator = true;
+                            //WaitingForFollowersOnElevator = true;
                             Loop.SetShouldFollowEntity(false);
                             Loop.SetNavMeshDest(other.gameObject.transform.parent.GetChild(1).position);
                         }
@@ -290,15 +290,16 @@ public class CCPlayer : CharacterEntity
                 else
                 {
                     StaticStuff.PrintTriggerEnter("Reached elevator EndPos so start movement");
-                    if (WaitingForFollowersOnElevator == true)
+                    StartCoroutine(StartElevatorRide());
+                    /*if (WaitingForFollowersOnElevator == true)
                     {
                         //Debug.Log("We're ready to ride the elevator but we're still waiting for Loop");
                         return;
                     }
                     else
                     {
-                        StartElevatorRide();
-                    }
+                        StartCoroutine(StartElevatorRide());
+                    }*/
                 }
             }
             else
@@ -312,17 +313,29 @@ public class CCPlayer : CharacterEntity
         }
     }
 
-    void StartElevatorRide()
+    IEnumerator StartElevatorRide()
     {
         ToggleNavMeshAgent(false);
-        transform.parent = SelectedElevator.transform;
-        if (WaitingForFollowersOnElevator == true)
-        {
-            //WaitingForFollowersOnElevator = false;
-            Loop.ToggleNavMeshAgent(false);
-            Loop.transform.parent = SelectedElevator.transform;
-        }
+        transform.parent = SelectedElevator.transform;        
         SelectedElevator.transform.GetChild(0).GetComponent<SphereCollider>().enabled = false;
+
+        Quaternion startRot = this.transform.rotation;
+        Vector3 curRot = this.transform.eulerAngles;
+        float yAdj = curRot.y;
+        yAdj = Mathf.Abs(yAdj);
+        if (yAdj > 180f) yAdj = 360f - yAdj;
+        float rotTime = yAdj / 180f;
+        float curTime = 0f;
+        while(curTime < rotTime)
+        {
+            curTime += Time.deltaTime;
+            this.transform.rotation = Quaternion.Lerp(startRot, Quaternion.identity, curTime / rotTime);
+            yield return new WaitForEndOfFrame();
+        }
+        this.transform.rotation = Quaternion.identity;
+       // Debug.Log("StartSelectedElevator() curRot: " + curRot.ToString("F2") + ", yAdj: " + yAdj + ", rotTime: " + rotTime.ToString("F2"));
+        
+        
         int newFloor = SelectedElevator.BeginMovement();
         foreach (Elevator e in Elevators)
         {
@@ -331,6 +344,7 @@ public class CCPlayer : CharacterEntity
                 e.BeginMovement();
             }
         }
+        yield return new WaitForEndOfFrame();
     }
 
     public void ElevatorDoneMoving(Elevator caller)
@@ -339,13 +353,7 @@ public class CCPlayer : CharacterEntity
         {
             // Debug.Log("Elevator done moving, so move player back to entrance");
             ToggleNavMeshAgent(true);
-            SetNavMeshDest(SelectedElevator.transform.GetChild(3).transform.position);
-            if (WaitingForFollowersOnElevator == true)
-            {
-                WaitingForFollowersOnElevator = false;
-                Loop.ToggleNavMeshAgent(true);
-                Loop.SetShouldFollowEntity(true);
-            }
+            SetNavMeshDest(SelectedElevator.transform.GetChild(3).transform.position);          
         }
     }
 
@@ -386,10 +394,10 @@ public class CCPlayer : CharacterEntity
         if (DebugText != null)
         {
                         
-            DebugText.text = "";
-            DebugText.text += "MovementBlocked: " + MovementBlocked.ToString() + "\n";
-            DebugText.text += "Loop following? " + IsLoopFollowing() + "\n";
-            DebugText.text += "WaitingForFollowersOnElevator: " + WaitingForFollowersOnElevator + "\n";
+           // DebugText.text = "";
+           // DebugText.text += "MovementBlocked: " + MovementBlocked.ToString() + "\n";
+          //  DebugText.text += "Loop following? " + IsLoopFollowing() + "\n";
+          //  DebugText.text += "WaitingForFollowersOnElevator: " + WaitingForFollowersOnElevator + "\n";
 
             /*DebugText.text += "m_DeltaPos: " + m_DeltaPos.ToString("F3") + "\n";
             DebugText.text += "m_Speed: " + m_Speed + "\n";
