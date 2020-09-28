@@ -27,24 +27,28 @@ public class PlazaFade : MonoBehaviour
         }
     }
 
-   // public Text DebugText;
-   // public GameObject OriginSphere, HitSphere;
+    public Text DebugText;
+    public GameObject OriginSphere, HitSphere;
     public Vector3 Offset = Vector3.zero;
     public GameObject CurrentFadedBuilding = null;
+    public bool Method = true;
     // FixedUpdate is called once per frame
     void FixedUpdate()
     {
-        Vector3 origin = this.transform.position;
-        //OriginSphere.transform.position = origin;
-        Vector3 direction = (Captain.transform.position + Offset) - this.transform.position;
-       // origin += direction * 1000f;
+        Vector3 origin, direction;       
+        origin = Captain.transform.position + Offset;
+        direction = this.transform.position - origin;
+        //origin = this.transform.position;
+        //direction = (Captain.transform.position + Offset) - this.transform.position;        
+        OriginSphere.transform.position = origin;
+
         RaycastHit hit;
         if( Physics.Raycast(origin, direction, out hit, Mathf.Infinity, PlayerPlazaMask) == true)
         {
-           // Debug.DrawRay(this.transform.position, direction * hit.distance, Color.yellow);                        
-           // string s = "hit: " + hit.collider.name;
-           // DebugText.text = s;
-           // HitSphere.transform.position = hit.point;            
+            Debug.DrawRay(this.transform.position, direction * hit.distance, Color.yellow);                        
+            string s = "hit: " + hit.collider.name;
+            DebugText.text = s;
+            HitSphere.transform.position = hit.point;            
             
             if(hit.collider.gameObject.layer == LayerMask.NameToLayer("Plaza_Fade"))
             {
