@@ -19,11 +19,12 @@ public class PlazaFade : MonoBehaviour
         GameObject[] gos = FindObjectsOfType<GameObject>();
         foreach(GameObject go in gos)
         {
-            if(go.layer == LayerMask.NameToLayer("Plaza_Fade") && go.GetComponent<BoxCollider>() != null)
+            go.AddComponent<Room>();
+            if (go.layer == LayerMask.NameToLayer("Plaza_Fade") && go.GetComponent<BoxCollider>() != null)
             {
                 //Debug.Log("swapping collider on: " + go.name);
                 DestroyImmediate(go.GetComponent<BoxCollider>());
-                go.AddComponent<MeshCollider>();
+                go.AddComponent<MeshCollider>();                
             }
         }
     }
@@ -53,7 +54,9 @@ public class PlazaFade : MonoBehaviour
             if (CurrentFadedBuildings.Contains(hit.collider) == false)
             {
                 CurrentFadedBuildings.Add(hit.collider);
-                hit.collider.GetComponent<MeshRenderer>().enabled = false;
+                //hit.collider.GetComponent<MeshRenderer>().enabled = false;
+                //Debug.Log("fade out building: " + hit.collider.name);
+                hit.collider.GetComponent<Room>().ToggleAlpha(.3f, false, true);
             }
         }
         List<Collider> collidersToRemove = new List<Collider>();
@@ -66,8 +69,9 @@ public class PlazaFade : MonoBehaviour
         }
         foreach(Collider c in collidersToRemove)
         {
-            if (c == null) Debug.Log("what the fuck");
-            c.GetComponent<MeshRenderer>().enabled = true;
+           // Debug.Log("fade up: " + c.name);
+            //c.GetComponent<MeshRenderer>().enabled = true;
+            c.GetComponent<Room>().ToggleAlpha(1f, false, true);
             CurrentFadedBuildings.Remove(c);
         }        
         string s = CurrentFadedBuildings.Count + "\n";

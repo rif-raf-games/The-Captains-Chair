@@ -7,43 +7,11 @@ public class Room : MonoBehaviour
 {
    // public enum eCollisionType { NONE, SHIP_COLLIDER, RAYCAST };
     //eCollisionType CurCollisionType;
-    MeshRenderer[] ChildMeshRenderers;
-    List<Material> ChildMaterials = new List<Material>();
+    public MeshRenderer[] ChildMeshRenderers;
+    public List<Material> ChildMaterials = new List<Material>();
     public List<Material> NeverOpaqueMaterials = new List<Material>();
     float FadeTime;
-
-
-    public void DEBUG_SetShader(string shaderName, Shader shader)
-    {
-        foreach(Material material in ChildMaterials)
-        {
-            material.shader = UnityEngine.Shader.Find(shaderName);
-            //material.shader = shader;
-        }
-    }
-
-    public void DEBUG_SetOpaque()
-    {
-        foreach (Material material in ChildMaterials)
-        {
-            StaticStuff.SetOpaque(material);
-        }
-    }
-    public void DEBUG_SetFade()
-    {
-        foreach (Material material in ChildMaterials)
-        {
-            StaticStuff.SetFade(material);
-        }
-    }
-    public void DEBUG_SetTransparent()
-    {
-        foreach (Material material in ChildMaterials)
-        {
-            StaticStuff.SetTransparent(material);
-        }
-    }
-
+    
     private void Awake()
     {
         TheCaptainsChair cChair = FindObjectOfType<TheCaptainsChair>();
@@ -59,12 +27,12 @@ public class Room : MonoBehaviour
         {
             List<Material> mrMaterials = new List<Material>();
             mr.GetMaterials(mrMaterials);
-            //Debug.Log("------ This MR " + mr.name + " has " + mrMaterials.Count + " materials");
+          //  Debug.Log("------ This MR " + mr.name + " has " + mrMaterials.Count + " materials");
             addToNeverOpaque = mr.tag.Equals("Never Opaque");
             foreach (Material material in mrMaterials)            
             {               
                 ChildMaterials.Add(material);
-                material.shader = UnityEngine.Shader.Find("RifRafStandard");
+                material.shader = UnityEngine.Shader.Find("RifRafStandard");                
                 if (addToNeverOpaque) NeverOpaqueMaterials.Add(material);
                 /*string rt = material.GetTag("RenderType", false, "fuck me");
                 if (rt.Contains("Opaq")) Debug.Log(rt);
@@ -121,14 +89,10 @@ public class Room : MonoBehaviour
         }              
     }    
 
-    // Hint system:
-    // Activity.ID = determines free roam or if you're in a mini game
-    // 
-
     List<Material> NPCMaterials = new List<Material>();
     float ToggleTime, ToggleValue;  
     string Result;    
-    public void ToggleAlpha(float alpha, bool skipLerp = false)
+    public void ToggleAlpha(float alpha, bool skipLerp = false, bool isPlaza = false)
     {
         for (int i = 0; i < SceneManager.sceneCount; i++)
         {
@@ -141,44 +105,47 @@ public class Room : MonoBehaviour
 
         ToggleTime = Time.time;
         ToggleValue = alpha;        
-       // Debug.Log("---------------------------------------ToggleAlpha from: " + ChildMaterials[0].color.a + " to: " + alpha + " skipLerp: " + skipLerp);
+       // Debug.Log("---------------------------------------ToggleAlpha from: " + ChildMaterials[0].color.a + " to: " + alpha + " skipLerp: " + skipLerp + ", isPlaza: " + isPlaza);
         if (ChildMaterials[0].color.a != alpha)
         {                       
             if(skipLerp == false ) CurMode = eRenderMode.TRANSITION;
             SetupLerp(ChildMaterials[0].color.a, alpha);
-            this.gameObject.SetActive(true);
-
             NPCMaterials.Clear();
-            int layerMask = LayerMask.GetMask("NPC");
-            BoxCollider box = GetComponent<BoxCollider>();            
-            if (box == null) box = transform.parent.GetComponent<BoxCollider>();//box = transform.GetChild(0).GetComponent<BoxCollider>();
-            Collider[] colliders = Physics.OverlapBox(box.bounds.center, box.size / 2, transform.rotation, layerMask);
-            if(colliders.Length != 0)
+
+            if (isPlaza == false)
             {
-                //Debug.Log("***********************this room: " + this.name + " has " + colliders.Length + " NPC's in it that we're going to turn to alpha: " + alpha );
-               // Debug.Log("before " + ChildMaterials.Count);
-                foreach(Collider c in colliders)
+                this.gameObject.SetActive(true);
+                int layerMask = LayerMask.GetMask("NPC");
+                BoxCollider box = GetComponent<BoxCollider>();
+                if (box == null) box = transform.parent.GetComponent<BoxCollider>();//box = transform.GetChild(0).GetComponent<BoxCollider>();
+                Collider[] colliders = Physics.OverlapBox(box.bounds.center, box.size / 2, transform.rotation, layerMask);
+                if (colliders.Length != 0)
                 {
-                   // Debug.Log("this collider is: " + c.name);
-                    Renderer[] childRs = c.GetComponentsInChildren<Renderer>();
-                    foreach (Renderer mr in childRs)
+                    //Debug.Log("***********************this room: " + this.name + " has " + colliders.Length + " NPC's in it that we're going to turn to alpha: " + alpha );
+                    // Debug.Log("before " + ChildMaterials.Count);
+                    foreach (Collider c in colliders)
                     {
-                        List<Material> mrMaterials = new List<Material>();
-                        mr.GetMaterials(mrMaterials);
-                        foreach (Material material in mrMaterials)
+                        // Debug.Log("this collider is: " + c.name);
+                        Renderer[] childRs = c.GetComponentsInChildren<Renderer>();
+                        foreach (Renderer mr in childRs)
                         {
-                          //  Debug.Log("material in this NPC: " + material.name);
-                            material.shader = UnityEngine.Shader.Find("RifRafStandard");
-                            NPCMaterials.Add(material);                            
+                            List<Material> mrMaterials = new List<Material>();
+                            mr.GetMaterials(mrMaterials);
+                            foreach (Material material in mrMaterials)
+                            {
+                                //  Debug.Log("material in this NPC: " + material.name);
+                                material.shader = UnityEngine.Shader.Find("RifRafStandard");
+                                NPCMaterials.Add(material);
+                            }
                         }
                     }
+                    // Debug.Log("those NPC's had " + NPCMaterials.Count + " materials in child NPC's");
+                    foreach (Material m in NPCMaterials) ChildMaterials.Add(m);
+                    // Debug.Log("after " + ChildMaterials.Count);
+                    // foreach (Material material in ChildMaterials) Debug.Log(material.name);
                 }
-               // Debug.Log("those NPC's had " + NPCMaterials.Count + " materials in child NPC's");
-                foreach (Material m in NPCMaterials) ChildMaterials.Add(m);
-               // Debug.Log("after " + ChildMaterials.Count);
-               // foreach (Material material in ChildMaterials) Debug.Log(material.name);
             }
-            //skipLerp = true;
+                        
            // if (colliders.Length != 0) Debug.Log("about to do stuff: " + ChildMaterials.Count);
             foreach (Material material in ChildMaterials)
             {                
@@ -215,7 +182,38 @@ public class Room : MonoBehaviour
             Debug.Log(ToggleTime.ToString("F2"));
             Debug.Log(Result);            
         }
-    }    
+    }
+
+    public void DEBUG_SetShader(string shaderName, Shader shader)
+    {
+        foreach (Material material in ChildMaterials)
+        {
+            material.shader = UnityEngine.Shader.Find(shaderName);
+            //material.shader = shader;
+        }
+    }
+
+    public void DEBUG_SetOpaque()
+    {
+        foreach (Material material in ChildMaterials)
+        {
+            StaticStuff.SetOpaque(material);
+        }
+    }
+    public void DEBUG_SetFade()
+    {
+        foreach (Material material in ChildMaterials)
+        {
+            StaticStuff.SetFade(material);
+        }
+    }
+    public void DEBUG_SetTransparent()
+    {
+        foreach (Material material in ChildMaterials)
+        {
+            StaticStuff.SetTransparent(material);
+        }
+    }
 
     /*void SetOpaque(Material material)
     {

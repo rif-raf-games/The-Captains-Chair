@@ -122,8 +122,7 @@ public class CCPlayer : CharacterEntity
                 mask = LayerMask.GetMask("ITrigger");
                 ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask))
-                {
-                   // Debug.Log("clicked a trigger");
+                {                   
                     // we clicked on an ITrigger, so figure out which collider we need to check, then check if the Player is inside
                     mask = LayerMask.GetMask("Player");
                     GameObject container = hit.collider.transform.GetChild(0).gameObject;
