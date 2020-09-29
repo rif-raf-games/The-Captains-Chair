@@ -2,18 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public class PlazaFade : MonoBehaviour
 {
     CCPlayer Captain;
-    int PlayerPlazaMask;
+    int PlazaMask;
     // Start is called before the first frame update
     void Start()
     {
        // Debug.Log("PlazaFade.Start()");
         Captain = FindObjectOfType<CCPlayer>();
-        PlayerPlazaMask = 1 << LayerMask.NameToLayer("Player");
-        PlayerPlazaMask |= (1 << LayerMask.NameToLayer("Plaza_Fade"));
+        PlazaMask = 1 << LayerMask.NameToLayer("Plaza_Fade");
+        //PlazaMask |= (1 << LayerMask.NameToLayer("Player"));
 
         GameObject[] gos = FindObjectsOfType<GameObject>();
         foreach(GameObject go in gos)
@@ -28,9 +29,10 @@ public class PlazaFade : MonoBehaviour
     }
 
     public Text DebugText;
-    public GameObject OriginSphere, HitSphere;
+    //public GameObject OriginSphere, HitSphere;
     public Vector3 Offset = Vector3.zero;
-    public GameObject CurrentFadedBuilding = null;
+    //public GameObject CurrentFadedBuilding = null;
+    public List<Collider> CurrentFadedBuildings = new List<Collider>();
     public bool Method = true;
     // FixedUpdate is called once per frame
     void FixedUpdate()
@@ -38,36 +40,43 @@ public class PlazaFade : MonoBehaviour
         Vector3 origin, direction;       
         origin = Captain.transform.position + Offset;
         direction = this.transform.position - origin;
-        //origin = this.transform.position;
-        //direction = (Captain.transform.position + Offset) - this.transform.position;        
-        OriginSphere.transform.position = origin;
+       
+        //OriginSphere.transform.position = origin;
 
-        RaycastHit hit;
-        if( Physics.Raycast(origin, direction, out hit, Mathf.Infinity, PlayerPlazaMask) == true)
+        List<RaycastHit> hits = Physics.RaycastAll(origin, direction, Mathf.Infinity, PlazaMask).ToList();
+        List<Collider> hitsColliders = new List<Collider>();        
+        foreach(RaycastHit hit in hits)
         {
-            Debug.DrawRay(this.transform.position, direction * hit.distance, Color.yellow);                        
+            hitsColliders.Add(hit.collider);
+            if (CurrentFadedBuildings.Contains(hit.collider) == false)
+            {
+                CurrentFadedBuildings.Add(hit.collider);
+                hit.collider.GetComponent<MeshRenderer>().enabled = false;
+            }
+        }
+        List<Collider> collidersToRemove = new List<Collider>();
+        foreach(Collider c in CurrentFadedBuildings)
+        {
+            if(hitsColliders.Contains(c) == false)
+            {
+                collidersToRemove.Add(c);                
+            }
+        }
+        foreach(Collider c in collidersToRemove)
+        {
+            c.GetComponent<MeshRenderer>().enabled = true;
+            CurrentFadedBuildings.Remove(c);
+        }        
+        string s = CurrentFadedBuildings.Count + "\n";
+        foreach(Collider c in CurrentFadedBuildings)
+        {
+            s += c.name + "\n";
+        }
+        DebugText.text = s;
+    }
+}/*Debug.DrawRay(this.transform.position, direction * hit.distance, Color.yellow);                        
             string s = "hit: " + hit.collider.name;
             DebugText.text = s;
-            HitSphere.transform.position = hit.point;            
-            
-            if(hit.collider.gameObject.layer == LayerMask.NameToLayer("Plaza_Fade"))
-            {
-                CurrentFadedBuilding = hit.collider.gameObject;
-                MeshRenderer mr = hit.collider.GetComponent<MeshRenderer>();
-                mr.enabled = false;
-            }
-            else if(CurrentFadedBuilding != null)
-            {
-                MeshRenderer mr = CurrentFadedBuilding.GetComponent<MeshRenderer>();
-                mr.enabled = true;
-                CurrentFadedBuilding = null;
-            }                        
-        }
-        else if(CurrentFadedBuilding != null)
-        {
-            MeshRenderer mr = CurrentFadedBuilding.GetComponent<MeshRenderer>();
-            mr.enabled = true;
-            CurrentFadedBuilding = null;
-        }
-    }
-}
+            HitSphere.transform.position = hit.point;    */
+//origin = this.transform.position;
+//direction = (Captain.transform.position + Offset) - this.transform.position;        
