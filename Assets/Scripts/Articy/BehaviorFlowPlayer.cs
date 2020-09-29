@@ -408,14 +408,14 @@ public class BehaviorFlowPlayer : MonoBehaviour
                                 wm.ReleaseWanderPoint(actionState.infoObject.GetComponent<WanderPoint>());
                             }
                             break;
-                        case Action.Bark:
+                        /*case Action.Bark:
                             actionState.timer += Time.deltaTime;
                             if (actionState.timer > 3f)
                             {
                                 actionState.actionObject.GetComponent<NPC>().ToggleBarkText(false);
                                 actionState.isActionDone = true;
                             }
-                            break;
+                            break;*/
                         case Action.TurnTowardsEachOther:
                             Debug.LogError("We should never get to Action.TurnTowardsEachOther here because the Action(s) for each ActionState on the characters turning towards each other were both changed to Action.TurnTowards");
                             yield break;
@@ -546,11 +546,11 @@ public class BehaviorFlowPlayer : MonoBehaviour
                 if (ce == null) { Debug.LogError("Can't tell an object that's not a Player/NPC/AmbientEntity to wander to a wander point: " + actionState.actionObject.name); return false; }
                 actionState.vectorData = wp.transform.position;
                 break;
-            case Action.Bark:
+            /*case Action.Bark:
                 NPC ae = actionState.actionObject.GetComponent<NPC>();
                 if (ae == null) { Debug.LogError("There's no NPC on the object you want a Bark action for: " + actionState.actionObject.name); return false; }
                 ae.SetBarkText(actionState.actionInfo);
-                break;
+                break;*/
             case Action.Follow:
                 GameObject followObject = GameObject.Find(actionState.actionInfo);
                 if (followObject == null) { Debug.LogError("Can't follow an object that's not in the scene: " + actionState.actionInfo); return false; }
@@ -609,9 +609,9 @@ public class BehaviorFlowPlayer : MonoBehaviour
             case Action.Wander:
                 ce.SetNavMeshDest(actionState.vectorData);
                 break;
-            case Action.Bark:
+           /* case Action.Bark:
                 actionState.actionObject.GetComponent<NPC>().ToggleBarkText(true);
-                break;
+                break;*/
         }
 
         return true;
@@ -626,9 +626,9 @@ public class BehaviorFlowPlayer : MonoBehaviour
                 ce = actionState.actionObject.GetComponent<CharacterEntity>();
                 ce.StopAnim();
                 break;
-            case Action.Bark:
+           /* case Action.Bark:
                 actionState.actionObject.GetComponent<NPC>().ToggleBarkText(false);
-                break;
+                break;*/
             case Action.WalkToLocation:
             case Action.WalkToObject:
                 ce = actionState.actionObject.GetComponent<CharacterEntity>();

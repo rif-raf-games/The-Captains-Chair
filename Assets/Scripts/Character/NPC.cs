@@ -9,7 +9,7 @@ public class NPC : CharacterEntity
 {    
     Character_Action_List_Template CurBehavior;
     List<Character_Action_List_Template> Behaviors = new List<Character_Action_List_Template>();
-    TextMesh BarkText;
+    //TextMesh BarkText;
     
     // Start is called before the first frame update
     public override void Start()
@@ -17,9 +17,9 @@ public class NPC : CharacterEntity
         //Debug.Log(this.name + " NPC.Start()");
         base.Start();
         
-        BarkText = GetComponentInChildren<TextMesh>();
-        if (BarkText == null) { Debug.LogError("There's no TextMesh on this NPC: " + this.gameObject.name); return; }
-        ToggleBarkText(false);
+        //BarkText = GetComponentInChildren<TextMesh>();
+       // if (BarkText == null) { Debug.LogError("There's no TextMesh on this NPC: " + this.gameObject.name); return; }
+       // ToggleBarkText(false);
        
         AI_Template t = ArticyAIReference.GetObject() as AI_Template;
         if (t == null) { Debug.LogWarning("This NPC: " + this.name + " does not have an AI_Template on it's ArticyAIReference"); return; }
@@ -114,7 +114,7 @@ public class NPC : CharacterEntity
         }        
     }
 
-    public void SetBarkText(string text)
+    /*public void SetBarkText(string text)
     {
         //Debug.LogWarning("Setting text: " + text + " on object: " + this.name);
         BarkText.text = text;
@@ -127,7 +127,7 @@ public class NPC : CharacterEntity
             BarkText.transform.LookAt(Camera.main.transform);
             BarkText.transform.Rotate(0f, 180, 0f);
         }
-    }
+    }*/
 
   /*  public GameObject DestObject;
     private void OnGUI()
