@@ -21,7 +21,7 @@ static public class StaticStuff
     public const string PROFILE_NAME_ROOT = "tcc_savegame_00";
     public const string CURRENT_PROFILE_NAME = "tcc_savegameid";
 
-    static public void SetOrientation(eOrientation orientation, string screenName)
+   /* static public void SetOrientation(eOrientation orientation, string screenName)
     {
         //Debug.Log("=============================================== SetOrientation(): " + orientation.ToString() + " from: " + screenName);
         if(orientation == eOrientation.LANDSCAPE)
@@ -31,10 +31,10 @@ static public class StaticStuff
             Screen.autorotateToLandscapeLeft = true;
             Screen.autorotateToLandscapeRight = true;
             Screen.orientation = ScreenOrientation.LandscapeLeft;
-            /*if (Input.deviceOrientation == DeviceOrientation.Portrait || Input.deviceOrientation == DeviceOrientation.PortraitUpsideDown)
+            if (Input.deviceOrientation == DeviceOrientation.Portrait || Input.deviceOrientation == DeviceOrientation.PortraitUpsideDown)
             {
                 Screen.orientation = ScreenOrientation.LandscapeLeft;
-            }*/
+            }
         }
         else
         {   // portrait            
@@ -43,12 +43,12 @@ static public class StaticStuff
             Screen.autorotateToLandscapeLeft = false;
             Screen.autorotateToLandscapeRight = false;
             Screen.orientation = ScreenOrientation.Portrait;
-            /*if (Input.deviceOrientation == DeviceOrientation.LandscapeLeft || Input.deviceOrientation == DeviceOrientation.LandscapeRight)
+            if (Input.deviceOrientation == DeviceOrientation.LandscapeLeft || Input.deviceOrientation == DeviceOrientation.LandscapeRight)
             {
                 Screen.orientation = ScreenOrientation.Portrait;
-            }*/
+            }
         }        
-    }
+    }*/
 
     public static void CreateMCPScene()
     {

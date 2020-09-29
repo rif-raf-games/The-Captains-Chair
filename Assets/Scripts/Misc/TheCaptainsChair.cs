@@ -29,7 +29,7 @@ public class TheCaptainsChair : MonoBehaviour
 
     private void Awake()
     {
-        StaticStuff.SetOrientation(StaticStuff.eOrientation.LANDSCAPE, this.name);
+        //StaticStuff.SetOrientation(StaticStuff.eOrientation.LANDSCAPE, this.name);
         this.MCP = FindObjectOfType<MCP>();
         if (this.MCP == null)
         {

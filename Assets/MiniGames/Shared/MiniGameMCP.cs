@@ -41,8 +41,8 @@ public class MiniGameMCP : MonoBehaviour
         //Debug.Log("MiniGameMCP.Awake(): " + this.name);
         CaptainsChair = GameObject.FindObjectOfType<TheCaptainsChair>();
         PuzzleDialogues = null;
-        if (this.name.Contains("LockPick")) StaticStuff.SetOrientation(StaticStuff.eOrientation.PORTRAIT, this.name);        
-        else StaticStuff.SetOrientation(StaticStuff.eOrientation.LANDSCAPE, this.name);
+        //if (this.name.Contains("LockPick")) StaticStuff.SetOrientation(StaticStuff.eOrientation.PORTRAIT, this.name);        
+       // else StaticStuff.SetOrientation(StaticStuff.eOrientation.LANDSCAPE, this.name);
 
         
     }
