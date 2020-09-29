@@ -26,7 +26,8 @@ public class CamFollow : MonoBehaviour
     {
         Player = FindObjectOfType<CCPlayer>();
         this.ShipAreasCollider = FindObjectOfType<ShipAreasCollider>();
-        FindObjectOfType<MCP>().AssignCameraToggleListeners(this);
+        if(FindObjectOfType<MCP>() != null) FindObjectOfType<MCP>().AssignCameraToggleListeners(this);
+
     }
     private void LateUpdate()
     {

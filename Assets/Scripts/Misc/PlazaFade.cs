@@ -22,7 +22,7 @@ public class PlazaFade : MonoBehaviour
             if(go.layer == LayerMask.NameToLayer("Plaza_Fade") && go.GetComponent<BoxCollider>() != null)
             {
                 //Debug.Log("swapping collider on: " + go.name);
-                Destroy(go.GetComponent<BoxCollider>());
+                DestroyImmediate(go.GetComponent<BoxCollider>());
                 go.AddComponent<MeshCollider>();
             }
         }
@@ -34,9 +34,11 @@ public class PlazaFade : MonoBehaviour
     //public GameObject CurrentFadedBuilding = null;
     public List<Collider> CurrentFadedBuildings = new List<Collider>();
     public bool Method = true;
+    bool waitedAFrame = false;
     // FixedUpdate is called once per frame
     void FixedUpdate()
     {
+        
         Vector3 origin, direction;       
         origin = Captain.transform.position + Offset;
         direction = this.transform.position - origin;
@@ -64,6 +66,7 @@ public class PlazaFade : MonoBehaviour
         }
         foreach(Collider c in collidersToRemove)
         {
+            if (c == null) Debug.Log("what the fuck");
             c.GetComponent<MeshRenderer>().enabled = true;
             CurrentFadedBuildings.Remove(c);
         }        
