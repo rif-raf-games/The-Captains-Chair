@@ -133,7 +133,11 @@ public class StageDirectionPlayer : MonoBehaviour
                     else ArticyFlow.TypewriterSpeed = float.Parse(sdf.Direction_Info);
                    // Debug.Log("TypewriterSpeed: " + ArticyFlow.TypewriterSpeed);
                     break;
-
+                case Direction.Play_Video:
+                    VideoPlayerRR vp = FindObjectOfType<VideoPlayerRR>();
+                    if(vp == null ) { Debug.LogError("No VideoPlayerRR in the scene."); break; }
+                    vp.PlayVideo(sdf.Direction_Info, null);
+                    break;
                 default:
                     Debug.LogError("Unknown how to handle this Stage_Direction type: " + sdf.Direction);
                     return false;

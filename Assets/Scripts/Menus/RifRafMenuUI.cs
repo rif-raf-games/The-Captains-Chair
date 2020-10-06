@@ -346,14 +346,20 @@ public class RifRafMenuUI : MonoBehaviour
         CaptainModelsContainer = null;
         CaptainSelect = null;
         CapRayCaster = null;
+        ToggleMenu(eMenuType.AVATAR_SELECT, false);
+        CurActiveMenu = eMenuType.MAIN;
         Resources.UnloadUnusedAssets();
         // Debug.Log("OnClickCaptainSelectConfirm() captainName: " + captainName + ", avatar: " + avatar);        
         this.MCP.LoadCaptainAvatar(avatar);
         StaticStuff.CreateNewProfile(avatar, CurProfileSlot);
+
+        this.MCP.VideoPlayerRR.PlayVideo("Maj_Warp_In", VideoCallback);
+    }
+
+    public void VideoCallback()
+    {
         StaticStuff.LoadProfileStartScene();
-        ToggleMenu(eMenuType.AVATAR_SELECT, false);
-        //CapRayCaster.gameObject.SetActive(false);
-        CurActiveMenu = eMenuType.MAIN;
+       
     }
     public void OnClickNewGameNo()
     {
@@ -371,6 +377,8 @@ public class RifRafMenuUI : MonoBehaviour
         StaticStuff.LoadProfileStartScene();
         TogglePopUp(0, false);
     }
+
+    
     public void OnClickContinueGameNo()
     {
         StaticStuff.PrintRifRafUI("OnClickContinueGameNo");

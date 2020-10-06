@@ -21,6 +21,7 @@ public class MCP : MonoBehaviour
     public FixedJoystick Joystick;    
     public Button CameraToggleButton;
     public Sprite CaptainAvatar;
+    public VideoPlayerRR VideoPlayerRR;
 
     [Header("Sound")]
     public SoundFX SoundFX;
@@ -51,6 +52,7 @@ public class MCP : MonoBehaviour
 
         SoundFXPlayer.Init(SoundFX, GetMusicVolume());
         BackgroundMusicPlayer.Init(BGMusic, GetMusicVolume());
+        //VideoPlayerRR.gameObject.transform.parent.gameObject.SetActive(false);
 
         DontDestroyOnLoad(this.gameObject);
     }
