@@ -17,17 +17,17 @@ public class VideoPlayerRR : MonoBehaviour
         VideoCamera.enabled = false;
     }
 
-    void OnGUI()
+   /* void OnGUI()
     {
         if(GUI.Button(new Rect(0,0,100,100), "Play"))
         {
             VideoCamera.enabled = true;
             VideoPlayer.Play();
         }
-    }
+    }*/
     public void PlayVideo(string videoName, Action callback)
     {
-        Debug.Log("VideoPlayerRR.PlayVideo(): videoName: " + videoName);
+      //  Debug.Log("VideoPlayerRR.PlayVideo(): videoName: " + videoName);
         //this.transform.parent.gameObject.SetActive(true);
         VideoClip clip = Resources.Load<VideoClip>("Movies/" + videoName);
         VideoPlayer.clip = clip;
@@ -38,7 +38,7 @@ public class VideoPlayerRR : MonoBehaviour
 
     void EndReached(UnityEngine.Video.VideoPlayer vp)
     {
-        Debug.Log("VideoPlayerRR.EndReached()");
+       // Debug.Log("VideoPlayerRR.EndReached()");
         VideoCamera.enabled = false;
         VideoPlayer.Stop();
         if (OnVideoEnd != null) OnVideoEnd.Invoke();

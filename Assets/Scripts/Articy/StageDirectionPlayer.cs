@@ -69,9 +69,11 @@ public class StageDirectionPlayer : MonoBehaviour
                     break;
                 case Direction.Dialogue_Interact_On:                    
                     this.ArticyFlow.IsDialogueFragmentsInteractive = true;
+                  //  Debug.Log("on");
                     break;
                 case Direction.Dialogue_Interact_Off:
                     this.ArticyFlow.IsDialogueFragmentsInteractive = false;
+                  //  Debug.Log("off");
                     break;
                 case Direction.Background_Track_Change:
                   //  Debug.Log("case Direction.Background_Track_Change:");

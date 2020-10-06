@@ -52,6 +52,11 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     public Text DebugText;
 
     public bool StartCalled = false;
+
+    private void Awake()
+    {
+        IsDialogueFragmentsInteractive = true;
+    }
     //public bool AwakeCalled = false;
     void Start()
     {
@@ -119,7 +124,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         }
 
         // start the dialogue
-        IsDialogueFragmentsInteractive = true;
+        //IsDialogueFragmentsInteractive = true;
         FindObjectOfType<MCP>().ToggleInGameUI(false);
         FlowPlayer.StartOn = convoStart;
         if (Player != null) Player.ToggleMovementBlocked(true);        
@@ -617,7 +622,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         {
             if(WaitingOnALLastFrame == true && waitingOnAL == false)
             {
-                ConvoUI.TurnOnValidButtons();
+                ConvoUI.SetupValidButtons();
             }            
         }
         WaitingOnALLastFrame = waitingOnAL;

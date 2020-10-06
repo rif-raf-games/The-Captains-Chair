@@ -27,6 +27,8 @@ public class ConvoUI : MonoBehaviour
     Coroutine TypewriterCoroutine;
     string CurDialogueText;
 
+    int NumValidButtons = 0;
+
     private void Awake()
     {
         TypewriterSpeed = DefaultTypewriterSpeed;
@@ -80,23 +82,27 @@ public class ConvoUI : MonoBehaviour
             {
                 SpeakerImage.sprite = this.MCP.CaptainAvatar;
             }
-        }        
+        }
+        NumValidButtons = 0;
         IsInteractive = isInteractive;
         TypewriterSpeed = typewriterSpeed;
         SpeakerText.text = "";
         CurDialogueText = dialogueFrag.Text;
         CurDialogueOptions = dialogueOptions;
         CurValidAOTargets = validAOTargets;
-        if (TypewriterCoroutine != null ) StopCoroutine(TypewriterCoroutine);
-        TypewriterCoroutine = StartCoroutine(TypewriterEffect());
+        
 
         //foreach (GameObject go in DialogueOptions) go.SetActive(false);
-        ShutOffButtons();
-        IsInteractive = true;
-        if(IsInteractive == true)
+       // ShutOffButtons();
+       // IsInteractive = true;
+       /* if(IsInteractive == true)
         {
-            TurnOnValidButtons();            
-        }
+            SetupValidButtons();            
+        }*/
+        SetupValidButtons();
+        ShutOffButtons();
+        if (TypewriterCoroutine != null) StopCoroutine(TypewriterCoroutine);
+        TypewriterCoroutine = StartCoroutine(TypewriterEffect());
 
         // VO stuff
         VO_Dialogue_Fragment vod = flowObj as VO_Dialogue_Fragment;
@@ -127,10 +133,10 @@ public class ConvoUI : MonoBehaviour
     {
         foreach (GameObject go in DialogueOptions) go.SetActive(false);
     }
-    public void TurnOnValidButtons()
+    public void SetupValidButtons()
     {
-        int numDO = (CurDialogueOptions != null ? CurDialogueOptions.Count : CurValidAOTargets.Count);
-        for (int i = 0; i < numDO; i++)
+        NumValidButtons = (CurDialogueOptions != null ? CurDialogueOptions.Count : CurValidAOTargets.Count);
+        for (int i = 0; i < NumValidButtons; i++)
         {
             DialogueOptions[i].SetActive(true);
             DialogueFragment df = (CurDialogueOptions != null ? CurDialogueOptions[i].Target as DialogueFragment : CurValidAOTargets[i] as DialogueFragment);
@@ -148,7 +154,8 @@ public class ConvoUI : MonoBehaviour
     IEnumerator TypewriterEffect()
     {
         //Debug.Log("Start effect: " + TypewriterSpeed);        
-        foreach (GameObject go in DialogueOptions) go.GetComponent<Button>().enabled = false;
+        //foreach (GameObject go in DialogueOptions) go.GetComponent<Button>().enabled = false;
+        foreach (GameObject go in DialogueOptions) go.SetActive(false);
         foreach (char character in CurDialogueText.ToCharArray())
         {
             SpeakerText.text += character;
@@ -163,7 +170,10 @@ public class ConvoUI : MonoBehaviour
         }
         else
         {
-            foreach (GameObject go in DialogueOptions) go.GetComponent<Button>().enabled = true;
+            // foreach (GameObject go in DialogueOptions) go.GetComponent<Button>().enabled = true;
+            //foreach (GameObject go in DialogueOptions) go.GetComponent<Button>().gameObject.SetActive(true);
+           // Debug.Log("1");
+            for (int i = 0; i < NumValidButtons; i++) DialogueOptions[i].SetActive(true);
         }        
     }
 
@@ -171,7 +181,10 @@ public class ConvoUI : MonoBehaviour
     {
        // Debug.Log("NextDialogueFragmentDelay() a");
         yield return new WaitForSeconds(2);
-        foreach (GameObject go in DialogueOptions) go.GetComponent<Button>().enabled = true;
+        //foreach (GameObject go in DialogueOptions) go.GetComponent<Button>().enabled = true;
+      //  Debug.Log("2");
+        //foreach (GameObject go in DialogueOptions) go.SetActive(true);
+        for (int i = 0; i < NumValidButtons; i++) DialogueOptions[i].SetActive(true);
         // Debug.Log("NextDialogueFragmentDelay() b");
         ArticyObject target = null;
         if (CurValidAOTargets != null) target = CurValidAOTargets[0];
