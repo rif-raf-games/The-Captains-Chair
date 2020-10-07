@@ -430,6 +430,7 @@ public class RifRafMenuUI : MonoBehaviour
 
         ToggleMenu(eMenuType.MAIN, true);
         InitMainMenu();
+        BackgroundMusicPlayer.Play("Exchange_Background_Track");
     }
 
     public void InitFromGame()

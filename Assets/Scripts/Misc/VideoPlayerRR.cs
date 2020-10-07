@@ -33,6 +33,7 @@ public class VideoPlayerRR : MonoBehaviour
         VideoPlayer.clip = clip;
         OnVideoEnd = callback;
         VideoCamera.enabled = true;
+        BackgroundMusicPlayer.Play("Off");
         VideoPlayer.Play();
     }
 

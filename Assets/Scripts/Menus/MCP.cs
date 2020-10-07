@@ -390,6 +390,10 @@ public class MCP : MonoBehaviour
         LoadingImage.texture = defaultTexture;
         LoadingScreen.SetActive(false);
         BGMusic.ResetVolume();
+        if (sceneName.Contains("Front End Launcher"))
+        {
+            BackgroundMusicPlayer.Play("Exchange_Background_Track");
+        }
     }
 
     public Text DebugText;
