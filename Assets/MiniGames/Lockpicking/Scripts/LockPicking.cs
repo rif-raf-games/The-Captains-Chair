@@ -115,6 +115,7 @@ public class LockPicking : MiniGame
 
     void StartGame()
     {
+        //Debug.Log("LockPicking.StartGame()");
         SetGameState(eGameState.ON);
         Diode.Moving = true;
         if (ResultsText != null) ResultsText.gameObject.SetActive(false);
@@ -306,6 +307,7 @@ public class LockPicking : MiniGame
     }
     public override void ResetPostDialogueState()
     {
+       // Debug.Log("LockPicking.ResetPostDialogueState()");
         base.ResetPostDialogueState();
         CurGameState = DialogueSaveState;
     }
@@ -364,7 +366,7 @@ public class LockPicking : MiniGame
             DebugText.text += "\n";
             DebugText.text += "Diode speed: " + Diode.CurSpeed.ToString("F2") + "\n";*/
         }
-        if (CurGameState == eGameState.OFF) return;
+        if (CurGameState == eGameState.OFF || DialogueActive == true) return;
         GameTime += Time.deltaTime;
         if (Input.GetMouseButtonDown(0)) // initial press
         {                        

@@ -59,6 +59,7 @@ public class MiniGame : MonoBehaviour
     }
     public void SetDialogueActive( bool val )
     {
+        //Debug.Log("MiniGame.SetDialogueActive() val: " + val);
         DialogueActive = val;
     }
 

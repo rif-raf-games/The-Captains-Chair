@@ -586,6 +586,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                         SetNextBranch(null);
                         NextFragment = null;
                         ConvoUI.ShowDialogueFragment(DebugDF, CurPauseObject, null, IsDialogueFragmentsInteractive, TypewriterSpeed, validArticyObjects); // show the UI                        
+                        ConvoUI.TurnOnValidButtons();
                     }
                     else
                     {

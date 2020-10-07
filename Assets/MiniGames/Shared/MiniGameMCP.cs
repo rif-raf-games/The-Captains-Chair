@@ -35,6 +35,7 @@ public class MiniGameMCP : MonoBehaviour
     public Text DebugText;
 
     public Text OrientationText;
+    MCP MCP;
 
     public virtual void Awake()
     {
@@ -51,7 +52,8 @@ public class MiniGameMCP : MonoBehaviour
     {
         SoundFX soundFX = FindObjectOfType<SoundFX>();
         SoundFXPlayer.Init(soundFX, -1);
-        
+        this.MCP = FindObjectOfType<MCP>();
+
         GameState = eGameState.NONE;
         FadeImage.gameObject.SetActive(true);
         MiniGameArticyFlow = GetComponent<ArticyFlow>();
@@ -253,6 +255,10 @@ public class MiniGameMCP : MonoBehaviour
     {
         Puzzles[CurPuzzleIndex].DialogueEnded();
     }
+    public void SetDialogueActive(bool isActive)
+    {
+        Puzzles[CurPuzzleIndex].SetDialogueActive(isActive);
+    }
     void StartCurrentPuzzle()
     {
       //  Debug.Log("StartCurrentPuzzle()");
@@ -260,8 +266,10 @@ public class MiniGameMCP : MonoBehaviour
         {   // if we're here, then we've gotten a list of dialogues from an articy ref, so use that
             if (PuzzleDialogues.Count == 0 || PuzzleDialogues.Count - 1 < CurPuzzleIndex)
             {
-                // no dialogue but keep this in case we need this
-                //Debug.LogError("You don't have the Mini_Game_Jump set up properly because there's no entry in the Dialogues To Play list for this puzzle");                
+                // no dialogue but keep this in case we need this                
+                Puzzles[CurPuzzleIndex].SetDialogueActive(false);
+                Puzzles[CurPuzzleIndex].DialogueEnded();
+                this.MCP.ToggleInGameUI(true);
             }
             else
             {

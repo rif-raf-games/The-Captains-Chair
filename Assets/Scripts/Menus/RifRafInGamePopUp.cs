@@ -72,6 +72,15 @@ public class RifRafInGamePopUp : MonoBehaviour
         {
             StaticStuff.SaveCurrentProfile("Closing In Game PopUp");
         }
+        if(FindObjectOfType<MiniGameMCP>() != null)
+        {
+            FindObjectOfType<MiniGameMCP>().SetDialogueActive(isActive);
+            this.MCP.ToggleJoystick(false);
+        }
+        else
+        {
+            this.MCP.ToggleJoystick(!isActive);
+        }        
     }
     public void ToggleMissionHint(bool isActive)
     {

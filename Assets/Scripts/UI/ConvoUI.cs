@@ -133,6 +133,10 @@ public class ConvoUI : MonoBehaviour
     {
         foreach (GameObject go in DialogueOptions) go.SetActive(false);
     }
+    public void TurnOnValidButtons()
+    {
+        for (int i = 0; i < NumValidButtons; i++) DialogueOptions[i].SetActive(true);
+    }
     public void SetupValidButtons()
     {
         NumValidButtons = (CurDialogueOptions != null ? CurDialogueOptions.Count : CurValidAOTargets.Count);
