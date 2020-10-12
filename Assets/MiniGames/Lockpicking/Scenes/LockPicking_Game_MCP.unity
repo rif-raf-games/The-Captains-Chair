@@ -264,8 +264,6 @@ MonoBehaviour:
     lowId: 26387
     highId: 16777224
   PuzzleDialogues: []
-  CameraPositions: []
-  CameraRotations: []
   SoundFXUsedInScene:
   - Clip: {fileID: 8300000, guid: e25fddaafea394a15849461f1f3ad1be, type: 3}
   - Clip: {fileID: 8300000, guid: 5afa318e27b034ad3b2d656d4df66b80, type: 3}
@@ -306,6 +304,7 @@ MonoBehaviour:
     mConnections:
       value: []
     mOwnerInstanceId: 0
+  debugText: {fileID: 0}
 --- !u!114 &259456612
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -374,8 +373,8 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 0
-  orthographic size: 5
+  orthographic: 1
+  orthographic size: 5.4
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1080,16 +1079,6 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 176
       objectReference: {fileID: 0}
-    - target: {fileID: 7245856041088549741, guid: 3c2cd0c8cedb540b9b2cbad5209d69c1,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 259456611}
-    - target: {fileID: 3485928968336790964, guid: 3c2cd0c8cedb540b9b2cbad5209d69c1,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3485928968314491012, guid: 3c2cd0c8cedb540b9b2cbad5209d69c1,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -1149,11 +1138,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 64
-      objectReference: {fileID: 0}
-    - target: {fileID: 7245856039576612951, guid: 3c2cd0c8cedb540b9b2cbad5209d69c1,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3485928968314513518, guid: 3c2cd0c8cedb540b9b2cbad5209d69c1,
         type: 3}
@@ -1225,6 +1209,26 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 242
       objectReference: {fileID: 0}
+    - target: {fileID: -2043634083698628915, guid: 3c2cd0c8cedb540b9b2cbad5209d69c1,
+        type: 3}
+      propertyPath: SpeakerImage
+      value: 
+      objectReference: {fileID: 1729193009}
+    - target: {fileID: 7245856041088549741, guid: 3c2cd0c8cedb540b9b2cbad5209d69c1,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 259456611}
+    - target: {fileID: 3485928968336790964, guid: 3c2cd0c8cedb540b9b2cbad5209d69c1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7245856039576612951, guid: 3c2cd0c8cedb540b9b2cbad5209d69c1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3485928968326489340, guid: 3c2cd0c8cedb540b9b2cbad5209d69c1,
         type: 3}
       propertyPath: m_Enabled
@@ -1241,11 +1245,6 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -2043634083698628915, guid: 3c2cd0c8cedb540b9b2cbad5209d69c1,
-        type: 3}
-      propertyPath: SpeakerImage
-      value: 
-      objectReference: {fileID: 1729193009}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3c2cd0c8cedb540b9b2cbad5209d69c1, type: 3}
 --- !u!114 &1729193009 stripped
