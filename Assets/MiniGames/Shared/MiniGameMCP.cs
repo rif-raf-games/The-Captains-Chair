@@ -233,30 +233,13 @@ public class MiniGameMCP : MonoBehaviour
             GameState = eGameState.FADE_IN;
         }
     }
-
-    /*public void QuitCurrentPuzzle()
-    {
-        ArticyGlobalVariables.Default.Mini_Games.Returning_From_Mini_Game = true;
-        ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success = false;
-        if (PuzzleDialogues != null)
-        {   // if PuzzleDialogues isn't null then we're under articy control
-            Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
-            SceneManager.Load Scene(jumpSave.Template.Quit_Mini_Game_Result.SceneName);
-        }
-        else
-        {
-            if (PuzzleNameRoot.Contains("Parking")) SceneManager.Load Scene("ParkingDemo");
-            else if (PuzzleNameRoot.Contains("LockPicking")) SceneManager.Load Scene("LockPickingDemo");
-            else if (PuzzleNameRoot.Contains("Repair")) SceneManager.Load Scene("RepairDemo");
-        }
-    }*/
-
+    
     public void CurrentDiaogueEnded()
-    {
+    {        
         Puzzles[CurPuzzleIndex].DialogueEnded();
     }
     public void SetDialogueActive(bool isActive)
-    {
+    {        
         Puzzles[CurPuzzleIndex].SetDialogueActive(isActive);
     }
     void StartCurrentPuzzle()
@@ -269,7 +252,8 @@ public class MiniGameMCP : MonoBehaviour
                 // no dialogue but keep this in case we need this                
                 Puzzles[CurPuzzleIndex].SetDialogueActive(false);
                 Puzzles[CurPuzzleIndex].DialogueEnded();
-                this.MCP.ToggleInGameUI(true);
+                Debug.Log("mofeh");
+               // this.MCP.ToggleInGameUI(true);
             }
             else
             {

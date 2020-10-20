@@ -3,7 +3,6 @@ using Articy.The_Captain_s_Chair.Features;
 using Articy.The_Captain_s_Chair.GlobalVariables;
 using Articy.The_Captain_s_Chair.Templates;
 using Articy.Unity;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,10 +25,17 @@ public class RifRafExchangeJobBoard : MonoBehaviour
     [Header("Articy")]
     public ArticyRef JobBoardContainer;
 
+    [Header("Misc")]
+    public RifRafInGamePopUp InGamePopUp;
+
     int JobIndex;
     MCP MCP;
     
-    public void Init(MCP mcp)
+    private void Awake()
+    {
+
+    }
+    public void SetMCP(MCP mcp)
     {
         this.MCP = mcp;
     }
@@ -37,7 +43,7 @@ public class RifRafExchangeJobBoard : MonoBehaviour
     List<ArticyObject> ActiveJobs = new List<ArticyObject>();
     public void FillBoard()
     {
-        ShutOffPopups();
+        ShutOffQuitAcceptPopups();
 
         FlowFragment jobContainer = JobBoardContainer.GetObject() as FlowFragment;
 
@@ -62,7 +68,7 @@ public class RifRafExchangeJobBoard : MonoBehaviour
             string s = em.DisplayName + "\n";
             emt = em.Template;
             emf = em.Template.Exchange_Mission;
-            Debug.Log("button index: " + buttonIndex);
+           // Debug.Log("button index: " + buttonIndex);
             Button b = JobButtons[buttonIndex++];
             b.gameObject.SetActive(true);
             Transform trans = b.gameObject.transform.GetChild(2);
@@ -92,13 +98,13 @@ public class RifRafExchangeJobBoard : MonoBehaviour
         PointOfContact.text = emf.Point_Of_Contact;
         Description.text = emf.Job_Description;
     }
-
+    
     public void OnClickAcceptJob()
     {
         // Debug.Log("RifRafExchangeJobBoard.OnClickAccpetJob().");
 
         //  Debug.LogWarning("OK we now have a job set up so lets rock it");
-        this.MCP.TMP_ShutOffExchangeBoard();
+        InGamePopUp.ShutOffExchangeBoard();
 
         Exchange_Missions em;
         Exchange_MissionsTemplate emt;
@@ -138,7 +144,7 @@ public class RifRafExchangeJobBoard : MonoBehaviour
        // Debug.LogError("**********************LOOK HERE FOR SCENE LOADING ISSUES!!!!!!!!!! " + s);
     }
 
-    public void ShutOffPopups()
+    public void ShutOffQuitAcceptPopups()
     {
         QuitPopup.SetActive(false);
         AcceptPopup.SetActive(false);
@@ -168,12 +174,10 @@ public class RifRafExchangeJobBoard : MonoBehaviour
         QuitPopup.SetActive(true);        
     }
 
-    
-
     public void OnClickAcceptClose()
     {
-        Debug.Log("RifRafExchangeJobBoard.OnClickAcceptClose().");
-        this.MCP.TMP_ShutOffExchangeBoard();
+        //Debug.Log("RifRafExchangeJobBoard.OnClickAcceptClose().");
+        InGamePopUp.ShutOffExchangeBoard();
     }
 
     public void OnClickClosePopup()

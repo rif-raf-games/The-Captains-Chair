@@ -31,36 +31,23 @@ public class ConvoUI : MonoBehaviour
 
     private void Awake()
     {
-        TypewriterSpeed = DefaultTypewriterSpeed;
-        //Debug.Log(TypewriterSpeed);
-    }
-    // Start is called before the first frame update
-    void Start()
-    {        
-        ArticyFlow = GameObject.FindObjectOfType<ArticyFlow>();
-        string hash = (ArticyFlow == null ? "no ArticyFlow" : ArticyFlow.GetHashCode().ToString());
-       // Debug.LogError("ConvoUI.Start() ArticyFlow hash: " + hash);
-    }
+        TypewriterSpeed = DefaultTypewriterSpeed;       
+    }    
 
     public void SetSceneArticyFlowObject()
     {
-        ArticyFlow = GameObject.FindObjectOfType<ArticyFlow>();
-        //string hash = (ArticyFlow == null ? "no ArticyFlow" : ArticyFlow.GetHashCode().ToString());
-       // Debug.LogError("TMP_SetArticyFlow.Start() ArticyFlow hash: " + hash);
+        ArticyFlow = GameObject.FindObjectOfType<ArticyFlow>();        
     }
-    public void Init(MCP mcp)
+    public void SetMCP(MCP mcp)
     {
-        this.MCP = mcp;
-        ArticyFlow = GameObject.FindObjectOfType<ArticyFlow>();
-        string hash = (ArticyFlow == null ? "no ArticyFlow" : ArticyFlow.GetHashCode().ToString());
-        //Debug.LogError("ConvoUI.Init() ArticyFlow hash: " + hash);
+        this.MCP = mcp;       
     }
 
     public void ShowDialogueFragment(DialogueFragment dialogueFrag, IFlowObject flowObj, IList<Branch> dialogueOptions, bool isInteractive, float typewriterSpeed, List<ArticyObject> validAOTargets = null)
     {
         StaticStuff.PrintUI("going to set up a dialogue fragment with speaker: " + dialogueFrag.Speaker + " with text: " + dialogueFrag.Text + ", tech name: " + dialogueFrag.TechnicalName);
 
-        this.gameObject.SetActive(true); // due to the fact that Articy handles stuff behind the scenes it's easiest to just make sure it gets turned on the same frame
+        this.MCP.StartDialogueConversation();
         if (dialogueOptions != null)
         {   // if dialogeOptions is null then we're calling this from a debug spot
             StaticStuff.PrintUI("this dialogue fragment has: " + dialogueOptions.Count + " options");
@@ -91,14 +78,6 @@ public class ConvoUI : MonoBehaviour
         CurDialogueOptions = dialogueOptions;
         CurValidAOTargets = validAOTargets;
         
-
-        //foreach (GameObject go in DialogueOptions) go.SetActive(false);
-       // ShutOffButtons();
-       // IsInteractive = true;
-       /* if(IsInteractive == true)
-        {
-            SetupValidButtons();            
-        }*/
         SetupValidButtons();
         ShutOffButtons();
         if (TypewriterCoroutine != null) StopCoroutine(TypewriterCoroutine);
@@ -157,8 +136,7 @@ public class ConvoUI : MonoBehaviour
 
     IEnumerator TypewriterEffect()
     {
-        //Debug.Log("Start effect: " + TypewriterSpeed);        
-        //foreach (GameObject go in DialogueOptions) go.GetComponent<Button>().enabled = false;
+        //Debug.Log("Start effect: " + TypewriterSpeed);                
         foreach (GameObject go in DialogueOptions) go.SetActive(false);
         foreach (char character in CurDialogueText.ToCharArray())
         {
@@ -173,10 +151,7 @@ public class ConvoUI : MonoBehaviour
             StartCoroutine(NextDialogueFragmentDelay());
         }
         else
-        {
-            // foreach (GameObject go in DialogueOptions) go.GetComponent<Button>().enabled = true;
-            //foreach (GameObject go in DialogueOptions) go.GetComponent<Button>().gameObject.SetActive(true);
-           // Debug.Log("1");
+        {            
             for (int i = 0; i < NumValidButtons; i++) DialogueOptions[i].SetActive(true);
         }        
     }
@@ -184,41 +159,22 @@ public class ConvoUI : MonoBehaviour
     IEnumerator NextDialogueFragmentDelay()
     {
        // Debug.Log("NextDialogueFragmentDelay() a");
-        yield return new WaitForSeconds(2);
-        //foreach (GameObject go in DialogueOptions) go.GetComponent<Button>().enabled = true;
-      //  Debug.Log("2");
-        //foreach (GameObject go in DialogueOptions) go.SetActive(true);
-        for (int i = 0; i < NumValidButtons; i++) DialogueOptions[i].SetActive(true);
-        // Debug.Log("NextDialogueFragmentDelay() b");
+        yield return new WaitForSeconds(2);        
+        for (int i = 0; i < NumValidButtons; i++) DialogueOptions[i].SetActive(true);        
         ArticyObject target = null;
         if (CurValidAOTargets != null) target = CurValidAOTargets[0];
         ArticyFlow.ConvoButtonClicked(0, target);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        /*if(TextTyping == true && IsInteractive == true && Input.GetMouseButtonUp(0))
-        {
-          //  Debug.LogError("shut off via button");
-            StopCoroutine(TypewriterCoroutine);
-            SpeakerText.text = CurDialogueText;
-            foreach (GameObject go in DialogueOptions) go.GetComponent<Button>().enabled = true;
-            TextTyping = false;
-        }*/
-    }
+    }    
    
     public void EndConversation()
     { 
-       // Debug.LogError("----------------------- EndConversation()");
-        this.gameObject.SetActive(false);
-        this.MCP.ToggleInGameUI(true);
+        //Debug.LogWarning("----------------------- EndConversation()");
+        this.MCP.StartFreeRoam();        
     }
     
     public void OnClickDialogueButton(int buttonIndex)
     {
-        //Debug.LogError("OnClickDialogueButton() buttonIndex: " + buttonIndex + ", ArticyFlow hash: " + ArticyFlow.GetHashCode());
-        
+        //Debug.LogError("OnClickDialogueButton() buttonIndex: " + buttonIndex + ", ArticyFlow hash: " + ArticyFlow.GetHashCode());        
         ArticyObject target = null;
         if (CurValidAOTargets != null) target = CurValidAOTargets[buttonIndex];
         ArticyFlow.ConvoButtonClicked(buttonIndex, target);

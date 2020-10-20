@@ -39,7 +39,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     // game stuff
     TheCaptainsChair CaptainsChair; // Core game
     CCPlayer Player;                // Captain/Player
-
+    MCP MCP;
     // UI stuff
     ConvoUI ConvoUI; 
     public bool IsDialogueFragmentsInteractive { get; set; }    // Whether or not the UI dialogue is interactive or not
@@ -67,10 +67,12 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         FlowPlayer = this.GetComponent<ArticyFlowPlayer>();
         StageDirectionPlayer = FindObjectOfType<StageDirectionPlayer>();
         this.MiniGameMCP = FindObjectOfType<MiniGameMCP>();
-        ConvoUI = FindObjectOfType<MCP>().TMP_GetConvoUI();
+        ConvoUI = FindObjectOfType<MCP>().GetConvoUI();
         TypewriterSpeed = ConvoUI.DefaultTypewriterSpeed;
         ArticyDatabase.DefaultGlobalVariables.Notifications.AddListener("*.*", MyGameStateVariablesChanged);
         ActiveCALPauseObjects.Clear();
+        this.MCP = FindObjectOfType<MCP>();
+        if (this.MCP == null) Debug.LogError("ERROR: no MCP");
         StartCalled = true;
     }
     
@@ -81,7 +83,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     /// </summary>
     public bool CheckIfDialogueShouldStart(Dialogue convoStart, GameObject collider)
     {
-        //Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ CheckDialogue() with technical name: " + convoStart.TechnicalName + " on GameObject: " + this.gameObject.name + " but DON'T DO ANY CODE STUFF UNTIL WE KNOW WE'RE ACTUALLY COMMITTING  time: " + Time.time);// + ", convoStart: " + convoStart.name + ", collider: " + collider.name);
+      //  Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ CheckDialogue() with technical name: " + convoStart.TechnicalName + " on GameObject: " + this.gameObject.name + " but DON'T DO ANY CODE STUFF UNTIL WE KNOW WE'RE ACTUALLY COMMITTING  time: " + Time.time);// + ", convoStart: " + convoStart.name + ", collider: " + collider.name);
         if (CurArticyState == eArticyState.DIALOGUE)
         {   // we're already in a dialogue, so bail
             return false;
@@ -125,9 +127,10 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
 
         // start the dialogue
         //IsDialogueFragmentsInteractive = true;
-        FindObjectOfType<MCP>().ToggleInGameUI(false);
+      //  FindObjectOfType<MCP>().ToggleInGameUI(false);
         FlowPlayer.StartOn = convoStart;
-        if (Player != null) Player.ToggleMovementBlocked(true);        
+        if (Player != null) Player.ToggleMovementBlocked(true);
+        this.MCP.ShutOffAllUI();
         return true;
     }
 
@@ -237,7 +240,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                     if (DialogueNPC != null && df.Speaker == null)
                     {
                         df.Speaker = DialogueNPC.ArticyEntityReference.GetObject();
-                    }
+                    }                    
                     ConvoUI.ShowDialogueFragment(df, CurPauseObject, CurBranches, IsDialogueFragmentsInteractive, TypewriterSpeed); // show the UI
                     break;
                 default:
@@ -617,13 +620,15 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
 
         if (waitingOnAL == true)
         {
-            ConvoUI.ShutOffButtons();
+            Debug.Log("1");
+           // ConvoUI.ShutOffButtons();
         }
         else
         {
             if(WaitingOnALLastFrame == true && waitingOnAL == false)
             {
-                ConvoUI.SetupValidButtons();
+                Debug.Log("2");
+                //  ConvoUI.SetupValidButtons();
             }            
         }
         WaitingOnALLastFrame = waitingOnAL;
@@ -720,7 +725,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     /// </summary>
     public void EndMiniGameDialogues()
     {
-        //Debug.LogError("EndMiniGameDialogues()");
+        //Debug.LogError("fix");
         SetArticyState(eArticyState.FREE_ROAM);        
         ConvoUI.EndConversation();
         CurPauseObject = null;

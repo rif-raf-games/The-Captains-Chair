@@ -9,18 +9,18 @@ using UnityEngine.UI;
 
 public class RifRafMenuUI : MonoBehaviour
 {    
-    public enum eMenuType { SPLASH, MAIN, COMING_SOON, ACHIEVEMENTS, TELL_FRIENDS, AVATAR_SELECT, NUM_MENUS };
-    [Header("Menus: Splash, Main, Coming Soon, Achievements, Tell Friends\n")]
+    public enum eMenuType { SPLASH, MAIN, AVATAR_SELECT, NUM_MENUS };
+    [Header("Menus")]
     public GameObject[] Menus;
     public eMenuType CurActiveMenu;
 
     public enum ePopUpType { PROFILES, NEW_GAME, CONTINUE_GAME, DELETE_GAME, DELETE_CONFIRM, NUM_POPUPS };
-    [Header("PopUps: Saved Games, New, Continue, Delete, Delete Confirm")]
+    [Header("PopUps")]
     public GameObject[] PopUps;
     public ePopUpType CurActivePopup;
 
     public enum eMainMenuButtons { NEW, CONTINUE, DELETE, NUM_MENU_MENU_BUTTONS };
-    [Header("Main Menu Buttons: New, Continue, Delete")]    
+    [Header("Main Menu Buttons")]    
     public Button[] MainMenuButtons;
     public Text[] MainMenuButtonsText;
     [Header("Save Games")]
@@ -50,34 +50,44 @@ public class RifRafMenuUI : MonoBehaviour
         CurActiveMenu = eMenuType.NUM_MENUS;
         foreach (GameObject go in PopUps) go.SetActive(false);
         CurActivePopup = ePopUpType.NUM_POPUPS;
-        CurActiveSaveGameFunction = eSaveGameFunction.NUM_SAVE_GAME_FUNCTIONS;
-        //CapRayCaster.gameObject.SetActive(false);
+        CurActiveSaveGameFunction = eSaveGameFunction.NUM_SAVE_GAME_FUNCTIONS;        
     }
- 
-    public void Init(MCP mcp)
-    {
-        this.MCP = mcp;
-    }
-
+     
     public void ToggleMenu(eMenuType menuID, bool isActive)
     {
+       // Debug.Log("ToggleMenu() menuID: " + menuID.ToString() + ", isActive: " + isActive);
         StaticStuff.PrintRifRafUI("ToggleMenu() menuID: " + menuID.ToString() + ", isActive: " + isActive);
-        if (menuID >= eMenuType.NUM_MENUS) { Debug.LogError("Invalid menu: " + menuID); return; }
+        if (menuID > eMenuType.NUM_MENUS) { Debug.LogError("Invalid menu: " + menuID); return; }
         foreach (GameObject go in Menus) go.SetActive(false);
-        Menus[(int)menuID].SetActive(isActive);
-        CurActiveMenu = (isActive == true ? menuID : eMenuType.NUM_MENUS);
+        if(menuID == eMenuType.NUM_MENUS || isActive == false)
+        {
+            CurActiveMenu = eMenuType.NUM_MENUS;
+        }
+        else
+        {
+            Menus[(int)menuID].SetActive(true);
+            CurActiveMenu = menuID;
+        }        
     }
     public void TogglePopUp(ePopUpType popUpID, bool isActive)
     {
+       // Debug.Log("TogglePopUp() popUpID: " + popUpID.ToString() + ", isActive: " + isActive);
         StaticStuff.PrintRifRafUI("TogglePopUp() popUpID: " + popUpID.ToString() + ", isActive: " + isActive);
-        if (popUpID >= ePopUpType.NUM_POPUPS) { Debug.LogError("Invalid popUp: " + popUpID); return; }
+        if (popUpID > ePopUpType.NUM_POPUPS) { Debug.LogError("Invalid popUp: " + popUpID); return; }
         foreach (GameObject go in PopUps) go.SetActive(false);
-        PopUps[(int)popUpID].SetActive(isActive);
-        CurActivePopup = (isActive == true ? popUpID : ePopUpType.NUM_POPUPS);
+        if(popUpID == ePopUpType.NUM_POPUPS || isActive == false)
+        {
+            CurActivePopup = ePopUpType.NUM_POPUPS;
+        }
+        else
+        {
+            PopUps[(int)popUpID].SetActive(true);
+            CurActivePopup = popUpID;
+        }        
     }    
 
     #region MAIN_MENU        
-    void InitMainMenu()
+    public void InitMainMenu()
     {           
         RefreshProfileInfo();
         BackButton.gameObject.SetActive(false);
@@ -175,7 +185,6 @@ public class RifRafMenuUI : MonoBehaviour
 
         TogglePopUp(ePopUpType.PROFILES, true);
         CurActiveSaveGameFunction = eSaveGameFunction.NEW;
-
         InitProfilesPopup();        
     }
     public void OnClickContinueGame()
@@ -200,29 +209,7 @@ public class RifRafMenuUI : MonoBehaviour
 
         InitProfilesPopup();
     }
-
-    public void OnClickComingSoon()
-    {
-        StaticStuff.PrintRifRafUI("OnClickComingSoon");
-        if (MenusActiveCheck() == false) return;
-
-        ToggleMenu(eMenuType.COMING_SOON, true);
-    }
-    public void OnClickAchievements()
-    {
-        StaticStuff.PrintRifRafUI("OnClickAchievements");
-        if (MenusActiveCheck() == false) return;
-
-        ToggleMenu(eMenuType.ACHIEVEMENTS, true);
-    }
-    public void OnClickTellYourFriends()
-    {
-        StaticStuff.PrintRifRafUI("OnClickTellYourFriends");
-        if (MenusActiveCheck() == false) return;
-
-        ToggleMenu(eMenuType.TELL_FRIENDS, true);
-    }
-
+    
     public void OnClickMainMenuBack()
     {
         StaticStuff.PrintRifRafUI("OnClickMainMenuBack()");
@@ -353,6 +340,7 @@ public class RifRafMenuUI : MonoBehaviour
         this.MCP.LoadCaptainAvatar(avatar);
         StaticStuff.CreateNewProfile(avatar, CurProfileSlot);
 
+        this.MCP.ShutOffAllUI();
         this.MCP.VideoPlayerRR.PlayVideo("Maj_Warp_In", VideoCallback);
     }
 
@@ -428,22 +416,15 @@ public class RifRafMenuUI : MonoBehaviour
         StaticStuff.PrintRifRafUI("OnClickTapToBegin()");
         if (MenusActiveCheck() == false) return;
 
-        ToggleMenu(eMenuType.MAIN, true);
-        InitMainMenu();
-        BackgroundMusicPlayer.Play("Exchange_Background_Track");
-    }
-
-    public void InitFromGame()
-    {
-        Debug.LogError("InitFromGame()");
-        ArticyGlobalVariables.Default.ResetVariables();
-        this.gameObject.SetActive(true);
-        this.MCP.ToggleInGameUI(false);
-        ToggleMenu(eMenuType.MAIN, true);
-        InitMainMenu();
-    }
+        this.MCP.StartMainMenu();        
+    }   
 
     #endregion
+
+    public void SetMCP(MCP mcp)
+    {
+        this.MCP = mcp;
+    }
 }
 
 /*

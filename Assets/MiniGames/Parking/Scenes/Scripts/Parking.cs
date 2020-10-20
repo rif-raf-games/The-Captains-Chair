@@ -43,9 +43,7 @@ public class Parking : MiniGame
     float LerpStartTime, LerpDurationTime;
 
     public Text ResultsText;
-    MCP MCP;
-    //[Header("Debug")]
-    //public Text DebugText;
+    MCP MCP;    
 
     public override void Init(MiniGameMCP mcp, string sceneName, List<SoundFX.FXInfo> soundFXUsedInScene)
     {
@@ -82,6 +80,7 @@ public class Parking : MiniGame
     }
     public override void BeginPuzzleStartTime()
     {
+       // Debug.Log("Parking.BeginPuzzleStartTime()");
         base.BeginPuzzleStartTime();
         TouchState = eTouchState.NONE;
         SetGameState(eGameState.NORMAL);

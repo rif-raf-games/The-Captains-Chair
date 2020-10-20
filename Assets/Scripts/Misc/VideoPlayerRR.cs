@@ -7,42 +7,38 @@ using UnityEngine.Video;
 public class VideoPlayerRR : MonoBehaviour
 {
     public VideoPlayer VideoPlayer;
-    public Camera VideoCamera;
+    public GameObject VideoPlayerChild;
     Action OnVideoEnd = null;
 
+    
     // Start is called before the first frame update
     void Start()
     {
         VideoPlayer.loopPointReached += EndReached;
-        VideoCamera.enabled = false;
-    }
+        ToggleVideoPlayerChild(false);     
+    }  
 
-   /* void OnGUI()
+    public void ToggleVideoPlayerChild(bool isActive)
     {
-        if(GUI.Button(new Rect(0,0,100,100), "Play"))
-        {
-            VideoCamera.enabled = true;
-            VideoPlayer.Play();
-        }
-    }*/
+        VideoPlayerChild.SetActive(isActive);
+    }
     public void PlayVideo(string videoName, Action callback)
     {
-      //  Debug.Log("VideoPlayerRR.PlayVideo(): videoName: " + videoName);
-        //this.transform.parent.gameObject.SetActive(true);
+        //  Debug.Log("VideoPlayerRR.PlayVideo(): videoName: " + videoName);
+        ToggleVideoPlayerChild(true);
         VideoClip clip = Resources.Load<VideoClip>("Movies/" + videoName);
         VideoPlayer.clip = clip;
-        OnVideoEnd = callback;
-        VideoCamera.enabled = true;
+        OnVideoEnd = callback;        
         BackgroundMusicPlayer.Play("Off");
         VideoPlayer.Play();
     }
 
     void EndReached(UnityEngine.Video.VideoPlayer vp)
     {
-       // Debug.Log("VideoPlayerRR.EndReached()");
-        VideoCamera.enabled = false;
+       // Debug.Log("VideoPlayerRR.EndReached()");            
         VideoPlayer.Stop();
         if (OnVideoEnd != null) OnVideoEnd.Invoke();
         OnVideoEnd = null;
+        ToggleVideoPlayerChild(false);
     }
 }

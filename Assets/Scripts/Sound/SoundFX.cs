@@ -16,7 +16,7 @@ public class SoundFX : MonoBehaviour
 
     public List<FXInfo> SoundFXList;    
 
-    AudioSource AudioSource;
+    public AudioSource AudioSource;
     public List<string> SoundFXNames;
 
     private void Awake()

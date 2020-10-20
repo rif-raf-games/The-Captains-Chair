@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class RifRafInGamePopUp : MonoBehaviour
 {
-    public GameObject PopUpPanel;
+    public GameObject MainPopupPanel;
     public GameObject ExchangeBoardButton;
     public GameObject ExchangeBoardText, SuspendJobText;
     public MissionHint MissionHint;
@@ -21,66 +21,68 @@ public class RifRafInGamePopUp : MonoBehaviour
     private void Awake()
     {
         StaticStuff.PrintRifRafUI("RifRafInGamePopUp.Awake()");
-        PopUpPanel.SetActive(false);
+        MainPopupPanel.SetActive(false);
         this.MissionHint.Init();
         MissionHint.gameObject.SetActive(false);
         ExchangeBoard.gameObject.SetActive(false);
         QuitConfirmPopup.gameObject.SetActive(false);
     }
-    public void Init(MCP mcp)
+    public void SetMCP(MCP mcp)
     {
-        StaticStuff.PrintRifRafUI("RifRafInGamePopUp.Init()");
+        //StaticStuff.PrintRifRafUI("RifRafInGamePopUp.Init()");
         this.MCP = mcp;
     }
     public void OnClickBurger()
     {
         StaticStuff.PrintRifRafUI("OnClickBurger()");
-        TogglePopUpPanel(!PopUpPanel.activeSelf);
+        if (PopupActiveCheck() == false) return;
+
+        if (MainPopupPanel.activeSelf == true)
+        {
+            this.MCP.StartFreeRoam();
+            StaticStuff.SaveCurrentProfile("Closing In Game PopUp");
+        }
+        else
+        {
+            this.MCP.StartPopupPanel();
+        }
+        //TogglePopUpPanel(!PopUpPanel.activeSelf);
     }
 
-    public void TogglePopUpPanel(bool isActive)
+    public void ToggleMainPopupPanel(bool isActive)
     {
-        StaticStuff.PrintRifRafUI("RifRafInGamePopUp.TogglePopUpPanel() isActive: " + isActive);
-        PopUpPanel.SetActive(isActive);
-        if (isActive == true)
-        {
-            MusicVolume.Slider.value = this.MCP.GetMusicVolume();
-            MusicVolume.Toggle.isOn = (MusicVolume.Slider.value > 0f);
-            SoundFXVolume.Slider.value = this.MCP.GetSoundFXVolume();
-            SoundFXVolume.Toggle.isOn = (SoundFXVolume.Slider.value > 0f);
+        MainPopupPanel.SetActive(isActive);
+    }
 
-            if (ArticyGlobalVariables.Default.Episode_01.First_Exchange == false)
+    public void TurnOnPopupMenu()
+    {
+        //StaticStuff.PrintRifRafUI("RifRafInGamePopUp.TogglePopUpPanel() isActive: " + isActive);
+        //Debug.Log("RifRafInGamePopUp.TurnOnPopupMenu()");
+        ToggleMainPopupPanel(true);
+        MusicVolume.Slider.value = this.MCP.GetMusicVolume();
+        MusicVolume.Toggle.isOn = (MusicVolume.Slider.value > 0f);
+        SoundFXVolume.Slider.value = this.MCP.GetSoundFXVolume();
+        SoundFXVolume.Toggle.isOn = (SoundFXVolume.Slider.value > 0f);
+
+        //if (ArticyGlobalVariables.Default.Episode_01.First_Exchange == false)
+        if(false)
+        {
+            ExchangeBoardButton.SetActive(false);
+        }
+        else
+        {
+            ExchangeBoardButton.SetActive(true);
+            if (FindObjectOfType<TheCaptainsChair>() != null)
             {
-                ExchangeBoardButton.SetActive(false);
+                ExchangeBoardText.SetActive(true);
+                SuspendJobText.SetActive(false);
             }
             else
             {
-                ExchangeBoardButton.SetActive(true);
-                if (FindObjectOfType<TheCaptainsChair>() != null)
-                {
-                    ExchangeBoardText.SetActive(true);
-                    SuspendJobText.SetActive(false);
-                }
-                else
-                {
-                    ExchangeBoardText.SetActive(false);
-                    SuspendJobText.SetActive(true);
-                }
+                ExchangeBoardText.SetActive(false);
+                SuspendJobText.SetActive(true);
             }
         }
-        else
-        {
-            StaticStuff.SaveCurrentProfile("Closing In Game PopUp");
-        }
-        if(FindObjectOfType<MiniGameMCP>() != null)
-        {
-            FindObjectOfType<MiniGameMCP>().SetDialogueActive(isActive);
-            this.MCP.ToggleJoystick(false);
-        }
-        else
-        {
-            this.MCP.ToggleJoystick(!isActive);
-        }        
     }
     public void ToggleMissionHint(bool isActive)
     {
@@ -102,7 +104,11 @@ public class RifRafInGamePopUp : MonoBehaviour
         MissionHint.gameObject.SetActive(false);
     }
 
-    
+    public void ShutOffExchangeBoard()
+    {
+        ExchangeBoard.ShutOffQuitAcceptPopups();
+        ExchangeBoard.gameObject.SetActive(false);
+    }
 
     bool PopupActiveCheck()
     {
@@ -115,7 +121,7 @@ public class RifRafInGamePopUp : MonoBehaviour
         StaticStuff.PrintRifRafUI("OnClickResumeGame()");
         if (PopupActiveCheck() == false) return;
 
-        TogglePopUpPanel(false);
+        this.MCP.StartFreeRoam();
     }
     
 
@@ -128,7 +134,7 @@ public class RifRafInGamePopUp : MonoBehaviour
     public void OnClickExchangeBoard()
     {
         StaticStuff.PrintRifRafUI("OnClickExchangeBoard()");
-        Debug.Log("OnClickExchangeBoard()");
+       // Debug.Log("OnClickExchangeBoard()");
         if (PopupActiveCheck() == false) return;
 
         if (FindObjectOfType<TheCaptainsChair>() != null)
@@ -157,8 +163,7 @@ public class RifRafInGamePopUp : MonoBehaviour
     {
         StaticStuff.PrintRifRafUI("OnClickQuitToMainMenu()");
         if (PopupActiveCheck() == false) return;
-
-        //this.MCP.LoadNextScene("Front End Launcher");
+        
         QuitConfirmPopup.gameObject.SetActive(true);
     }
     public void OnClickQuitToMainCancel()

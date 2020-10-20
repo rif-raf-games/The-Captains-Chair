@@ -45,30 +45,22 @@ public class TheCaptainsChair : MonoBehaviour
         {
             //Debug.LogWarning("TheCaptainsChair.Start() getting MCP");
             this.MCP = FindObjectOfType<MCP>();
-            this.MCP.ShutOffAllUI();
+           // this.MCP.ShutOffAllUI();
             forceDialogueStart = true;
         }        
 
-        ArticyDatabase.DefaultGlobalVariables.Notifications.AddListener("*.*", MyGameStateVariablesChanged);
-        //Debug.Log("Welcome to The Captain's Chair!!");
+        ArticyDatabase.DefaultGlobalVariables.Notifications.AddListener("*.*", MyGameStateVariablesChanged);        
         StaticStuff.SetCaptainsChair(this.ArticyFlowToPrint);
         Player = FindObjectOfType<CCPlayer>();
         // get a list of all the NPC's so that we can search for them quickly via an articy reference
-        List<NPC> npcs = GameObject.FindObjectsOfType<NPC>().ToList();
-        string s = "TheCaptainsChair.Start() ArticyRefNPCs:\n";
-        foreach (KeyValuePair<string, NPC> entry in ArticyRefNPCs)
-        {
-            s += entry.Key + ", " + entry.Value.name + "\n";
-        }
-       // Debug.Log(s);
+        List<NPC> npcs = GameObject.FindObjectsOfType<NPC>().ToList();        
         foreach (NPC npc in npcs)
         {
             if (npc.ArticyEntityReference == null || npc.ArticyEntityReference.GetObject() == null)
             {
                 Debug.LogWarning("This NPC has a missing or broken ArticyRef so make sure all is well: " + npc.name);
                 continue;
-            }
-           // Debug.Log("about to add npc: " + npc.name);
+            }           
             ArticyRefNPCs.Add(npc.name, npc);
         }
 
@@ -86,7 +78,7 @@ public class TheCaptainsChair : MonoBehaviour
             }
             else
             {
-                Debug.Log("We quit the mini game so deal with that");
+               // Debug.Log("We quit the mini game so deal with that");
                 flowStartAO = jumpSave.Template.Quit_Mini_Game_Result.Dialogue; //jumpSave.Template.Flow_Start_Success.ReferenceSlot;
                                                                                 // Debug.Log("flow start: " + flowStartAO.TechnicalName);
                                                                                 //Player.GetComponent<ArticyFlow>().CheckIfDialogueShouldStart(flowStartAO as Dialogue, Player.gameObject);
@@ -102,28 +94,14 @@ public class TheCaptainsChair : MonoBehaviour
         }
         else
         {
-            /*if(DialogueToStartOn == null)
-            {
-                Debug.LogError("There's no dialogue defined to start on in this scene");
-            }
-            if(DialogueToStartOn.GetObject() == null)
-            {
-                Debug.LogError("There's no dialogue defined to start on in this scene");
-            }
-            if(DialogueToStartOn.GetObject() as Dialogue == null)
-            {
-                Debug.LogError("The starting Articy element is not a Dialogue");
-            }*/
-            //Player.GetComponent<ArticyFlow>().CheckIfDialogueShouldStart(DialogueToStartOn.GetObject() as Dialogue, Player.gameObject);
             dialogueToStartOn = DialogueToStartOn.GetObject() as Dialogue;
         }
 
         if (dialogueToStartOn == null) { Debug.LogError("We've got no Dialogue to start on in this scene"); return; }
         if(forceDialogueStart == true)
-        {
-           // Debug.LogWarning("We're forcing the start of the dialogue since we had no MCP when this started");
+        {          
             Player.GetComponent<ArticyFlow>().CheckIfDialogueShouldStart(dialogueToStartOn, Player.gameObject);            
-            this.MCP.ToggleJoystick(true);            
+           // this.MCP.ToggleJoystick(true);            
         }
         else
         {
@@ -132,7 +110,6 @@ public class TheCaptainsChair : MonoBehaviour
 
         VisualFX visualFX = FindObjectOfType<VisualFX>();
         VisualFXPlayer.Init(visualFX);       
-
         this.MCP.SetupSceneSound(SoundFXUsedInScene);
     }
 

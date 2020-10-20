@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class BackgroundMusic : MonoBehaviour
 {
-    AudioSource AudioSource;
+    public AudioSource AudioSource;
     float SavedVol;
     Coroutine FadeCoroutine;
 
     private void Awake()
     {
+        //Debug.Log("BackgroundMusic.Awake()");
         this.AudioSource = GetComponent<AudioSource>();
     }
     
@@ -74,7 +75,7 @@ public static class BackgroundMusicPlayer
 
     public static void Play(string musicName)
     {
-        Debug.Log("BackgroundMusicPlayer.Play() musicName: " + musicName);
+        //Debug.Log("BackgroundMusicPlayer.Play() musicName: " + musicName);
         if (BGMusic == null) { Debug.LogError("Trying to play music with no music player"); return; }
         if (musicName.Equals("Off")) BGMusic.StopMusic();
         else BGMusic.PlayMusic(musicName);
