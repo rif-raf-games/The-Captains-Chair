@@ -620,14 +620,14 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
 
         if (waitingOnAL == true)
         {
-            Debug.Log("1");
+           // Debug.Log("1");
            // ConvoUI.ShutOffButtons();
         }
         else
         {
             if(WaitingOnALLastFrame == true && waitingOnAL == false)
             {
-                Debug.Log("2");
+              //  Debug.Log("2");
                 //  ConvoUI.SetupValidButtons();
             }            
         }

@@ -16,7 +16,7 @@ public class ConvoUI : MonoBehaviour
     float TypewriterSpeed;
     public GameObject[] DialogueOptions;
 
-    ArticyFlow ArticyFlow;
+    public ArticyFlow ArticyFlow;
     MCP MCP;
     bool TextTyping = false;
     bool IsInteractive = true;
@@ -163,6 +163,7 @@ public class ConvoUI : MonoBehaviour
         for (int i = 0; i < NumValidButtons; i++) DialogueOptions[i].SetActive(true);        
         ArticyObject target = null;
         if (CurValidAOTargets != null) target = CurValidAOTargets[0];
+        if (ArticyFlow == null) SetSceneArticyFlowObject(); // needed if starting a scene not via FE
         ArticyFlow.ConvoButtonClicked(0, target);
     }    
    
@@ -177,6 +178,7 @@ public class ConvoUI : MonoBehaviour
         //Debug.LogError("OnClickDialogueButton() buttonIndex: " + buttonIndex + ", ArticyFlow hash: " + ArticyFlow.GetHashCode());        
         ArticyObject target = null;
         if (CurValidAOTargets != null) target = CurValidAOTargets[buttonIndex];
+        if (ArticyFlow == null) SetSceneArticyFlowObject(); // needed if starting a scene not via FE
         ArticyFlow.ConvoButtonClicked(buttonIndex, target);
     }
     
