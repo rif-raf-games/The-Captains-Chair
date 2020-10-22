@@ -9,6 +9,7 @@ using UnityEngine.UI;
 using System.Linq;
 using UnityEditor;
 
+
 public class LockPicking : MiniGame
 {
     enum eGameState { OFF, ON };
@@ -20,7 +21,7 @@ public class LockPicking : MiniGame
     public List<float> RingCamYs = new List<float>();
     public Gate GatePrefab;
     public List<Gate> Gates;
-    public List<Gate> GatesThisGame = new List<Gate>();
+    public List<Gate> GatesRemaining = new List<Gate>();
     public List<PathNode> StartNodes;
     public List<PathNode> DeathNodes;
     public Ring CurTouchedRing = null;
@@ -28,7 +29,8 @@ public class LockPicking : MiniGame
     Vector3 LastWorldTouchPos = Vector3.zero;
     float LastCenterToWorldAngle;
     public Text ResultsText;
-    MCP MCP;   
+    MCP MCP;
+    LockpickStatus StatsText;
 
     Diode EvilDiodePrefab;
     float GameTime;
@@ -130,8 +132,8 @@ public class LockPicking : MiniGame
         EvilDiodes.Clear();
 
         //List<PathNode> availStartNodes = new List<PathNode>(StartNodes);
-        GatesThisGame.Clear();
-        GatesThisGame = new List<Gate>(Gates);
+        GatesRemaining.Clear();
+        GatesRemaining = new List<Gate>(Gates);
         if (Diode.DebugStartNode != null)
         {
             Diode.ResetDiodeForGame(Diode.DebugStartNode);
@@ -143,10 +145,44 @@ public class LockPicking : MiniGame
             // usedPathNodes.Add(StartNodes[startIndex]);
         }
 
+        for (int i = 0; i < 3; i++) NumGatesPerRing[i] = 0;
         foreach (Gate g in Gates)
         {
             g.gameObject.SetActive(true);
+            g.RingNum = int.Parse(g.transform.parent.gameObject.name[6].ToString());
+            NumGatesPerRing[g.RingNum - 1]++;
         }
+
+        StatsText = FindObjectOfType<LockpickStatus>();
+        if (StatsText != null)
+        {            
+            StatsText.TotalCollected.text = "0";
+            StatsText.TimeSpent.text = "0";
+            StatsText.TotalRemaining.text = Gates.Count.ToString();
+            for (int i = 0; i < 3; i++) StatsText.RemainingPerRing[i].text = NumGatesPerRing[i].ToString();
+        }                
+    }
+
+    int[] NumGatesPerRing = new int[3];
+    
+    public void CollectGate(Gate gate)
+    {
+        Debug.Log("found gate: " + gate.name + ", ring num: " + gate.RingNum); // mogate
+        GatesRemaining.Remove(gate);
+        gate.gameObject.SetActive(false);
+        SoundFXPlayer.Play("Lock_CollectFacet");
+        if (GatesRemaining.Count == 0)
+        {
+            StartCoroutine(ShowResults("You Win, congratulations!!", true));
+        }
+
+        NumGatesPerRing[gate.RingNum - 1]--;
+        if(StatsText != null)
+        {
+            StatsText.TotalCollected.text = (Gates.Count - GatesRemaining.Count).ToString();
+            StatsText.TotalRemaining.text = GatesRemaining.Count.ToString();
+            for (int i = 0; i < 3; i++) StatsText.RemainingPerRing[i].text = NumGatesPerRing[i].ToString();
+        }        
     }
 
     IEnumerator ShowResults(string result, bool success)
@@ -205,7 +241,7 @@ public class LockPicking : MiniGame
         // time adjustment
         float timeAdj = SpeedAdjTime * GameTime * .01f;   
         // num gates collected adjustment
-        float gatesAdj = SpeedAdjNumGates * (Gates.Count - GatesThisGame.Count);        
+        float gatesAdj = SpeedAdjNumGates * (Gates.Count - GatesRemaining.Count);        
 
         float newSpeed = startSpeed + timeAdj + gatesAdj;
         if (newSpeed > MAX_DIODE_SPEED) newSpeed = MAX_DIODE_SPEED;
@@ -311,21 +347,7 @@ public class LockPicking : MiniGame
         base.ResetPostDialogueState();
         CurGameState = DialogueSaveState;
     }
-    
-
-    public void CollectGate(Gate gate)
-    {
-        //Debug.Log("found gate: " + gate.name);
-        GatesThisGame.Remove(gate);
-        gate.gameObject.SetActive(false);
-        SoundFXPlayer.Play("Lock_CollectFacet");
-        if(GatesThisGame.Count == 0)        
-        {
-            StartCoroutine(ShowResults("You Win, congratulations!!", true));
-        }        
-    }
-
-    
+            
     public bool IsDeathNode(PathNode pathNode)
     {
         return DeathNodes.Contains(pathNode);
@@ -348,26 +370,18 @@ public class LockPicking : MiniGame
         Diode.DiodeFixedUpdate();
         RotateRings();
     }
-
+    
     // Update is called once per frame
     void Update()
     {
-        if (DebugText != null)
-        {
-            DebugText.text = CurGameState.ToString() + "\n";
-            DebugText.text += PuzzleStartTime + "\n";
-            /*DebugText.text = "";
-            DebugText.text = "GameTime: " + GameTime.ToString("F2") + "\n";
-            DebugText.text += "\n";
-            DebugText.text += "EvilSpanBegan: " + EvilSpawnBegan + "\n";
-            DebugText.text += "Num Evil Diodes: " + EvilDiodes.Count + "\n";
-            DebugText.text += "MaxEvilDiodes: " + MaxEvilDiodes + "\n";
-            DebugText.text += "EvilDiodeTimer: " + EvilDiodeTimer.ToString("F2") + "\n";
-            DebugText.text += "\n";
-            DebugText.text += "Diode speed: " + Diode.CurSpeed.ToString("F2") + "\n";*/
-        }
+        
         if (CurGameState == eGameState.OFF || DialogueActive == true) return;
+        
         GameTime += Time.deltaTime;
+        System.TimeSpan span = System.TimeSpan.FromSeconds(GameTime);
+        
+        if(StatsText != null ) StatsText.TimeSpent.text = string.Format("{0}:{1:00}", (int)span.TotalMinutes, span.Seconds);
+       
         if (Input.GetMouseButtonDown(0)) // initial press
         {                        
             LayerMask mask = LayerMask.GetMask("Lockpick Touch Control");
@@ -457,6 +471,7 @@ public class LockPicking : MiniGame
     {
         foreach (Ring r in Rings)
         {
+           // if (r != CurTouchedRing) r.CurRotateSpeed = 0f;
             r.Rotate();
         }
     }
@@ -485,7 +500,7 @@ public class LockPicking : MiniGame
         GatePrefab = gatePrefab;
         Rings = rings;
     }
-    public void InitFromProcessing( /*Diode diode, GameObject centerBlock, List<Ring> rings,*/ List<Gate> gates, List<PathNode> startNodes, List<PathNode> deathNodes)
+    public void InitFromProcessing( List<Gate> gates, List<PathNode> startNodes, List<PathNode> deathNodes)
     {
         Gates = gates;
         StartNodes = startNodes;
@@ -499,11 +514,10 @@ public class LockPicking : MiniGame
         }
     }
 
+    
+
     public void ProcessBoardSetup()
-    {
-        GameObject go = GameObject.Find("goatfucker");
-        Debug.Log(go == null);
-        Debug.Log("process lockpicking board setup");
+    {        
         float nodeRadius = Diode.GetComponent<SphereCollider>().radius / 3f;
         int ringLayerMask = LayerMask.GetMask("Lockpick Ring");        
         float gateSize = Diode.GetComponent<SphereCollider>().radius * 2f;
@@ -540,7 +554,9 @@ public class LockPicking : MiniGame
                     {
                         Gate g = Object.Instantiate<Gate>(GatePrefab, nodeTransform);
                         g.transform.localScale = gateScale;
-                        g.name = "Gate " + (numGates++).ToString("D2");
+                        Debug.LogWarning("ring name: " + ring.name);
+                        g.RingNum = int.Parse(ring.name[6].ToString());                        
+                        g.name = "Gate " + (numGates++).ToString("D2") + " Ring " + g.RingNum;                        
                         gates.Add(g);
                     }
                 }
@@ -594,3 +610,20 @@ public class LockPicking : MiniGame
 #endif
     }
 }
+
+/*
+ if (DebugText != null)
+        {
+            DebugText.text = CurGameState.ToString() + "\n";
+            DebugText.text += PuzzleStartTime + "\n";
+            /*DebugText.text = "";
+            DebugText.text = "GameTime: " + GameTime.ToString("F2") + "\n";
+            DebugText.text += "\n";
+            DebugText.text += "EvilSpanBegan: " + EvilSpawnBegan + "\n";
+            DebugText.text += "Num Evil Diodes: " + EvilDiodes.Count + "\n";
+            DebugText.text += "MaxEvilDiodes: " + MaxEvilDiodes + "\n";
+            DebugText.text += "EvilDiodeTimer: " + EvilDiodeTimer.ToString("F2") + "\n";
+            DebugText.text += "\n";
+            DebugText.text += "Diode speed: " + Diode.CurSpeed.ToString("F2") + "\n";*/
+        //}
+   

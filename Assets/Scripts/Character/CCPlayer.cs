@@ -121,9 +121,14 @@ public class CCPlayer : CharacterEntity
             {
                 mask = LayerMask.GetMask("ITrigger");
                 ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+                {
+                    Debug.Log("clicked on this hit: " + hit.collider.gameObject.name);
+                }
                 if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask))
-                {                   
+                {
                     // we clicked on an ITrigger, so figure out which collider we need to check, then check if the Player is inside
+                    Debug.Log("clicked on this ITrigger: " + hit.collider.gameObject.name);
                     mask = LayerMask.GetMask("Player");
                     GameObject container = hit.collider.transform.GetChild(0).gameObject;
                     Collider[] colliders = null;                
@@ -195,26 +200,17 @@ public class CCPlayer : CharacterEntity
             rbody.velocity = newVel;
             Vector3 newDir = Vector3.RotateTowards(transform.forward, rbody.velocity, RotSpeed * Time.deltaTime, 0.0f);
             transform.rotation = Quaternion.LookRotation(newDir);
-          }        
-
-         /* if (WaitingForFollowersOnElevator == true)
-          {
-              if(Loop.NavMeshDone())
-              {
-                 // Debug.Log("Loop is ready to rock");
-                  StartElevatorRide();
-              }
-          } */         
+          }                     
     }
 
     public int Adjustment = 0;
 
     private void OnTriggerEnter(Collider other)
     {
-        //Debug.Log("OnTriggerEnter() other: " + other.name);
-        if(other.gameObject.CompareTag("Ignore Trigger")) { StaticStuff.PrintTriggerEnter(this.name + "Collided with an Ignore Trigger trigger, so bail"); return; }
-        if (other.gameObject.layer == LayerMask.NameToLayer("Room")) { StaticStuff.PrintTriggerEnter(this.name + " This is a Room collider " + other.name + " on the Player, so bail and let the RoomCollider.cs handle it"); return; }
         StaticStuff.PrintTriggerEnter(this.name + " CCPlayer.OnTriggerEnter() other: " + other.name + ", layer: " + other.gameObject.layer);
+        if (other.gameObject.CompareTag("Ignore Trigger")) { StaticStuff.PrintTriggerEnter(this.name + "Collided with an Ignore Trigger trigger, so bail"); return; }
+        if (other.gameObject.layer == LayerMask.NameToLayer("Room")) { StaticStuff.PrintTriggerEnter(this.name + " This is a Room collider " + other.name + " on the Player, so bail and let the RoomCollider.cs handle it"); return; }
+        
         ArticyReference colliderArtRef = other.gameObject.GetComponent<ArticyReference>();
         if (colliderArtRef != null)
         {
