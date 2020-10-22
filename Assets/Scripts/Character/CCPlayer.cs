@@ -120,15 +120,11 @@ public class CCPlayer : CharacterEntity
             if (Input.GetMouseButtonDown(0))
             {
                 mask = LayerMask.GetMask("ITrigger");
-                ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                if (Physics.Raycast(ray, out hit, Mathf.Infinity))
-                {
-                    Debug.Log("clicked on this hit: " + hit.collider.gameObject.name);
-                }
+                ray = Camera.main.ScreenPointToRay(Input.mousePosition);                
                 if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask))
                 {
                     // we clicked on an ITrigger, so figure out which collider we need to check, then check if the Player is inside
-                    Debug.Log("clicked on this ITrigger: " + hit.collider.gameObject.name);
+                   // Debug.Log("clicked on this ITrigger: " + hit.collider.gameObject.name);
                     mask = LayerMask.GetMask("Player");
                     GameObject container = hit.collider.transform.GetChild(0).gameObject;
                     Collider[] colliders = null;                
