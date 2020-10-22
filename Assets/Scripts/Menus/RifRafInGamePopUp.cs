@@ -64,8 +64,8 @@ public class RifRafInGamePopUp : MonoBehaviour
         SoundFXVolume.Slider.value = this.MCP.GetSoundFXVolume();
         SoundFXVolume.Toggle.isOn = (SoundFXVolume.Slider.value > 0f);
 
-        //if (ArticyGlobalVariables.Default.Episode_01.First_Exchange == false)
-        if(false)
+        if (ArticyGlobalVariables.Default.Episode_01.First_Exchange == false)
+        //if(false)
         {
             ExchangeBoardButton.SetActive(false);
         }
