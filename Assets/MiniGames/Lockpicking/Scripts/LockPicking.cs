@@ -459,10 +459,10 @@ public class LockPicking : MiniGame
         {
             StartGame();
         }
-        if (GUI.Button(new Rect(Screen.width - 100, Screen.height / 2 - 100, 100, 100), "Win"))
+       /* if (GUI.Button(new Rect(Screen.width - 100, Screen.height / 2 - 100, 100, 100), "Win"))
         {
             TMP_WinGame();
-        }
+        }*/
     }
  
     // ou can rotate a direction Vector3 with a Quaternion by multiplying the quaternion with the direction(in that order)

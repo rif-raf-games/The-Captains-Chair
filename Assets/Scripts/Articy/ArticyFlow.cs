@@ -551,7 +551,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     public DialogueFragment DebugDF = null;
     public bool SHOW_SKIP_BUTTON = false;
 #if true
-    void OnGUI()
+   /* void OnGUI()
     {
       //  if (SHOW_SKIP_BUTTON == false) return;
         if (CurArticyState == eArticyState.DIALOGUE && CurPauseObject != null)
@@ -608,7 +608,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                 }
             }
         }
-    }
+    }*/
 #endif
     MCP OurMCP;
     bool WaitingOnALLastFrame = false;
