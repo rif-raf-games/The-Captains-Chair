@@ -191,13 +191,13 @@ public class MiniGameMCP : MonoBehaviour
         EndCurrentPuzzle();
     }
 
-   /* private void OnGUI()
+    private void OnGUI()
     {
         if (GUI.Button(new Rect(Screen.width - 100, Screen.height / 2 - 100, 100, 100), "Win"))
         {
             Puzzles[CurPuzzleIndex].TMP_WinGame();
         }        
-    }   */
+    }   
 
     void EndCurrentPuzzle()
     {
