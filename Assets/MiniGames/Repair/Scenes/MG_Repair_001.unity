@@ -508,10 +508,8 @@ MonoBehaviour:
   ScanLines: {fileID: 2001861102}
   OnBoardMaterial: {fileID: 2100000, guid: 43bcbbd76eef64b7dafa570bb2f60f2a, type: 2}
   OnBeltLiftMaterial: {fileID: 2100000, guid: 121bdc78b043d4a378b79ece99e6b350, type: 2}
-  NonMovableMaterial: {fileID: 2100000, guid: 103028ffdb3c142018f589cfc0cbc76f, type: 2}
+  NonMovableMaterial: {fileID: 2100000, guid: a8f863ee2b3284275af171592cffcb8f, type: 2}
   PathErrorSphere: {fileID: 1472913666}
-  BoardPieces: {fileID: 667540215}
-  Belt: {fileID: 1659761969}
   ResultsText: {fileID: 1297454062}
   FuelMat: {fileID: 2100000, guid: 22243e14fb5128a4686b6192b47058c0, type: 2}
   CoolantMat: {fileID: 2100000, guid: b0479df68d723174bb21ff34645fad81, type: 2}
@@ -533,6 +531,8 @@ MonoBehaviour:
   - {fileID: 1922494023}
   - {fileID: 1635395429}
   - {fileID: 2119250349}
+  BoardPieces: {fileID: 667540215}
+  Belt: {fileID: 1659761969}
   raiseLevel: 1.5
 --- !u!114 &226100611
 MonoBehaviour:
@@ -2311,22 +2311,12 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 966086584205992199, guid: d91674bf05cbb4866add59a821b86151,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6336315527628806038, guid: d91674bf05cbb4866add59a821b86151,
         type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5919823595663706442, guid: d91674bf05cbb4866add59a821b86151,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3803348457029138485, guid: d91674bf05cbb4866add59a821b86151,
         type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -2345,6 +2335,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6174442713612075053, guid: d91674bf05cbb4866add59a821b86151,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 966086584205992199, guid: d91674bf05cbb4866add59a821b86151,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3803348457029138485, guid: d91674bf05cbb4866add59a821b86151,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1746008705087907519, guid: d91674bf05cbb4866add59a821b86151,
         type: 3}
@@ -2370,11 +2375,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_CastShadows
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6174442713612075053, guid: d91674bf05cbb4866add59a821b86151,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d91674bf05cbb4866add59a821b86151, type: 3}
