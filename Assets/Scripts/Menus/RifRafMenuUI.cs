@@ -102,10 +102,10 @@ public class RifRafMenuUI : MonoBehaviour
                 MainMenuButtons[(int)eMainMenuButtons.NEW].interactable = true;
                 
                 MainMenuButtons[(int)eMainMenuButtons.NEW].onClick.AddListener(OnClickNewGame);
-                MainMenuButtonsText[(int)eMainMenuButtons.NEW].text = "New Game";
+                MainMenuButtonsText[(int)eMainMenuButtons.NEW].text = "NEW GAME";
                 
                 MainMenuButtons[(int)eMainMenuButtons.CONTINUE].onClick.AddListener(OnClickContinueGame);
-                MainMenuButtonsText[(int)eMainMenuButtons.CONTINUE].text = "Continue Game";
+                MainMenuButtonsText[(int)eMainMenuButtons.CONTINUE].text = "CONTINUE GAME";
                 break;
             case StaticStuff.NUM_PROFILES:
                // Debug.Log("4 saves");
@@ -113,20 +113,20 @@ public class RifRafMenuUI : MonoBehaviour
                 MainMenuButtons[(int)eMainMenuButtons.DELETE].interactable = true;
 
                 MainMenuButtons[(int)eMainMenuButtons.NEW].onClick.AddListener(OnClickContinueGame);
-                MainMenuButtonsText[(int)eMainMenuButtons.NEW].text = "Continue Game";
+                MainMenuButtonsText[(int)eMainMenuButtons.NEW].text = "CONTINUE GAME";
 
                 MainMenuButtons[(int)eMainMenuButtons.CONTINUE].onClick.AddListener(OnClickNewGame);
-                MainMenuButtonsText[(int)eMainMenuButtons.CONTINUE].text = "New Game";
+                MainMenuButtonsText[(int)eMainMenuButtons.CONTINUE].text = "NEW GAME";
                 break;            
             default:
                // Debug.Log("< 4 saves");
                 foreach (Button b in MainMenuButtons) b.interactable = true;
 
                 MainMenuButtons[(int)eMainMenuButtons.NEW].onClick.AddListener(OnClickContinueGame);
-                MainMenuButtonsText[(int)eMainMenuButtons.NEW].text = "Continue Game";
+                MainMenuButtonsText[(int)eMainMenuButtons.NEW].text = "CONTINUE GAME";
 
                 MainMenuButtons[(int)eMainMenuButtons.CONTINUE].onClick.AddListener(OnClickNewGame);
-                MainMenuButtonsText[(int)eMainMenuButtons.CONTINUE].text = "New Game";
+                MainMenuButtonsText[(int)eMainMenuButtons.CONTINUE].text = "NEW GAME";
                 break;
         }
     }
