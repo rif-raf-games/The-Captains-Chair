@@ -14,7 +14,7 @@ public class RifRafMenuUI : MonoBehaviour
     public GameObject[] Menus;
     public eMenuType CurActiveMenu;
 
-    public enum ePopUpType { PROFILES, NEW_GAME, CONTINUE_GAME, DELETE_GAME, DELETE_CONFIRM, NUM_POPUPS };
+    public enum ePopUpType { PROFILES, NEW_GAME, CONTINUE_GAME, DELETE_GAME, DELETE_CONFIRM, AUDIO, NUM_POPUPS };
     [Header("PopUps")]
     public GameObject[] PopUps;
     public ePopUpType CurActivePopup;
@@ -27,6 +27,9 @@ public class RifRafMenuUI : MonoBehaviour
     public Button[] ProfilesButtons;
     public Text[] ProfilesText;
     public Image[] ProfilesImages;
+    [Header("Audio")]
+    public RifRafInGamePopUp.VolumeControl MusicVolume;
+    public RifRafInGamePopUp.VolumeControl SoundFXVolume;
 
     [Header("Misc")]
     public Button BackButton;
@@ -404,6 +407,53 @@ public class RifRafMenuUI : MonoBehaviour
         TogglePopUp(0, false);
     }
     #endregion
+
+    public void OnClickAudioSettings()
+    {
+        StaticStuff.PrintRifRafUI("OnClickGenericMenuBack");
+        if (MenusActiveCheck() == false) return;
+
+        TogglePopUp(ePopUpType.AUDIO, true);
+    }
+
+    public void OnClickCloseAudioSettings()
+    {
+        StaticStuff.PrintRifRafUI("OnClickCloseAudioSettings");
+
+        TogglePopUp(ePopUpType.AUDIO, false);
+    }
+
+    public void OnSliderAudioVolume(Slider slider)
+    {
+        StaticStuff.PrintRifRafUI("OnSliderAudioVolume()");
+
+        if (slider == MusicVolume.Slider)
+        {
+            this.MCP.SetMusicVolume((int)slider.value);
+            MusicVolume.Toggle.isOn = (MusicVolume.Slider.value > 0f);
+        }
+        else
+        {
+            this.MCP.SetSoundFXVolume((int)slider.value);
+            SoundFXVolume.Toggle.isOn = (SoundFXVolume.Slider.value > 0f);
+        }
+    }
+
+    public void OnToggleAudioVolume(Toggle toggle)
+    {
+        if (toggle == MusicVolume.Toggle)
+        {
+            if (toggle.isOn == true) this.MCP.SetMusicVolume(100);
+            else this.MCP.SetMusicVolume(0);
+            MusicVolume.Slider.value = this.MCP.GetMusicVolume();
+        }
+        else
+        {
+            if (toggle.isOn == true) this.MCP.SetSoundFXVolume(100);
+            else this.MCP.SetSoundFXVolume(0);
+            SoundFXVolume.Slider.value = this.MCP.GetSoundFXVolume();
+        }
+    }
 
     bool MenusActiveCheck()
     {

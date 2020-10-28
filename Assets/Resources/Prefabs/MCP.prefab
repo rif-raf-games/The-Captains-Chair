@@ -937,7 +937,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7819065350477731054
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2122,7 +2122,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7521580289344985261}
+      - m_Target: {fileID: 6502241616610132884}
         m_MethodName: OnToggleAudioVolume
         m_Mode: 2
         m_Arguments:
@@ -7832,7 +7832,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7521580289344985261}
+      - m_Target: {fileID: 6502241616610132884}
         m_MethodName: OnSliderAudioVolume
         m_Mode: 2
         m_Arguments:
@@ -8709,7 +8709,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 408, y: 96}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -11773,7 +11773,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7521580289344985261}
+      - m_Target: {fileID: 6502241616610132884}
         m_MethodName: OnSliderAudioVolume
         m_Mode: 2
         m_Arguments:
@@ -12499,7 +12499,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8190119445669253799
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12667,7 +12667,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7521580289344985261}
+      - m_Target: {fileID: 6502241616610132884}
         m_MethodName: OnToggleAudioVolume
         m_Mode: 2
         m_Arguments:
@@ -12802,6 +12802,7 @@ MonoBehaviour:
   - {fileID: 7477218653633302679}
   - {fileID: 2282236390612885020}
   - {fileID: 5134224634847763335}
+  - {fileID: 489113444146770739}
   CurActivePopup: 0
   MainMenuButtons:
   - {fileID: 2282236390395317695}
@@ -12826,6 +12827,12 @@ MonoBehaviour:
   - {fileID: 6638924706487782352}
   - {fileID: 4223529890912462917}
   - {fileID: 1190256942048856511}
+  MusicVolume:
+    Slider: {fileID: 8968153492529112602}
+    Toggle: {fileID: 7598156464817143228}
+  SoundFXVolume:
+    Slider: {fileID: 5730868397552973655}
+    Toggle: {fileID: 4147500952655093181}
   BackButton: {fileID: 5118093338902191931}
   DefaultProfileIcon: {fileID: 21300000, guid: 062f2d2147ada49f79a6fbe90c335641, type: 3}
   CurActiveSaveGameFunction: 0
@@ -13442,12 +13449,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: 
+      - m_Target: {fileID: 6502241616610132884}
+        m_MethodName: OnClickCloseAudioSettings
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -15002,13 +15009,13 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Highlighted
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 5423129616582313372}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6502241616610132884}
-        m_MethodName: OnClickComingSoon
+        m_MethodName: OnClickAudioSettings
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -25930,7 +25937,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8629029976380959774
 Transform:
   m_ObjectHideFlags: 0
@@ -28200,7 +28207,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 408, y: 96}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -28700,6 +28707,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6502241616296845841}
     m_Modifications:
+    - target: {fileID: 6732433165535002115, guid: 8f3c36467506b432e96ad281bce7cbbb,
+        type: 3}
+      propertyPath: m_Name
+      value: RifRaf UI - Debug
+      objectReference: {fileID: 0}
+    - target: {fileID: 6732433165535002115, guid: 8f3c36467506b432e96ad281bce7cbbb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8589682433542437566, guid: 8f3c36467506b432e96ad281bce7cbbb,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -28803,16 +28820,6 @@ PrefabInstance:
     - target: {fileID: 8589682433542437566, guid: 8f3c36467506b432e96ad281bce7cbbb,
         type: 3}
       propertyPath: m_Pivot.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6732433165535002115, guid: 8f3c36467506b432e96ad281bce7cbbb,
-        type: 3}
-      propertyPath: m_Name
-      value: RifRaf UI - Debug
-      objectReference: {fileID: 0}
-    - target: {fileID: 6732433165535002115, guid: 8f3c36467506b432e96ad281bce7cbbb,
-        type: 3}
-      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7610559627464273725, guid: 8f3c36467506b432e96ad281bce7cbbb,

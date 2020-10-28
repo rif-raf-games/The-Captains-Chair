@@ -167,7 +167,7 @@ public class LockPicking : MiniGame
     
     public void CollectGate(Gate gate)
     {
-        Debug.Log("found gate: " + gate.name + ", ring num: " + gate.RingNum); // mogate
+       // Debug.Log("found gate: " + gate.name + ", ring num: " + gate.RingNum); // mogate
         GatesRemaining.Remove(gate);
         gate.gameObject.SetActive(false);
         SoundFXPlayer.Play("Lock_CollectFacet");
@@ -180,7 +180,8 @@ public class LockPicking : MiniGame
         if(StatsText != null)
         {
             StatsText.TotalCollected.text = (Gates.Count - GatesRemaining.Count).ToString();
-            StatsText.TotalRemaining.text = GatesRemaining.Count.ToString();
+            if (GatesRemaining.Count == 0) StatsText.TotalRemaining.text = "Complete";
+            else StatsText.TotalRemaining.text = GatesRemaining.Count.ToString();
             for (int i = 0; i < 3; i++) StatsText.RemainingPerRing[i].text = NumGatesPerRing[i].ToString();
         }        
     }
