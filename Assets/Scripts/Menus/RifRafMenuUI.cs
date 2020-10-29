@@ -364,7 +364,8 @@ public class RifRafMenuUI : MonoBehaviour
     {
         StaticStuff.PrintRifRafUI("OnClickContinueGameYes");
         StaticStuff.SetCurrentProfile(CurProfileSlot);
-        this.MCP.LoadCaptainAvatar(CurProfileSlot);
+        StaticStuff.LoadCurrentProfile();
+        this.MCP.LoadCaptainAvatar(ArticyGlobalVariables.Default.TheCaptain.Avatar);
         StaticStuff.LoadProfileStartScene();
         TogglePopUp(0, false);
     }

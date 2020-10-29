@@ -485,12 +485,12 @@ public class Repair : MiniGame
         if (newLocFound == false)
         {   // didn't find an empty spot, so put the piece back to where it started from           
             piece.transform.position = origPos;
-            Debug.Log("newLocFound is false, so put piece to original position");
+          //  Debug.Log("newLocFound is false, so put piece to original position");
         }        
         else
         {
             bool adjustmentMade = CheckBeltSorting();
-            Debug.Log("piece found a new position, but was there an adjustment made to the belt?: " + adjustmentMade);
+          //  Debug.Log("piece found a new position, but was there an adjustment made to the belt?: " + adjustmentMade);
         }
         
         return newLocFound;
@@ -671,7 +671,7 @@ public class Repair : MiniGame
             collPiece.transform.position = collider.transform.position;
         }
 
-        //Debug.Log(err);
+        //Debug.Log("SetupPathError() err: " + err);
         PieceConn newConn = new PieceConn(collPiece, curPiece);
         DEBUG_ConnsOnThisPath.Add(newConn);
     }    
@@ -687,22 +687,23 @@ public class Repair : MiniGame
         RepairPiece curPiece = pieceConn.Cur;        
         Vector3 curPiecePos = new Vector3(curPiece.transform.position.x, PieceAnchorHeightValToUse, curPiece.transform.position.z); //curPiece.transform.position + new Vector3(0f, Repair.MODEL_HEIGHT / 2f, 0f);        
         StaticStuff.PrintRepairPath("CheckPieceConn() pieceConn: " + pieceConn.ID + ", num OpenAngles: " + curPiece.OpenAngles.Count);
+        
         foreach (int angle in curPiece.OpenAngles)
-        {
+        {            
             NumChecks++;            
-            int pieceRot = Mathf.RoundToInt(curPiece.transform.localRotation.eulerAngles.y);
+            int pieceRot = Mathf.RoundToInt(curPiece.transform.localRotation.eulerAngles.y);         
             int angleAdj = ( curPiece.Type == eRepairPieceType.XOVER || curPiece.Type == eRepairPieceType.SPLITTER ? angle : angle + pieceRot);            
             Color color = GetColor(angleAdj);
             Quaternion q = Quaternion.AngleAxis(angleAdj, Vector3.up);
             Vector3 rayDir = q * Vector3.right;// moangle
-           // Debug.DrawRay(curPiecePos, rayDir * 4, color, 100000f);
+           //Debug.DrawRay(curPiecePos, rayDir * 4, color, 100000f);
             
             RaycastHit hit;
             Physics.Raycast(curPiecePos, rayDir, out hit, Mathf.Infinity);
             StaticStuff.PrintRepairPath("-----------------------------curPiece: " + curPiece.name + " checking dir: " + angleAdj);                  
             if (hit.collider == null)
             {                                                
-                SetupPathError(curPiece.name + " hit nothing at dir: " + angleAdj + " so we must have shot off the board.", curPiece, null, rayDir);
+                SetupPathError(curPiece.name + " hit nothing at dir: " + angleAdj + " so we must have shot off the board.", curPiece, null, rayDir);                
                 return false;
             }
             else
@@ -718,11 +719,10 @@ public class Repair : MiniGame
                 {                    
                     Debug.LogError("checking if piece is on location hit nothing, which should never happen so see what's up");                    
                     return false;
-                }
-                
+                }                
                 if (hit.collider.tag == "Repair Piece Anchor")
                 {                    
-                    SetupPathError("There is NO piece on the spot " + hit.collider.name, curPiece, hit.collider, rayDir);
+                    SetupPathError("There is NO piece on the spot " + hit.collider.name, curPiece, hit.collider, rayDir);                    
                     return false;
                 }
                 else if (hit.collider.tag == "Repair Piece")
@@ -874,10 +874,10 @@ public class Repair : MiniGame
                 StaticStuff.PrintRepairPath("************************************ going to check conn Us: " + curPieceConn.Cur.name + " , From: " + curPieceConn.From.name);
                 if (CheckPieceConn(curPieceConn) == false)
                 {
+                  //  Debug.Log("***************************************************bailed due to broken puzzle");
                     ConnsToCheck.Clear();
                     puzzleSolved = false;
-                    brokenPathFound = true;
-                   // Debug.Log("***************************************************bailed due to broken puzzle");
+                    brokenPathFound = true;                    
                     msg = PathErrorMessage;
                     break;
                 }

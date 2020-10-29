@@ -97,7 +97,7 @@ static public class StaticStuff
     }
 
     public static int Current_Profile_Num = 1;    
-    static public void CreateNewProfile(int avatar, int profile) // called from debug OnGUI() from avatar select
+    static public void CreateNewProfile(int avatar, int profile) // called from from avatar select
     {
         string saveName = GetProfileName(profile);
         //Debug.LogError("mosave - CreateNewProfile() avatar: " + avatar + ", profile: " + profile + ", saveName: " + saveName);
@@ -129,9 +129,7 @@ static public class StaticStuff
     }
     static public void LoadProfileStartScene() // called from avatar select AND main menu continue
     {
-        //Debug.Log("mosave - LoadProfileStartScene()");
-        LoadCurrentProfile();     
-
+        // NOTE - the profile is now loaded before this is called becauase I need to load up the avatar
         string returnScene = ArticyGlobalVariables.Default.Save_Info.Return_Scene;
         string posToSave = ArticyGlobalVariables.Default.Save_Info.Positions_To_Save;
         string savedPos = ArticyGlobalVariables.Default.Save_Info.Saved_Positions;
@@ -301,7 +299,7 @@ static public class StaticStuff
 
     static public void PrintRepairPath(string s)
     {
-        //Debug.Log(s);
+        // Debug.LogWarning("===============================PrintRepairPath(): " + s);
     }
 
     static public void PrintRifRafUI(string s)

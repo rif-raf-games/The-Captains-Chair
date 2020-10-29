@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 5251656462094973578}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.0000007, y: 1, z: 1.0000007}
   m_Children:
   - {fileID: 8658582824363224549}
   m_Father: {fileID: 0}
@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FluidType: 0
   Type: 0
-  OpenAngles: 5a000000960000000e010000
+  OpenAngles: 5a0000001e0000000e010000
   Movable: 1
   ReachedOnPath: 0
 --- !u!64 &942290348140053303
@@ -73,22 +73,22 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: 109278b17221bcc40afaf6ba13f14cac,
         type: 3}
       propertyPath: m_Name
-      value: Pipe_2Way_Fork_01
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 109278b17221bcc40afaf6ba13f14cac,
-        type: 3}
-      propertyPath: m_TagString
-      value: Repair Piece
+      value: BROKEN PIECE COLLIDER
       objectReference: {fileID: 0}
     - target: {fileID: -927199367670048503, guid: 109278b17221bcc40afaf6ba13f14cac,
         type: 3}
       propertyPath: m_Layer
       value: 21
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 109278b17221bcc40afaf6ba13f14cac,
+        type: 3}
+      propertyPath: m_TagString
+      value: Repair Piece
+      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 109278b17221bcc40afaf6ba13f14cac,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 109278b17221bcc40afaf6ba13f14cac,
         type: 3}
@@ -140,6 +140,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -1504981713932161579, guid: 109278b17221bcc40afaf6ba13f14cac,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 121bdc78b043d4a378b79ece99e6b350, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 109278b17221bcc40afaf6ba13f14cac, type: 3}
 --- !u!1 &5652632076938190838 stripped
