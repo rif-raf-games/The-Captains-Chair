@@ -348,7 +348,7 @@ public class MCP : MonoBehaviour
                 index++;
             }
         }
-        if (curSceneName.Contains("E1.Exchange") && sceneName.Contains("E1.Plaza"))
+       /* if (curSceneName.Contains("E1.Exchange") && sceneName.Contains("E1.Plaza"))
         {
             GameObject go = GameObject.Find("Captain");
             if (go == null) Debug.LogError("No object named Captain in this scene");
@@ -359,7 +359,7 @@ public class MCP : MonoBehaviour
             go = GameObject.Find("Carver");
             if (go == null) Debug.LogError("No object named Carver in this scene");
             go.transform.position = new Vector3(-44f, 0f, -40f);
-        }
+        }*/
 
         if (sceneName.Contains("Front") == false)
         {            
