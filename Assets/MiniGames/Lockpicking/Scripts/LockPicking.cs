@@ -364,7 +364,10 @@ public class LockPicking : MiniGame
 
     private void FixedUpdate()
     {
-        if (CurGameState == eGameState.OFF || DialogueActive == true) return;
+        bool menuActive = false;
+        if (FindObjectOfType<RifRafInGamePopUp>() != null) menuActive = !FindObjectOfType<RifRafInGamePopUp>().MenusActiveCheck();
+        
+        if (CurGameState == eGameState.OFF || DialogueActive == true || menuActive == true) return;
         foreach (Diode d in EvilDiodes)
         {
             d.DiodeFixedUpdate();
@@ -375,8 +378,11 @@ public class LockPicking : MiniGame
     
     // Update is called once per frame
     void Update()
-    {        
-        if (CurGameState == eGameState.OFF || DialogueActive == true) return;
+    {
+        bool menuActive = false;
+        if (FindObjectOfType<RifRafInGamePopUp>() != null) menuActive = !FindObjectOfType<RifRafInGamePopUp>().MenusActiveCheck();
+
+        if (CurGameState == eGameState.OFF || DialogueActive == true || menuActive == true) return;
         
         GameTime += Time.deltaTime;
         System.TimeSpan span = System.TimeSpan.FromSeconds(GameTime);

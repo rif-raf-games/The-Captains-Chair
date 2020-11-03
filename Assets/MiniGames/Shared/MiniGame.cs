@@ -9,7 +9,7 @@ public class MiniGame : MonoBehaviour
 {
     protected MiniGameMCP MiniGameMCP;
     protected bool IsSolo;
-    protected bool DialogueActive;
+    protected bool DialogueActive;    
     public string SceneName;
 
     //[Header("Sound")]
@@ -20,7 +20,7 @@ public class MiniGame : MonoBehaviour
     public virtual void Awake()
     {
       //  Debug.Log("MiniGame.Awake()");
-        DialogueActive = false;
+        DialogueActive = false;        
         MiniGameMCP mcp = FindObjectOfType<MiniGameMCP>();
         if(mcp == null)
         {
@@ -62,6 +62,7 @@ public class MiniGame : MonoBehaviour
             FindObjectOfType<MCP>().StartMiniGame();
         }
     }
+    
     public void SetDialogueActive( bool val )
     {
       //  Debug.Log("MiniGame.SetDialogueActive() val: " + val);

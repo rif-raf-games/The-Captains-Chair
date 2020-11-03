@@ -44,9 +44,8 @@ public class RifRafInGamePopUp : MonoBehaviour
         }
         else
         {
-            this.MCP.StartPopupPanel();
-        }
-        //TogglePopUpPanel(!PopUpPanel.activeSelf);
+            this.MCP.StartPopupPanel();            
+        }        
     }
 
     public void ToggleMainPopupPanel(bool isActive)
@@ -110,7 +109,11 @@ public class RifRafInGamePopUp : MonoBehaviour
         ExchangeBoard.gameObject.SetActive(false);
     }
 
-    bool PopupActiveCheck()
+    public bool MenusActiveCheck()
+    {
+        return PopupActiveCheck() && MainPopupPanel.activeSelf == false;
+    }
+    public bool PopupActiveCheck()
     {
         return MissionHint.gameObject.activeSelf == false && ExchangeBoard.gameObject.activeSelf == false && QuitConfirmPopup.gameObject.activeSelf == false;
     }
