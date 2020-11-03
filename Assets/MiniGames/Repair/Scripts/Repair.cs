@@ -125,6 +125,7 @@ public class Repair : MiniGame
             foreach (RepairPiece terminal in Terminals) terminal.ReachedOnPath = false;
             foreach (RepairPiece piece in AllPieces)
             {
+                piece.FluidType = eFluidType.NONE;
                 if (piece == null) Debug.LogError(piece.name + ": null piece");
                 if (piece.GetComponentInChildren<MeshRenderer>() == null) Debug.LogError(piece.name + ": null mr");
                 if (piece.GetComponentInChildren<MeshRenderer>().material == null) Debug.LogError(piece.name + ": null material");
@@ -1009,7 +1010,7 @@ public class Repair : MiniGame
     GameObject Cur, From;
     IEnumerator ShowPath()
     {
-        Debug.Log("num PieceConns: " + DEBUG_ConnsOnThisPath.Count);
+       // Debug.Log("num PieceConns: " + DEBUG_ConnsOnThisPath.Count);
         foreach (PieceConn pc in DEBUG_ConnsOnThisPath)
         {
             string curName = "";
@@ -1025,7 +1026,7 @@ public class Repair : MiniGame
                 curName = pc.Cur.gameObject.name;
             }
             From.transform.position = pc.From.transform.position + new Vector3(0f, .6f, 0f);
-            Debug.Log("Cur: " + curName + ", From: " + pc.From.gameObject.name);
+           // Debug.Log("Cur: " + curName + ", From: " + pc.From.gameObject.name);
             yield return new WaitForSeconds(1f);
         }
     }
