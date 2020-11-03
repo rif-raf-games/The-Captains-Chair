@@ -109,6 +109,7 @@ public class MCP : MonoBehaviour
 
         InGamePopUp.gameObject.SetActive(true);
         InGamePopUp.ToggleMainPopupPanel(false);
+        InGamePopUp.ToggleMissionHint(false);
         if (FindObjectOfType<MiniGameMCP>() != null)
         {
             ToggleJoystick(false);
@@ -117,7 +118,12 @@ public class MCP : MonoBehaviour
         {
             ToggleJoystick(true);
         }
-    }    
+    }   
+    
+    public void StartMiniGame()
+    {
+        StartFreeRoam();
+    }
     
     #region SCENE_TRANSITIONS
     public void LoadNextScene(string sceneName = "", Scene_Jump sceneJump = null, Mini_Game_Jump miniGameJump = null, string posToSave = "", string savedPos = "")

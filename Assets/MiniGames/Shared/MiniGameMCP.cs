@@ -244,16 +244,14 @@ public class MiniGameMCP : MonoBehaviour
     }
     void StartCurrentPuzzle()
     {
-      //  Debug.Log("StartCurrentPuzzle()");
+       // Debug.Log("StartCurrentPuzzle()");
         if(PuzzleDialogues != null)
         {   // if we're here, then we've gotten a list of dialogues from an articy ref, so use that
             if (PuzzleDialogues.Count == 0 || PuzzleDialogues.Count - 1 < CurPuzzleIndex)
             {
                 // no dialogue but keep this in case we need this                
                 Puzzles[CurPuzzleIndex].SetDialogueActive(false);
-                Puzzles[CurPuzzleIndex].DialogueEnded();
-                Debug.Log("mofeh");
-               // this.MCP.ToggleInGameUI(true);
+                Puzzles[CurPuzzleIndex].DialogueEnded();                
             }
             else
             {
@@ -274,7 +272,7 @@ public class MiniGameMCP : MonoBehaviour
             }
             else
             {
-                //Debug.Log("trying to start mini game dialogue");
+                Debug.Log("trying to start mini game dialogue");
                 Dialogue d = PuzzleDialogueRefs[CurPuzzleIndex].GetObject() as Dialogue;
                 if (d != null)
                 {

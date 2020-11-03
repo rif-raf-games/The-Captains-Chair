@@ -49,17 +49,22 @@ public class MiniGame : MonoBehaviour
     
     public virtual void ResetPostDialogueState()
     {
-
+       // Debug.Log("MiniGame.ResetPostDialogueState()");
     }
     public void DialogueEnded()
     {
+      //  Debug.Log("MiniGAme.DialogueEnded()");
         SetDialogueActive(false);
         ResetPuzzleTimer();
         ResetPostDialogueState();
+        if(FindObjectOfType<MCP>() != null)
+        {
+            FindObjectOfType<MCP>().StartMiniGame();
+        }
     }
     public void SetDialogueActive( bool val )
     {
-        //Debug.Log("MiniGame.SetDialogueActive() val: " + val);
+      //  Debug.Log("MiniGame.SetDialogueActive() val: " + val);
         DialogueActive = val;
     }
 

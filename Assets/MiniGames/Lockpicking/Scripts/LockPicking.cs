@@ -117,7 +117,7 @@ public class LockPicking : MiniGame
 
     void StartGame()
     {
-        //Debug.Log("LockPicking.StartGame()");
+      //  Debug.Log("LockPicking.StartGame()");
         SetGameState(eGameState.ON);
         Diode.Moving = true;
         if (ResultsText != null) ResultsText.gameObject.SetActive(false);
@@ -228,6 +228,7 @@ public class LockPicking : MiniGame
     }
     void SetGameState(eGameState newState)
     {
+      //  Debug.Log("LockPicking.SetGameState() newState: " + newState);
         DialogueSaveState = newState;
         if (DialogueActive == false)
         {
@@ -344,7 +345,7 @@ public class LockPicking : MiniGame
     }
     public override void ResetPostDialogueState()
     {
-       // Debug.Log("LockPicking.ResetPostDialogueState()");
+     //   Debug.Log("LockPicking.ResetPostDialogueState()");
         base.ResetPostDialogueState();
         CurGameState = DialogueSaveState;
     }
@@ -374,8 +375,7 @@ public class LockPicking : MiniGame
     
     // Update is called once per frame
     void Update()
-    {
-        
+    {        
         if (CurGameState == eGameState.OFF || DialogueActive == true) return;
         
         GameTime += Time.deltaTime;
