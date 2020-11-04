@@ -17,12 +17,13 @@ public class RifRafMenuUI : MonoBehaviour
     public enum ePopUpType { PROFILES, NEW_GAME, CONTINUE_GAME, DELETE_GAME, DELETE_CONFIRM, AUDIO, NUM_POPUPS };
     [Header("PopUps")]
     public GameObject[] PopUps;
-    public ePopUpType CurActivePopup;
+    public ePopUpType CurActivePopup = ePopUpType.NUM_POPUPS;
 
-    public enum eMainMenuButtons { NEW, CONTINUE, DELETE, NUM_MENU_MENU_BUTTONS };
+    public enum eMainMenuButtons { MAIN_GAME, CONTINUE, DELETE, AUDIO_SETTINGS, NUM_MENU_MENU_BUTTONS };
     [Header("Main Menu Buttons")]    
     public Button[] MainMenuButtons;
     public Text[] MainMenuButtonsText;
+    public bool[] MainMenuEnabledStates;
     [Header("Save Games")]
     public Button[] ProfilesButtons;
     public Text[] ProfilesText;
@@ -30,7 +31,11 @@ public class RifRafMenuUI : MonoBehaviour
     [Header("Audio")]
     public RifRafInGamePopUp.VolumeControl MusicVolume;
     public RifRafInGamePopUp.VolumeControl SoundFXVolume;
-
+    [Header("Inactive Button Images")]
+    public Sprite MainGameBlue;
+    public Sprite MainGameGrey;
+    public Sprite OtherBlue;
+    public Sprite OtherGrey;
     [Header("Misc")]
     public Button BackButton;
     public Sprite DefaultProfileIcon;
@@ -44,21 +49,55 @@ public class RifRafMenuUI : MonoBehaviour
     bool[] ProfileFileStatus;
     StaticStuff.ProfileInfo[] ProfilesInfo;
     int CurProfileSlot = 0;
+    bool MainMenuInitted = false;
 
     public Text DebugText;    
 
     private void Awake()
     {
+        Debug.Log("RifRafMenuUI.Awake()");
         foreach (GameObject go in Menus) go.SetActive(false);
         CurActiveMenu = eMenuType.NUM_MENUS;
         foreach (GameObject go in PopUps) go.SetActive(false);
         CurActivePopup = ePopUpType.NUM_POPUPS;
         CurActiveSaveGameFunction = eSaveGameFunction.NUM_SAVE_GAME_FUNCTIONS;        
     }
-     
+
+    void SetDisabledSprites(bool isPopupActive)
+    {
+        Debug.Log("SetDisabledSprites(): " + isPopupActive);
+                 
+        int buttonIndex = 0;
+        foreach (Button b in MainMenuButtons)
+        {            
+            Sprite blueSprite = (b == MainMenuButtons[(int)eMainMenuButtons.MAIN_GAME] ? MainGameBlue : OtherBlue);
+            Sprite greySprite = (b == MainMenuButtons[(int)eMainMenuButtons.MAIN_GAME] ? MainGameGrey : OtherGrey);
+
+            SpriteState spriteState = new SpriteState();
+            spriteState = b.spriteState;
+
+            if(isPopupActive == true)
+            {   // going from no popup to popup, so save sprite states and set all the main menu buttons to non-active
+                MainMenuEnabledStates[buttonIndex] = b.interactable;
+                if (b.interactable == true) spriteState.disabledSprite = blueSprite;
+                else spriteState.disabledSprite = greySprite;
+                b.interactable = false;
+            }
+            else
+            {   // going from popup to no popup, so reset the sprites to their original state
+                b.interactable = MainMenuEnabledStates[buttonIndex];
+            }
+
+            b.spriteState = spriteState;
+            buttonIndex++;
+        }
+    }
+    //if (b == MainMenuButtons[(int)eMainMenuButtons.MAIN_GAME])
+    //spriteState.disabledSprite = otherSprite;
+
     public void ToggleMenu(eMenuType menuID, bool isActive)
     {
-       // Debug.Log("ToggleMenu() menuID: " + menuID.ToString() + ", isActive: " + isActive);
+      //  Debug.Log("ToggleMenu() menuID: " + menuID.ToString() + ", isActive: " + isActive);
         StaticStuff.PrintRifRafUI("ToggleMenu() menuID: " + menuID.ToString() + ", isActive: " + isActive);
         if (menuID > eMenuType.NUM_MENUS) { Debug.LogError("Invalid menu: " + menuID); return; }
         foreach (GameObject go in Menus) go.SetActive(false);
@@ -77,6 +116,19 @@ public class RifRafMenuUI : MonoBehaviour
        // Debug.Log("TogglePopUp() popUpID: " + popUpID.ToString() + ", isActive: " + isActive);
         StaticStuff.PrintRifRafUI("TogglePopUp() popUpID: " + popUpID.ToString() + ", isActive: " + isActive);
         if (popUpID > ePopUpType.NUM_POPUPS) { Debug.LogError("Invalid popUp: " + popUpID); return; }
+        
+        if(MainMenuInitted == true)
+        {   // don't mess with this if the main menu hasn't been initted yet
+            if (CurActivePopup == ePopUpType.NUM_POPUPS && isActive == true)
+            {   // going from no popup to popup, so save sprite states and set all the main menu buttons to non-active
+                SetDisabledSprites(true);
+            }
+            else if (CurActivePopup != ePopUpType.NUM_POPUPS && isActive == false)
+            {   // going from popup to no popup, so reset the sprites to their original state
+                SetDisabledSprites(false);
+            }
+        }
+             
         foreach (GameObject go in PopUps) go.SetActive(false);
         if(popUpID == ePopUpType.NUM_POPUPS || isActive == false)
         {
@@ -87,36 +139,42 @@ public class RifRafMenuUI : MonoBehaviour
             PopUps[(int)popUpID].SetActive(true);
             CurActivePopup = popUpID;
         }        
-    }    
+    }        
 
     #region MAIN_MENU        
     public void InitMainMenu()
-    {           
+    {
+        Debug.Log("InitMainMenu()");
         RefreshProfileInfo();
-        BackButton.gameObject.SetActive(false);
-        //foreach (Button b in MainMenuButtons) b.interactable = true;
-        MainMenuButtons[(int)eMainMenuButtons.NEW].onClick.RemoveAllListeners();
+        BackButton.gameObject.SetActive(false);        
+        MainMenuButtons[(int)eMainMenuButtons.MAIN_GAME].onClick.RemoveAllListeners();
         MainMenuButtons[(int)eMainMenuButtons.CONTINUE].onClick.RemoveAllListeners();
-        foreach (Button b in MainMenuButtons) b.interactable = false;
+        
+        foreach (Button b in MainMenuButtons)
+        {
+            if (b == MainMenuButtons[(int)eMainMenuButtons.AUDIO_SETTINGS]) continue;            
+            b.interactable = false;                 
+        }
+        
         switch (CurNumActiveProfiles)
         {
             case 0:
                 //Debug.Log("No saves");
-                MainMenuButtons[(int)eMainMenuButtons.NEW].interactable = true;
+                MainMenuButtons[(int)eMainMenuButtons.MAIN_GAME].interactable = true;
                 
-                MainMenuButtons[(int)eMainMenuButtons.NEW].onClick.AddListener(OnClickNewGame);
-                MainMenuButtonsText[(int)eMainMenuButtons.NEW].text = "NEW GAME";
+                MainMenuButtons[(int)eMainMenuButtons.MAIN_GAME].onClick.AddListener(OnClickNewGame);
+                MainMenuButtonsText[(int)eMainMenuButtons.MAIN_GAME].text = "NEW GAME";
                 
                 MainMenuButtons[(int)eMainMenuButtons.CONTINUE].onClick.AddListener(OnClickContinueGame);
                 MainMenuButtonsText[(int)eMainMenuButtons.CONTINUE].text = "CONTINUE GAME";
                 break;
             case StaticStuff.NUM_PROFILES:
                // Debug.Log("4 saves");
-                MainMenuButtons[(int)eMainMenuButtons.NEW].interactable = true;
+                MainMenuButtons[(int)eMainMenuButtons.MAIN_GAME].interactable = true;
                 MainMenuButtons[(int)eMainMenuButtons.DELETE].interactable = true;
 
-                MainMenuButtons[(int)eMainMenuButtons.NEW].onClick.AddListener(OnClickContinueGame);
-                MainMenuButtonsText[(int)eMainMenuButtons.NEW].text = "CONTINUE GAME";
+                MainMenuButtons[(int)eMainMenuButtons.MAIN_GAME].onClick.AddListener(OnClickContinueGame);
+                MainMenuButtonsText[(int)eMainMenuButtons.MAIN_GAME].text = "CONTINUE GAME";
 
                 MainMenuButtons[(int)eMainMenuButtons.CONTINUE].onClick.AddListener(OnClickNewGame);
                 MainMenuButtonsText[(int)eMainMenuButtons.CONTINUE].text = "NEW GAME";
@@ -125,13 +183,21 @@ public class RifRafMenuUI : MonoBehaviour
                // Debug.Log("< 4 saves");
                 foreach (Button b in MainMenuButtons) b.interactable = true;
 
-                MainMenuButtons[(int)eMainMenuButtons.NEW].onClick.AddListener(OnClickContinueGame);
-                MainMenuButtonsText[(int)eMainMenuButtons.NEW].text = "CONTINUE GAME";
+                MainMenuButtons[(int)eMainMenuButtons.MAIN_GAME].onClick.AddListener(OnClickContinueGame);
+                MainMenuButtonsText[(int)eMainMenuButtons.MAIN_GAME].text = "CONTINUE GAME";
 
                 MainMenuButtons[(int)eMainMenuButtons.CONTINUE].onClick.AddListener(OnClickNewGame);
                 MainMenuButtonsText[(int)eMainMenuButtons.CONTINUE].text = "NEW GAME";
                 break;
         }
+
+        int buttonIndex = 0;
+        foreach (Button b in MainMenuButtons)
+        {
+            MainMenuEnabledStates[buttonIndex] = b.interactable;
+            buttonIndex++;
+        }
+        MainMenuInitted = true;
     }
 
     void RefreshProfileInfo()
@@ -259,10 +325,7 @@ public class RifRafMenuUI : MonoBehaviour
         CurActiveSaveGameFunction = eSaveGameFunction.NUM_SAVE_GAME_FUNCTIONS;
     }
     #endregion
-
     
-    
-
     public Camera UICamera;
     int CaptainIndex = 0;
     Vector3 LastCameraPos;
@@ -322,7 +385,8 @@ public class RifRafMenuUI : MonoBehaviour
         ToggleMenu(eMenuType.AVATAR_SELECT, true);
         CapRayCaster.gameObject.SetActive(true);
         CaptainIndex = 0;      
-        MenuBG.enabled = false;      
+        MenuBG.enabled = false;
+        MainMenuInitted = false;
     }
     public void OnClickCaptainSelectConfirm()
     {
@@ -368,6 +432,7 @@ public class RifRafMenuUI : MonoBehaviour
         this.MCP.LoadCaptainAvatar(ArticyGlobalVariables.Default.TheCaptain.Avatar);
         StaticStuff.LoadProfileStartScene();
         TogglePopUp(0, false);
+        MainMenuInitted = false;
     }
 
     

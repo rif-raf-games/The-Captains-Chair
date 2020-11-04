@@ -65,7 +65,6 @@ public class MCP : MonoBehaviour
         InGamePopUp.ToggleMainPopupPanel(false);
         InGamePopUp.gameObject.SetActive(false);
 
-
         VideoPlayerRR.ToggleVideoPlayerChild(false);
     }
 
@@ -391,7 +390,13 @@ public class MCP : MonoBehaviour
     }
 
 
-
+    void OnGUI()
+    {
+        if (GUI.Button(new Rect(0, Screen.height - 100, 100, 100), "feh"))
+        {
+            Debug.Log("******************************************************************************");
+        }
+    }
 
 
     public void LoadCaptainAvatar(int avatar)

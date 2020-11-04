@@ -6426,7 +6426,7 @@ GameObject:
   - component: {fileID: 2282236390395317693}
   - component: {fileID: 2282236390395317695}
   m_Layer: 5
-  m_Name: New_Game
+  m_Name: Main Game Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12808,10 +12808,13 @@ MonoBehaviour:
   - {fileID: 2282236390395317695}
   - {fileID: 2282236389697246767}
   - {fileID: 2282236389550561755}
+  - {fileID: 5423129616582315458}
   MainMenuButtonsText:
   - {fileID: 2282236390464449001}
   - {fileID: 2282236391301238938}
   - {fileID: 2282236389497246435}
+  - {fileID: 5423129616582418892}
+  MainMenuEnabledStates: 00000000
   ProfilesButtons:
   - {fileID: 6880623208479536089}
   - {fileID: 7472699625003691611}
@@ -12833,6 +12836,10 @@ MonoBehaviour:
   SoundFXVolume:
     Slider: {fileID: 5730868397552973655}
     Toggle: {fileID: 4147500952655093181}
+  MainGameBlue: {fileID: 21300000, guid: 2b7adc815c4bc40039e048de37f0fc23, type: 3}
+  MainGameGrey: {fileID: 21300000, guid: b9aaf30b56ebf4855a919e8c885709e5, type: 3}
+  OtherBlue: {fileID: 21300000, guid: 70b89cec11ffa411ab312c1a020263d3, type: 3}
+  OtherGrey: {fileID: 21300000, guid: 79be93a53124c440bb3abff9540e7b08, type: 3}
   BackButton: {fileID: 5118093338902191931}
   DefaultProfileIcon: {fileID: 21300000, guid: 062f2d2147ada49f79a6fbe90c335641, type: 3}
   CurActiveSaveGameFunction: 0
@@ -15085,7 +15092,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.7490196, g: 0.7490196, b: 0.7490196, a: 1}
+  m_Color: {r: 0.6901961, g: 0.96862745, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -28707,6 +28714,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6502241616296845841}
     m_Modifications:
+    - target: {fileID: 6732433165535002115, guid: 8f3c36467506b432e96ad281bce7cbbb,
+        type: 3}
+      propertyPath: m_Name
+      value: RifRaf UI - Debug
+      objectReference: {fileID: 0}
+    - target: {fileID: 6732433165535002115, guid: 8f3c36467506b432e96ad281bce7cbbb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8589682433542437566, guid: 8f3c36467506b432e96ad281bce7cbbb,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -28812,21 +28829,6 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6732433165535002115, guid: 8f3c36467506b432e96ad281bce7cbbb,
-        type: 3}
-      propertyPath: m_Name
-      value: RifRaf UI - Debug
-      objectReference: {fileID: 0}
-    - target: {fileID: 6732433165535002115, guid: 8f3c36467506b432e96ad281bce7cbbb,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5286519778201170484, guid: 8f3c36467506b432e96ad281bce7cbbb,
-        type: 3}
-      propertyPath: m_Name
-      value: Debug Output Text
-      objectReference: {fileID: 0}
     - target: {fileID: 7610559627464273725, guid: 8f3c36467506b432e96ad281bce7cbbb,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -28886,6 +28888,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 48.30992
+      objectReference: {fileID: 0}
+    - target: {fileID: 5286519778201170484, guid: 8f3c36467506b432e96ad281bce7cbbb,
+        type: 3}
+      propertyPath: m_Name
+      value: Debug Output Text
       objectReference: {fileID: 0}
     - target: {fileID: 7401595427761828000, guid: 8f3c36467506b432e96ad281bce7cbbb,
         type: 3}
