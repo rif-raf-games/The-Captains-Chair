@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 319216561322214691}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.0000002, y: 1, z: 1.0000002}
   m_Children:
   - {fileID: 6495705571030700056}
   m_Father: {fileID: 0}
@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FluidType: 0
   Type: 0
-  OpenAngles: 1e0000005a0000000e010000
+  OpenAngles: 960000005a0000000e010000
   Movable: 1
   ReachedOnPath: 0
 --- !u!64 &179219186891838489
@@ -77,13 +77,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -927199367670048503, guid: c1329ccd54a7e1541b641faed1b3d978,
         type: 3}
-      propertyPath: m_TagString
-      value: Repair Piece
+      propertyPath: m_Layer
+      value: 21
       objectReference: {fileID: 0}
     - target: {fileID: -927199367670048503, guid: c1329ccd54a7e1541b641faed1b3d978,
         type: 3}
-      propertyPath: m_Layer
-      value: 21
+      propertyPath: m_TagString
+      value: Repair Piece
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: c1329ccd54a7e1541b641faed1b3d978,
         type: 3}
@@ -140,6 +140,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -1504981713932161579, guid: c1329ccd54a7e1541b641faed1b3d978,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 121bdc78b043d4a378b79ece99e6b350, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c1329ccd54a7e1541b641faed1b3d978, type: 3}
 --- !u!1 &7817747670190613003 stripped
