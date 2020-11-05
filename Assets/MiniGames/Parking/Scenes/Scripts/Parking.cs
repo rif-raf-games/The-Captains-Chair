@@ -306,127 +306,133 @@ public class Parking : MiniGame
         float mouseMoveAngle = Mathf.NegativeInfinity;
         ParkingShip.eMoveDir curMoveDir = ParkingShip.eMoveDir.NONE;
         float MoveDistance = 0f;
-        if (Input.GetMouseButtonDown(0))
+        
+        bool menuActive = false;
+        if (FindObjectOfType<RifRafInGamePopUp>() != null) menuActive = !FindObjectOfType<RifRafInGamePopUp>().MenusActiveCheck();
+        if(menuActive == false)
         {
-            LayerMask mask = LayerMask.GetMask("Parking Ship");
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask))
+            if (Input.GetMouseButtonDown(0))
             {
-               // Debug.Log("Clicked on a ship.");
-                ParkingShip ship = hit.collider.gameObject.GetComponent<ParkingShip>();
-                if (ship == null) { Debug.LogError("Clicked on a ship with no ParkingShip component: " + hit.collider.name); return; }
-                //SetActiveShip(ship);
-                ClickedShip = ship;
-                TouchState = eTouchState.CLICK;
-                InputTimer = 0f;
+                LayerMask mask = LayerMask.GetMask("Parking Ship");
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask))
+                {
+                    // Debug.Log("Clicked on a ship.");
+                    ParkingShip ship = hit.collider.gameObject.GetComponent<ParkingShip>();
+                    if (ship == null) { Debug.LogError("Clicked on a ship with no ParkingShip component: " + hit.collider.name); return; }
+                    //SetActiveShip(ship);
+                    ClickedShip = ship;
+                    TouchState = eTouchState.CLICK;
+                    InputTimer = 0f;
+                }
+                mask = LayerMask.GetMask("Parking Rotate Platform");
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask))
+                {
+                    TouchingRotatePad = true;
+                }
             }
-            mask = LayerMask.GetMask("Parking Rotate Platform");
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask))
+            else if (Input.GetMouseButton(0))
             {
-                TouchingRotatePad = true;
-            }
-        }
-        else if (Input.GetMouseButton(0))
-        {
-            InputTimer += Time.deltaTime;
-            if (TouchState == eTouchState.CLICK)
-            {                
-                if (InputTimer >= HoldTime)
-                {                               //lift piece
-                    TouchState = eTouchState.HOLD;
-                    SetActiveShip(ClickedShip);
-                    int val = Random.Range(0, 2);
-                    if (val < 1) SoundFXPlayer.Play("Cargo_LiftPiece-A");
-                    else SoundFXPlayer.Play("Cargo_LiftPiece-A");
-                    ActiveShip.BeginHold(RaiserLowerTime);
+                InputTimer += Time.deltaTime;
+                if (TouchState == eTouchState.CLICK)
+                {
+                    if (InputTimer >= HoldTime)
+                    {                               //lift piece
+                        TouchState = eTouchState.HOLD;
+                        SetActiveShip(ClickedShip);
+                        int val = Random.Range(0, 2);
+                        if (val < 1) SoundFXPlayer.Play("Cargo_LiftPiece-A");
+                        else SoundFXPlayer.Play("Cargo_LiftPiece-A");
+                        ActiveShip.BeginHold(RaiserLowerTime);
+                        CurTouchPos = Input.mousePosition;
+                        LastTouchPos = Input.mousePosition;
+                        TouchingRotatePad = false;
+                    }
+                }
+                else if (TouchState == eTouchState.HOLD && ActiveShip.GetState() == ParkingShip.eParkingShipState.RAISED)
+                {
                     CurTouchPos = Input.mousePosition;
-                    LastTouchPos = Input.mousePosition;
-                    TouchingRotatePad = false;
+                    mouseMoveAngle = Vector3.Angle(CurTouchPos - LastTouchPos, Vector3.right);
+                    if (mouseMoveAngle >= 47.5f && mouseMoveAngle <= 132.5f) curMoveDir = ParkingShip.eMoveDir.VERTICAL;
+                    else if (mouseMoveAngle <= 42.5f || mouseMoveAngle >= 137.5f) curMoveDir = ParkingShip.eMoveDir.HORIZONTAL;
+                    else curMoveDir = ParkingShip.eMoveDir.NONE;
+                    if (curMoveDir == ParkingShip.eMoveDir.HORIZONTAL) MoveDistance = CurTouchPos.x - LastTouchPos.x;
+                    else if (curMoveDir == ParkingShip.eMoveDir.VERTICAL) MoveDistance = CurTouchPos.y - LastTouchPos.y;
+                    if (ActiveShip.GetMoveDir() == ParkingShip.eMoveDir.NONE && curMoveDir != ParkingShip.eMoveDir.NONE && MoveDistance != 0f)
+                    {
+                        ActiveShip.SetMoveDir(curMoveDir);
+                    }
+                    if (ActiveShip.GetMoveDir() != ParkingShip.eMoveDir.NONE && curMoveDir != ParkingShip.eMoveDir.NONE && MoveDistance != 0f)
+                    {
+                        if (ActiveShip.GetMoveDir() != curMoveDir)
+                        {
+                            Vector3 closestCenteredPos = GetClosestCenteredPoint(ActiveShip.gameObject);
+                            //float dec;
+                            // want to change directions of movement eh?
+                            if (ActiveShip.GetMoveDir() == ParkingShip.eMoveDir.HORIZONTAL)
+                            {   // want to start moving the ship vertically
+                                //float newX = GetClosestRoundedVal(ActiveShip.transform.position.x, out dec);
+                                float diffX = Mathf.Abs(closestCenteredPos.x - ActiveShip.transform.position.x);
+                                //Debug.Log("went from X: " + ActiveShip.transform.position.x.ToString("F2") + " to this spot: " + closestCenteredPos.ToString("F2") + ", diffX was: " + diffX.ToString("F2"));
+                                if (diffX < DirChangeBuffer)
+                                {
+                                    ActiveShip.transform.position = new Vector3(closestCenteredPos.x, ActiveShip.transform.position.y, ActiveShip.transform.position.z);
+                                    ActiveShip.SetMoveDir(ParkingShip.eMoveDir.VERTICAL);
+                                }
+                            }
+                            else if (ActiveShip.GetMoveDir() == ParkingShip.eMoveDir.VERTICAL)
+                            {   // want to start moving shipt horizontally
+                                //float newZ = GetClosestRoundedVal(ActiveShip.transform.position.z, out dec);
+                                float diffZ = Mathf.Abs(closestCenteredPos.z - ActiveShip.transform.position.z);
+                                //Debug.Log("went from Z: " + ActiveShip.transform.position.z.ToString("F2") + " to this spot: " + closestCenteredPos.ToString("F2") + ", diffZ was: " + diffZ.ToString("F2"));
+                                if (diffZ < DirChangeBuffer)
+                                {
+                                    ActiveShip.transform.position = new Vector3(ActiveShip.transform.position.x, ActiveShip.transform.position.y, closestCenteredPos.z);
+                                    ActiveShip.SetMoveDir(ParkingShip.eMoveDir.HORIZONTAL);
+                                }
+                            }
+                        }
+                        if (ActiveShip.GetMoveDir() == curMoveDir)
+                        {
+                            bool validMove = true;
+                            Vector3 moveDelta = Vector3.zero;
+                            Vector3 lastWorld = Camera.main.ScreenToWorldPoint(new Vector3(LastTouchPos.x, LastTouchPos.y, Camera.main.transform.position.y));
+                            Vector3 curWorld = Camera.main.ScreenToWorldPoint(new Vector3(CurTouchPos.x, CurTouchPos.y, Camera.main.transform.position.y));
+                            if (ActiveShip.GetMoveDir() == ParkingShip.eMoveDir.HORIZONTAL)
+                            {   // if we're HORIZONTAL, only take into account the x delta
+                                moveDelta.x = curWorld.x - lastWorld.x;
+                                if (Mathf.Abs(moveDelta.x) > .95f) validMove = false;   // if moved too far, not a valid move                        
+                            }
+                            else if (ActiveShip.GetMoveDir() == ParkingShip.eMoveDir.VERTICAL)
+                            {
+                                // if we're VERTICAL, only take into account the z delta
+                                moveDelta.z = curWorld.z - lastWorld.z;
+                                if (Mathf.Abs(moveDelta.z) > .95f) validMove = false; // if moved too far, not a valid move                                     
+                            }
+                            if (validMove == false)
+                            {
+                                Debug.LogWarning("WARNING: move too fast: " + moveDelta.ToString("F3")); // bail if we're trying to move too far
+                            }
+                            else
+                            {
+                                ActiveShip.Move(moveDelta);
+                            }
+                        }
+                    }
                 }
             }
-            else if (TouchState == eTouchState.HOLD && ActiveShip.GetState() == ParkingShip.eParkingShipState.RAISED)
+            else if (Input.GetMouseButtonUp(0))
             {
-                CurTouchPos = Input.mousePosition;
-                mouseMoveAngle = Vector3.Angle(CurTouchPos - LastTouchPos, Vector3.right);
-                if (mouseMoveAngle >= 47.5f && mouseMoveAngle <= 132.5f) curMoveDir = ParkingShip.eMoveDir.VERTICAL;
-                else if (mouseMoveAngle <= 42.5f || mouseMoveAngle >= 137.5f) curMoveDir = ParkingShip.eMoveDir.HORIZONTAL;
-                else curMoveDir = ParkingShip.eMoveDir.NONE;
-                if (curMoveDir == ParkingShip.eMoveDir.HORIZONTAL) MoveDistance = CurTouchPos.x - LastTouchPos.x;
-                else if (curMoveDir == ParkingShip.eMoveDir.VERTICAL) MoveDistance = CurTouchPos.y - LastTouchPos.y;
-                if (ActiveShip.GetMoveDir() == ParkingShip.eMoveDir.NONE && curMoveDir != ParkingShip.eMoveDir.NONE && MoveDistance != 0f)
-                {
-                    ActiveShip.SetMoveDir(curMoveDir);
-                }
-                if (ActiveShip.GetMoveDir() != ParkingShip.eMoveDir.NONE && curMoveDir != ParkingShip.eMoveDir.NONE && MoveDistance != 0f)
-                {
-                    if (ActiveShip.GetMoveDir() != curMoveDir)
-                    {
-                        Vector3 closestCenteredPos = GetClosestCenteredPoint(ActiveShip.gameObject);
-                        //float dec;
-                        // want to change directions of movement eh?
-                        if (ActiveShip.GetMoveDir() == ParkingShip.eMoveDir.HORIZONTAL)
-                        {   // want to start moving the ship vertically
-                            //float newX = GetClosestRoundedVal(ActiveShip.transform.position.x, out dec);
-                            float diffX = Mathf.Abs(closestCenteredPos.x - ActiveShip.transform.position.x);
-                            //Debug.Log("went from X: " + ActiveShip.transform.position.x.ToString("F2") + " to this spot: " + closestCenteredPos.ToString("F2") + ", diffX was: " + diffX.ToString("F2"));
-                            if (diffX < DirChangeBuffer)
-                            {
-                                ActiveShip.transform.position = new Vector3(closestCenteredPos.x, ActiveShip.transform.position.y, ActiveShip.transform.position.z);
-                                ActiveShip.SetMoveDir(ParkingShip.eMoveDir.VERTICAL);
-                            }
-                        }
-                        else if (ActiveShip.GetMoveDir() == ParkingShip.eMoveDir.VERTICAL)
-                        {   // want to start moving shipt horizontally
-                            //float newZ = GetClosestRoundedVal(ActiveShip.transform.position.z, out dec);
-                            float diffZ = Mathf.Abs(closestCenteredPos.z - ActiveShip.transform.position.z);
-                            //Debug.Log("went from Z: " + ActiveShip.transform.position.z.ToString("F2") + " to this spot: " + closestCenteredPos.ToString("F2") + ", diffZ was: " + diffZ.ToString("F2"));
-                            if (diffZ < DirChangeBuffer)
-                            {
-                                ActiveShip.transform.position = new Vector3(ActiveShip.transform.position.x, ActiveShip.transform.position.y, closestCenteredPos.z);
-                                ActiveShip.SetMoveDir(ParkingShip.eMoveDir.HORIZONTAL);
-                            }
-                        }
-                    }
-                    if (ActiveShip.GetMoveDir() == curMoveDir)
-                    {
-                        bool validMove = true;
-                        Vector3 moveDelta = Vector3.zero;
-                        Vector3 lastWorld = Camera.main.ScreenToWorldPoint(new Vector3(LastTouchPos.x, LastTouchPos.y, Camera.main.transform.position.y));
-                        Vector3 curWorld = Camera.main.ScreenToWorldPoint(new Vector3(CurTouchPos.x, CurTouchPos.y, Camera.main.transform.position.y));
-                        if (ActiveShip.GetMoveDir() == ParkingShip.eMoveDir.HORIZONTAL)
-                        {   // if we're HORIZONTAL, only take into account the x delta
-                            moveDelta.x = curWorld.x - lastWorld.x;
-                            if (Mathf.Abs(moveDelta.x) > .95f) validMove = false;   // if moved too far, not a valid move                        
-                        }
-                        else if (ActiveShip.GetMoveDir() == ParkingShip.eMoveDir.VERTICAL)
-                        {
-                            // if we're VERTICAL, only take into account the z delta
-                            moveDelta.z = curWorld.z - lastWorld.z;
-                            if (Mathf.Abs(moveDelta.z) > .95f) validMove = false; // if moved too far, not a valid move                                     
-                        }
-                        if (validMove == false)
-                        {
-                            Debug.LogWarning("WARNING: move too fast: " + moveDelta.ToString("F3")); // bail if we're trying to move too far
-                        }
-                        else
-                        {
-                            ActiveShip.Move(moveDelta);
-                        }
-                    }
-                }
+                HandleTouchRelease();
+            }
+            else if (Input.GetMouseButton(0) == false)
+            {
+                if (ActiveShip != null) HandleTouchRelease();
+                else if (ClickedShip != null) SetActiveShip(null);
             }
         }
-        else if (Input.GetMouseButtonUp(0))
-        {
-            HandleTouchRelease();
-        }
-        else if(Input.GetMouseButton(0) == false)
-        {
-            if (ActiveShip != null) HandleTouchRelease();
-            else if (ClickedShip != null) SetActiveShip(null);
-        }
-
+                
         if (DebugText != null)
         {
             string s = (ActiveShip == null ? "null ActiveShip" : ActiveShip.name) + "\n";

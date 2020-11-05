@@ -220,6 +220,10 @@ public class Repair : MiniGame
     private void Update()
     {        
         if (CurGameState == eGameState.OFF) return;
+        bool menuActive = false;
+        if (FindObjectOfType<RifRafInGamePopUp>() != null) menuActive = !FindObjectOfType<RifRafInGamePopUp>().MenusActiveCheck();
+        if (menuActive == true) return;
+
         float deltaZ=0f;
         Vector3 newWorldTouchPos = Vector3.zero;
         if (Input.GetMouseButtonDown(0))
@@ -345,7 +349,11 @@ public class Repair : MiniGame
 
     public void OnClickScan()
     {
-       // Debug.Log("I JUST CLICKED THE SCAN BUTTON");
+        // Debug.Log("I JUST CLICKED THE SCAN BUTTON");
+        bool menuActive = false;
+        if (FindObjectOfType<RifRafInGamePopUp>() != null) menuActive = !FindObjectOfType<RifRafInGamePopUp>().MenusActiveCheck();
+        if (menuActive == true) return;
+
         SoundFXPlayer.Play("Repair_StartScan");
         SetGameState(eGameState.OFF);
         ScanLines.Scan(CheckPuzzleComplete);
