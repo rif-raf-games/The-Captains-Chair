@@ -55,7 +55,7 @@ public class RifRafMenuUI : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log("RifRafMenuUI.Awake()");
+       // Debug.Log("RifRafMenuUI.Awake()");
         foreach (GameObject go in Menus) go.SetActive(false);
         CurActiveMenu = eMenuType.NUM_MENUS;
         foreach (GameObject go in PopUps) go.SetActive(false);
@@ -65,7 +65,7 @@ public class RifRafMenuUI : MonoBehaviour
 
     void SetDisabledSprites(bool isPopupActive)
     {
-        Debug.Log("SetDisabledSprites(): " + isPopupActive);
+     ///   Debug.Log("SetDisabledSprites(): " + isPopupActive);
                  
         int buttonIndex = 0;
         foreach (Button b in MainMenuButtons)
@@ -144,7 +144,7 @@ public class RifRafMenuUI : MonoBehaviour
     #region MAIN_MENU        
     public void InitMainMenu()
     {
-        Debug.Log("InitMainMenu()");
+      //  Debug.Log("InitMainMenu()");
         RefreshProfileInfo();
         BackButton.gameObject.SetActive(false);        
         MainMenuButtons[(int)eMainMenuButtons.MAIN_GAME].onClick.RemoveAllListeners();

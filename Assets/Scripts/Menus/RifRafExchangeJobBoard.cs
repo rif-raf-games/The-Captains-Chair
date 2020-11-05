@@ -28,6 +28,9 @@ public class RifRafExchangeJobBoard : MonoBehaviour
     [Header("Misc")]
     public RifRafInGamePopUp InGamePopUp;
 
+    [Header("Buttons")]
+    public Button[] MainButtons;
+
     int JobIndex;
     MCP MCP;
     
@@ -38,6 +41,12 @@ public class RifRafExchangeJobBoard : MonoBehaviour
     public void SetMCP(MCP mcp)
     {
         this.MCP = mcp;
+    }
+
+    public void ToggleMainButtons(bool isActive)
+    {
+       // Debug.Log("++++++++++ToggleMainButtons(): " + isActive);
+        foreach (Button b in MainButtons) b.interactable = isActive;
     }
 
     List<ArticyObject> ActiveJobs = new List<ArticyObject>();
@@ -146,7 +155,9 @@ public class RifRafExchangeJobBoard : MonoBehaviour
 
     public void ShutOffQuitAcceptPopups()
     {
-        QuitPopup.SetActive(false);
+      //  Debug.Log("ShutOffQuitAcceptPopups()");
+        //QuitPopup.SetActive(false);
+        ToggleQuitPopUp(false);
         AcceptPopup.SetActive(false);
     }
 
@@ -161,17 +172,33 @@ public class RifRafExchangeJobBoard : MonoBehaviour
 
     public void OnClickAccept()
     {
-     //   Debug.Log("RifRafExchangeJobBoard.OnClickAcceptJob().  JobIndex: " + JobIndex);
+      //  Debug.Log("RifRafExchangeJobBoard.OnClickAcceptJob().  JobIndex: " + JobIndex);
         if (QuitPopup.activeSelf == true) return;
 
-        AcceptPopup.SetActive(true);
+        // AcceptPopup.SetActive(true);
+        ToggleAcceptPopup(true);
     }
+
+    void ToggleAcceptPopup(bool isActive)
+    {
+       // Debug.Log("ToggleAcceptPopup(): " + isActive);
+        AcceptPopup.SetActive(isActive);
+        ToggleMainButtons(!isActive);
+    }
+
     public void OnClickCloseJobBoard()
     {
       //  Debug.Log("RifRafExchangeJobBoard.OnClickCloseJobBoard().");
         if (AcceptPopup.activeSelf == true) return;
 
-        QuitPopup.SetActive(true);        
+        //QuitPopup.SetActive(true);        
+        ToggleQuitPopUp(true);
+    }
+
+    void ToggleQuitPopUp(bool isActive)
+    {
+        QuitPopup.SetActive(isActive);
+        ToggleMainButtons(!isActive);
     }
 
     public void OnClickAcceptClose()
@@ -182,7 +209,9 @@ public class RifRafExchangeJobBoard : MonoBehaviour
 
     public void OnClickClosePopup()
     {
-        QuitPopup.SetActive(false);
+      //  Debug.Log("OnClickClosePopup()");
+        // QuitPopup.SetActive(false);
+        ToggleQuitPopUp(false);
         AcceptPopup.SetActive(false);
     }
 

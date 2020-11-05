@@ -17,10 +17,14 @@ public class RifRafInGamePopUp : MonoBehaviour
     public VolumeControl MusicVolume;
     public VolumeControl SoundFXVolume;
     public MCP MCP;
+    [Header("MainPopUpButtons")]
+    public Button[] MainPopUpButtons;
 
     private void Awake()
     {
         StaticStuff.PrintRifRafUI("RifRafInGamePopUp.Awake()");
+      //  Debug.Log("RifRafInGamePopUp.Awake()");
+
         MainPopupPanel.SetActive(false);
         this.MissionHint.Init();
         MissionHint.gameObject.SetActive(false);
@@ -35,6 +39,7 @@ public class RifRafInGamePopUp : MonoBehaviour
     public void OnClickBurger()
     {
         StaticStuff.PrintRifRafUI("OnClickBurger()");
+      //  Debug.Log("OnClickBurger()");
         if (PopupActiveCheck() == false) return;
 
         if (MainPopupPanel.activeSelf == true)
@@ -48,23 +53,31 @@ public class RifRafInGamePopUp : MonoBehaviour
         }        
     }
 
+    void ToggleMainPopUpButtons(bool isActive)
+    {
+      //  Debug.Log("*********ToggleMainPopUpButtons(): " + isActive);
+        foreach (Button b in MainPopUpButtons) b.interactable = isActive;
+    }
+
     public void ToggleMainPopupPanel(bool isActive)
     {
+      //  Debug.Log("ToggleMainPopupPanel(): " + isActive);
         MainPopupPanel.SetActive(isActive);
+        ToggleMainPopUpButtons(true);
     }
 
     public void TurnOnPopupMenu()
-    {
-        //StaticStuff.PrintRifRafUI("RifRafInGamePopUp.TogglePopUpPanel() isActive: " + isActive);
-        //Debug.Log("RifRafInGamePopUp.TurnOnPopupMenu()");
+    {        
+     //   Debug.Log("RifRafInGamePopUp.TurnOnPopupMenu()");
+       
         ToggleMainPopupPanel(true);
         MusicVolume.Slider.value = this.MCP.GetMusicVolume();
         MusicVolume.Toggle.isOn = (MusicVolume.Slider.value > 0f);
         SoundFXVolume.Slider.value = this.MCP.GetSoundFXVolume();
         SoundFXVolume.Toggle.isOn = (SoundFXVolume.Slider.value > 0f);
 
-        //if (ArticyGlobalVariables.Default.Episode_01.First_Exchange == false)
-        if(false)
+        if (ArticyGlobalVariables.Default.Episode_01.First_Exchange == false)
+        //if(false)
         {
             ExchangeBoardButton.SetActive(false);
         }
@@ -85,28 +98,34 @@ public class RifRafInGamePopUp : MonoBehaviour
     }
     public void ToggleMissionHint(bool isActive)
     {
+       // Debug.Log("ToggleMissionHint(): " + isActive);
         if (isActive == true)
         {
            // Debug.LogWarning("Get the hint ready");
             MissionHint.SetupHint();
         }
         MissionHint.gameObject.SetActive(isActive);
+        ToggleMainPopUpButtons(!isActive);
     }
 
     public void ShowResultsText(string result)
     {
+        Debug.Log("ShowResultsText()");
         MissionHint.gameObject.SetActive(true);
         MissionHint.HintText.text = result;
     }
     public void HideResultsText()
     {
+        //Debug.Log("HideResultsText()");
         MissionHint.gameObject.SetActive(false);
     }
 
     public void ShutOffExchangeBoard()
     {
+       // Debug.Log("ShutOffExchangeBoard()");
         ExchangeBoard.ShutOffQuitAcceptPopups();
-        ExchangeBoard.gameObject.SetActive(false);
+        //ExchangeBoard.gameObject.SetActive(false);
+        ToggleExchangeBoard(false);
     }
 
     public bool MenusActiveCheck()
@@ -122,22 +141,24 @@ public class RifRafInGamePopUp : MonoBehaviour
     public void OnClickResumeGame()
     {
         StaticStuff.PrintRifRafUI("OnClickResumeGame()");
+        //Debug.Log("OnClickResumeGame()");
         if (PopupActiveCheck() == false) return;
 
         this.MCP.StartFreeRoam();
     }
     
-
     public void ToggleExchangeBoard(bool isActive)
     {
+       // Debug.Log("ToggleExchangeBoard(): " + isActive);
         if (isActive == true) ExchangeBoard.FillBoard();
         ExchangeBoard.gameObject.SetActive(isActive);
+        ToggleMainPopUpButtons(!isActive);
     }
 
     public void OnClickExchangeBoard()
     {
         StaticStuff.PrintRifRafUI("OnClickExchangeBoard()");
-       // Debug.Log("OnClickExchangeBoard()");
+      //  Debug.Log("OnClickExchangeBoard()");
         if (PopupActiveCheck() == false) return;
 
         if (FindObjectOfType<TheCaptainsChair>() != null)
@@ -157,25 +178,38 @@ public class RifRafInGamePopUp : MonoBehaviour
     public void OnClickMissionHint()
     {
         StaticStuff.PrintRifRafUI("OnClickMissionHint()");
+      //  Debug.Log("OnClickMissionHint()");
         if (PopupActiveCheck() == false) return;
 
         ToggleMissionHint(true);
     }
 
+    void ToggleQuitConfirmPopUp(bool isActive)
+    {
+        QuitConfirmPopup.gameObject.SetActive(isActive);
+        ToggleMainPopUpButtons(!isActive);
+    }
+
     public void OnClickQuitToMainMenu()
     {
         StaticStuff.PrintRifRafUI("OnClickQuitToMainMenu()");
+       // Debug.Log("OnClickQuitToMainMenu()");
         if (PopupActiveCheck() == false) return;
         
-        QuitConfirmPopup.gameObject.SetActive(true);
+        //QuitConfirmPopup.gameObject.SetActive(true);
+        ToggleQuitConfirmPopUp(true);
     }
     public void OnClickQuitToMainCancel()
     {
-        QuitConfirmPopup.gameObject.SetActive(false);
+       // Debug.Log("OnClickQuitToMainCancel()");
+        //QuitConfirmPopup.gameObject.SetActive(false);
+        ToggleQuitConfirmPopUp(false);
     }
     public void OnClickQuitToMainConfirm()
     {
-        QuitConfirmPopup.gameObject.SetActive(false);
+       // Debug.Log("OnClickQuitToMainConfirm()");
+        //QuitConfirmPopup.gameObject.SetActive(false);
+        ToggleQuitConfirmPopUp(false);
         this.MCP.LoadNextScene("Front End Launcher");
     }
     
@@ -197,7 +231,8 @@ public class RifRafInGamePopUp : MonoBehaviour
 
     public void OnToggleAudioVolume(Toggle toggle)
     {
-        if(toggle == MusicVolume.Toggle)
+      //  Debug.Log("OnToggleAudioVolume()");
+        if (toggle == MusicVolume.Toggle)
         {
             if (toggle.isOn == true) this.MCP.SetMusicVolume(100);
             else this.MCP.SetMusicVolume(0);
@@ -212,13 +247,11 @@ public class RifRafInGamePopUp : MonoBehaviour
     }
 #endregion
 
-#region EXCHANGE_BOARD
-#endregion
-
 #region MISSION_HINT
     public void OnClickMissionHintBack()
     {
         StaticStuff.PrintRifRafUI("OnClickMissionHintBack()");
+      //  Debug.Log("OnClickMissionHintBack()");
 
         ToggleMissionHint(false);
     }

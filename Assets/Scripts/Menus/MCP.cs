@@ -51,7 +51,7 @@ public class MCP : MonoBehaviour
 
     public void ShutOffAllUI()
     {
-        //Debug.LogWarning("ShutOffAllUI()");
+       // Debug.LogWarning("-------------ShutOffAllUI() start");
         MenuUI.UICamera.enabled = false;
        
         MenuUI.gameObject.SetActive(false);
@@ -66,6 +66,8 @@ public class MCP : MonoBehaviour
         InGamePopUp.gameObject.SetActive(false);
 
         VideoPlayerRR.ToggleVideoPlayerChild(false);
+
+       // Debug.LogWarning("-------------ShutOffAllUI() end");
     }
 
     public void StartPopupPanel()
