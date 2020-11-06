@@ -9,13 +9,13 @@ public class CamFollow : MonoBehaviour
     enum eCamState { FOLLOW, SHIP_VIEW, TRANSITION };
     eCamState CurCamState = eCamState.FOLLOW;
 
-    public CharacterEntity EntityToFollow;
+    public GameObject EntityToFollow;
     public Vector3 CamOffset;    
     public CameraSetting[] CameraSettings;
     public int CameraSettingIndex = 0;
 
     private CCPlayer Player;    
-    CharacterEntity EntityWasFollowing;
+    GameObject EntityWasFollowing;
     Vector3 PrevCamPos;
     float PrevCamRot;    
     Vector3 ShipViewCamPos = new Vector3(-23.7f, 40f, 295f);    
@@ -69,7 +69,7 @@ public class CamFollow : MonoBehaviour
         StartCoroutine(LerpCamFollow(newPos, newRot));
     }  
 
-    public void SetupNewCamFollow(CharacterEntity newEntityToFollow, Vector3 newCamOffset, Quaternion newCamRot)
+    public void SetupNewCamFollow(GameObject newEntityToFollow, Vector3 newCamOffset, Quaternion newCamRot) // mocam
     {        
         if(CurCamState != eCamState.FOLLOW ) Debug.LogError("Trying to set up a new cam follow: " + newEntityToFollow.name + " but the camera is not in FOLLOW mode");        
 

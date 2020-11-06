@@ -458,9 +458,7 @@ public class BehaviorFlowPlayer : MonoBehaviour
         }
         switch (actionState.action)
         {
-            case Action.CameraFollow:
-                ce = actionState.actionObject.GetComponent<CharacterEntity>();
-                if (ce == null) { Debug.LogError("Camera can't follow something that's not a Player/NPC: " + actionState.actionObject.name); return false; }
+            case Action.CameraFollow:            
                 string[] offset = actionState.actionInfo.Split(',');
                 actionState.vectorData = new Vector3(float.Parse(offset[0]), float.Parse(offset[1]), float.Parse(offset[2]));
                 if(offset.Length > 3)
@@ -590,10 +588,11 @@ public class BehaviorFlowPlayer : MonoBehaviour
     {
         actionState.timer = 0f;
         CharacterEntity ce = actionState.actionObject.GetComponent<CharacterEntity>();
+        GameObject go = actionState.actionObject;
         switch (actionState.action)
         {            
-            case Action.CameraFollow:                
-                CamFollow.SetupNewCamFollow(ce, actionState.vectorData, actionState.LerpRotEnd);
+            case Action.CameraFollow:            
+                CamFollow.SetupNewCamFollow(go, actionState.vectorData, actionState.LerpRotEnd);
                 actionState.isActionDone = true;
                 break;
             case Action.WalkToLocation:
