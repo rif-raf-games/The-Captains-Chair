@@ -47,8 +47,8 @@ public class VisualFX : MonoBehaviour
     //        Debug.Log("null ET");
         }
 
-        int x = 5;
-        x++;
+      //  int x = 5;
+     //   x++;
 
         return vfx;
     }

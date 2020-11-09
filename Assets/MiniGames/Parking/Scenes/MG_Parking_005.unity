@@ -578,6 +578,98 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1839862542}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &376704978
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 376704982}
+  - component: {fileID: 376704981}
+  - component: {fileID: 376704980}
+  - component: {fileID: 376704979}
+  m_Layer: 0
+  m_Name: VFX_TEST
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!135 &376704979
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 376704978}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &376704980
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 376704978}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!33 &376704981
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 376704978}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &376704982
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 376704978}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 5.2, y: 2.1, z: 6.4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1580447750}
+  m_RootOrder: 30
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &392833503 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3410937339731516583, guid: bc287c284eada42ab83a5d8c3f701c8c,
@@ -2496,6 +2588,7 @@ Transform:
   - {fileID: 1629403771}
   - {fileID: 1700324874}
   - {fileID: 653050966}
+  - {fileID: 376704982}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2516,17 +2609,16 @@ MonoBehaviour:
   HoldTime: 0.15
   RaiserLowerTime: 0.15
   DirChangeBuffer: 0.15
-  ActiveShip: {fileID: 0}
   AllShips: []
   TargetShips: []
   LiftPad: {fileID: 1743355623}
-  ResultsText: {fileID: 748055420}
   RotatePlatform: {fileID: 567464505}
   RotateBox01: {fileID: 567464504}
   RotateBox02: {fileID: 567464503}
   RotateParent: {fileID: 567464501}
   RotateShipList: []
   LiftPadShipList: []
+  ResultsText: {fileID: 748055420}
 --- !u!114 &1580447752
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3952,17 +4044,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6613489697432615034, guid: c5283c7ec20794862b2f9669e75e49a7,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1420495247867012629, guid: c5283c7ec20794862b2f9669e75e49a7,
         type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 7446921618470619746, guid: 20532ac4a111f4615a725f4ff78b0894,
         type: 3}
-    - target: {fileID: 6613489697432615034, guid: c5283c7ec20794862b2f9669e75e49a7,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c5283c7ec20794862b2f9669e75e49a7, type: 3}
 --- !u!1001 &4177556669226823786

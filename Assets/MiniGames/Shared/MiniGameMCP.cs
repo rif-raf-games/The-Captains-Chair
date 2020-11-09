@@ -52,6 +52,10 @@ public class MiniGameMCP : MonoBehaviour
     {
         SoundFX soundFX = FindObjectOfType<SoundFX>();
         SoundFXPlayer.Init(soundFX, -1);
+
+        VisualFX visualFX = FindObjectOfType<VisualFX>();
+        VisualFXPlayer.Init(visualFX);
+
         this.MCP = FindObjectOfType<MCP>();
 
         GameState = eGameState.NONE;

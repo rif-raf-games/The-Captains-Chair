@@ -110,6 +110,7 @@ public class TheCaptainsChair : MonoBehaviour
 
         VisualFX visualFX = FindObjectOfType<VisualFX>();
         VisualFXPlayer.Init(visualFX);       
+       
         this.MCP.SetupSceneSound(SoundFXUsedInScene);
     }
 
