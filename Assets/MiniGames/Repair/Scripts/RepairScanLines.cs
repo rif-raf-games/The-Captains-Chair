@@ -79,13 +79,5 @@ public class RepairScanLines : MonoBehaviour
         //   yield return StartCoroutine(ScanLine(LeftRightLine, new Vector3(LeftRightXRange[1], 0f, 0f), new Vector3(LeftRightXRange[0], 0f, 0f)));
         CurDoorState = eDoorState.OFF;                
         if (returnCall != null) returnCall.Invoke();        
-    }
-
-    /*private void OnGUI()
-    {
-        if(GUI.Button(new Rect(0,0,100,100), "feh"))
-        {
-            Scan();
-        }
-    }*/
+    }    
 }

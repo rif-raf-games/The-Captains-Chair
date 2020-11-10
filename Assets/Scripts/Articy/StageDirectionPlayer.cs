@@ -175,7 +175,7 @@ public class StageDirectionPlayer : MonoBehaviour
         }
         BehaviorFlowPlayer bfp = npc.GetComponent<BehaviorFlowPlayer>();
         bfp.StopBehavior();
-        Debug.Log("adding this to the shut off list: " + npc.name);
+        //Debug.Log("adding this to the shut off list: " + npc.name);
         ShutOffAIs.Add(npc);
     }
 

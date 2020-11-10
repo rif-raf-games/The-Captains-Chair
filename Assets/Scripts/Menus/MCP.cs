@@ -389,17 +389,7 @@ public class MCP : MonoBehaviour
             BackgroundMusicPlayer.Play("Exchange_Background_Track");
             StartMainMenu();
         }
-    }
-
-
-    void OnGUI()
-    {
-        if (GUI.Button(new Rect(0, Screen.height - 100, 100, 100), "feh"))
-        {
-            Debug.Log("******************************************************************************");
-        }
-    }
-
+    }   
 
     public void LoadCaptainAvatar(int avatar)
     {

@@ -110,7 +110,7 @@ public class RifRafInGamePopUp : MonoBehaviour
 
     public void ShowResultsText(string result)
     {
-        Debug.Log("ShowResultsText()");
+      //  Debug.Log("ShowResultsText()");
         MissionHint.gameObject.SetActive(true);
         MissionHint.HintText.text = result;
     }
