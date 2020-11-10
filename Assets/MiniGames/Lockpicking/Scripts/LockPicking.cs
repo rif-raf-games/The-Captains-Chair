@@ -99,6 +99,24 @@ public class LockPicking : MiniGame
             //Debug.Log(i);
             RingCamYs.Add(newY);
         }
+
+        for (int i = 0; i < 3; i++) NumGatesPerRing[i] = 0;
+        foreach (Gate g in Gates)
+        {
+            g.gameObject.SetActive(true);
+            g.RingNum = int.Parse(g.transform.parent.gameObject.name[6].ToString());
+            NumGatesPerRing[g.RingNum - 1]++;
+        }
+
+        StatsText = FindObjectOfType<LockpickStatus>();
+        if (StatsText != null)
+        {
+            StatsText.TotalCollected.text = "0";
+            StatsText.TimeSpent.text = "0";
+            StatsText.TotalRemaining.text = Gates.Count.ToString();
+            for (int i = 0; i < 3; i++) StatsText.RemainingPerRing[i].text = NumGatesPerRing[i].ToString();
+        }
+
         if (IsSolo == true)
         {
             if (ResultsText != null) ResultsText.gameObject.SetActive(false);
@@ -117,7 +135,7 @@ public class LockPicking : MiniGame
 
     void StartGame()
     {
-      //  Debug.Log("LockPicking.StartGame()");
+       // Debug.Log("LockPicking.StartGame()");
         SetGameState(eGameState.ON);
         Diode.Moving = true;
         if (ResultsText != null) ResultsText.gameObject.SetActive(false);
@@ -145,22 +163,7 @@ public class LockPicking : MiniGame
             // usedPathNodes.Add(StartNodes[startIndex]);
         }
 
-        for (int i = 0; i < 3; i++) NumGatesPerRing[i] = 0;
-        foreach (Gate g in Gates)
-        {
-            g.gameObject.SetActive(true);
-            g.RingNum = int.Parse(g.transform.parent.gameObject.name[6].ToString());
-            NumGatesPerRing[g.RingNum - 1]++;
-        }
-
-        StatsText = FindObjectOfType<LockpickStatus>();
-        if (StatsText != null)
-        {            
-            StatsText.TotalCollected.text = "0";
-            StatsText.TimeSpent.text = "0";
-            StatsText.TotalRemaining.text = Gates.Count.ToString();
-            for (int i = 0; i < 3; i++) StatsText.RemainingPerRing[i].text = NumGatesPerRing[i].ToString();
-        }                
+                      
     }
 
     int[] NumGatesPerRing = new int[3];
@@ -180,9 +183,13 @@ public class LockPicking : MiniGame
         if(StatsText != null)
         {
             StatsText.TotalCollected.text = (Gates.Count - GatesRemaining.Count).ToString();
-            if (GatesRemaining.Count == 0) StatsText.TotalRemaining.text = "Complete";
-            else StatsText.TotalRemaining.text = GatesRemaining.Count.ToString();
-            for (int i = 0; i < 3; i++) StatsText.RemainingPerRing[i].text = NumGatesPerRing[i].ToString();
+            StatsText.TotalRemaining.text = GatesRemaining.Count.ToString();
+            
+            for (int i = 0; i < 3; i++)
+            {
+                if (NumGatesPerRing[i] == 0) StatsText.RemainingPerRing[i].text = "Complete";
+                else StatsText.RemainingPerRing[i].text = NumGatesPerRing[i].ToString();
+            }
         }        
     }
 
