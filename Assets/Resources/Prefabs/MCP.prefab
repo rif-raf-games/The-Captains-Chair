@@ -2586,6 +2586,9 @@ MonoBehaviour:
   - {fileID: 5597101489661657573}
   - {fileID: 5597101489805869457}
   - {fileID: 5597101488683387863}
+  - {fileID: 5597101489410958063}
+  - {fileID: 5597101489041532856}
+  - {fileID: 5597101489880655259}
   JobName: {fileID: 5597101488485069151}
   JobLocation: {fileID: 5597101488641727815}
   PointOfContact: {fileID: 5597101489477954303}
@@ -15409,7 +15412,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5597101487902929678}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -16355,7 +16358,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5597101488129627608}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -18750,7 +18753,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &5597101489041532857
 RectTransform:
   m_ObjectHideFlags: 0
@@ -18873,13 +18876,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: OnClick
-        m_Mode: 1
+      - m_Target: {fileID: 2215079609994016643}
+        m_MethodName: OnClickJob
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 4
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -20132,7 +20135,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &5597101489410958056
 RectTransform:
   m_ObjectHideFlags: 0
@@ -20255,13 +20258,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: OnClick
-        m_Mode: 1
+      - m_Target: {fileID: 2215079609994016643}
+        m_MethodName: OnClickJob
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 3
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -22017,7 +22020,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &5597101489880655268
 RectTransform:
   m_ObjectHideFlags: 0
@@ -22140,13 +22143,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: OnClick
-        m_Mode: 1
+      - m_Target: {fileID: 2215079609994016643}
+        m_MethodName: OnClickJob
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 5
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -28841,6 +28844,11 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5286519778201170484, guid: 8f3c36467506b432e96ad281bce7cbbb,
+        type: 3}
+      propertyPath: m_Name
+      value: Debug Output Text
+      objectReference: {fileID: 0}
     - target: {fileID: 7610559627464273725, guid: 8f3c36467506b432e96ad281bce7cbbb,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -28900,11 +28908,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 48.30992
-      objectReference: {fileID: 0}
-    - target: {fileID: 5286519778201170484, guid: 8f3c36467506b432e96ad281bce7cbbb,
-        type: 3}
-      propertyPath: m_Name
-      value: Debug Output Text
       objectReference: {fileID: 0}
     - target: {fileID: 7401595427761828000, guid: 8f3c36467506b432e96ad281bce7cbbb,
         type: 3}
