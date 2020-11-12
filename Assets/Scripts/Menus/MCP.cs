@@ -1,6 +1,7 @@
 ﻿using Articy.The_Captain_s_Chair;
 using Articy.The_Captain_s_Chair.GlobalVariables;
 using Articy.Unity;
+using CodeStage.AdvancedFPSCounter;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -47,6 +48,12 @@ public class MCP : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
         
         StartSplashScreen();
+    }
+
+   
+    private void Update()
+    {
+        
     }
 
     public void ShutOffAllUI()

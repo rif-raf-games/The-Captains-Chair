@@ -43,7 +43,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     // UI stuff
     ConvoUI ConvoUI; 
     public bool IsDialogueFragmentsInteractive { get; set; }    // Whether or not the UI dialogue is interactive or not
-    public float TypewriterSpeed { get; set; }  // How fast the UI text types on screen    
+    public float TypewriterSpeed;/* { get; set; }*/  // How fast the UI text types on screen    
                
     // Articy function callback stuff
     public bool IsCalledInForecast { get; set; } // This is required by Articy for code callbacks from the Articy flow stuff

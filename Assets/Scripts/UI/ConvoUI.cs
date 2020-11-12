@@ -11,9 +11,10 @@ public class ConvoUI : MonoBehaviour
     public GameObject SpeakerPanel;
     public Text SpeakerName;
     public Text SpeakerText;
+    public Text DataText;
     public Image SpeakerImage;
     public float DefaultTypewriterSpeed = 20f;
-    float TypewriterSpeed;
+    public float TypewriterSpeed;
     public GameObject[] DialogueOptions;
 
     public ArticyFlow ArticyFlow;
@@ -29,9 +30,12 @@ public class ConvoUI : MonoBehaviour
 
     int NumValidButtons = 0;
 
+    
+
     private void Awake()
     {
-        TypewriterSpeed = DefaultTypewriterSpeed;       
+        TypewriterSpeed = DefaultTypewriterSpeed;
+       
     }    
 
     public void SetSceneArticyFlowObject()
@@ -73,6 +77,7 @@ public class ConvoUI : MonoBehaviour
         NumValidButtons = 0;
         IsInteractive = isInteractive;
         TypewriterSpeed = typewriterSpeed;
+       // Debug.Log("typewriterSpeed: " + typewriterSpeed + ", TypewriterSpeed: " + TypewriterSpeed + ", wait time: " + (1f / TypewriterSpeed));
         SpeakerText.text = "";
         CurDialogueText = dialogueFrag.Text;
         CurDialogueOptions = dialogueOptions;
@@ -136,14 +141,113 @@ public class ConvoUI : MonoBehaviour
 
     IEnumerator TypewriterEffect()
     {
-        //Debug.Log("Start effect: " + TypewriterSpeed);                
+      //  Debug.Log("*************************************************");        
         foreach (GameObject go in DialogueOptions) go.SetActive(false);
-        foreach (char character in CurDialogueText.ToCharArray())
+        char[] charArray = CurDialogueText.ToCharArray();
+        string preUnderscore = CurDialogueText.Replace(" ", "_");
+        int totalChars = charArray.Length;
+        TypewriterSpeed = 30f;
+        float timePerChar = 1f / TypewriterSpeed;
+      //  Debug.Log("totalChars: " + totalChars + ", TypewriterSpeed: " + TypewriterSpeed + ", timePerChar: " + timePerChar);
+        string s = "";
+        float startTime, timeDiff;       
+        int charIndex = 0;                
+        float remainder = 0f;
+        startTime = Time.time;
+
+        DataText.text = CurDialogueText;        
+        yield return new WaitForEndOfFrame();        
+        int tgCount = DataText.cachedTextGenerator.characterCount;
+        int tglCount = DataText.cachedTextGeneratorForLayout.characterCount;
+
+        int tgCharCount = DataText.cachedTextGenerator.characters.Count;
+        int tglCharCount = DataText.cachedTextGeneratorForLayout.characters.Count;        
+        
+        int tgLineCount = DataText.cachedTextGenerator.lineCount;
+        int tglLineCount = DataText.cachedTextGeneratorForLayout.lineCount;
+
+     //   Debug.Log("characterCount: " + tgCount + ", " + tglCount + " || characters.Count: " + tgCharCount + ", " + tglCharCount);
+    //    Debug.Log("lineCount: " + tgLineCount + ", " + tglLineCount);
+      //  Debug.LogWarning("LINES");
+     //   foreach(UILineInfo info in DataText.cachedTextGenerator.lines)
+     //   {
+     //       s += info.startCharIdx + ", " + DataText.text[info.startCharIdx] + ", " + info.topY + "\n";
+     //   }
+     //   Debug.Log(s);
+     //   s = "";
+    //    Debug.LogWarning("CHARACTERS");
+    //    int idx = 0;
+    //    foreach (UICharInfo info in DataText.cachedTextGenerator.characters)
+    //    {
+    //        s += idx + ": " +info.charWidth + ", " + info.cursorPos.ToString() + "\n";
+    //        idx++;
+    //    }
+    //    Debug.Log(s);
+
+    //    string oldText = new string(charArray);
+     //   Debug.Log("preUnderscore: " + preUnderscore);
+     //   Debug.Log("oldText: " + oldText);
+        if (DataText.cachedTextGenerator.lines.Count > 1)
         {
-            SpeakerText.text += character;
-            yield return new WaitForSeconds(1f / TypewriterSpeed);
-            TextTyping = true; // wait a sec so that the click off via any press on screen 
+            for(int i=1; i< DataText.cachedTextGenerator.lines.Count; i++)
+            {
+                UILineInfo info = DataText.cachedTextGenerator.lines[i];
+                charArray[info.startCharIdx-1] = '\n';
+            }
         }
+        string newText = new string(charArray);
+     //   Debug.Log("newText: " + newText);
+
+        
+        SpeakerText.text = "";
+        while (charIndex < totalChars)
+        {
+            yield return new WaitForEndOfFrame();
+          //  s += "deltaTime: " + Time.deltaTime + ", remainder: " + remainder + ", ";
+            float numToDisplay = Time.deltaTime / timePerChar + remainder;
+            remainder = numToDisplay % 1;
+            int numChars = Mathf.FloorToInt(numToDisplay);
+          //  s += "numToDisplay: " + numToDisplay.ToString() + ", NEW remainder: " + remainder.ToString() + ", numChars: " + numChars + "\n";            
+            for(int i=0; i<numChars; i++)
+            {
+                SpeakerText.text += charArray[charIndex];
+                charIndex++;
+                if (charIndex >= totalChars) break;
+                
+            }
+            if (Time.time - startTime > 60f) break;
+        }
+       /* yield return new WaitForEndOfFrame();
+        timeDiff = Time.time - startTime;
+        tgCount = SpeakerText.cachedTextGenerator.characterCount;
+        tgCharCount = SpeakerText.cachedTextGenerator.characters.Count;
+        tglCount = SpeakerText.cachedTextGeneratorForLayout.characterCount;
+        tglCharCount = SpeakerText.cachedTextGeneratorForLayout.characters.Count;
+        Debug.Log("tgCount: " + tgCount + ", tgCharCount: " + tgCharCount + "----tglCount: " + tglCount + ", tglCharCount: " + tglCharCount + "-------");
+
+        string postUnderscore = SpeakerText.text.Replace(" ", "_");
+        Debug.Log("PostUnderscaore: " + postUnderscore);*/
+        //  Debug.Log("timeDiff: " + timeDiff);
+
+
+
+
+        // Debug.Log(s);
+
+
+        /* startTime = Time.time;
+          foreach (char character in CurDialogueText.ToCharArray())
+          {
+              SpeakerText.text += character;
+              //yield return new WaitForSeconds(1f / TypewriterSpeed);
+              yield return new WaitForEndOfFrame();
+              TextTyping = true; 
+          }
+         timeDiff = Time.time - startTime;
+         Debug.Log("timeDiff: " + timeDiff);*/
+
+
+
         TextTyping = false;
        // Debug.Log("TypewriterEffect end: " + IsInteractive);
         if(IsInteractive == false)
