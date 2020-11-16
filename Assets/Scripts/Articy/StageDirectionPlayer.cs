@@ -98,6 +98,7 @@ public class StageDirectionPlayer : MonoBehaviour
                     SoundFXPlayer.Play(sdf.Direction_Info);
                     break;
                 case Direction.VFX_On:
+                    Debug.Log("StageDirectionPlayer() VFX_On: " + sdf.Direction_Info);
                     Vector3 vfxPos = Vector3.zero;
                     GameObject posObj = null;
                     string[] locInfo = sdf.DirectionTargets.Split(',');
@@ -123,7 +124,8 @@ public class StageDirectionPlayer : MonoBehaviour
                         fx.transform.parent = posObj.transform;
                     }
                     break;
-                case Direction.VFX_Off:                    
+                case Direction.VFX_Off:
+                    Debug.Log("StageDirectionInto() VFX_Off");
                     GameObject[] vfxs = GameObject.FindGameObjectsWithTag("Looped VFX");
                     foreach (GameObject vfx in vfxs)
                     {
