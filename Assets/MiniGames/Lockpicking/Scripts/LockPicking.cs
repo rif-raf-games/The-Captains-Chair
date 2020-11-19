@@ -48,10 +48,10 @@ public class LockPicking : MiniGame
     public float SpeedAdjNumGates = 1f;         // Number of gates collected        
 
     #region INIT_START_RESET
-    public override void Init(MiniGameMCP mcp, string sceneName, List<SoundFX.FXInfo> soundFXUsedInScene)
+    public override void Init(MiniGameMCP mcp, string sceneName, List<SoundFX.FXInfo> soundFXUsedInScene, Button resetButton)
     {
         //Debug.Log("LockPicking.Init()");
-        base.Init(mcp, sceneName, soundFXUsedInScene);
+        base.Init(mcp, sceneName, soundFXUsedInScene, resetButton);
         if (ResultsText != null) ResultsText.gameObject.SetActive(false);
         if (FindObjectOfType<MCP>() != null)
         {
@@ -130,10 +130,18 @@ public class LockPicking : MiniGame
         CenterBlock.transform.position = new Vector3(CenterBlock.transform.position.x, 0f, CenterBlock.transform.position.z);
         LargestRingDiameter = Rings[Rings.Count - 1].GetComponent<MeshCollider>().bounds.extents.x;
 
-        StartGame();
+        ResetGame();
     }
 
-    void StartGame()
+    /*public void OnGUI()
+    {
+        if (GUI.Button(new Rect(0, 200, 100, 100), "Reset"))
+        {
+            ResetGame();
+        }
+    }*/
+
+    public override void ResetGame()
     {
        // Debug.Log("LockPicking.StartGame()");
         SetGameState(eGameState.ON);
@@ -230,7 +238,7 @@ public class LockPicking : MiniGame
         }
         else
         {
-            StartGame();
+            ResetGame();
         }
     }
     void SetGameState(eGameState newState)
@@ -465,19 +473,7 @@ public class LockPicking : MiniGame
             }
         }        
         
-    }
-
-    void OnGUI()
-    {
-        if (GUI.Button(new Rect(0, 100, 100, 100), "Reset"))
-        {
-            StartGame();
-        }
-       /* if (GUI.Button(new Rect(Screen.width - 100, Screen.height / 2 - 100, 100, 100), "Win"))
-        {
-            TMP_WinGame();
-        }*/
-    }
+    }    
  
     // ou can rotate a direction Vector3 with a Quaternion by multiplying the quaternion with the direction(in that order)
     //    Then you just use Quaternion.AngleAxis to create the rotation

@@ -11,6 +11,7 @@ public class MissionHint : MonoBehaviour
 {
     public ArticyRef MissionHints;
     public Text HintText;
+    public Button ResetMiniGameButton;
 
     Decision_Fragment MissionHintsFrag;
     ArticyObject HintsFlowStart;

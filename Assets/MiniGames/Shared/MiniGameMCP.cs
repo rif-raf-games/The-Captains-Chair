@@ -129,8 +129,9 @@ public class MiniGameMCP : MonoBehaviour
             {
                 yield return null;
             }
-           // Debug.Log("Unload Done: " + puzzleScene);
-            Puzzles[i].Init(this, puzzleName, SoundFXUsedInScene);                        
+            // Debug.Log("Unload Done: " + puzzleScene);
+            Button resetButton = this.MCP.InGamePopUp.MissionHint.ResetMiniGameButton;
+            Puzzles[i].Init(this, puzzleName, SoundFXUsedInScene, resetButton);                        
         }
 
         for (int i = 0; i < Puzzles.Length; i++)

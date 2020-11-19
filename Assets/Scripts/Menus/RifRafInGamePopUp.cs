@@ -96,17 +96,7 @@ public class RifRafInGamePopUp : MonoBehaviour
             }
         }
     }
-    public void ToggleMissionHint(bool isActive)
-    {
-       // Debug.Log("ToggleMissionHint(): " + isActive);
-        if (isActive == true)
-        {
-           // Debug.LogWarning("Get the hint ready");
-            MissionHint.SetupHint();
-        }
-        MissionHint.gameObject.SetActive(isActive);
-        ToggleMainPopUpButtons(!isActive);
-    }
+    
 
     public void ShowResultsText(string result)
     {
@@ -138,14 +128,7 @@ public class RifRafInGamePopUp : MonoBehaviour
     }
 
 #region MAIN_POPUP
-    public void OnClickResumeGame()
-    {
-        StaticStuff.PrintRifRafUI("OnClickResumeGame()");
-        //Debug.Log("OnClickResumeGame()");
-        if (PopupActiveCheck() == false) return;
-
-        this.MCP.StartFreeRoam();
-    }
+    //mo put back here
     
     public void ToggleExchangeBoard(bool isActive)
     {
@@ -175,6 +158,26 @@ public class RifRafInGamePopUp : MonoBehaviour
             FindObjectOfType<MCP>().LoadNextScene(sceneName, null, jumpSave);
         }
     }
+
+    public void ResetGameClicked()
+    {
+        StaticStuff.PrintRifRafUI("ResetGameClick");
+        ToggleMissionHint(false);
+        this.MCP.StartFreeRoam();
+    }
+
+    public void ToggleMissionHint(bool isActive)
+    {
+        StaticStuff.PrintRifRafUI("ToggleMissionHint(): " + isActive);
+        if (isActive == true)
+        {
+            // Debug.LogWarning("Get the hint ready");
+            MissionHint.SetupHint();
+        }
+        MissionHint.gameObject.SetActive(isActive);
+        ToggleMainPopUpButtons(!isActive);
+    }
+
     public void OnClickMissionHint()
     {
         StaticStuff.PrintRifRafUI("OnClickMissionHint()");
@@ -182,6 +185,15 @@ public class RifRafInGamePopUp : MonoBehaviour
         if (PopupActiveCheck() == false) return;
 
         ToggleMissionHint(true);
+    }
+
+    public void OnClickResumeGame()
+    {
+        StaticStuff.PrintRifRafUI("OnClickResumeGame() PUT THIS BACK");
+        //Debug.Log("OnClickResumeGame()");
+        if (PopupActiveCheck() == false) return;
+
+        this.MCP.StartFreeRoam();
     }
 
     void ToggleQuitConfirmPopUp(bool isActive)

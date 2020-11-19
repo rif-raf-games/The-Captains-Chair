@@ -34,14 +34,27 @@ public class MiniGame : MonoBehaviour
             IsSolo = false;
         }                        
     }
-    public virtual void Init(MiniGameMCP mcp, string sceneName, List<SoundFX.FXInfo> soundFXUsedInScene)
+    public virtual void Init(MiniGameMCP mcp, string sceneName, List<SoundFX.FXInfo> soundFXUsedInScene, Button resetButton)
     {
         //Debug.Log("MiniGame.Init()");
         this.MiniGameMCP = mcp;
         SceneName = sceneName;
+        resetButton.onClick.RemoveAllListeners();
+        resetButton.onClick.AddListener(ResetGame);
        // this.SoundFXUsedInScene = soundFXUsedInScene;
-    } 
-    
+    }
+
+    public virtual void ResetGame()
+    {
+        //Debug.Log("MiniGame.ResetGame()");
+        FindObjectOfType<RifRafInGamePopUp>().ResetGameClicked();
+    }
+
+    public virtual void BeginPuzzleStartTime()
+    {
+        if (DialogueActive == false) ResetPuzzleTimer();
+    }
+
     public virtual void TMP_WinGame()
     {
 
@@ -74,10 +87,7 @@ public class MiniGame : MonoBehaviour
     {
         PuzzleStartTime = Time.time;
     }
-    public virtual void BeginPuzzleStartTime()
-    {
-        if (DialogueActive == false) ResetPuzzleTimer();
-    }    
+     
     public void EndPuzzleTime(bool didFinish)
     {
         float gameTime = Time.time - PuzzleStartTime;

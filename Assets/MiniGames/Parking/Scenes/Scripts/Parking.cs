@@ -45,10 +45,10 @@ public class Parking : MiniGame
     public Text ResultsText;
     MCP MCP;    
 
-    public override void Init(MiniGameMCP mcp, string sceneName, List<SoundFX.FXInfo> soundFXUsedInScene)
+    public override void Init(MiniGameMCP mcp, string sceneName, List<SoundFX.FXInfo> soundFXUsedInScene, Button resetButton)
     {
         //Debug.Log("Parking.Init()");
-        base.Init(mcp, sceneName, soundFXUsedInScene);        
+        base.Init(mcp, sceneName, soundFXUsedInScene, resetButton);        
         if(ResultsText != null ) ResultsText.gameObject.SetActive(false);
 
         if(FindObjectOfType<MCP>() != null)
@@ -99,15 +99,26 @@ public class Parking : MiniGame
                 sphere.transform.parent = ship.transform;
             }
         }
-    }    
-    void ResetGame()
+    }
+
+  /*  public void OnGUI()
     {
+        if (GUI.Button(new Rect(0, 200, 100, 100), "Reset"))
+        {
+            ResetGame();
+        }
+    }*/
+
+    public override void ResetGame()
+    {
+      //  Debug.Log("Parking.ResetGame()");
+        base.ResetGame();
         ActiveShip = null;
         ClickedShip = null;
         TouchingRotatePad = false;
         CurTouchPos = Vector3.zero;
         LastTouchPos = Vector3.zero;
-        foreach(ParkingShip ship in AllShips)
+        foreach (ParkingShip ship in AllShips)
         {
             ship.ResetItem();
         }
@@ -121,15 +132,7 @@ public class Parking : MiniGame
         base.BeginPuzzleStartTime();
         SetGameState(eGameState.NORMAL);
     }
-
-    public void OnGUI()
-    {
-        if (GUI.Button(new Rect(0, 200, 100, 100), "Reset"))
-        {
-            ResetGame();
-        }
-    }
-
+        
     eGameState DialogueSaveState;
     void SetGameState(eGameState newState)
     {
@@ -142,6 +145,7 @@ public class Parking : MiniGame
 
     public override void ResetPostDialogueState()
     {
+       // Debug.Log("Parking.ResetPostDialogueState()");
         base.ResetPostDialogueState();
         CurGameState = DialogueSaveState;
     }

@@ -50,10 +50,10 @@ public class Repair : MiniGame
     MCP MCP;
     //int FuelDoorMask;
 
-    public override void Init(MiniGameMCP mcp, string sceneName, List<SoundFX.FXInfo> soundFXUsedInScene)
+    public override void Init(MiniGameMCP mcp, string sceneName, List<SoundFX.FXInfo> soundFXUsedInScene, Button resetButton)
     {
         //Debug.Log("Repair.Init()");
-        base.Init(mcp, sceneName, soundFXUsedInScene);
+        base.Init(mcp, sceneName, soundFXUsedInScene, resetButton);
         
         if (FindObjectOfType<MCP>() != null)
         {
@@ -89,9 +89,17 @@ public class Repair : MiniGame
 
     public Transform BoardPieces;
     public Transform Belt;
-    
-    void ResetGame()
-    {                        
+ /*   public void OnGUI()
+    {
+        if (GUI.Button(new Rect(0, 200, 100, 100), "Reset"))
+        {
+            ResetGame();
+        }
+    }*/
+    public override void ResetGame()
+    {
+     //   Debug.Log("Repair.ResetGame()");
+        base.ResetGame();
         base.BeginPuzzleStartTime();     
         foreach (RepairPiece piece in AllPieces) piece.ResetItem();
         foreach (RepairPiece piece in AllPieces) SnapPieceIntoPlace(piece, Vector3.zero);
@@ -447,6 +455,12 @@ public class Repair : MiniGame
         if ((rot - newRot) > 30f) newRot += 60;
         return newRot;        
     }
+
+    void PrintShit(string s, RepairPiece piece)
+    {
+        if (piece.name.Contains("BROKEN") == false) return;
+        Debug.Log(s);
+    }
     
     bool SnapPieceIntoPlace(RepairPiece piece, Vector3 origPos)
     {
@@ -458,6 +472,7 @@ public class Repair : MiniGame
         //Debug.Log("pieces anchor mask: " + piecesAndAnchorMask);
         Collider[] overlapColliders = Physics.OverlapSphere(checkLoc, 1f, piecesAndAnchorMask); // get all the anchor points within 1 unit of distance                                        
         //Debug.Log("num overlapColliders: " + overlapColliders.Length);
+        PrintShit("num overlapColliders: " + overlapColliders.Length, piece);
         if (overlapColliders.Count() != 0)
         {   // we have at least one AnchorHitPoint, so get a sorted list by distance
             List<AnchorHitPoint> anchorPoints = new List<AnchorHitPoint>();
@@ -494,12 +509,14 @@ public class Repair : MiniGame
         if (newLocFound == false)
         {   // didn't find an empty spot, so put the piece back to where it started from           
             piece.transform.position = origPos;
-          //  Debug.Log("newLocFound is false, so put piece to original position");
+            //Debug.Log("newLocFound is false, so put piece to original position");
+            PrintShit("newLocFound is false, so put piece to original position", piece);
         }        
         else
         {
             bool adjustmentMade = CheckBeltSorting();
-          //  Debug.Log("piece found a new position, but was there an adjustment made to the belt?: " + adjustmentMade);
+            //Debug.Log("piece found a new position, but was there an adjustment made to the belt?: " + adjustmentMade);
+            PrintShit("piece found a new position, but was there an adjustment made to the belt?: " + adjustmentMade, piece);
         }
         
         return newLocFound;
@@ -1052,13 +1069,4 @@ public class Repair : MiniGame
             ID = "Cur: " + Cur.name + " From: " + From.name;
         }
     }
-
-    public void OnGUI()
-    {
-        if (GUI.Button(new Rect(0, 200, 100, 100), "Reset"))
-        {
-            ResetGame();
-        }
-    }
-
 }

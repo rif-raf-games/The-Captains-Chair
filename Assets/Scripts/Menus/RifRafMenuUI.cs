@@ -40,7 +40,6 @@ public class RifRafMenuUI : MonoBehaviour
     public Button BackButton;
     public Sprite DefaultProfileIcon;
     
-
     public enum eSaveGameFunction { NEW, CONTINUE, DELETE, NUM_SAVE_GAME_FUNCTIONS };
     public eSaveGameFunction CurActiveSaveGameFunction;    
     MCP MCP;
@@ -91,9 +90,7 @@ public class RifRafMenuUI : MonoBehaviour
             b.spriteState = spriteState;
             buttonIndex++;
         }
-    }
-    //if (b == MainMenuButtons[(int)eMainMenuButtons.MAIN_GAME])
-    //spriteState.disabledSprite = otherSprite;
+    }    
 
     public void ToggleMenu(eMenuType menuID, bool isActive)
     {
