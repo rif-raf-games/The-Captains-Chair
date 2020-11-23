@@ -967,10 +967,14 @@ public class Repair : MiniGame
 
     IEnumerator ShowResults(string result, bool success)
     {
+        Debug.Log("Repair.ShowResults() result: " + result);
+        if (success == false) result = "This configuration doesn’t work. Check all your lines and connections and try again!";
         if (success == true) SoundFXPlayer.Play("Repair_ScanSuccess");
         else SoundFXPlayer.Play("Repair_ScanFail");
+        
         if (MiniGameMCP != null) MiniGameMCP.ShowResultsText(result);
         else ResultsText.text = result;
+        
         if (MiniGameMCP != null) MiniGameMCP.SavePuzzlesProgress(success);
         if (success == true) EndPuzzleTime(true);
         SetGameState(eGameState.OFF);

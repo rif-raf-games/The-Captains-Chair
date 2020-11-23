@@ -405,7 +405,8 @@ public class RifRafMenuUI : MonoBehaviour
         StaticStuff.CreateNewProfile(avatar, CurProfileSlot);
 
         this.MCP.ShutOffAllUI();
-        this.MCP.VideoPlayerRR.PlayVideo("Maj_Warp_In", VideoCallback);
+        //  this.MCP.VideoPlayerRR.PlayVideo("Maj_Warp_In", VideoCallback);
+        StaticStuff.LoadProfileStartScene();
     }
 
     public void VideoCallback()
