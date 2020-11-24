@@ -20,11 +20,13 @@ public class VideoPlayerRR : MonoBehaviour
 
     public void ToggleVideoPlayerChild(bool isActive)
     {
+       // Debug.Log("ToggleVideoPlayerChild(): isActive: " + isActive);
         VideoPlayerChild.SetActive(isActive);
     }
     public void PlayVideo(string videoName, Action callback)
     {
-        //  Debug.Log("VideoPlayerRR.PlayVideo(): videoName: " + videoName);
+       // videoName = "Maj_Intro_Cinematic__Compressed";
+       // Debug.Log("VideoPlayerRR.PlayVideo(): videoName: " + videoName);
         ToggleVideoPlayerChild(true);
         VideoClip clip = Resources.Load<VideoClip>("Movies/" + videoName);
         VideoPlayer.clip = clip;

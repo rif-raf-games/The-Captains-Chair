@@ -72,7 +72,7 @@ public class MCP : MonoBehaviour
         InGamePopUp.ToggleMainPopupPanel(false);
         InGamePopUp.gameObject.SetActive(false);
 
-        VideoPlayerRR.ToggleVideoPlayerChild(false);
+        //VideoPlayerRR.ToggleVideoPlayerChild(false);
 
        // Debug.LogWarning("-------------ShutOffAllUI() end");
     }
