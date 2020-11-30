@@ -202,20 +202,20 @@ public class CCPlayer : CharacterEntity
     public int Adjustment = 0;
 
     private void OnTriggerEnter(Collider other)
-    {
+    {        
         StaticStuff.PrintTriggerEnter(this.name + " CCPlayer.OnTriggerEnter() other: " + other.name + ", layer: " + other.gameObject.layer);
         if (other.gameObject.CompareTag("Ignore Trigger")) { StaticStuff.PrintTriggerEnter(this.name + "Collided with an Ignore Trigger trigger, so bail"); return; }
         if (other.gameObject.layer == LayerMask.NameToLayer("Room")) { StaticStuff.PrintTriggerEnter(this.name + " This is a Room collider " + other.name + " on the Player, so bail and let the RoomCollider.cs handle it"); return; }
         
         ArticyReference colliderArtRef = other.gameObject.GetComponent<ArticyReference>();
         if (colliderArtRef != null)
-        {
+        {            
             StaticStuff.PrintTriggerEnter("we collided with something that has an ArticyRef.  Now lets see what it is.");
             Dialogue dialogue = colliderArtRef.reference.GetObject() as Dialogue;
             Ambient_Trigger at = colliderArtRef.reference.GetObject() as Ambient_Trigger;
             Stage_Directions_Container sdc = colliderArtRef.reference.GetObject() as Stage_Directions_Container;
             if (dialogue != null)
-            {
+            {                
                 StaticStuff.PrintTriggerEnter("we have a dialogue, so set the FlowPlayer to start on it and see what happens");
                 CaptainArticyFlow.CheckIfDialogueShouldStart(dialogue, other.gameObject);
             }
@@ -359,7 +359,7 @@ public class CCPlayer : CharacterEntity
 
     public void ToggleMovementBlocked(bool val)
     {
-        // Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ToggleMovementBlocked() val: " + val);        
+       // Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ToggleMovementBlocked() val: " + val);        
         MovementBlocked = val;
     }
     public bool IsMovementBlocked()

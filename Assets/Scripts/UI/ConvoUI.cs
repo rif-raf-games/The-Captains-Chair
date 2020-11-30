@@ -50,7 +50,7 @@ public class ConvoUI : MonoBehaviour
     public void ShowDialogueFragment(DialogueFragment dialogueFrag, IFlowObject flowObj, IList<Branch> dialogueOptions, bool isInteractive, float typewriterSpeed, List<ArticyObject> validAOTargets = null)
     {
         StaticStuff.PrintUI("going to set up a dialogue fragment with speaker: " + dialogueFrag.Speaker + " with text: " + dialogueFrag.Text + ", tech name: " + dialogueFrag.TechnicalName);
-       // Debug.Log("going to set up a dialogue fragment with speaker: " + dialogueFrag.Speaker + " with text: " + dialogueFrag.Text + ", tech name: " + dialogueFrag.TechnicalName);
+        //Debug.Log("going to set up a dialogue fragment with speaker: " + dialogueFrag.Speaker + ", isInteractive: " + isInteractive + ", with text: " + dialogueFrag.Text + ", tech name: " + dialogueFrag.TechnicalName);
         this.MCP.StartDialogueConversation();
         if (dialogueOptions != null)
         {   // if dialogeOptions is null then we're calling this from a debug spot
@@ -119,14 +119,19 @@ public class ConvoUI : MonoBehaviour
     }
     public void TurnOnValidButtons()
     {
-        for (int i = 0; i < NumValidButtons; i++) DialogueOptions[i].SetActive(true);
+        for (int i = 0; i < NumValidButtons; i++)
+        {
+           // Debug.Log("TurnOnValidButtons() i: " + i);
+            DialogueOptions[i].SetActive(true);
+        }
     }
     public void SetupValidButtons()
     {
         NumValidButtons = (CurDialogueOptions != null ? CurDialogueOptions.Count : CurValidAOTargets.Count);
         for (int i = 0; i < NumValidButtons; i++)
         {
-            DialogueOptions[i].SetActive(true);
+           // Debug.Log("SetupValidButtons() i: " + i);
+            if(IsInteractive == true) DialogueOptions[i].SetActive(true);
             DialogueFragment df = (CurDialogueOptions != null ? CurDialogueOptions[i].Target as DialogueFragment : CurValidAOTargets[i] as DialogueFragment);
             if (df != null)
             {
@@ -263,8 +268,12 @@ public class ConvoUI : MonoBehaviour
     IEnumerator NextDialogueFragmentDelay()
     {
        // Debug.Log("NextDialogueFragmentDelay() a");
-        yield return new WaitForSeconds(2);        
-        for (int i = 0; i < NumValidButtons; i++) DialogueOptions[i].SetActive(true);        
+        yield return new WaitForSeconds(2);
+        for (int i = 0; i < NumValidButtons; i++)
+        {
+            //Debug.Log("NextDialogueFragmentDelay() i: " + i);
+            if (IsInteractive == true) DialogueOptions[i].SetActive(true);
+        }
         ArticyObject target = null;
         if (CurValidAOTargets != null) target = CurValidAOTargets[0];
         if (ArticyFlow == null) SetSceneArticyFlowObject(); // needed if starting a scene not via FE

@@ -58,7 +58,7 @@ public class MCP : MonoBehaviour
 
     public void ShutOffAllUI()
     {
-       // Debug.LogWarning("-------------ShutOffAllUI() start");
+        //Debug.LogWarning("-------------ShutOffAllUI() start");
         MenuUI.UICamera.enabled = false;
        
         MenuUI.gameObject.SetActive(false);
@@ -113,6 +113,7 @@ public class MCP : MonoBehaviour
 
     public void StartFreeRoam()
     {
+       // Debug.Log("StartFreeRoam()");
         ShutOffAllUI();
 
         InGamePopUp.gameObject.SetActive(true);
@@ -446,7 +447,7 @@ public class MCP : MonoBehaviour
 
     IEnumerator CaptainLoadStall(GameObject captain)
     {
-        Debug.Log("CaptainLoadStall");        
+        //Debug.Log("CaptainLoadStall");        
         yield return new WaitForEndOfFrame();
         captain.GetComponent<Animator>().Rebind(); 
     }
@@ -462,7 +463,7 @@ public class MCP : MonoBehaviour
     }
     public void ToggleJoystick(bool val)
     {        
-        //Debug.Log("ToggleJoystick() val: " + val); 
+       // Debug.Log("ToggleJoystick() val: " + val); 
         Joystick.ResetInput();
         Joystick.gameObject.transform.parent.gameObject.SetActive(val);
         // take care of camera toggle thing

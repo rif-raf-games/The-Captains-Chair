@@ -294,7 +294,7 @@ static public class StaticStuff
 
     static public void PrintTriggerEnter(string s)
     {
-        //Debug.Log(s);
+       // Debug.LogWarning("===============================PrintTriggerEnter(): " + s);
     }
 
     static public void PrintRepairPath(string s)

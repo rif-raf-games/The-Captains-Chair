@@ -53,6 +53,8 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
 
     public bool StartCalled = false;
 
+    bool IsSaveOnlyDialogue;
+
     private void Awake()
     {
         IsDialogueFragmentsInteractive = true;
@@ -89,6 +91,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             return false;
         }
         bool shouldBail;
+        
         Condition c = (convoStart.InputPins[0].Connections[0].Target) as Condition;
         if (c == null)
         {
@@ -105,7 +108,17 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             // for whatever reason determined above we're gonna bail so do it
             return false;
         }
-        
+
+        ArticyObject firstNode = convoStart.InputPins[0].Connections[0].Target;
+        Save_Point sp = convoStart.InputPins[0].Connections[0].Target as Save_Point;
+        IsSaveOnlyDialogue = sp != null;                
+        if(IsSaveOnlyDialogue == true)
+        {
+            //Debug.Log("IsSaveOnlyDialogue is true to just save and bail");
+            StaticStuff.SaveCurrentProfile("ArticyFlow.CheckIfDialogueShouldStart() Dialogue is a Save_Point so save and bail");
+            return false;
+        }
+
         // if we made it this far then we're going to start the dialogue so get ready        
         SetArticyState(eArticyState.DIALOGUE);                
         // the DialogueNPC is who you are talking to during a dialogue with a random NPC.  Need more info about the NPC
@@ -127,10 +140,12 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
 
         // start the dialogue
         //IsDialogueFragmentsInteractive = true;
-      //  FindObjectOfType<MCP>().ToggleInGameUI(false);
+        //  FindObjectOfType<MCP>().ToggleInGameUI(false);       
+        
         FlowPlayer.StartOn = convoStart;
         if (Player != null) Player.ToggleMovementBlocked(true);
         this.MCP.ShutOffAllUI();
+
         return true;
     }
 
@@ -301,7 +316,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                     StaticStuff.PrintFlowBranchesUpdate("*****************************************We're paused on a Hub with no Target so we're in Free Roam.", this);                    
                     if (CurArticyState == eArticyState.DIALOGUE)
                     {   // we're leaving a Dialogue                        
-                        if (Player != null) Player.ToggleMovementBlocked(false); // set the player free if there is one (if not we're in a mini game)                        
+                        if (Player != null && IsSaveOnlyDialogue == false) Player.ToggleMovementBlocked(false); // set the player free if there is one (if not we're in a mini game)                        
                         if (DialogueNPC != null)
                         {   // get the DialogueNPC back to normal if there was one
                             StageDirectionPlayer.StartAIOnNPC(DialogueNPC);
