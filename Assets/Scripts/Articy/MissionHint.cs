@@ -26,9 +26,15 @@ public class MissionHint : MonoBehaviour
         HintsFlowStart = outCon.Target;
         //Debug.LogError("type: " + HintsFlowStart.GetType() + ", articyType: " + HintsFlowStart.GetArticyType());
     }
+
+    public void ToggleResetMiniGameButton(bool isActive)
+    {
+       // Debug.Log("ToggleResetMiniGameButton() isActive: " + isActive);
+        ResetMiniGameButton.gameObject.SetActive(isActive);
+    }
     public void SetupHint()
     {
-        //Debug.LogError("SetupHint()");        
+     //   Debug.Log("SetupHint()");        
         //ArticyGlobalVariables.Default.Episode_01.Scene = 1;
         ArticyObject CurHint = HintsFlowStart;
         

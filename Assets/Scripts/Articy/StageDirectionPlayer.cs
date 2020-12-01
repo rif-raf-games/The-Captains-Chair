@@ -125,7 +125,7 @@ public class StageDirectionPlayer : MonoBehaviour
                     }
                     break;
                 case Direction.VFX_Off:
-                    Debug.Log("StageDirectionInto() VFX_Off");
+                   // Debug.Log("StageDirectionInto() VFX_Off");
                     GameObject[] vfxs = GameObject.FindGameObjectsWithTag("Looped VFX");
                     foreach (GameObject vfx in vfxs)
                     {

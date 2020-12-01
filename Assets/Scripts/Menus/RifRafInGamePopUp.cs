@@ -98,17 +98,7 @@ public class RifRafInGamePopUp : MonoBehaviour
     }
     
 
-    public void ShowResultsText(string result)
-    {
-      //  Debug.Log("ShowResultsText()");
-        MissionHint.gameObject.SetActive(true);
-        MissionHint.HintText.text = result;
-    }
-    public void HideResultsText()
-    {
-        //Debug.Log("HideResultsText()");
-        MissionHint.gameObject.SetActive(false);
-    }
+    
 
     public void ShutOffExchangeBoard()
     {
@@ -168,11 +158,16 @@ public class RifRafInGamePopUp : MonoBehaviour
 
     public void ToggleMissionHint(bool isActive)
     {
-        StaticStuff.PrintRifRafUI("ToggleMissionHint(): " + isActive);
+        StaticStuff.PrintRifRafUI("ToggleMissionHint(): " + isActive);        
+        MissionHint.ToggleResetMiniGameButton(false);
         if (isActive == true)
         {
             // Debug.LogWarning("Get the hint ready");
             MissionHint.SetupHint();
+            if(FindObjectOfType<MiniGame>() != null)
+            {
+                MissionHint.ToggleResetMiniGameButton(true);
+            }
         }
         MissionHint.gameObject.SetActive(isActive);
         ToggleMainPopUpButtons(!isActive);
@@ -185,6 +180,19 @@ public class RifRafInGamePopUp : MonoBehaviour
         if (PopupActiveCheck() == false) return;
 
         ToggleMissionHint(true);
+    }
+
+    public void ShowResultsText(string result)
+    {
+        //  Debug.Log("ShowResultsText()");
+        MissionHint.gameObject.SetActive(true);
+        MissionHint.HintText.text = result;
+        MissionHint.ToggleResetMiniGameButton(false);
+    }
+    public void HideResultsText()
+    {
+        //Debug.Log("HideResultsText()");
+        MissionHint.gameObject.SetActive(false);
     }
 
     public void OnClickResumeGame()

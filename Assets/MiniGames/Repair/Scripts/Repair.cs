@@ -23,6 +23,8 @@ public class Repair : MiniGame
     public Material OnBeltLiftMaterial;
     public Material NonMovableMaterial;
 
+    Button ScanButton;
+
     RepairPiece CurTerminalStart;
     eFluidType CurTerminalStartFluidType;
     List<RepairPiece> AllPieces = new List<RepairPiece>();
@@ -73,6 +75,10 @@ public class Repair : MiniGame
             StaticStuff.CreateMCPScene();
             StartCoroutine(ShutOffUI());
         }
+
+        GameObject go = GameObject.Find("Scan Button UI Canvas");
+        if (go == null) { Debug.LogError("No scan button in this scene"); return; }
+        ScanButton = go.GetComponent<Button>();
     }
     private void Start()
     {
@@ -224,13 +230,40 @@ public class Repair : MiniGame
     enum eLocationType { BELT, BOARD, };
 
     static float TAP_TIME = .1f;
-    
-    private void Update()
-    {        
-        if (CurGameState == eGameState.OFF) return;
+
+    public void OnClickScan()
+    {
         bool menuActive = false;
         if (FindObjectOfType<RifRafInGamePopUp>() != null) menuActive = !FindObjectOfType<RifRafInGamePopUp>().MenusActiveCheck();
+        Debug.Log("I JUST CLICKED THE SCAN BUTTON: " + menuActive);
         if (menuActive == true) return;
+
+        SoundFXPlayer.Play("Repair_StartScan");
+        SetGameState(eGameState.OFF);
+        ScanLines.Scan(CheckPuzzleComplete);
+    }
+
+    void ToggleScanButton(bool isActive)
+    {
+        if(ScanButton == null) { Debug.LogError("No scan button"); return; }
+        ScanButton.enabled = isActive;
+    }
+
+    private void Update()
+    {
+        if (CurGameState == eGameState.OFF)
+        {
+            ToggleScanButton(false);
+            return;
+        }
+        bool menuActive = false;
+        if (FindObjectOfType<RifRafInGamePopUp>() != null) menuActive = !FindObjectOfType<RifRafInGamePopUp>().MenusActiveCheck();        
+        if (menuActive == true)
+        {
+            ToggleScanButton(false);
+            return;
+        }
+        ToggleScanButton(true);
 
         float deltaZ=0f;
         Vector3 newWorldTouchPos = Vector3.zero;
@@ -355,17 +388,7 @@ public class Repair : MiniGame
 
     public float raiseLevel = 1f;   
 
-    public void OnClickScan()
-    {
-        // Debug.Log("I JUST CLICKED THE SCAN BUTTON");
-        bool menuActive = false;
-        if (FindObjectOfType<RifRafInGamePopUp>() != null) menuActive = !FindObjectOfType<RifRafInGamePopUp>().MenusActiveCheck();
-        if (menuActive == true) return;
-
-        SoundFXPlayer.Play("Repair_StartScan");
-        SetGameState(eGameState.OFF);
-        ScanLines.Scan(CheckPuzzleComplete);
-    }
+    
 
     public void SetBoardPiecesInEditor()
     {
