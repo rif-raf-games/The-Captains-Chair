@@ -496,7 +496,7 @@ public class MCP : MonoBehaviour
 
     public void TurnOnMainMenu()
     {
-        Debug.LogWarning("TurnOnMainMenu()");
+        //Debug.LogWarning("TurnOnMainMenu()");
         ToggleMenuUI(true);
         ToggleInGamePopUp(false);
         MenuUI.ToggleMenu(RifRafMenuUI.eMenuType.MAIN, true);
@@ -504,7 +504,7 @@ public class MCP : MonoBehaviour
 
     public void TurnOnInGamePopUp()
     {
-        Debug.LogWarning("fix");
+       // Debug.LogWarning("fix");
         ToggleMenuUI(false);
         ToggleInGamePopUp(true);
         InGamePopUp.TurnOnPopupMenu();
