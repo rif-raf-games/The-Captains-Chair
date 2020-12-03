@@ -35,19 +35,27 @@ public class MCP : MonoBehaviour
         MCP mcp = FindObjectOfType<MCP>();
         if (mcp != this)
         {
-            Debug.LogError("There should only ever be one MCP in the scene.  Tell Mo."); 
+            Debug.LogError("There should only ever be one MCP in the scene."); 
             return;
         }
                  
         MenuUI.SetMCP(this);        
         InGamePopUp.SetMCP(this);
         ConvoUI.SetMCP(this);
-        ExchangeJobBoard.SetMCP(this);        
-        SoundFXPlayer.Init(SoundFX, GetMusicVolume());
+        ExchangeJobBoard.SetMCP(this);
+
+        // below is bullshit but it's the only way for the UI to not send
+        // callback events when opening up the in game popup the first time
+        InGamePopUp.gameObject.SetActive(true);
+        InGamePopUp.TurnOnPopupMenu();
+        InGamePopUp.gameObject.SetActive(false);
+        // end bullshit
+        StaticStuff.LoadSettings();
+        SoundFXPlayer.Init(SoundFX, GetSoundFXVolume());
         BackgroundMusicPlayer.Init(BGMusic, GetMusicVolume());                
-        DontDestroyOnLoad(this.gameObject);
         
-        StartSplashScreen();
+        DontDestroyOnLoad(this.gameObject);        
+        StartSplashScreen();        
     }
 
    
@@ -526,23 +534,33 @@ public class MCP : MonoBehaviour
 
     #region GAME_SETTINGS
     public int GetMusicVolume()
-    { 
-        
-        return ArticyGlobalVariables.Default.Game_Settings.Music_Volume;
+    {
+        //Debug.LogError("mosound GetMusicVolume(): " + StaticStuff.MusicVolume);
+        return StaticStuff.MusicVolume;
+       // return 0;
+        //return ArticyGlobalVariables.Default.Game_Settings.Music_Volume;
     }
     public void SetMusicVolume(int vol)
     {
-        ArticyGlobalVariables.Default.Game_Settings.Music_Volume = vol;
-        BGMusic.SetVolume(vol);                
+        //Debug.LogError("mosound SetMusicVolume(): " + StaticStuff.MusicVolume);
+        StaticStuff.MusicVolume = vol;
+        //ArticyGlobalVariables.Default.Game_Settings.Music_Volume = vol;
+        //BGMusic.SetVolume(vol);                
     }
     public int GetSoundFXVolume()
     {
-        return ArticyGlobalVariables.Default.Game_Settings.SoundFX_Volume;
+      //  Debug.LogError("mosound GetSoundFXVolume(): " + StaticStuff.SoundFXVolume);
+        return StaticStuff.SoundFXVolume;
+        //return 0;
+        //return ArticyGlobalVariables.Default.Game_Settings.SoundFX_Volume;
     }
     public void SetSoundFXVolume(int vol)
     {
-        ArticyGlobalVariables.Default.Game_Settings.SoundFX_Volume = vol;
-        SoundFX.SetVolume(vol);
+      //  Debug.LogError("mosound SetSoundFXVolume(): " + StaticStuff.SoundFXVolume);
+        StaticStuff.SoundFXVolume = vol;
+        //ArticyGlobalVariables.Default.Game_Settings.SoundFX_Volume = vol;
+        //SoundFX.SetVolume(vol);
+
     }
 
     #endregion    

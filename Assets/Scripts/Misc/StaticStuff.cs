@@ -66,16 +66,52 @@ static public class StaticStuff
             saveData = new Dictionary<string, object>();
         }
     }
+    [System.Serializable]
+    public class Settings
+    {
+        public int soundFXVolume;
+        public int musicFXVolume;
+
+        public Settings(int sound, int music)
+        {
+            soundFXVolume = sound;
+            musicFXVolume = music;
+        }
+    }
     
     static public void ShowDataPath()
     {
         Debug.Log(Application.persistentDataPath);
     }
 
+    static public string SETTINGS_FILE_NAME = "TCCSettings";
+    static public int SoundFXVolume = 100;
+    static public int MusicVolume = 100;
+    static public void SaveCurrentSettings(string s)
+    {
+        //Debug.LogWarning("SaveCurrentSettings(): " + s);
+        string saveName = GetSettingsName();
+
+        Settings settings = new Settings(SoundFXVolume, MusicVolume);
+
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream file;
+        if (SaveFileExists(saveName) == true)
+        {
+            file = File.Open(saveName, FileMode.Open);
+        }
+        else
+        {
+            file = File.Create(saveName);
+        }
+        bf.Serialize(file, settings);
+        file.Close();
+    }
+
     static public void SaveCurrentProfile(string s)
     {
         string saveName = GetProfileName(Current_Profile_Num);
-      //  Debug.LogError("mosave - SaveCurrentProfile(): saveName: " + saveName + ", s: " + s + ", stack track: " + Environment.StackTrace);
+      //  Debug.LogWarning("SaveCurrentProfile(): saveName: " + saveName + ", s: " + s + ", stack track: " + Environment.StackTrace);
 
         SaveDataDic saveData = new SaveDataDic();
 
@@ -84,7 +120,7 @@ static public class StaticStuff
 
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file;
-        if (ProfileExists(saveName) == true)
+        if (SaveFileExists(saveName) == true)
         {
             file = File.Open(saveName, FileMode.Open);
         }
@@ -96,13 +132,25 @@ static public class StaticStuff
         file.Close();
     }
 
+    static public void CreateNewSettings()
+    {
+       // Debug.LogWarning("CreateNewSettings()");
+        string saveName = GetSettingsName();
+
+        if (SaveFileExists(saveName) == true) { Debug.LogError("Cannot create new settings over existing settings data."); return; }
+
+        SoundFXVolume = 100;
+        MusicVolume = 100;
+        SaveCurrentSettings("CreateNewSettings()");
+    }
+
     public static int Current_Profile_Num = 1;    
     static public void CreateNewProfile(int avatar, int profile) // called from from avatar select
     {
         string saveName = GetProfileName(profile);
-        //Debug.LogError("mosave - CreateNewProfile() avatar: " + avatar + ", profile: " + profile + ", saveName: " + saveName);
+       // Debug.LogWarning("CreateNewProfile() avatar: " + avatar + ", profile: " + profile + ", saveName: " + saveName);
 
-        if (ProfileExists(saveName) == true) { Debug.LogError("Cannot create new profile over existing profile data: " + profile); return; }
+        if (SaveFileExists(saveName) == true) { Debug.LogError("Cannot create new profile over existing profile data: " + profile); return; }
 
         SetCurrentProfile(profile);
         ArticyGlobalVariables.Default.ResetVariables();
@@ -115,11 +163,29 @@ static public class StaticStuff
     {
         Current_Profile_Num = profile;
     }
+
+    static public void LoadSettings()
+    {
+      //  Debug.LogWarning("LoadSettings()");
+        string saveName = GetSettingsName();
+        if (SaveFileExists(saveName) == false) //{ Debug.LogError("Trying to load settings but it doesn't exist."); return; }
+        {
+            CreateNewSettings();
+        }
+        
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream file = File.Open(saveName, FileMode.Open);
+        Settings settings = (Settings)bf.Deserialize(file);
+        SoundFXVolume = settings.soundFXVolume;
+        MusicVolume = settings.musicFXVolume;       
+        file.Close();
+
+    }
     static public void LoadCurrentProfile() // called from LoadProfileStartScene()
     {
-        //Debug.LogError("mosave - LoadCurrentProfile()");
+      //  Debug.LogWarning("LoadCurrentProfile()");
         string saveName = GetProfileName(Current_Profile_Num);
-        if (ProfileExists(saveName) == false) { Debug.LogError("Trying to load current profile: " + saveName + " but it doesn't exist."); return; }
+        if (SaveFileExists(saveName) == false) { Debug.LogError("Trying to load current profile: " + saveName + " but it doesn't exist."); return; }
 
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file = File.Open(saveName, FileMode.Open);
@@ -197,22 +263,29 @@ static public class StaticStuff
         //Debug.LogError("mosave - GetProfileName(): " + s);
         return s;            
     }
+    static public string GetSettingsName()
+    {
+        string s = Application.persistentDataPath + "/" + SETTINGS_FILE_NAME + ".dat";
+        //Debug.Log(s);
+        return s;
+    }
+
     
 
     static public bool ProfileExists(int profileNum)
     {
         return File.Exists(GetProfileName(profileNum));
     }
-    static public bool ProfileExists(string saveName)
+    static public bool SaveFileExists(string saveName)
     {
         return File.Exists(saveName);
-    }
+    }    
             
     static public void DeleteProfileNum(int profileNum)
     {        
         string fileName = GetProfileName(profileNum);
         //Debug.LogError("mosave - DeleteProfileNum(): " + fileName);
-        if (ProfileExists(fileName) == false) { Debug.LogError("Trying to delete a file that doesn't exist: " + fileName); return; }
+        if (SaveFileExists(fileName) == false) { Debug.LogError("Trying to delete a file that doesn't exist: " + fileName); return; }
 
         File.Delete(fileName);
     }

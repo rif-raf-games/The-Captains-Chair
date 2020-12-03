@@ -45,7 +45,8 @@ public class RifRafInGamePopUp : MonoBehaviour
         if (MainPopupPanel.activeSelf == true)
         {
             this.MCP.StartFreeRoam();
-            StaticStuff.SaveCurrentProfile("Closing In Game PopUp");
+            //StaticStuff.SaveCurrentProfile("Closing In Game PopUp");
+            StaticStuff.SaveCurrentSettings("OnClickBurger()");
         }
         else
         {
@@ -198,9 +199,10 @@ public class RifRafInGamePopUp : MonoBehaviour
     public void OnClickResumeGame()
     {
         StaticStuff.PrintRifRafUI("OnClickResumeGame() PUT THIS BACK");
-        //Debug.Log("OnClickResumeGame()");
+       // Debug.Log("OnClickResumeGame()");
         if (PopupActiveCheck() == false) return;
 
+        StaticStuff.SaveCurrentSettings("OnClickResumeGame()");
         this.MCP.StartFreeRoam();
     }
 
@@ -236,7 +238,7 @@ public class RifRafInGamePopUp : MonoBehaviour
     public void OnSliderAudioVolume(Slider slider)
     {
         StaticStuff.PrintRifRafUI("OnSliderAudioVolume()");
-
+      //  Debug.Log("OnSliderAudioVolume(): " + slider.gameObject.name);
         if(slider == MusicVolume.Slider)
         {
             this.MCP.SetMusicVolume((int)slider.value);
@@ -251,7 +253,7 @@ public class RifRafInGamePopUp : MonoBehaviour
 
     public void OnToggleAudioVolume(Toggle toggle)
     {
-      //  Debug.Log("OnToggleAudioVolume()");
+        //Debug.Log("OnToggleAudioVolume(): " + toggle.gameObject.name);
         if (toggle == MusicVolume.Toggle)
         {
             if (toggle.isOn == true) this.MCP.SetMusicVolume(100);
