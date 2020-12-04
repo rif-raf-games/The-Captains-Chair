@@ -17,7 +17,24 @@ public class Ep1End : MonoBehaviour
         Menus[0].SetActive(true);
     }
 
-    void OnGUI()
+    void Update()
+    {
+        if(Input.GetMouseButtonDown(0))
+        {
+            if(CurMenu == Menus.Length-1)
+            {
+                FindObjectOfType<MCP>().LoadNextScene("Front End Launcher");
+            }
+            else
+            {
+                Menus[CurMenu].SetActive(false);
+                CurMenu = (CurMenu + 1) % Menus.Length;
+                Menus[CurMenu].SetActive(true);
+            }            
+        }
+    }
+
+    /*void OnGUI()
     {
         if(GUI.Button(new Rect(Screen.width-100, Screen.height-100, 100, 100),"Next"))
         {
@@ -25,5 +42,5 @@ public class Ep1End : MonoBehaviour
             CurMenu = (CurMenu + 1) % Menus.Length;
             Menus[CurMenu].SetActive(true);
         }
-    }
+    }*/
 }
