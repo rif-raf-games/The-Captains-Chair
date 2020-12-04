@@ -93,10 +93,10 @@ public class Parking : MiniGame
             if(ship.ShipType == ParkingShip.eParkingShipType.TARGET)
             {
                 TargetShips.Add(ship);
-                GameObject sphere = CreateSphere(ship.transform, "target", Color.cyan, false);
+               /* GameObject sphere = CreateSphere(ship.transform, "target", Color.cyan, false);
                 sphere.transform.position += new Vector3(0f, ship.GetComponent<BoxCollider>().size.y, 0f);
                 sphere.transform.localScale = new Vector3(.5f, .5f, .5f);
-                sphere.transform.parent = ship.transform;
+                sphere.transform.parent = ship.transform;*/
             }
         }
     }

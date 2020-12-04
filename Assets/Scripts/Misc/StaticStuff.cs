@@ -437,7 +437,7 @@ static public class StaticStuff
         parameters.Add("Platform", platform);
         //parameters.Add("stack", Environment.StackTrace);
         AnalyticsResult ar = Analytics.CustomEvent(e, parameters);
-       // Debug.Log("##################################################################RifRafLookHere---------Analytic: " + e + " has result: " + ar.ToString());
+        Debug.Log("---------Analytic: " + e + " has result: " + ar.ToString());
         if (ar != AnalyticsResult.Ok) Debug.LogError("ERROR: we have a screwed up analytics event tracking: " + ar.ToString());
     }
 

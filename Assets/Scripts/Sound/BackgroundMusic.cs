@@ -59,6 +59,7 @@ public class BackgroundMusic : MonoBehaviour
     {
         if (FadeCoroutine != null) StopCoroutine(FadeCoroutine);
         FadeCoroutine = null;
+        StopMusic();
         this.AudioSource.volume = SavedVol;
     }
 }
