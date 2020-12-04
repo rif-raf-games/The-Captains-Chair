@@ -37,7 +37,8 @@ public class BackgroundMusic : MonoBehaviour
     }
 
     public IEnumerator FadeVolume()
-    {        
+    {
+        //Debug.Log("Start FadeVolume()");
         float startVol = this.AudioSource.volume;
         float timer = 0f;
         while(timer <= 1f)
@@ -48,6 +49,7 @@ public class BackgroundMusic : MonoBehaviour
             timer += Time.deltaTime;
             yield return new WaitForEndOfFrame();
         }
+      //  Debug.Log("End FadeVolume()");
     }
     
     public void StartFade()
@@ -57,6 +59,7 @@ public class BackgroundMusic : MonoBehaviour
     }
     public void ResetVolume()
     {
+       // Debug.Log("ResetVolume()");
         if (FadeCoroutine != null) StopCoroutine(FadeCoroutine);
         FadeCoroutine = null;
         StopMusic();

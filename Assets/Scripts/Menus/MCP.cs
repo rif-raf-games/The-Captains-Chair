@@ -371,18 +371,19 @@ public class MCP : MonoBehaviour
                 index++;
             }
         }
-       /* if (curSceneName.Contains("E1.Exchange") && sceneName.Contains("E1.Plaza"))
-        {
-            GameObject go = GameObject.Find("Captain");
-            if (go == null) Debug.LogError("No object named Captain in this scene");
-            else go.transform.position = new Vector3(-48f, 0f, 30f);
-            go = GameObject.Find("Grunfeld");
-            if (go == null) Debug.LogError("No object named Grunfeld in this scene");
-            go.transform.position = new Vector3(-44f, 0f, -24f);
-            go = GameObject.Find("Carver");
-            if (go == null) Debug.LogError("No object named Carver in this scene");
-            go.transform.position = new Vector3(-44f, 0f, -40f);
-        }*/
+        /* if (curSceneName.Contains("E1.Exchange") && sceneName.Contains("E1.Plaza"))
+         {
+             GameObject go = GameObject.Find("Captain");
+             if (go == null) Debug.LogError("No object named Captain in this scene");
+             else go.transform.position = new Vector3(-48f, 0f, 30f);
+             go = GameObject.Find("Grunfeld");
+             if (go == null) Debug.LogError("No object named Grunfeld in this scene");
+             go.transform.position = new Vector3(-44f, 0f, -24f);
+             go = GameObject.Find("Carver");
+             if (go == null) Debug.LogError("No object named Carver in this scene");
+             go.transform.position = new Vector3(-44f, 0f, -40f);
+         }*/
+        BGMusic.ResetVolume();
 
         if (sceneName.Contains("Front") == false)
         {            
@@ -397,8 +398,7 @@ public class MCP : MonoBehaviour
         yield return StartCoroutine(FadeObjects(curImages, fadeTime, 1f));
         LoadingImage.texture = defaultTexture;
 
-        LoadingScreen.SetActive(false);
-        BGMusic.ResetVolume();
+        LoadingScreen.SetActive(false);        
         
         if (sceneName.Contains("Front End Launcher"))
         {

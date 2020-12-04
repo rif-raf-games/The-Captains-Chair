@@ -68,18 +68,17 @@ public class StageDirectionPlayer : MonoBehaviour
                     }
                     break;
                 case Direction.Dialogue_Interact_On:                    
-                    this.ArticyFlow.IsDialogueFragmentsInteractive = true;
-                  //  Debug.Log("on");
+                    this.ArticyFlow.IsDialogueFragmentsInteractive = true;                  
                     break;
                 case Direction.Dialogue_Interact_Off:
-                    this.ArticyFlow.IsDialogueFragmentsInteractive = false;
-                  //  Debug.Log("off");
+                    this.ArticyFlow.IsDialogueFragmentsInteractive = false;                  
                     break;
                 case Direction.Background_Track_Change:
-                  //  Debug.Log("case Direction.Background_Track_Change:");
+                    //Debug.Log("case Direction.Background_Track_Change: " + sdf.Direction_Info);
                     BackgroundMusicPlayer.Play(sdf.Direction_Info);
                     break;
                 case Direction.Ambient_Sound:
+                 //   Debug.Log("case Ambient_Sound: " + sdf.Direction_Info);
                     AmbientSound ambientSound = FindObjectOfType<AmbientSound>();
                     if (ambientSound == null) { Debug.LogError("No AmbientSound in the scene."); return false; }
                     else
@@ -98,7 +97,7 @@ public class StageDirectionPlayer : MonoBehaviour
                     SoundFXPlayer.Play(sdf.Direction_Info);
                     break;
                 case Direction.VFX_On:
-                    Debug.Log("StageDirectionPlayer() VFX_On: " + sdf.Direction_Info);
+                //    Debug.Log("StageDirectionPlayer() VFX_On: " + sdf.Direction_Info);
                     Vector3 vfxPos = Vector3.zero;
                     GameObject posObj = null;
                     string[] locInfo = sdf.DirectionTargets.Split(',');
@@ -125,7 +124,7 @@ public class StageDirectionPlayer : MonoBehaviour
                     }
                     break;
                 case Direction.VFX_Off:
-                   // Debug.Log("StageDirectionInto() VFX_Off");
+               //     Debug.Log("StageDirectionInto() VFX_Off");
                     GameObject[] vfxs = GameObject.FindGameObjectsWithTag("Looped VFX");
                     foreach (GameObject vfx in vfxs)
                     {
