@@ -478,26 +478,32 @@ public class RifRafMenuUI : MonoBehaviour
         if (MenusActiveCheck() == false) return;
 
         TogglePopUp(ePopUpType.AUDIO, true);
+
+        MusicVolume.Slider.value = this.MCP.GetMusicVolume();
+        MusicVolume.Toggle.isOn = (MusicVolume.Slider.value > 0f);
+        SoundFXVolume.Slider.value = this.MCP.GetSoundFXVolume();
+        SoundFXVolume.Toggle.isOn = (SoundFXVolume.Slider.value > 0f);
     }
 
     public void OnClickCloseAudioSettings()
     {
         StaticStuff.PrintRifRafUI("OnClickCloseAudioSettings");
-
+        StaticStuff.SaveCurrentSettings("RifRafMenuUI.OnClickCloseAudioSettings()");
         TogglePopUp(ePopUpType.AUDIO, false);
     }
 
     public void OnSliderAudioVolume(Slider slider)
     {
-        StaticStuff.PrintRifRafUI("OnSliderAudioVolume()");
-
+        StaticStuff.PrintRifRafUI("OnSliderAudioVolume()");        
         if (slider == MusicVolume.Slider)
         {
+          //  Debug.Log("RifRafMenuUI().OnSliderAudioVolume() Music: " + slider.value);
             this.MCP.SetMusicVolume((int)slider.value);
             MusicVolume.Toggle.isOn = (MusicVolume.Slider.value > 0f);
         }
         else
         {
+          //  Debug.Log("RifRafMenuUI().OnSliderAudioVolume() SFX: " + slider.value);
             this.MCP.SetSoundFXVolume((int)slider.value);
             SoundFXVolume.Toggle.isOn = (SoundFXVolume.Slider.value > 0f);
         }

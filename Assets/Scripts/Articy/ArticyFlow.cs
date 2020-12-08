@@ -566,7 +566,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     public DialogueFragment DebugDF = null;
     public bool SHOW_SKIP_BUTTON = false;
 #if true
-  /* void OnGUI()
+   void OnGUI()
     {
       //  if (SHOW_SKIP_BUTTON == false) return;
         if (CurArticyState == eArticyState.DIALOGUE && CurPauseObject != null)
@@ -617,13 +617,10 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                             DebugDF = curAO as DialogueFragment;
                         }
                     }
-
-
-                   // if (numCheck > 25) iSaySo = false;
                 }
             }
         }
-    } */
+    } 
 
 #endif
     MCP OurMCP;

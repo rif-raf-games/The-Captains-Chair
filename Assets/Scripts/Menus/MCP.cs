@@ -543,9 +543,8 @@ public class MCP : MonoBehaviour
     public void SetMusicVolume(int vol)
     {
         //Debug.LogError("mosound SetMusicVolume(): " + StaticStuff.MusicVolume);
-        StaticStuff.MusicVolume = vol;
-        //ArticyGlobalVariables.Default.Game_Settings.Music_Volume = vol;
-        //BGMusic.SetVolume(vol);                
+        StaticStuff.MusicVolume = vol;        
+        BGMusic.SetVolume(vol);                
     }
     public int GetSoundFXVolume()
     {
@@ -557,10 +556,8 @@ public class MCP : MonoBehaviour
     public void SetSoundFXVolume(int vol)
     {
       //  Debug.LogError("mosound SetSoundFXVolume(): " + StaticStuff.SoundFXVolume);
-        StaticStuff.SoundFXVolume = vol;
-        //ArticyGlobalVariables.Default.Game_Settings.SoundFX_Volume = vol;
-        //SoundFX.SetVolume(vol);
-
+        StaticStuff.SoundFXVolume = vol;        
+        SoundFX.SetVolume(vol);
     }
 
     #endregion    

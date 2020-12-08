@@ -241,11 +241,13 @@ public class RifRafInGamePopUp : MonoBehaviour
       //  Debug.Log("OnSliderAudioVolume(): " + slider.gameObject.name);
         if(slider == MusicVolume.Slider)
         {
+           // Debug.Log("RifRafMenuUI().OnSliderAudioVolume() Music: " + slider.value);
             this.MCP.SetMusicVolume((int)slider.value);
             MusicVolume.Toggle.isOn = (MusicVolume.Slider.value > 0f);
         }
         else
         {
+          //  Debug.Log("RifRafMenuUI().OnSliderAudioVolume() SFX: " + slider.value);
             this.MCP.SetSoundFXVolume((int)slider.value);
             SoundFXVolume.Toggle.isOn = (SoundFXVolume.Slider.value > 0f);
         }        
