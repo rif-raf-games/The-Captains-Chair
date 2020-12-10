@@ -948,13 +948,13 @@ public class Repair : MiniGame
             if (pieceNotReached == null)
             {
                 puzzleSolved = true;
-                msg = "You Win, Congratulations!!";
+                msg = "Task Complete.";
             }
             else
             {
                 puzzleSolved = false;
                 //msg = "WE HAVE AT LEAST 1 TERMINAL " + pieceNotReached.name + " THAT HAS NOT BEEN REACHED SO WE FAIL!!!!!!";
-                msg = "There is at least one Terminal that has not been connected. Try again!";
+                msg = "At least one Terminal has not been properly connected.";
                 PathErrorSphere.transform.position = pieceNotReached.transform.position + new Vector3(0f, .5f, 0f);
             }
         }
@@ -991,7 +991,7 @@ public class Repair : MiniGame
     IEnumerator ShowResults(string result, bool success)
     {
         Debug.Log("Repair.ShowResults() result: " + result);
-        if (success == false) result = "This configuration doesn’t work. Check all your lines and connections and try again!";
+        if (success == false) result = "Current configuration will cause meltdown and cannot be completed. Re-confirm all lines and connections.";
         if (success == true) SoundFXPlayer.Play("Repair_ScanSuccess");
         else SoundFXPlayer.Play("Repair_ScanFail");
         

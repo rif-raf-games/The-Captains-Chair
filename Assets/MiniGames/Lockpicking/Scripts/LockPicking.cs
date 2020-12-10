@@ -184,7 +184,7 @@ public class LockPicking : MiniGame
         SoundFXPlayer.Play("Lock_CollectFacet");
         if (GatesRemaining.Count == 0)
         {
-            StartCoroutine(ShowResults("You Win, congratulations!!", true));
+            StartCoroutine(ShowResults("Task Complete.", true));
         }
 
         NumGatesPerRing[gate.RingNum - 1]--;
@@ -271,7 +271,7 @@ public class LockPicking : MiniGame
             if (diode.Evil == false)
             {
                 SoundFXPlayer.Play("Lock_HitByEnemy");
-                StartCoroutine(ShowResults("You got caught by an enemy Diode!", false));
+                StartCoroutine(ShowResults("Process Terminated, Rebooting.", false));
             }
             else StartCoroutine(EvilDiodeRespawn(diode));
         }
@@ -288,7 +288,7 @@ public class LockPicking : MiniGame
     }
     public void HitEvilDiode(Diode evilDiode)
     {
-        StartCoroutine(ShowResults("You got caught by an enemy Diode!", false));
+        StartCoroutine(ShowResults("Process Terminated, Rebooting.", false));
     }
 
     bool EvilSpawnBegan;

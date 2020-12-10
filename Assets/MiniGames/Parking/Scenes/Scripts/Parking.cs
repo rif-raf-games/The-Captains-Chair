@@ -635,7 +635,7 @@ public class Parking : MiniGame
         string result;
         if (allTargetShipsContainedLiftPad == true)
         {
-            result = "You win, congratulations!!";
+            result = "Task Complete.";
             StartCoroutine(ShowResults(result, allTargetShipsContainedLiftPad));
         }        
     }
