@@ -28,7 +28,11 @@ public class MCP : MonoBehaviour
     [Header("Sound")]
     public SoundFX SoundFX;
     public BackgroundMusic BGMusic;
-        
+    
+    [Header("Aspect Ratio")]
+    public bool TabletMode = false;
+    public float AspectVal = 0f;
+    
     private void Awake()
     {
         if (MenuUI == null || InGamePopUp == null) { Debug.LogError("No MenuUI or InGamePopUp in MCP"); return; }
@@ -49,13 +53,20 @@ public class MCP : MonoBehaviour
         InGamePopUp.gameObject.SetActive(true);
         InGamePopUp.TurnOnPopupMenu();
         InGamePopUp.gameObject.SetActive(false);
-        // end bullshit
+        //
         StaticStuff.LoadSettings();
         SoundFXPlayer.Init(SoundFX, GetSoundFXVolume());
         BackgroundMusicPlayer.Init(BGMusic, GetMusicVolume());                
         
         DontDestroyOnLoad(this.gameObject);        
-        StartSplashScreen();        
+        StartSplashScreen();
+
+        // we only support landscape        
+        float w = Screen.width;
+        float h = Screen.height;
+        AspectVal = w / h;
+        TabletMode = (AspectVal < 1.36f);
+        Debug.Log("AspectVal: " + AspectVal + ", TabletMode: " + TabletMode);
     }
 
    

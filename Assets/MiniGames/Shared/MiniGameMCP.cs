@@ -16,8 +16,13 @@ public class MiniGameMCP : MonoBehaviour
     public int[] PuzzlesToLoad;
     public ArticyRef[] PuzzleDialogueRefs;
     public List<ArticyObject> PuzzleDialogues;
+        
     Vector3[] CameraPositions;
     Quaternion[] CameraRotations;
+    float[] CameraFOVs;
+    float[] CameraSizes;
+
+
     MiniGame[] Puzzles;
     string ProgressVarName;
     string FinishedVarName;
@@ -87,6 +92,8 @@ public class MiniGameMCP : MonoBehaviour
         Puzzles = new MiniGame[PuzzlesToLoad.Length];
         CameraPositions = new Vector3[PuzzlesToLoad.Length];
         CameraRotations = new Quaternion[PuzzlesToLoad.Length];
+        CameraFOVs = new float[PuzzlesToLoad.Length];
+        CameraSizes = new float[PuzzlesToLoad.Length];
         for (int i = 0; i < PuzzlesToLoad.Length; i++)
         {
             //Debug.Log("LoadScene: " + PuzzlesToLoad[i]);
@@ -110,20 +117,37 @@ public class MiniGameMCP : MonoBehaviour
             MiniGame newPuzzle = null;
             Vector3 camPos = Vector3.zero;
             Quaternion camRot = Quaternion.identity;
+            float camFOV = 0f;
+            float camSize = 0f;
             GameObject[] newPuzzleObjs = puzzleScene.GetRootGameObjects();
             foreach (GameObject go in newPuzzleObjs)
             {
-                if(newPuzzle == null) newPuzzle = go.GetComponent<MiniGame>();
-                if (go.GetComponent<Camera>() != null)
+                //if (go.name.Equals("PhoneCamera")) Debug.Log("PhoneCamera");
+                //if (go.name.Equals("TabletCamera")) Debug.Log("TabletCamera");
+                if (this.MCP.TabletMode == false && go.name.Equals("PhoneCamera")) Debug.Log("Use PhoneCamera");
+                if (this.MCP.TabletMode == true && go.name.Equals("TabletCamera")) Debug.Log("Use TabletCam");
+
+                    if (newPuzzle == null) newPuzzle = go.GetComponent<MiniGame>();
+                Camera cam;
+                if( (this.MCP.TabletMode == false && go.name.Equals("PhoneCamera")) ||
+                    (this.MCP.TabletMode == true && go.name.Equals("TabletCamera")))
                 {
+                    cam = go.GetComponent<Camera>();
                     camPos = go.transform.position;
                     camRot = go.transform.rotation;
+                    camFOV = cam.fieldOfView;
+                    camSize = cam.orthographicSize;
                 }
+              //  if (this.MCP.TabletMode == false && go.name.Equals("TabletCamera")) go.SetActive(false);
+              //  if (this.MCP.TabletMode == true && go.name.Equals("PhoneCamera")) go.SetActive(false);
             }
             Puzzles[i] = newPuzzle;
             Puzzles[i].transform.parent = this.transform;
             CameraPositions[i] = camPos;
             CameraRotations[i] = camRot;
+            CameraFOVs[i] = camFOV;
+            CameraSizes[i] = camSize;
+           
             asyncLoad = SceneManager.UnloadSceneAsync(puzzleScene);
             while (!asyncLoad.isDone)
             {
@@ -176,6 +200,8 @@ public class MiniGameMCP : MonoBehaviour
         Puzzles[CurPuzzleIndex].gameObject.SetActive(true);
         Camera.main.transform.position = CameraPositions[CurPuzzleIndex];
         Camera.main.transform.rotation = CameraRotations[CurPuzzleIndex];
+        Camera.main.fieldOfView = CameraFOVs[CurPuzzleIndex];
+        Camera.main.orthographicSize = CameraSizes[CurPuzzleIndex];
 
         
         float endTime = Time.time;
