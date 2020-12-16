@@ -580,8 +580,8 @@ public class Parking : MiniGame
         }
         DebugSpheres.Clear();
 
-        BoxCollider box = LiftPad.GetComponent<BoxCollider>();
-        Vector3 size = box.size;
+        BoxCollider liftPadCollider = LiftPad.GetComponent<BoxCollider>();
+        Vector3 liftPadSize = liftPadCollider.size;
 
         if (TargetShips.Count == 0)
         {
@@ -589,9 +589,10 @@ public class Parking : MiniGame
             return;
         }
 
-        bool allTargetShipsContainedLiftPad = true;
-        foreach (ParkingShip ship in TargetShips)
-        {
+        bool success = true;
+        bool shouldShowFailResult = false;
+        foreach (ParkingShip ship in AllShips)
+        {            
             List<Vector3> checkPoints = new List<Vector3>();
             // GameObject go;
             Vector3 moveVec;
@@ -599,45 +600,57 @@ public class Parking : MiniGame
             Bounds b = shipBox.bounds;
             Vector3 shipMax = b.max;
             Vector3 shipMin = b.min;
+            Bounds smallBounds = new Bounds(b.center, b.size/1.1f);
 
             // min check spot                
             ContainGO.transform.position = shipMin;
             moveVec = shipBox.bounds.center - shipMin;
-            ContainGO.transform.Translate(moveVec * .1f);
-            //CreateSphere(ContainGO.transform, "_rawMin", Color.red);
-            ContainGO.transform.position = new Vector3(ContainGO.transform.position.x, RotateBox01.bounds.center.y, ContainGO.transform.position.z);
-            //CreateSphere(ContainGO.transform, "_checkMin", Color.blue);
+            ContainGO.transform.Translate(moveVec * .1f);            
+            ContainGO.transform.position = new Vector3(ContainGO.transform.position.x, RotateBox01.bounds.center.y, ContainGO.transform.position.z);            
             checkPoints.Add(ContainGO.transform.position);
 
             // max check spot                
             ContainGO.transform.position = shipMax;
             moveVec = shipBox.bounds.center - shipMax;
-            ContainGO.transform.Translate(moveVec * .1f);
-            // CreateSphere(ContainGO.transform, "_rawMax", Color.red);
-            ContainGO.transform.position = new Vector3(ContainGO.transform.position.x, RotateBox01.bounds.center.y, ContainGO.transform.position.z);
-            //CreateSphere(ContainGO.transform, "_checkMax", Color.blue);
+            ContainGO.transform.Translate(moveVec * .1f);            
+            ContainGO.transform.position = new Vector3(ContainGO.transform.position.x, RotateBox01.bounds.center.y, ContainGO.transform.position.z);            
             checkPoints.Add(ContainGO.transform.position);
 
            // Debug.Log("this: " + this.name + ", checkPoints[0], checkPoints[1]: " + checkPoints[0].ToString("F2") + ", " + checkPoints[1].ToString("F2"));
-            bool inLiftPad = box.bounds.Contains(checkPoints[0]) && box.bounds.Contains(checkPoints[1]);
-            if (inLiftPad)
+            bool inLiftPad = liftPadCollider.bounds.Contains(checkPoints[0]) && liftPadCollider.bounds.Contains(checkPoints[1]);
+            bool onLiftPad = liftPadCollider.bounds.Intersects(smallBounds);
+            if (TargetShips.Contains(ship) == true && onLiftPad == true) shouldShowFailResult = true; // only show fail result if target ship is on
+            if (TargetShips.Contains(ship) == true && inLiftPad == false )
             {
-               // Debug.Log("ship: " + ship.name + " is fully contained within the lift pad");
+              //  Debug.Log("Target ship: " + ship.name + " is not contained within the lift pad");
+                success = false;
+               // break;
+            }            
+            if (onLiftPad == true && TargetShips.Contains(ship) == false)
+            {
+              //  Debug.Log("ship: " + ship.name + " is NOT a target ship but still on the lift pad.");
+                success = false;
+               // break;
             }
-            else
+            /*else
             {
-               // Debug.Log("ship: " + ship.name + " is NOT fully contained within the lift pad so can't lift no matter what");
+                Debug.Log("ship: " + ship.name + " is NOT fully contained within the lift pad so can't lift no matter what");
                 allTargetShipsContainedLiftPad = false;
                 break;
-            }
+            }*/
         }
-      //  Debug.Log("are all TARGET ships contained in the lift?: " + allTargetShipsContainedLiftPad);
+      //  Debug.Log("Is the puzzle complete?: " + success);
         string result;
-        if (allTargetShipsContainedLiftPad == true)
+        if (success == true)
         {
             result = "Task Complete.";
-            StartCoroutine(ShowResults(result, allTargetShipsContainedLiftPad));
-        }        
+            StartCoroutine(ShowResults(result, success));
+        }    
+        else if(success == false && shouldShowFailResult == true)
+        {
+            result = "Error: Auto - Lift will only operate when target is fully contained within lift, and no Non-target loads are detected.Please review target placement and remove others from lift area to operate.";
+            StartCoroutine(ShowResults(result, success));
+        }
     }
               
     GameObject CreateSphere(Transform t, string end, Color color, bool addToDebugSpheres = true)

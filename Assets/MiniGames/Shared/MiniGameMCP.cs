@@ -124,8 +124,8 @@ public class MiniGameMCP : MonoBehaviour
             {
                 //if (go.name.Equals("PhoneCamera")) Debug.Log("PhoneCamera");
                 //if (go.name.Equals("TabletCamera")) Debug.Log("TabletCamera");
-                if (this.MCP.TabletMode == false && go.name.Equals("PhoneCamera")) Debug.Log("Use PhoneCamera");
-                if (this.MCP.TabletMode == true && go.name.Equals("TabletCamera")) Debug.Log("Use TabletCam");
+              //  if (this.MCP.TabletMode == false && go.name.Equals("PhoneCamera")) Debug.Log("Use PhoneCamera");
+            //    if (this.MCP.TabletMode == true && go.name.Equals("TabletCamera")) Debug.Log("Use TabletCam");
 
                     if (newPuzzle == null) newPuzzle = go.GetComponent<MiniGame>();
                 Camera cam;
