@@ -648,7 +648,7 @@ public class Parking : MiniGame
         }    
         else if(success == false && shouldShowFailResult == true)
         {
-            result = "Warning: Anti-Grav Lift only operational when target load fully within lift and no other loads are detected. Please review target load placement and remove excess from lift area to proceed.";
+            result = "Warning: Unbalanced Anti-Grav detected. Please review target placement or remove excess load to proceed.";
             StartCoroutine(ShowResults(result, success));
         }
     }
