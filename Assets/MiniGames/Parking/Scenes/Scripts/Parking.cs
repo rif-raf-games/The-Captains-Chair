@@ -648,7 +648,7 @@ public class Parking : MiniGame
         }    
         else if(success == false && shouldShowFailResult == true)
         {
-            result = "Error: Auto - Lift will only operate when target is fully contained within lift, and no Non-target loads are detected.Please review target placement and remove others from lift area to operate.";
+            result = "Warning: Anti-Grav Lift only operational when target load fully within lift and no other loads are detected. Please review target load placement and remove excess from lift area to proceed.";
             StartCoroutine(ShowResults(result, success));
         }
     }
