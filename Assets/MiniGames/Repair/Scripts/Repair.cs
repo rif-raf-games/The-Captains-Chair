@@ -991,7 +991,7 @@ public class Repair : MiniGame
     IEnumerator ShowResults(string result, bool success)
     {
         Debug.Log("Repair.ShowResults() result: " + result);
-        if (success == false) result = "Current configuration will cause meltdown and cannot be completed. Re-confirm all lines and connections.";
+        if (success == false) result = "Result Fail: Current configuration will cause meltdown and cannot be completed. Re-confirm all lines connect to matching terminals.";
         if (success == true) SoundFXPlayer.Play("Repair_ScanSuccess");
         else SoundFXPlayer.Play("Repair_ScanFail");
         
