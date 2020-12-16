@@ -112,7 +112,7 @@ public class CamFollow : MonoBehaviour
                 }
                 if (FingerDir[1] > 90f && Player.IsInFreeRoam() == true)
                 {
-                    BeginZoomOut();
+                    //BeginZoomOut();
                 }
             }
         }
@@ -138,7 +138,7 @@ public class CamFollow : MonoBehaviour
                     TapCount++;
                     if(TapCount == 2 )
                     {
-                        BeginZoomIn();
+                        //BeginZoomIn();
                         TapCount = 0;
                     }
                 }
