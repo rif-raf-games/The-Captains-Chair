@@ -85,6 +85,7 @@ public class LockPicking : MiniGame
         }
     }
 
+    int[] NumGatesPerRing = new int[3];
     private void Start()
     {
         for (int i = 0; i < Rings.Count; i++)
@@ -123,27 +124,10 @@ public class LockPicking : MiniGame
             BeginPuzzleStartTime();
         }
     }
-    public override void BeginPuzzleStartTime()
-    {
-        //Debug.Log("Lockpicking.BeginPuzzle()");   
-        base.BeginPuzzleStartTime();
-        CenterBlock.transform.position = new Vector3(CenterBlock.transform.position.x, 0f, CenterBlock.transform.position.z);
-        LargestRingDiameter = Rings[Rings.Count - 1].GetComponent<MeshCollider>().bounds.extents.x;
-
-        ResetGame();
-    }
-
-    /*public void OnGUI()
-    {
-        if (GUI.Button(new Rect(0, 200, 100, 100), "Reset"))
-        {
-            ResetGame();
-        }
-    }*/
 
     public override void ResetGame()
     {
-       // Debug.Log("LockPicking.StartGame()");
+        // Debug.Log("LockPicking.StartGame()");
         SetGameState(eGameState.ON);
         Diode.Moving = true;
         if (ResultsText != null) ResultsText.gameObject.SetActive(false);
@@ -156,10 +140,24 @@ public class LockPicking : MiniGame
             Destroy(d.gameObject);
         }
         EvilDiodes.Clear();
-
-        //List<PathNode> availStartNodes = new List<PathNode>(StartNodes);
+       
         GatesRemaining.Clear();
         GatesRemaining = new List<Gate>(Gates);
+        for (int i = 0; i < 3; i++) NumGatesPerRing[i] = 0;
+        foreach (Gate g in Gates)
+        {
+            g.gameObject.SetActive(true);
+            NumGatesPerRing[g.RingNum - 1]++;
+        }
+        
+        if (StatsText != null)
+        {
+            StatsText.TotalCollected.text = "0";
+            StatsText.TimeSpent.text = "0";
+            StatsText.TotalRemaining.text = Gates.Count.ToString();
+            for (int i = 0; i < 3; i++) StatsText.RemainingPerRing[i].text = NumGatesPerRing[i].ToString();
+        }
+
         if (Diode.DebugStartNode != null)
         {
             Diode.ResetDiodeForGame(Diode.DebugStartNode);
@@ -170,15 +168,11 @@ public class LockPicking : MiniGame
             Diode.ResetDiodeForGame(StartNodes[startIndex]);
             // usedPathNodes.Add(StartNodes[startIndex]);
         }
+    }    
 
-                      
-    }
-
-    int[] NumGatesPerRing = new int[3];
-    
     public void CollectGate(Gate gate)
     {
-       // Debug.Log("found gate: " + gate.name + ", ring num: " + gate.RingNum); // mogate
+        // Debug.Log("found gate: " + gate.name + ", ring num: " + gate.RingNum); // mogate
         GatesRemaining.Remove(gate);
         gate.gameObject.SetActive(false);
         SoundFXPlayer.Play("Lock_CollectFacet");
@@ -188,18 +182,32 @@ public class LockPicking : MiniGame
         }
 
         NumGatesPerRing[gate.RingNum - 1]--;
-        if(StatsText != null)
+        if (StatsText != null)
         {
             StatsText.TotalCollected.text = (Gates.Count - GatesRemaining.Count).ToString();
             StatsText.TotalRemaining.text = GatesRemaining.Count.ToString();
-            
+
             for (int i = 0; i < 3; i++)
             {
                 if (NumGatesPerRing[i] == 0) StatsText.RemainingPerRing[i].text = "Complete";
                 else StatsText.RemainingPerRing[i].text = NumGatesPerRing[i].ToString();
             }
-        }        
+        }
     }
+
+    public override void BeginPuzzleStartTime()
+    {
+        //Debug.Log("Lockpicking.BeginPuzzle()");   
+        base.BeginPuzzleStartTime();
+        CenterBlock.transform.position = new Vector3(CenterBlock.transform.position.x, 0f, CenterBlock.transform.position.z);
+        LargestRingDiameter = Rings[Rings.Count - 1].GetComponent<MeshCollider>().bounds.extents.x;
+
+        ResetGame();
+    }    
+
+    
+
+    
 
     IEnumerator ShowResults(string result, bool success)
     {
