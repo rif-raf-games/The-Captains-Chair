@@ -86,7 +86,7 @@ static public class StaticStuff
 
     static public string SETTINGS_FILE_NAME = "TCCSettings";
     static public int SoundFXVolume = 100;
-    static public int MusicVolume = 100;
+    static public int MusicVolume = 40;
     static public void SaveCurrentSettings(string s)
     {
         //Debug.LogWarning("SaveCurrentSettings(): " + s);
