@@ -351,15 +351,18 @@ public class Repair : MiniGame
                 // Debug.Log("a");
                 // SoundFXPlayer.Play("Repair_Rotate Piece"); [Commenting this out for now, too many sfx at once - Brent]
                 HeldPiece.transform.Rotate(0f, 60f, 0f);
-                if (HeldPiece.transform.parent == BoardPieces)
+                if (HeldPiece.Type != eRepairPieceType.DAMAGED)
                 {
-                    //  Debug.Log("d");
-                    HeldPiece.GetComponentInChildren<MeshRenderer>().material = OnBoardMaterial;
-                }
-                else
-                {
-                    //  Debug.Log("e");
-                    HeldPiece.GetComponentInChildren<MeshRenderer>().material = OnBeltLiftMaterial;
+                    if (HeldPiece.transform.parent == BoardPieces)
+                    {
+                        //  Debug.Log("d");
+                        HeldPiece.GetComponentInChildren<MeshRenderer>().material = OnBoardMaterial;
+                    }
+                    else
+                    {
+                        //  Debug.Log("e");
+                        HeldPiece.GetComponentInChildren<MeshRenderer>().material = OnBeltLiftMaterial;
+                    }
                 }
             }
             else
