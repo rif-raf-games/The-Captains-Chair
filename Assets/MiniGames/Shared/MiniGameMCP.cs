@@ -219,7 +219,7 @@ public class MiniGameMCP : MonoBehaviour
     {
         GameState = eGameState.NONE;
         yield return new WaitForSeconds(1f);
-        EndCurrentPuzzle();
+        //EndCurrentPuzzle();
     }
 
     private void OnGUI()
@@ -230,17 +230,23 @@ public class MiniGameMCP : MonoBehaviour
         }        
     }   
 
-    void EndCurrentPuzzle()
+    public void EndCurrentPuzzle()
     {
+        Debug.Log("EndCurrentPuzzle() CurPuzzleIndex: " + CurPuzzleIndex + ", Puzzles,Length: " + Puzzles.Length);
         if (CurPuzzleIndex == Puzzles.Length - 1)
         {
             // Debug.LogError("moprog03 ********************************  we're done with all puzzles and this code is only called if we finished them all but this is AFTER the code to save needs to be handled");            
             ArticyGlobalVariables.Default.Mini_Games.Coming_From_Main_Game = false;
             ArticyGlobalVariables.Default.Mini_Games.Returning_From_Mini_Game = true;
             ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success = true;
-            if(PuzzleDialogues != null)
+
+            Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
+            MiniGameArticyFlow.HandleSavePoint(jumpSave.Template.Success_Save_Fragment.SaveFragment as Save_Point);
+            string sceneName = jumpSave.Template.Success_Mini_Game_Result.SceneName;
+            FindObjectOfType<MCP>().LoadNextScene(sceneName, null, jumpSave);
+           /* if (PuzzleDialogues != null)
             {   // if PuzzleDialogues isn't null then we're under articy control
-                Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");                
+                Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");                  
                 MiniGameArticyFlow.HandleSavePoint(jumpSave.Template.Success_Save_Fragment.SaveFragment as Save_Point);
                 string sceneName = jumpSave.Template.Success_Mini_Game_Result.SceneName;
                 FindObjectOfType<MCP>().LoadNextScene(sceneName, null, jumpSave); // MGJ: MiniGameMCP.EndCurrentPuzzle() - done with all the puzzles for this set
@@ -250,8 +256,8 @@ public class MiniGameMCP : MonoBehaviour
                // Debug.LogWarning("If we're here then you're expecting some kind of demo.");
                 /*if (PuzzleNameRoot.Contains("Parking")) SceneManager.Load Scene("ParkingDemo");
                 else if (PuzzleNameRoot.Contains("LockPicking")) SceneManager.Load Scene("LockPickingDemo");
-                else if (PuzzleNameRoot.Contains("Repair")) SceneManager.Load Scene("RepairDemo");*/
-            }                        
+                else if (PuzzleNameRoot.Contains("Repair")) SceneManager.Load Scene("RepairDemo");
+            }      */                  
         }
         else
         {
@@ -334,8 +340,8 @@ public class MiniGameMCP : MonoBehaviour
 
     public void SavePuzzlesProgress(bool success, string cameFrom = "not set in call")
     {
-        //Debug.LogError("SavePuzzleProgress() success: " + success + ", cameFrom: " + cameFrom);
-        if(success == true)
+        Debug.LogError("SavePuzzleProgress() success: " + success + ", cameFrom: " + cameFrom + ", ProgressVarName: " + ProgressVarName + ", FinishedVarName: " + FinishedVarName);
+        if (success == true)
         {
             string var = ArticyGlobalVariables.Default.GetVariableByString<string>(ProgressVarName);
             int progress = int.Parse(var);

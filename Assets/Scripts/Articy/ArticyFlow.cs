@@ -367,9 +367,10 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                 //FindObjectOfType<MCP>().LoadNextScene(sj.Template.Next_Game_Scene.Scene_Name, sj); 
             }
             else if (CurPauseObject.GetType().Equals(typeof(Mini_Game_Jump)))
-            {   // we're going to a mini game, so fill up the mini game info container with the current pause object's information, then start the mini game                
+            {   // we're going to a mini game, so fill up the mini game info container with the current pause object's information, then start the mini game                               
                 Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
                 Mini_Game_Jump curJump = CurPauseObject as Mini_Game_Jump;
+                Debug.Log("Set Up Mini game: " + curJump.TechnicalName + ", is SaveFragment null: " + (curJump.Template.Success_Save_Fragment.SaveFragment == null));
                 //jumpSave.Template.Mini_Game_Scene.Scene_Name = curJump.Template.Mini_Game_Scene.Scene_Name;
                 jumpSave.Template.LoadingScreen.SceneToLoad = curJump.Template.LoadingScreen.SceneToLoad;
                 jumpSave.Template.LoadingScreen.LoadingImages = curJump.Template.LoadingScreen.LoadingImages;
@@ -453,12 +454,14 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     /// </summary>
     /// <param name="savePoint"></param>
     public void HandleSavePoint(Save_Point savePoint)
-    {              
+    {        
         if(savePoint == null)
         {
-           // Debug.LogError("The save info is not set up in the articy nodes yet so we're temporarily skipping saving at this moment.");
+            Debug.LogError("The save info is not set up in the articy nodes yet so we're temporarily skipping saving at this moment.");
             return;
         }
+        Debug.Log("HandleSavePoint() Sav_Var: " + savePoint.Template.Save_Info.Sav_Var);
+
         ArticyGlobalVariables.Default.Save_Info.Return_Scene = savePoint.Template.Save_Info.ReturnScene;
 
         //Debug.LogError("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! mosavepos01 HandleSavePoint()");
@@ -501,7 +504,14 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                 trackingParameters.Add("value at save", x);
                 StaticStuff.TrackEvent(a, trackingParameters);
             }
-        }        
+        }  
+        if(savePoint.Template.Save_Info.Sav_Var != "")
+        {
+            string saveVar = savePoint.Template.Save_Info.Sav_Var;
+            Debug.Log("saveVar: " + saveVar);
+            ArticyGlobalVariables.Default.SetVariableByString(saveVar, true);            
+        }
+
         StaticStuff.SaveCurrentProfile("ArticyFlow.HandleSavePoint()");        
     }
 

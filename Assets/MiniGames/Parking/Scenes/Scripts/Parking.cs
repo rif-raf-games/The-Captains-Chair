@@ -157,9 +157,16 @@ public class Parking : MiniGame
 
     IEnumerator ShowResults(string result, bool success)
     {
-        if (success == true) SoundFXPlayer.Play("Cargo_WinGame");
-        if (MiniGameMCP != null) MiniGameMCP.SavePuzzlesProgress(success, "ShowResults()");
-        if (success == true) EndPuzzleTime(true);
+        if (success == true)
+        {
+            SoundFXPlayer.Play("Cargo_WinGame");
+            EndPuzzleTime(true);
+            if (MiniGameMCP != null)
+            {
+                MiniGameMCP.SavePuzzlesProgress(success, "ShowResults()");
+                MiniGameMCP.EndCurrentPuzzle();
+            }
+        }        
         SetGameState(eGameState.OFF);
 
         if(MiniGameMCP != null)

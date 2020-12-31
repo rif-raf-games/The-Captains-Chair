@@ -67,8 +67,9 @@ public class RifRafExchangeJobBoard : MonoBehaviour
         foreach (ArticyObject job in jobs)
         {           
             em = job as Exchange_Missions;           
-            string varName = "Activity.Finished_" + em.Template.Exchange_Mission.ProgressVariable;
-            string var = ArticyGlobalVariables.Default.GetVariableByString<string>(varName);          
+            string varName = "Activity.Finished_" + em.Template.Exchange_Mission.ProgressVariable;            
+            string var = ArticyGlobalVariables.Default.GetVariableByString<string>(varName);
+            //Debug.Log("varName: " + varName + " has a value of: " + var);
             if (var.Equals("True"))
             {          
                 continue;

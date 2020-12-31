@@ -211,10 +211,20 @@ public class LockPicking : MiniGame
 
     IEnumerator ShowResults(string result, bool success)
     {
-        if (success == true) SoundFXPlayer.Play("Lock_WinGame");
-        else SoundFXPlayer.Play("Lock_LoseGame");
-        if (MiniGameMCP != null) MiniGameMCP.SavePuzzlesProgress(success);
-        if (success == true) EndPuzzleTime(true);
+        if (success == true)
+        {
+            SoundFXPlayer.Play("Lock_WinGame");
+            EndPuzzleTime(true);
+            if (MiniGameMCP != null)
+            {
+                MiniGameMCP.SavePuzzlesProgress(success, "ShowResults()");
+                MiniGameMCP.EndCurrentPuzzle();
+            }
+        }
+        else
+        {
+            SoundFXPlayer.Play("Lock_LoseGame");
+        }        
         SetGameState(eGameState.OFF);
 
         if (MiniGameMCP != null)

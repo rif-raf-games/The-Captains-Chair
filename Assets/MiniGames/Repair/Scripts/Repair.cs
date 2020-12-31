@@ -995,16 +995,25 @@ public class Repair : MiniGame
     {
         Debug.Log("Repair.ShowResults() result: " + result);
         if (success == false) result = "Result Fail: Current configuration will cause meltdown and cannot be completed. Re-confirm all lines connect to matching terminals.";
-        if (success == true) SoundFXPlayer.Play("Repair_ScanSuccess");
+        if (success == true)
+        {
+            SoundFXPlayer.Play("Repair_ScanSuccess");
+            EndPuzzleTime(true);
+            if (MiniGameMCP != null)
+            {
+                MiniGameMCP.SavePuzzlesProgress(success, "ShowResults()");
+                MiniGameMCP.EndCurrentPuzzle();
+            }
+        }
         else SoundFXPlayer.Play("Repair_ScanFail");
-        
+
         if (MiniGameMCP != null) MiniGameMCP.ShowResultsText(result);
         else ResultsText.text = result;
-        
-        if (MiniGameMCP != null) MiniGameMCP.SavePuzzlesProgress(success);
-        if (success == true) EndPuzzleTime(true);
+
+        // if (MiniGameMCP != null) MiniGameMCP.SavePuzzlesProgress(success);
+        // if (success == true) EndPuzzleTime(true);
         SetGameState(eGameState.OFF);
-        
+
         if (success == true) SetLights(0);
         else SetLights(2);
         yield return new WaitForSeconds(3);
