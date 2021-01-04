@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class CCPlayer : CharacterEntity
@@ -105,7 +106,8 @@ public class CCPlayer : CharacterEntity
         }        
     }
 
-    
+
+    public GraphicRaycaster JoystickGRC = null;
     // Update is called once per frame
     public override void Update()
     {
@@ -118,9 +120,33 @@ public class CCPlayer : CharacterEntity
             Ray ray;
             RaycastHit hit;
             int mask;
-            
+            bool uiElementClicked = false;
+
+            if (Input.GetMouseButtonDown(0) )
+            {
+                if(JoystickGRC == null)
+                {
+                    GameObject go = GameObject.Find("Joystick UI");
+                    if (go == null) { Debug.LogError("null Joystick UI object"); }
+                    else JoystickGRC = go.GetComponent<GraphicRaycaster>();
+                }                
+                if(JoystickGRC != null)
+                {
+                    PointerEventData ped = new PointerEventData(null);
+                    ped.position = Input.mousePosition;
+                    List<RaycastResult> results = new List<RaycastResult>();
+                    JoystickGRC.Raycast(ped, results);
+                    uiElementClicked = (results.Count > 0);
+                    /*Debug.Log("num results: " + results.Count + ", uiElementClicked: " + uiElementClicked);
+                    foreach (RaycastResult result in results)
+                    {
+                        Debug.Log("result name: " + result.gameObject.name);
+                    }*/
+                }
+            }
+
             // first check to see if we have clicked on an interactive triggers
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && uiElementClicked == false)
             {
                 mask = LayerMask.GetMask("ITrigger");
                 ray = Camera.main.ScreenPointToRay(Input.mousePosition);                

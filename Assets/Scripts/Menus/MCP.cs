@@ -65,7 +65,7 @@ public class MCP : MonoBehaviour
         float w = Screen.width;
         float h = Screen.height;
         AspectVal = w / h;
-        TabletMode = (AspectVal < 1.36f);
+        TabletMode = (AspectVal < 1.44f);
         Debug.Log("AspectVal: " + AspectVal + ", TabletMode: " + TabletMode);
     }
 
