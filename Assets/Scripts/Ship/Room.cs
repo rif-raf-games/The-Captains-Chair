@@ -34,14 +34,14 @@ public class Room : MonoBehaviour
                 ChildMaterials.Add(material);
                 material.shader = UnityEngine.Shader.Find("RifRafStandard");                
                 if (addToNeverOpaque) NeverOpaqueMaterials.Add(material);
-                /*string rt = material.GetTag("RenderType", false, "fuck me");
+                /*string rt = material.GetTag("RenderType", false, "frik me");
                 if (rt.Contains("Opaq")) Debug.Log(rt);
                 else Debug.LogWarning(rt);
                 int rq = material.renderQueue;
                 Debug.Log(rq);*/
             }
         }
-        //Debug.Log("Room " + this.name + ", num child materials:  " + ChildMaterials.Count + " num never opaque: " + NeverOpaqueMaterials.Count);
+       // Debug.Log("Room " + this.name + ", num child materials:  " + ChildMaterials.Count + " num never opaque: " + NeverOpaqueMaterials.Count);
     }    
 
     float LerpStart, LerpEnd;
@@ -59,6 +59,7 @@ public class Room : MonoBehaviour
     public Text DebugText;
     private void LateUpdate()
     {
+       // bool changed = false;
         if(CurMode == eRenderMode.TRANSITION)
         {    
             float lerpTime = Time.time - LerpStartTime;
@@ -68,8 +69,10 @@ public class Room : MonoBehaviour
             {
                 alpha = LerpEnd;
                 CurMode = eRenderMode.IDLE;
+              //  changed = true;
             }
-            else alpha = Mathf.Lerp(LerpStart, LerpEnd, lerpPercentage);    
+            else alpha = Mathf.Lerp(LerpStart, LerpEnd, lerpPercentage);
+           // if (changed == true && this.name.Contains("StarDeck")) Debug.Log("room changed: " + this.name);
             // use new alpha (and possibly new mode) to get this ready
             foreach(Material material in ChildMaterials)
             {                
@@ -77,14 +80,17 @@ public class Room : MonoBehaviour
                 if (CurMode == eRenderMode.IDLE && LerpEnd > .99f && NeverOpaqueMaterials.Contains(material) == false)
                 {
                     StaticStuff.SetOpaque(material);
-                    
+                   // if(material.name.Contains("Stu")) Debug.Log("SetOpaque material: " + material.name + ", i'm in room: " + this.name);
                 }
             }       
             if(CurMode == eRenderMode.IDLE)
             {
                 foreach (Material m in NPCMaterials) ChildMaterials.Remove(m);
                 NPCMaterials.Clear();
-                if (LerpEnd < .01f) this.gameObject.SetActive(false);
+                if (LerpEnd < .01f)
+                {
+                    this.gameObject.SetActive(false);
+                }
             }
         }              
     }    
@@ -105,7 +111,7 @@ public class Room : MonoBehaviour
 
         ToggleTime = Time.time;
         ToggleValue = alpha;        
-       // Debug.Log("---------------------------------------ToggleAlpha from: " + ChildMaterials[0].color.a + " to: " + alpha + " skipLerp: " + skipLerp + ", isPlaza: " + isPlaza);
+        //if(this.name.Contains("StarDeck")) Debug.Log("---------------------------------------ToggleAlpha from: " + ChildMaterials[0].color.a + " to: " + alpha + ", name: " + this.name + " skipLerp: " + skipLerp + ", isPlaza: " + isPlaza);
         if (ChildMaterials[0].color.a != alpha)
         {                       
             if(skipLerp == false ) CurMode = eRenderMode.TRANSITION;
@@ -125,7 +131,7 @@ public class Room : MonoBehaviour
                     // Debug.Log("before " + ChildMaterials.Count);
                     foreach (Collider c in colliders)
                     {
-                        // Debug.Log("this collider is: " + c.name);
+                        //if(c.name.Contains("Stu")) Debug.Log("ToggleAlpha() from: " + ChildMaterials[0].color.a + " to: " + alpha + " on collider: " + c.name + " and i'm in room: " + this.name);
                         Renderer[] childRs = c.GetComponentsInChildren<Renderer>();
                         foreach (Renderer mr in childRs)
                         {
@@ -139,9 +145,9 @@ public class Room : MonoBehaviour
                             }
                         }
                     }
-                    // Debug.Log("those NPC's had " + NPCMaterials.Count + " materials in child NPC's");
+                   // Debug.Log("those NPC's had " + NPCMaterials.Count + " materials in child NPC's");
                     foreach (Material m in NPCMaterials) ChildMaterials.Add(m);
-                    // Debug.Log("after " + ChildMaterials.Count);
+                    //Debug.Log("after " + ChildMaterials.Count);
                     // foreach (Material material in ChildMaterials) Debug.Log(material.name);
                 }
             }
@@ -174,14 +180,14 @@ public class Room : MonoBehaviour
         {
             Result = "skipped Toggle.  alpha: " + alpha.ToString("F2");
         }
-        if(DebugText != null)
+     /*   if(DebugText != null)
         {
             Debug.Log("************************************************");
             //Debug.Log(NumToggles);
             Debug.Log(ToggleTime.ToString("F2"));
             Debug.Log(ToggleTime.ToString("F2"));
             Debug.Log(Result);            
-        }
+        }*/
     }
 
     public void DEBUG_SetShader(string shaderName, Shader shader)
