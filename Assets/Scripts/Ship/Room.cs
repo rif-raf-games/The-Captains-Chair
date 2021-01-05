@@ -23,7 +23,6 @@ public class Room : MonoBehaviour
     {
         MCP mcp = GameObject.FindObjectOfType<MCP>(); // tmpshader
         int numAssignments = 0;
-        int numCopies = 0;
         ChildMeshRenderers = GetComponentsInChildren<MeshRenderer>();
         bool addToNeverOpaque = false;
         foreach (MeshRenderer mr in ChildMeshRenderers)
@@ -48,11 +47,8 @@ public class Room : MonoBehaviour
                             numAssignments++;
                         }
                         break;
-                    case 2:
-                        material.CopyPropertiesFromMaterial(mcp.RifRafMaterial);
-                        numCopies++;
-                        break;
                     case 3:
+                        material.CopyPropertiesFromMaterial(mcp.RifRafMaterial);
                         break;
                 }
                // if (material.shader != mcp.RifRafShader)
@@ -70,8 +66,7 @@ public class Room : MonoBehaviour
             }            
         }
         mcp.NumTotalShaderAssignments += numAssignments;
-        mcp.NumTotalMaterialCopies += numCopies;
-       // Debug.Log("Room " + this.name + ", num child materials:  " + ChildMaterials.Count + "shader version: " + mcp.ShaderVersion + ", numAssignments: " + numAssignments);
+        Debug.Log("Room " + this.name + ", num child materials:  " + ChildMaterials.Count + "shader version: " + mcp.ShaderVersion + ", numAssignments: " + numAssignments);
         // Debug.Log("Room " + this.name + ", num child materials:  " + ChildMaterials.Count + " num never opaque: " + NeverOpaqueMaterials.Count);
     }    
 
