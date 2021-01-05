@@ -33,14 +33,20 @@ public class MCP : MonoBehaviour
     public bool TabletMode = false;
     public float AspectVal = 0f;
 
-    [Header("TMP SHADER")]
-    public UnityEngine.Shader RifRafShader; // tmpshader
+    [Header("Material/Shader Version")]
     public int ShaderVersion = 0;
+    [Header("TMP SHADER")]
+    public UnityEngine.Shader RifRafShader; // tmpshader    
     public int NumTotalShaderAssignments = 0;
+    [Header("TMP MATERIAL")]
     public Material RifRafMaterial;
+    public int NumTotalMaterialCopies = 0;
+    [Header("Misc")]
+    public Text DebugText;
     // 0 = assign ALL shaders
     // 1 = only assign shaders that aren't already RifRaf
-    // 2 = copy shader values
+    // 2 = copy material values
+    // 3 = do nothing
 
     private void Awake()
     {
@@ -449,7 +455,7 @@ public class MCP : MonoBehaviour
         return this.ConvoUI;
     }
    
-    public Text DebugText;
+    
     IEnumerator FadeObjects(List<RawImage> images, float fadeTime, float alphaStart)
     {
         foreach (RawImage image in images) image.color = new Color(1f, 1f, 1f, alphaStart);
