@@ -1,6 +1,6 @@
 // Unity built-in shader source. Copyright (c) 2016 Unity Technologies. MIT license (see license.txt)
 
-Shader "RifRafStandard"
+Shader "Standard"
 {
     Properties
     {
@@ -44,7 +44,7 @@ Shader "RifRafStandard"
         [HideInInspector] _Mode ("__mode", Float) = 0.0
         [HideInInspector] _SrcBlend ("__src", Float) = 1.0
         [HideInInspector] _DstBlend ("__dst", Float) = 0.0
-        [HideInInspector] _ZWrite ("__zw", Float) = 0.0
+        [HideInInspector] _ZWrite ("__zw", Float) = 1.0
     }
 
     CGINCLUDE
@@ -102,7 +102,7 @@ Shader "RifRafStandard"
             Tags { "LightMode" = "ForwardAdd" }
             Blend [_SrcBlend] One
             Fog { Color (0,0,0,0) } // in additive pass fog should be black
-            ZWrite On
+            ZWrite Off
             ZTest LEqual
 
             CGPROGRAM
@@ -268,7 +268,7 @@ Shader "RifRafStandard"
             Tags { "LightMode" = "ForwardAdd" }
             Blend [_SrcBlend] One
             Fog { Color (0,0,0,0) } // in additive pass fog should be black
-            ZWrite On
+            ZWrite Off
             ZTest LEqual
 
             CGPROGRAM
