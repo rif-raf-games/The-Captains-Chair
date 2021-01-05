@@ -33,11 +33,7 @@ public class Room : MonoBehaviour
             foreach (Material material in mrMaterials)            
             {               
                 ChildMaterials.Add(material);
-                if (material.shader != mcp.RifRafShader)
-                {
-                    Debug.Log("assigning shader");
-                    material.shader = mcp.RifRafShader; // tmpshader //UnityEngine.Shader.Find("RifRafStandard");                
-                }
+                material.shader = mcp.RifRafShader; // tmpshader //UnityEngine.Shader.Find("RifRafStandard");                
                 if (addToNeverOpaque) NeverOpaqueMaterials.Add(material);
                 /*string rt = material.GetTag("RenderType", false, "frik me");
                 if (rt.Contains("Opaq")) Debug.Log(rt);
