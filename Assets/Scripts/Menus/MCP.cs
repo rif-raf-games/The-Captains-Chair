@@ -32,10 +32,7 @@ public class MCP : MonoBehaviour
     [Header("Aspect Ratio")]
     public bool TabletMode = false;
     public float AspectVal = 0f;
-
-    [Header("TMP SHADER")]
-    public UnityEngine.Shader RifRafShader; // tmpshader
-
+    
     private void Awake()
     {
         if (MenuUI == null || InGamePopUp == null) { Debug.LogError("No MenuUI or InGamePopUp in MCP"); return; }
