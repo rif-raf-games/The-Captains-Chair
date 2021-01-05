@@ -35,12 +35,6 @@ public class MCP : MonoBehaviour
 
     [Header("TMP SHADER")]
     public UnityEngine.Shader RifRafShader; // tmpshader
-    public int ShaderVersion = 0;
-    public int NumTotalShaderAssignments = 0;
-    public Material RifRafMaterial;
-    // 0 = assign ALL shaders
-    // 1 = only assign shaders that aren't already RifRaf
-    // 2 = copy shader values
 
     private void Awake()
     {
