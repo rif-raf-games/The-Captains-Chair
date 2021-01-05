@@ -20,7 +20,8 @@ public class Room : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {        
+    {
+        MCP mcp = GameObject.FindObjectOfType<MCP>(); // tmpshader
         ChildMeshRenderers = GetComponentsInChildren<MeshRenderer>();
         bool addToNeverOpaque = false;
         foreach (MeshRenderer mr in ChildMeshRenderers)
@@ -32,7 +33,7 @@ public class Room : MonoBehaviour
             foreach (Material material in mrMaterials)            
             {               
                 ChildMaterials.Add(material);
-                material.shader = UnityEngine.Shader.Find("RifRafStandard");                
+                material.shader = mcp.RifRafShader; // tmpshader //UnityEngine.Shader.Find("RifRafStandard");                
                 if (addToNeverOpaque) NeverOpaqueMaterials.Add(material);
                 /*string rt = material.GetTag("RenderType", false, "frik me");
                 if (rt.Contains("Opaq")) Debug.Log(rt);
