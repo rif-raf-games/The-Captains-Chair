@@ -22,6 +22,7 @@ public class Room : MonoBehaviour
     void Start()
     {
         MCP mcp = GameObject.FindObjectOfType<MCP>(); // tmpshader
+        int numAssignments = 0;
         ChildMeshRenderers = GetComponentsInChildren<MeshRenderer>();
         bool addToNeverOpaque = false;
         foreach (MeshRenderer mr in ChildMeshRenderers)
@@ -33,20 +34,40 @@ public class Room : MonoBehaviour
             foreach (Material material in mrMaterials)            
             {               
                 ChildMaterials.Add(material);
-                if (material.shader != mcp.RifRafShader)
+                switch(mcp.ShaderVersion)
                 {
-                    Debug.Log("assigning shader");
-                    material.shader = mcp.RifRafShader; // tmpshader //UnityEngine.Shader.Find("RifRafStandard");                
+                    case 0:
+                        material.shader = mcp.RifRafShader;
+                        numAssignments++;
+                        break;
+                    case 1:
+                        if (material.shader != mcp.RifRafShader)
+                        {
+                            material.shader = mcp.RifRafShader;
+                            numAssignments++;
+                        }
+                        break;
+                    case 3:
+                        material.CopyPropertiesFromMaterial(mcp.RifRafMaterial);
+                        break;
                 }
+               // if (material.shader != mcp.RifRafShader)
+               // if(true)
+             //   {
+                   // Debug.Log("assigning shader");
+              //      material.shader = mcp.RifRafShader; // tmpshader //UnityEngine.Shader.Find("RifRafStandard");                
+              //  }
                 if (addToNeverOpaque) NeverOpaqueMaterials.Add(material);
                 /*string rt = material.GetTag("RenderType", false, "frik me");
                 if (rt.Contains("Opaq")) Debug.Log(rt);
                 else Debug.LogWarning(rt);
                 int rq = material.renderQueue;
                 Debug.Log(rq);*/
-            }
+            }            
         }
-       // Debug.Log("Room " + this.name + ", num child materials:  " + ChildMaterials.Count + " num never opaque: " + NeverOpaqueMaterials.Count);
+        mcp.NumTotalShaderAssignments += numAssignments;
+        Debug.Log("Room " + this.name + ", num child materials:  " + ChildMaterials.Count + "shader version: " + mcp.ShaderVersion + ", numAssignments: " + numAssignments);
+        // Debug.Log("Room " + this.name + ", num child materials:  " + ChildMaterials.Count + " num never opaque: " + NeverOpaqueMaterials.Count);
     }    
 
     float LerpStart, LerpEnd;
