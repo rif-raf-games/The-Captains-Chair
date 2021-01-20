@@ -324,7 +324,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   VideoPlayer: {fileID: 1182736234}
-  VideoCamera: {fileID: 1182736236}
+  VideoPlayerChild: {fileID: 0}
 --- !u!1 &1359950272
 GameObject:
   m_ObjectHideFlags: 0
@@ -3670,6 +3670,8 @@ MonoBehaviour:
     referencingMode: 0
     lowId: 45039
     highId: 16777224
+  InGamePopUp: {fileID: 0}
+  MainButtons: []
 --- !u!1 &1486084179730840646
 GameObject:
   m_ObjectHideFlags: 0
@@ -6437,11 +6439,14 @@ MonoBehaviour:
   SpeakerPanel: {fileID: 1722405360513253758}
   SpeakerName: {fileID: 1722405360506112302}
   SpeakerText: {fileID: 1722405360506166024}
+  DataText: {fileID: 0}
   SpeakerImage: {fileID: 1722405360506206502}
   DefaultTypewriterSpeed: 120
+  TypewriterSpeed: 0
   DialogueOptions:
   - {fileID: 1722405360513164524}
   - {fileID: 1722405360513188136}
+  ArticyFlow: {fileID: 0}
   Player: {fileID: 0}
 --- !u!1 &2078848421782407279
 GameObject:
@@ -16522,6 +16527,7 @@ MonoBehaviour:
     lowId: 14034
     highId: 16777217
   HintText: {fileID: 1868468148953676804}
+  ResetMiniGameButton: {fileID: 0}
 --- !u!114 &8408786122246383144
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19199,7 +19205,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3401b2050284dd444b68df1696d528ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PopUpPanel: {fileID: 5288589605333056604}
+  MainPopupPanel: {fileID: 0}
   ExchangeBoardButton: {fileID: 4480656192144516784}
   ExchangeBoardText: {fileID: 5780132294984958712}
   SuspendJobText: {fileID: 8479133307298274849}
@@ -19213,6 +19219,7 @@ MonoBehaviour:
     Slider: {fileID: 4170414215581018842}
     Toggle: {fileID: 7410741707692319285}
   MCP: {fileID: 6502241616296845840}
+  MainPopUpButtons: []
 --- !u!1 &3882034510664238121
 GameObject:
   m_ObjectHideFlags: 0
@@ -21871,6 +21878,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SoundFXList: []
+  AudioSource: {fileID: 0}
   SoundFXNames: []
 --- !u!1 &4491150632039789837
 GameObject:
@@ -22012,6 +22020,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 746f6547055eaf743815c0900d5ba4b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AudioSource: {fileID: 0}
 --- !u!1 &4545994307068846110
 GameObject:
   m_ObjectHideFlags: 0
@@ -22133,7 +22142,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &4671206073571774371
 RectTransform:
   m_ObjectHideFlags: 0
@@ -22249,6 +22258,7 @@ MonoBehaviour:
   - {fileID: 2282236390464449001}
   - {fileID: 2282236391301238938}
   - {fileID: 2282236389497246435}
+  MainMenuEnabledStates: 
   ProfilesButtons:
   - {fileID: 6880623208479536089}
   - {fileID: 7472699625003691611}
@@ -22264,6 +22274,16 @@ MonoBehaviour:
   - {fileID: 6638924706487782352}
   - {fileID: 4223529890912462917}
   - {fileID: 1190256942048856511}
+  MusicVolume:
+    Slider: {fileID: 0}
+    Toggle: {fileID: 0}
+  SoundFXVolume:
+    Slider: {fileID: 0}
+    Toggle: {fileID: 0}
+  MainGameBlue: {fileID: 0}
+  MainGameGrey: {fileID: 0}
+  OtherBlue: {fileID: 0}
+  OtherGrey: {fileID: 0}
   BackButton: {fileID: 5118093338902191931}
   DefaultProfileIcon: {fileID: 21300000, guid: 062f2d2147ada49f79a6fbe90c335641, type: 3}
   CurActiveSaveGameFunction: 0
@@ -36254,7 +36274,7 @@ GameObject:
   - component: {fileID: 6502241616296845840}
   - component: {fileID: 2387193674660294320}
   m_Layer: 0
-  m_Name: MCP
+  m_Name: MCP (10-12) BU
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -36297,7 +36317,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 991d2cde4e602884dace9b8af0d75844, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UICamera: {fileID: 0}
   MenuUI: {fileID: 6502241616610132884}
   InGamePopUp: {fileID: 7521580289344985261}
   ConvoUI: {fileID: 7196160309700528169}
@@ -36310,8 +36329,11 @@ MonoBehaviour:
   CameraToggleButton: {fileID: 2919414366674700512}
   CaptainAvatar: {fileID: 0}
   VideoPlayerRR: {fileID: 1182736237}
+  UICamera: {fileID: 0}
   SoundFX: {fileID: 4491150631626826631}
   BGMusic: {fileID: 4491150632039789838}
+  TabletMode: 0
+  AspectVal: 0
   DebugText: {fileID: 799978650}
   CaptainAssets: {fileID: 1744338960939395524}
 --- !u!81 &2387193674660294320
@@ -42617,16 +42639,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6502241616296845841}
     m_Modifications:
-    - target: {fileID: 6732433165535002115, guid: 8f3c36467506b432e96ad281bce7cbbb,
-        type: 3}
-      propertyPath: m_Name
-      value: RifRaf UI - Debug
-      objectReference: {fileID: 0}
-    - target: {fileID: 6732433165535002115, guid: 8f3c36467506b432e96ad281bce7cbbb,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8589682433542437566, guid: 8f3c36467506b432e96ad281bce7cbbb,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -42730,6 +42742,16 @@ PrefabInstance:
     - target: {fileID: 8589682433542437566, guid: 8f3c36467506b432e96ad281bce7cbbb,
         type: 3}
       propertyPath: m_Pivot.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6732433165535002115, guid: 8f3c36467506b432e96ad281bce7cbbb,
+        type: 3}
+      propertyPath: m_Name
+      value: RifRaf UI - Debug
+      objectReference: {fileID: 0}
+    - target: {fileID: 6732433165535002115, guid: 8f3c36467506b432e96ad281bce7cbbb,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7610559627464273725, guid: 8f3c36467506b432e96ad281bce7cbbb,
