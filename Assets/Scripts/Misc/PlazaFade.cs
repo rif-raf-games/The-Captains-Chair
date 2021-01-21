@@ -79,7 +79,7 @@ public class PlazaFade : MonoBehaviour
         {
             s += c.name + "\n";
         }
-        DebugText.text = s;
+       // DebugText.text = s;
     }
 }/*Debug.DrawRay(this.transform.position, direction * hit.distance, Color.yellow);                        
             string s = "hit: " + hit.collider.name;

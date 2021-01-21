@@ -114,7 +114,7 @@ public class CCPlayer : CharacterEntity
         base.Update();
         bool menuActive = false;
         if (FindObjectOfType<RifRafInGamePopUp>() != null) menuActive = !FindObjectOfType<RifRafInGamePopUp>().MenusActiveCheck();
-
+       // Debug.Log("MovementBlocked: " + MovementBlocked + ", DEBUG_BlockMovement: " + DEBUG_BlockMovement + ", menuActive: " + menuActive);
         if (MovementBlocked == false && DEBUG_BlockMovement == false && menuActive == false)
         {
             Ray ray;

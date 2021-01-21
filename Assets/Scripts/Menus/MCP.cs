@@ -34,8 +34,13 @@ public class MCP : MonoBehaviour
     public float AspectVal = 0f;
     
     private void Awake()
-    {
-        if (MenuUI == null || InGamePopUp == null) { Debug.LogError("No MenuUI or InGamePopUp in MCP"); return; }
+    {        
+        if (MenuUI == null || InGamePopUp == null) 
+        {
+            string s = "MenuUI==null: " + (MenuUI == null) + ", InGamePopUp==null: " + (InGamePopUp == null);
+            Debug.LogError(s); 
+            return; 
+        }
         MCP mcp = FindObjectOfType<MCP>();
         if (mcp != this)
         {

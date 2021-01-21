@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class RifRafInGamePopUp : MonoBehaviour
 {
     public GameObject MainPopupPanel;
-    public GameObject ExchangeBoardButton;
+    //public GameObject ExchangeBoardButton; monewui
     public GameObject ExchangeBoardText, SuspendJobText;
     public MissionHint MissionHint;
     public GameObject QuitConfirmPopup;
@@ -23,13 +23,15 @@ public class RifRafInGamePopUp : MonoBehaviour
     private void Awake()
     {
         StaticStuff.PrintRifRafUI("RifRafInGamePopUp.Awake()");
-      //  Debug.Log("RifRafInGamePopUp.Awake()");
+        //  Debug.Log("RifRafInGamePopUp.Awake()");
 
-        MainPopupPanel.SetActive(false);
+        MainPopupPanel.SetActive(false);       
         this.MissionHint.Init();
         MissionHint.gameObject.SetActive(false);
-        ExchangeBoard.gameObject.SetActive(false);
+        //ExchangeBoard.gameObject.SetActive(false); // monewui
         QuitConfirmPopup.gameObject.SetActive(false);
+
+        this.gameObject.SetActive(false); // monewui
     }
     public void SetMCP(MCP mcp)
     {
@@ -42,34 +44,34 @@ public class RifRafInGamePopUp : MonoBehaviour
       //  Debug.Log("OnClickBurger()");
         if (PopupActiveCheck() == false) return;
 
+        // burger won't be clickable with new UI so we don't need to check this        
         if (MainPopupPanel.activeSelf == true)
         {
-            this.MCP.StartFreeRoam();
-            //StaticStuff.SaveCurrentProfile("Closing In Game PopUp");
+            this.MCP.StartFreeRoam();            
             StaticStuff.SaveCurrentSettings("OnClickBurger()");
         }
         else
         {
             this.MCP.StartPopupPanel();            
-        }        
+        }      
     }
 
     void ToggleMainPopUpButtons(bool isActive)
     {
-      //  Debug.Log("*********ToggleMainPopUpButtons(): " + isActive);
+        //Debug.Log("*********ToggleMainPopUpButtons(): " + isActive);
         foreach (Button b in MainPopUpButtons) b.interactable = isActive;
     }
 
     public void ToggleMainPopupPanel(bool isActive)
     {
-      //  Debug.Log("ToggleMainPopupPanel(): " + isActive);
-        MainPopupPanel.SetActive(isActive);
-        ToggleMainPopUpButtons(true);
+        //Debug.LogWarning("monewui CHECK THIS ToggleMainPopupPanel(): " + isActive);
+        MainPopupPanel.SetActive(isActive);       
+        ToggleMainPopUpButtons(true); 
     }
 
     public void TurnOnPopupMenu()
     {        
-     //   Debug.Log("RifRafInGamePopUp.TurnOnPopupMenu()");
+        //Debug.Log("RifRafInGamePopUp.TurnOnPopupMenu()");
        
         ToggleMainPopupPanel(true);
         MusicVolume.Slider.value = this.MCP.GetMusicVolume();
@@ -77,7 +79,9 @@ public class RifRafInGamePopUp : MonoBehaviour
         SoundFXVolume.Slider.value = this.MCP.GetSoundFXVolume();
         SoundFXVolume.Toggle.isOn = (SoundFXVolume.Slider.value > 0f);
 
-        if (ArticyGlobalVariables.Default.Episode_01.First_Exchange == false)
+        // monewui
+        Debug.LogWarning("monewui - This is where the whole exchange board text/suspend job text will get set up");
+      /*  if (ArticyGlobalVariables.Default.Episode_01.First_Exchange == false)
         //if(false)
         {
             ExchangeBoardButton.SetActive(false);
@@ -95,7 +99,7 @@ public class RifRafInGamePopUp : MonoBehaviour
                 ExchangeBoardText.SetActive(false);
                 SuspendJobText.SetActive(true);
             }
-        }
+        }*/
     }
     
 
@@ -104,35 +108,33 @@ public class RifRafInGamePopUp : MonoBehaviour
     public void ShutOffExchangeBoard()
     {
        // Debug.Log("ShutOffExchangeBoard()");
-        ExchangeBoard.ShutOffQuitAcceptPopups();
-        //ExchangeBoard.gameObject.SetActive(false);
+        ExchangeBoard.ShutOffQuitAcceptPopups();        
         ToggleExchangeBoard(false);
     }
 
     public bool MenusActiveCheck()
     {
+        //Debug.LogWarning("monewui MenusActiveCheck() CHECK THIS .PopupActiveCheck(): " + PopupActiveCheck() + ", MainPopupPanel.activeSelf: " + MainPopupPanel.activeSelf);        
         return PopupActiveCheck() && MainPopupPanel.activeSelf == false;
     }
     public bool PopupActiveCheck()
     {
-        return MissionHint.gameObject.activeSelf == false && ExchangeBoard.gameObject.activeSelf == false && QuitConfirmPopup.gameObject.activeSelf == false;
+        return MissionHint.gameObject.activeSelf == false /*&& this.gameObject.activeSelf == false*/ && QuitConfirmPopup.gameObject.activeSelf == false; 
     }
 
 #region MAIN_POPUP
-    //mo put back here
+    
     
     public void ToggleExchangeBoard(bool isActive)
     {
-       // Debug.Log("ToggleExchangeBoard(): " + isActive);
-        if (isActive == true) ExchangeBoard.FillBoard();
-        ExchangeBoard.gameObject.SetActive(isActive);
+        //Debug.Log("monewui FIX THIS ToggleExchangeBoard(): " + isActive);
+        if (isActive == true) ExchangeBoard.FillBoard();        
         ToggleMainPopUpButtons(!isActive);
     }
 
     public void OnClickExchangeBoard()
     {
-        StaticStuff.PrintRifRafUI("OnClickExchangeBoard()");
-      //  Debug.Log("OnClickExchangeBoard()");
+        StaticStuff.PrintRifRafUI("OnClickExchangeBoard()");      
         if (PopupActiveCheck() == false) return;
 
         if (FindObjectOfType<TheCaptainsChair>() != null)
