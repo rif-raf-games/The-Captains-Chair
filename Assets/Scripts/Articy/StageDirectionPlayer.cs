@@ -16,11 +16,7 @@ public class StageDirectionPlayer : MonoBehaviour
     {
         CaptainsChair = FindObjectOfType<TheCaptainsChair>();
         this.ArticyFlow = GetComponent<ArticyFlow>();        
-    }
-
-    // 1) re-arrange/re-name stuff in SD frag
-    // 2) Turn Off:  
-    // 3) Timer
+    }    
 
     public void HandleStangeDirectionContainer(Stage_Directions_Container sdc)
     {

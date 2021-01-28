@@ -56,7 +56,7 @@ public class MCP : MonoBehaviour
         // below is bullshit but it's the only way for the UI to not send
         // callback events when opening up the in game popup the first time
         InGamePopUp.gameObject.SetActive(true);
-        InGamePopUp.TurnOnPopupMenu();
+        InGamePopUp.TurnOnPopupMenu(false);
         InGamePopUp.gameObject.SetActive(false);
         //
         StaticStuff.LoadSettings();
@@ -80,33 +80,15 @@ public class MCP : MonoBehaviour
         
     }
 
-    public void ShutOffAllUI()
-    {
-        //Debug.LogWarning("-------------ShutOffAllUI() start");
-        MenuUI.UICamera.enabled = false;
-       
-        MenuUI.gameObject.SetActive(false);
-        MenuUI.ToggleMenu(RifRafMenuUI.eMenuType.NUM_MENUS, false);
-        MenuUI.TogglePopUp(RifRafMenuUI.ePopUpType.NUM_POPUPS, false);
-
-        ToggleJoystick(false);
-        
-        ConvoUI.gameObject.SetActive(false);
-
-        InGamePopUp.ToggleMainPopupPanel(false);
-        InGamePopUp.gameObject.SetActive(false);
-
-        //VideoPlayerRR.ToggleVideoPlayerChild(false);
-
-       // Debug.LogWarning("-------------ShutOffAllUI() end");
-    }
+    
 
     public void StartPopupPanel()
     {
+        Debug.Log("StartPopupPanel()");
         ShutOffAllUI();
 
         InGamePopUp.gameObject.SetActive(true);
-        InGamePopUp.TurnOnPopupMenu();
+        InGamePopUp.TurnOnPopupMenu(true);
     }
 
     public void StartDialogueConversation()
@@ -137,7 +119,7 @@ public class MCP : MonoBehaviour
 
     public void StartFreeRoam()
     {
-       // Debug.Log("StartFreeRoam()");
+        Debug.Log("StartFreeRoam()");
         ShutOffAllUI();
 
         InGamePopUp.gameObject.SetActive(true);
@@ -151,20 +133,47 @@ public class MCP : MonoBehaviour
         {
             ToggleJoystick(true);
         }
-    }   
-    
+        InGamePopUp.gameObject.SetActive(true);
+        InGamePopUp.gameObject.SetActive(true);
+        InGamePopUp.gameObject.SetActive(true);
+        InGamePopUp.gameObject.SetActive(true);
+        InGamePopUp.gameObject.SetActive(true);
+    }
+
+    public void ShutOffAllUI()
+    {
+        Debug.LogWarning("-------------ShutOffAllUI() start");
+        MenuUI.UICamera.enabled = false;
+
+        MenuUI.gameObject.SetActive(false);
+        MenuUI.ToggleMenu(RifRafMenuUI.eMenuType.NUM_MENUS, false);
+        MenuUI.TogglePopUp(RifRafMenuUI.ePopUpType.NUM_POPUPS, false);
+
+        ToggleJoystick(false);
+
+        ConvoUI.gameObject.SetActive(false);
+
+        InGamePopUp.ToggleMainPopupPanel(false);
+
+        InGamePopUp.gameObject.SetActive(false);
+
+        //VideoPlayerRR.ToggleVideoPlayerChild(false);
+
+        // Debug.LogWarning("-------------ShutOffAllUI() end");
+    }
+
     public void StartMiniGame()
     {
         StartFreeRoam();
     }
     
     #region SCENE_TRANSITIONS
-    public void LoadNextScene(string sceneName = "", Scene_Jump sceneJump = null, Mini_Game_Jump miniGameJump = null, string posToSave = "", string savedPos = "")
+    public void LoadNextScene(string sceneName = "", Scene_Jump sceneJump = null, Mini_Game_Jump miniGameJump = null, string posToSave = "", string savedPos = "", MenuButton menuButton = null)
     {
         StartCoroutine(LoadNextSceneDelay(sceneName, sceneJump, miniGameJump, posToSave, savedPos));
     }
 
-    IEnumerator LoadNextSceneDelay(string sceneName = "", Scene_Jump sceneJump = null, Mini_Game_Jump miniGameJump = null, string posToSave = "", string savedPos = "")
+    IEnumerator LoadNextSceneDelay(string sceneName = "", Scene_Jump sceneJump = null, Mini_Game_Jump miniGameJump = null, string posToSave = "", string savedPos = "", MenuButton menuButton = null)
     {
        // Debug.LogWarning("LoadNextSceneDelay() sceneName: " + sceneName + ", Time.timeScale: " + Time.timeScale);
 
@@ -212,6 +221,31 @@ public class MCP : MonoBehaviour
                     loadingImageAOs = miniGameJump.Template.Quit_Mini_Game_Result.LoadingImages;
                     delayTime = miniGameJump.Template.Quit_Mini_Game_Result.DisplayTime;
                     fadeTime = miniGameJump.Template.Quit_Mini_Game_Result.FadeTime;
+                }
+            }
+        }
+        else if(menuButton != null)
+        {
+            Debug.Log("via menu button");
+            if (ArticyGlobalVariables.Default.Mini_Games.Coming_From_Main_Game == true)
+            {
+                loadingImageAOs = menuButton.LoadingScreen.LoadingImages;
+                delayTime = menuButton.LoadingScreen.DisplayTime;
+                fadeTime = menuButton.LoadingScreen.FadeTime;
+            }
+            else
+            {
+                if (ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success == true)
+                {
+                    loadingImageAOs = menuButton.SuccessResult.LoadingImages;
+                    delayTime = menuButton.SuccessResult.DisplayTime;
+                    fadeTime = menuButton.SuccessResult.FadeTime;
+                }
+                else
+                {
+                    loadingImageAOs = menuButton.QuitResult.LoadingImages;
+                    delayTime = menuButton.QuitResult.DisplayTime;
+                    fadeTime = menuButton.QuitResult.FadeTime;
                 }
             }
         }
@@ -422,6 +456,7 @@ public class MCP : MonoBehaviour
             StartMainMenu();
         }
     }   
+    
 
     public void LoadCaptainAvatar(int avatar)
     {
@@ -531,7 +566,7 @@ public class MCP : MonoBehaviour
        // Debug.LogWarning("fix");
         ToggleMenuUI(false);
         ToggleInGamePopUp(true);
-        InGamePopUp.TurnOnPopupMenu();
+        InGamePopUp.TurnOnPopupMenu(true);
     }
 
     
@@ -545,6 +580,7 @@ public class MCP : MonoBehaviour
     }
     public void ToggleInGamePopUp(bool isActive)
     {
+        Debug.Log("MCP.ToggleInGamePopUp(): " + isActive);
         InGamePopUp.gameObject.SetActive(isActive);
     }
 

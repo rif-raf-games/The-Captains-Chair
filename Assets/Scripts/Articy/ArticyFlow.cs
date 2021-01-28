@@ -367,7 +367,8 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                 //FindObjectOfType<MCP>().LoadNextScene(sj.Template.Next_Game_Scene.Scene_Name, sj); 
             }
             else if (CurPauseObject.GetType().Equals(typeof(Mini_Game_Jump)))
-            {   // we're going to a mini game, so fill up the mini game info container with the current pause object's information, then start the mini game                               
+            {
+                // we're going to a mini game, so fill up the mini game info container with the current pause object's information, then start the mini game                               
                 Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
                 Mini_Game_Jump curJump = CurPauseObject as Mini_Game_Jump;
                 Debug.Log("Set Up Mini game: " + curJump.TechnicalName + ", is SaveFragment null: " + (curJump.Template.Success_Save_Fragment.SaveFragment == null));
@@ -376,9 +377,9 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                 jumpSave.Template.LoadingScreen.LoadingImages = curJump.Template.LoadingScreen.LoadingImages;
                 jumpSave.Template.LoadingScreen.DisplayTime = curJump.Template.LoadingScreen.DisplayTime;
                 jumpSave.Template.LoadingScreen.FadeTime = curJump.Template.LoadingScreen.FadeTime;
-                
+
                 jumpSave.Template.Mini_Game_Puzzles_To_Play.Puzzle_Numbers = curJump.Template.Mini_Game_Puzzles_To_Play.Puzzle_Numbers;
-                
+
                 jumpSave.Template.Dialogue_List.DialoguesToPlay = curJump.Template.Dialogue_List.DialoguesToPlay;
 
                 jumpSave.Template.Success_Mini_Game_Result.SceneName = curJump.Template.Success_Mini_Game_Result.SceneName;
@@ -393,13 +394,14 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                 jumpSave.Template.Quit_Mini_Game_Result.FadeTime = curJump.Template.Quit_Mini_Game_Result.FadeTime;
                 jumpSave.Template.Quit_Mini_Game_Result.Dialogue = curJump.Template.Quit_Mini_Game_Result.Dialogue;
 
-                jumpSave.Template.Success_Save_Fragment.SaveFragment = curJump.Template.Success_Save_Fragment.SaveFragment;                
+                jumpSave.Template.Success_Save_Fragment.SaveFragment = curJump.Template.Success_Save_Fragment.SaveFragment;
 
-                ArticyGlobalVariables.Default.Mini_Games.Coming_From_Main_Game = true;                
+                ArticyGlobalVariables.Default.Mini_Games.Coming_From_Main_Game = true;
                 ArticyGlobalVariables.Default.Mini_Games.Returning_From_Mini_Game = false;
                 ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success = false;
                 //Debug.Log("About to start a mini game: " + curJump.Template.LoadingScreen.SceneToLoad);                
                 //FindObjectOfType<MCP>().LoadNextScene(curJump.Template.Mini_Game_Scene.Scene_Name, null, curJump); // MGJ: ArticyFlow.OnBranchesUpdate() CurPauseObject = Mini_Game_Jump
+                /*FindObjectOfType<MCP>().*/
                 FindObjectOfType<MCP>().LoadNextScene(curJump.Template.LoadingScreen.SceneToLoad, null, curJump); // MGJ: ArticyFlow.OnBranchesUpdate() CurPauseObject = Mini_Game_Jump
             }
             else if(CurPauseObject.GetType().Equals(typeof(Save_Point)))
