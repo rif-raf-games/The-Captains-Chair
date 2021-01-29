@@ -24,8 +24,8 @@ public class MiniGameMCP : MonoBehaviour
 
 
     MiniGame[] Puzzles;
-    string ProgressVarName;
-    string FinishedVarName;
+   // string ProgressVarName;
+   // string FinishedVarName;
     int CurPuzzleIndex;
 
     TheCaptainsChair CaptainsChair;
@@ -164,7 +164,7 @@ public class MiniGameMCP : MonoBehaviour
         }
 
         // 0 = Majestic Free Roam, 1 = Parking Game, 2 = Lockpick Game, 3 = Repair Game, 4 = Crossing Free Roam
-        
+
         //string varName = "error";
         /*switch (ArticyGlobalVariables.Default.Activity.ID)
         {
@@ -186,16 +186,18 @@ public class MiniGameMCP : MonoBehaviour
         }*/
 
         //Debug.LogError("DONT PAINIC I JUST WANT TO SEE WHAT'S GOING ON: " + ProgressVarName);
-        string var = ArticyGlobalVariables.Default.GetVariableByString<string>(ProgressVarName);
+        // string var = ArticyGlobalVariables.Default.GetVariableByString<string>(ProgressVarName);
+        string var = ArticyGlobalVariables.Default.Mission.Current_Progress_Variable;
         int progress = int.Parse(var);
         Debug.Log("progress: " + progress);
-        if (progress == 0)
+        if(progress == 0) { Debug.LogError("Progress for: " + var + " is zero"); yield return null; }
+      /*  if (progress == 0)
         {
             progress = 1;
             ArticyGlobalVariables.Default.SetVariableByString(ProgressVarName, progress);
            // Debug.LogError("moprog01 ******************************** Setting the var (b): " + ProgressVarName + " to " + progress + " because the current progress for the variable is 0");
             StaticStuff.SaveCurrentProfile("We went from progress on variable: " + ProgressVarName + ", so save");
-        }
+        }*/
         
         CurPuzzleIndex = progress - 1;
         Puzzles[CurPuzzleIndex].gameObject.SetActive(true);
@@ -216,23 +218,32 @@ public class MiniGameMCP : MonoBehaviour
 
     public void SavePuzzlesProgress(bool success, string cameFrom = "not set in call")
     {
-        Debug.LogError("SavePuzzleProgress() success: " + success + ", cameFrom: " + cameFrom + ", ProgressVarName: " + ProgressVarName + ", FinishedVarName: " + FinishedVarName);
+       // Debug.LogError("SavePuzzleProgress() success: " + success + ", cameFrom: " + cameFrom);// + ", ProgressVarName: " + ProgressVarName + ", FinishedVarName: " + FinishedVarName);
         if (success == true)
         {
-            string var = ArticyGlobalVariables.Default.GetVariableByString<string>(ProgressVarName);
+            // string var = ArticyGlobalVariables.Default.GetVariableByString<string>(ProgressVarName);
+            string var = ArticyGlobalVariables.Default.Mission.Current_Progress_Variable;
             int progress = int.Parse(var);
             progress++;
-            ArticyGlobalVariables.Default.SetVariableByString(ProgressVarName, progress);            
-            if (progress > 2)
-            {
-                //   Debug.LogError("Progress is more than 2, so we're done with the mission so set var: " + FinishedVarName + " to true");
-                ArticyGlobalVariables.Default.SetVariableByString(FinishedVarName, true);
-            }
             if (CurPuzzleIndex == Puzzles.Length - 1)
             {
                 //   Debug.LogError("We are done with all the puzzles so reset the value to zero done with all the puzzles set the progress of " + ProgressVarName + " back to zero");
-                ArticyGlobalVariables.Default.SetVariableByString(ProgressVarName, 0);
+                ArticyGlobalVariables.Default.SetVariableByString(var, 999);
             }
+            else 
+            {
+                ArticyGlobalVariables.Default.SetVariableByString(var, progress);
+            }            
+            /*if (progress > 2)
+            {
+                //   Debug.LogError("Progress is more than 2, so we're done with the mission so set var: " + FinishedVarName + " to true");
+                ArticyGlobalVariables.Default.SetVariableByString(FinishedVarName, true);
+            }*/
+           /* if (CurPuzzleIndex == Puzzles.Length - 1)
+            {
+                //   Debug.LogError("We are done with all the puzzles so reset the value to zero done with all the puzzles set the progress of " + ProgressVarName + " back to zero");
+                ArticyGlobalVariables.Default.SetVariableByString(var, 999);
+            }*/
 
             StaticStuff.SaveCurrentProfile("MiniGameMCP.SavePuzzlesProgress()");
         }
