@@ -187,7 +187,8 @@ public class MiniGameMCP : MonoBehaviour
 
         //Debug.LogError("DONT PAINIC I JUST WANT TO SEE WHAT'S GOING ON: " + ProgressVarName);
         // string var = ArticyGlobalVariables.Default.GetVariableByString<string>(ProgressVarName);
-        string var = ArticyGlobalVariables.Default.Mission.Current_Progress_Variable;
+        string progressVarName = ArticyGlobalVariables.Default.Mission.Current_Progress_Variable;
+        string var = ArticyGlobalVariables.Default.GetVariableByString<string>(progressVarName);
         int progress = int.Parse(var);
         Debug.Log("progress: " + progress);
         if(progress == 0) { Debug.LogError("Progress for: " + var + " is zero"); yield return null; }
@@ -222,7 +223,8 @@ public class MiniGameMCP : MonoBehaviour
         if (success == true)
         {
             // string var = ArticyGlobalVariables.Default.GetVariableByString<string>(ProgressVarName);
-            string var = ArticyGlobalVariables.Default.Mission.Current_Progress_Variable;
+            string progressVarName = ArticyGlobalVariables.Default.Mission.Current_Progress_Variable;
+            string var = ArticyGlobalVariables.Default.GetVariableByString<string>(progressVarName);
             int progress = int.Parse(var);
             progress++;
             if (CurPuzzleIndex == Puzzles.Length - 1)
