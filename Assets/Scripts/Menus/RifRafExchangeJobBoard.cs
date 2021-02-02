@@ -152,7 +152,7 @@ public class RifRafExchangeJobBoard : MonoBehaviour
             int progress = int.Parse(var);
             s += "int prog: " + progress + "\n";
 
-            if (progress == 0)
+            if (progress == 1)
             {
                 this.MCP.LoadNextScene(emf.ToGoSceneFirstTime); // SJ: OnClickAcceptJob() progress == 0
             }
@@ -194,7 +194,7 @@ public class RifRafExchangeJobBoard : MonoBehaviour
             ArticyGlobalVariables.Default.Mini_Games.Coming_From_Main_Game = true;
             ArticyGlobalVariables.Default.Mini_Games.Returning_From_Mini_Game = false;
             ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success = false;
-            ArticyGlobalVariables.Default.Mission.Current_Progress_Variable = menuButton.ExchangeMission.ProgressVariable; ;
+            ArticyGlobalVariables.Default.Mission.Current_Progress_Variable = menuButton.ExchangeMission.ProgressVariable;
 
             FindObjectOfType<MCP>().LoadNextScene(menuButton.LoadingScreen.SceneToLoad, null, null, "", "", menuButton); // MGJ: ArticyFlow.OnBranchesUpdate() CurPauseObject = Mini_Game_Jump
         }
