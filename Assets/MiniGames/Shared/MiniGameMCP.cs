@@ -230,11 +230,11 @@ public class MiniGameMCP : MonoBehaviour
             if (CurPuzzleIndex == Puzzles.Length - 1)
             {
                 //   Debug.LogError("We are done with all the puzzles so reset the value to zero done with all the puzzles set the progress of " + ProgressVarName + " back to zero");
-                ArticyGlobalVariables.Default.SetVariableByString(var, 999);
+                ArticyGlobalVariables.Default.SetVariableByString(progressVarName, 999);
             }
             else 
             {
-                ArticyGlobalVariables.Default.SetVariableByString(var, progress);
+                ArticyGlobalVariables.Default.SetVariableByString(progressVarName, progress);
             }            
             /*if (progress > 2)
             {
