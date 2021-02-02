@@ -190,8 +190,8 @@ public class MiniGameMCP : MonoBehaviour
         string progressVarName = ArticyGlobalVariables.Default.Mission.Current_Progress_Variable;
         string var = ArticyGlobalVariables.Default.GetVariableByString<string>(progressVarName);
         int progress = int.Parse(var);
-        Debug.Log("progress: " + progress);
-        if(progress == 0) { Debug.LogError("Progress for: " + var + " is zero"); yield return null; }
+        Debug.Log("progressVarName: " + progressVarName + ", progress: " + progress);
+        if(progress == 0) { Debug.LogError("Progress for: " + progressVarName + " is zero"); yield return null; }
       /*  if (progress == 0)
         {
             progress = 1;
