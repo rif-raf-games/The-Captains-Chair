@@ -74,6 +74,7 @@ public class RifRafInGamePopUp : MonoBehaviour
     [Header("Menu Content")]
     public ArticyRef MissionFlowRef;
     public ArticyRef CodexRef;
+    public ScrollRect ContentScrollView;
     public GameObject ExchangeContent;
     public GameObject TasksContent;
     public GameObject CodexContent;
@@ -134,8 +135,8 @@ public class RifRafInGamePopUp : MonoBehaviour
                 else
                 {
                     FlowFragment childFrag = child as FlowFragment;
-                   if(childFrag.InputPins[0].Text.CallScript() == true)
-                   //if(true)
+                  // if(childFrag.InputPins[0].Text.CallScript() == true)
+                   if(true)
                     {
                        // Debug.Log("add container: " + childFrag.DisplayName + " to the containers to check");
                         containersToCheck.Add(childFrag);
@@ -198,6 +199,7 @@ public class RifRafInGamePopUp : MonoBehaviour
 
         ToggleContent(false);
         ExchangeContent.SetActive(true);
+        ContentScrollView.content = ExchangeContent.GetComponent<RectTransform>();
         InitMenuButtonInfo(null, eInGameMenus.EXCHANGE);
 
         if (FindObjectOfType<TheCaptainsChair>() != null)
@@ -274,27 +276,34 @@ public class RifRafInGamePopUp : MonoBehaviour
     
     public void OnClickMenuTab(Button button)
     {
+        GameObject currentContent = ExchangeContent;
         ToggleContent(false);
         if (button.name.Contains("Exchange") && CurMenu != eInGameMenus.EXCHANGE)
         {
             ExchangeContent.SetActive(true);
+            currentContent = ExchangeContent;
             InitMenuButtonInfo(null, eInGameMenus.EXCHANGE);
         }
         else if(button.name.Contains("Task") && CurMenu != eInGameMenus.TASKS)
         {
             TasksContent.SetActive(true);
+            currentContent = TasksContent;
             InitMenuButtonInfo(null, eInGameMenus.TASKS);
         }
         else if (button.name.Contains("Codex") && CurMenu != eInGameMenus.CODEX)
         {
             CodexContent.SetActive(true);
+            currentContent = CodexContent;
             InitMenuButtonInfo(null, eInGameMenus.CODEX);
         }
         else if (button.name.Contains("Log") && CurMenu != eInGameMenus.SHIPS_LOG)
         {
             ShipLogContent.SetActive(true);
+            currentContent = ShipLogContent;
             InitMenuButtonInfo(null, eInGameMenus.SHIPS_LOG);
         }
+
+        ContentScrollView.content = currentContent.GetComponent<RectTransform>();
     }
     void OnClickMenuButton(MenuButton button)
     {
