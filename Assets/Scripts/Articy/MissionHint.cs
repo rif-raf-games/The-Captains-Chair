@@ -11,7 +11,7 @@ public class MissionHint : MonoBehaviour
 {
     public ArticyRef MissionHints;
     public Text HintText;
-    public Button ResetMiniGameButton;
+    //public Button ResetMiniGameButton;
 
     Decision_Fragment MissionHintsFrag;
     ArticyObject HintsFlowStart;
@@ -27,11 +27,11 @@ public class MissionHint : MonoBehaviour
         //Debug.LogError("type: " + HintsFlowStart.GetType() + ", articyType: " + HintsFlowStart.GetArticyType());
     }
 
-    public void ToggleResetMiniGameButton(bool isActive)
+   /* public void ToggleResetMiniGameButton(bool isActive)
     {
-       // Debug.Log("ToggleResetMiniGameButton() isActive: " + isActive);
+        Debug.Log("ToggleResetMiniGameButton() isActive: " + isActive);
         ResetMiniGameButton.gameObject.SetActive(isActive);
-    }
+    }*/
     public void SetupHint()
     {
      //   Debug.Log("SetupHint()");        

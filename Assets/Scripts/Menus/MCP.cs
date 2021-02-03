@@ -84,7 +84,7 @@ public class MCP : MonoBehaviour
 
     public void StartPopupPanel()
     {
-        Debug.Log("StartPopupPanel()");
+        //Debug.Log("StartPopupPanel()");
         ShutOffAllUI();
 
         InGamePopUp.gameObject.SetActive(true);
@@ -119,7 +119,7 @@ public class MCP : MonoBehaviour
 
     public void StartFreeRoam()
     {
-        Debug.Log("StartFreeRoam()");
+       // Debug.Log("StartFreeRoam()");
         ShutOffAllUI();
 
         InGamePopUp.gameObject.SetActive(true);
@@ -142,7 +142,7 @@ public class MCP : MonoBehaviour
 
     public void ShutOffAllUI()
     {
-        Debug.LogWarning("-------------ShutOffAllUI() start");
+       // Debug.LogWarning("-------------ShutOffAllUI() start");
         MenuUI.UICamera.enabled = false;
 
         MenuUI.gameObject.SetActive(false);

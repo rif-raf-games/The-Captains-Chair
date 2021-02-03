@@ -10,8 +10,9 @@ using UnityEngine.UI;
 public class RifRafInGamePopUp : MonoBehaviour
 {
     public GameObject MainPopupPanel;
-    public GameObject AcceptButton; 
-    public GameObject ExchangeBoardText, SuspendJobText;
+    public GameObject AcceptButton;
+    public GameObject ResetPuzzleButton;
+    public GameObject AcceptJobText, SuspendJobText;
     public MissionHint MissionHint;
     public GameObject QuitConfirmPopup;
     public RifRafExchangeJobBoard ExchangeBoard;
@@ -42,7 +43,7 @@ public class RifRafInGamePopUp : MonoBehaviour
     public void OnClickBurger()
     {
         StaticStuff.PrintRifRafUI("OnClickBurger()");
-        Debug.Log("OnClickBurger()");
+        //Debug.Log("OnClickBurger()");
         if (PopupActiveCheck() == false) return;
 
         // burger won't be clickable with new UI so we don't need to check this        
@@ -65,7 +66,7 @@ public class RifRafInGamePopUp : MonoBehaviour
 
     public void ToggleMainPopupPanel(bool isActive)
     {
-        Debug.LogWarning("monewui CHECK THIS ToggleMainPopupPanel(): " + isActive);
+        //Debug.LogWarning("monewui CHECK THIS ToggleMainPopupPanel(): " + isActive);
         MainPopupPanel.SetActive(isActive);       
         ToggleMainPopUpButtons(true); 
     }
@@ -88,7 +89,7 @@ public class RifRafInGamePopUp : MonoBehaviour
     
     public void TurnOnPopupMenu( bool initContents )
     {        
-        Debug.Log("RifRafInGamePopUp.TurnOnPopupMenu()");
+       // Debug.Log("RifRafInGamePopUp.TurnOnPopupMenu()");
        
         ToggleMainPopupPanel(true);
         if (initContents == false) return;
@@ -198,12 +199,36 @@ public class RifRafInGamePopUp : MonoBehaviour
         ToggleContent(false);
         ExchangeContent.SetActive(true);
         InitMenuButtonInfo(null, eInGameMenus.EXCHANGE);
+
+        if (FindObjectOfType<TheCaptainsChair>() != null)
+        {   // main game
+            AcceptJobText.SetActive(true);
+            SuspendJobText.SetActive(false);
+        }
+        else
+        {   // mini game
+            AcceptJobText.SetActive(false);
+            SuspendJobText.SetActive(true);
+        }
     }
 
     private void Update()
-    {        
-        if (CurJobButton == null || CurMenu == eInGameMenus.CODEX || CurMenu == eInGameMenus.SHIPS_LOG) AcceptButton.SetActive(false);
-        else AcceptButton.SetActive(true);
+    {
+        if (FindObjectOfType<TheCaptainsChair>() == null)
+        {
+            AcceptButton.SetActive(true);
+        }
+        else
+        {
+            if (CurJobButton == null || CurMenu == eInGameMenus.CODEX || CurMenu == eInGameMenus.SHIPS_LOG)
+            {
+                AcceptButton.SetActive(false);
+            }
+            else
+            {
+                AcceptButton.SetActive(true);
+            }
+        }            
     }
 
     public MenuButton GetCurJobButton()
@@ -326,6 +351,16 @@ public class RifRafInGamePopUp : MonoBehaviour
         }
     }
 
+    public void BailMiniGame()
+    {
+        Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
+        ArticyGlobalVariables.Default.Mini_Games.Coming_From_Main_Game = false;
+        ArticyGlobalVariables.Default.Mini_Games.Returning_From_Mini_Game = true;
+        ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success = false;
+        string sceneName = jumpSave.Template.Quit_Mini_Game_Result.SceneName;
+        FindObjectOfType<MCP>().LoadNextScene(sceneName, null, jumpSave);
+    }
+
     public void ResetGameClicked()
     {
         StaticStuff.PrintRifRafUI("ResetGameClick");
@@ -335,16 +370,17 @@ public class RifRafInGamePopUp : MonoBehaviour
 
     public void ToggleMissionHint(bool isActive)
     {
-        StaticStuff.PrintRifRafUI("ToggleMissionHint(): " + isActive);        
-        MissionHint.ToggleResetMiniGameButton(false);
+        //StaticStuff.PrintRifRafUI("ToggleMissionHint(): " + isActive);        
+        //Debug.Log("ToggleMissionHint(): " + isActive);        
+        //MissionHint.ToggleResetMiniGameButton(false);
         if (isActive == true)
         {
             // Debug.LogWarning("Get the hint ready");
             MissionHint.SetupHint();
-            if(FindObjectOfType<MiniGame>() != null)
+           /* if(FindObjectOfType<MiniGame>() != null) // monewui took out Feb 3
             {
                 MissionHint.ToggleResetMiniGameButton(true);
-            }
+            }*/
         }
         MissionHint.gameObject.SetActive(isActive);
         ToggleMainPopUpButtons(!isActive);
@@ -361,10 +397,11 @@ public class RifRafInGamePopUp : MonoBehaviour
 
     public void ShowResultsText(string result)
     {
-        //  Debug.Log("ShowResultsText()");
+          Debug.Log("ShowResultsText()");
         MissionHint.gameObject.SetActive(true);
         MissionHint.HintText.text = result;
-        MissionHint.ToggleResetMiniGameButton(false);
+        //MissionHint.ToggleResetMiniGameButton(false);
+        ResetPuzzleButton.SetActive(false);
     }
     public void HideResultsText()
     {

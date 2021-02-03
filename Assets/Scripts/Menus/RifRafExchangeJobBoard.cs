@@ -204,9 +204,15 @@ public class RifRafExchangeJobBoard : MonoBehaviour
     {
           Debug.Log("RifRafExchangeJobBoard.OnClickAcceptJob().  JobIndex: " + JobIndex);
         if (QuitPopup.activeSelf == true) return;
-        
-        // AcceptPopup.SetActive(true);
-        ToggleAcceptPopup(true);
+
+        if (FindObjectOfType<TheCaptainsChair>() != null)
+        {   // in game
+            ToggleAcceptPopup(true);
+        }
+        else
+        {
+            InGamePopUp.BailMiniGame();
+        }            
     }
 
     public void ShutOffQuitAcceptPopups()

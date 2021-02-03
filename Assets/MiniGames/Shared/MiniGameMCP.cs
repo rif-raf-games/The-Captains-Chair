@@ -154,7 +154,7 @@ public class MiniGameMCP : MonoBehaviour
                 yield return null;
             }
             // Debug.Log("Unload Done: " + puzzleScene);
-            Button resetButton = this.MCP.InGamePopUp.MissionHint.ResetMiniGameButton;
+            Button resetButton = this.MCP.InGamePopUp.ResetPuzzleButton.GetComponent<Button>();
             Puzzles[i].Init(this, puzzleName, SoundFXUsedInScene, resetButton);                        
         }
 
@@ -250,6 +250,9 @@ public class MiniGameMCP : MonoBehaviour
             StaticStuff.SaveCurrentProfile("MiniGameMCP.SavePuzzlesProgress()");
         }
     }
+
+    // Testing codex - Start beginning 
+    // Scene 2
 
     IEnumerator FadePause()
     {
