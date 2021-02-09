@@ -413,7 +413,8 @@ public class LockPicking : MiniGame
         Diode.DiodeFixedUpdate();
         RotateRings();
     }
-    
+
+    static float MAX_SPIN_SPEED = 20f; // Brent here
     // Update is called once per frame
     void Update()
     {
@@ -445,8 +446,9 @@ public class LockPicking : MiniGame
         {
             Vector2 pointerPos = Input.mousePosition;
             float ringNewAngle = Vector2.Angle(Vector2.up, pointerPos - RingCenterPoint);
-            if ((pointerPos - RingCenterPoint).sqrMagnitude >= 4f)
+            if ((pointerPos - RingCenterPoint).sqrMagnitude >= 4f && Mathf.Abs(ringNewAngle - RingPrevAngle) < MAX_SPIN_SPEED)
             {
+              //  Debug.Log("speed: " + Mathf.Abs(ringNewAngle - RingPrevAngle).ToString("F2"));
                 if (pointerPos.x > RingCenterPoint.x)
                     RingAngle += ringNewAngle - RingPrevAngle;
                 else
