@@ -45,7 +45,12 @@ public class LockPicking : MiniGame
     [Header("Diode Speed Tuning")]
     public float MAX_DIODE_SPEED = 40f;         // Maximum speed a Diode can go
     public float SpeedAdjTime = 0f;             // Time goes on
-    public float SpeedAdjNumGates = 1f;         // Number of gates collected        
+    public float SpeedAdjNumGates = 1f;         // Number of gates collected     
+    [Header("Wheel Control")]
+    Vector2 RingCenterPoint;
+    float RingPrevAngle;
+    Vector2 MousePosition;
+    float RingAngle = 0f;
 
     #region INIT_START_RESET
     public override void Init(MiniGameMCP mcp, string sceneName, List<SoundFX.FXInfo> soundFXUsedInScene, Button resetButton)
@@ -430,33 +435,25 @@ public class LockPicking : MiniGame
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask))
             {
                 CurTouchedRing = hit.collider.gameObject.transform.GetChild(0).transform.GetChild(0).GetComponent<Ring>();
-                LastWorldTouchPos = GetWorldPointFromMouse();
-                LastCenterToWorldAngle = GetAngle(LastWorldTouchPos, LastWorldTouchPos.z < 0f);
+                RingCenterPoint = RectTransformUtility.WorldToScreenPoint(Camera.main, CurTouchedRing.transform.position);
+                MousePosition = Input.mousePosition;                
+               // Debug.Log("OURS: centerPoint: " + centerPoint.ToString("F2") + ", eventDataPosition: " + eventDataPosition.ToString("F2"));
+                RingPrevAngle = Vector2.Angle(Vector2.up, MousePosition - RingCenterPoint);                
             }
         }        
         else if (Input.GetMouseButton(0) && CurTouchedRing != null)
-        {            
-            Vector3 touchVec = GetWorldPointFromMouse();
-            Vector3 dragVec = touchVec - LastWorldTouchPos;
-            float touchDragAngleDiff = Mathf.Abs(Vector3.SignedAngle(dragVec, touchVec, Vector3.up));
-            if (touchDragAngleDiff > 90) touchDragAngleDiff = 180f - touchDragAngleDiff;                
-            float centerToWorldTouchPosAngle = GetAngle(touchVec, touchVec.z < 0f);
-
-            float worldMoveDist = Vector3.Distance(touchVec, LastWorldTouchPos);
-            if (worldMoveDist > 0f)
+        {
+            Vector2 pointerPos = Input.mousePosition;
+            float ringNewAngle = Vector2.Angle(Vector2.up, pointerPos - RingCenterPoint);
+            if ((pointerPos - RingCenterPoint).sqrMagnitude >= 4f)
             {
-                float speed = touchDragAngleDiff * worldMoveDist * 12f;
-                if (centerToWorldTouchPosAngle > LastCenterToWorldAngle) speed = -speed;
-                float speedAdj = 1f / (CurTouchedRing.GetComponent<MeshCollider>().bounds.extents.x / LargestRingDiameter);
-                CurTouchedRing.SetTouchRotateSpeed(speed * speedAdj);
+                if (pointerPos.x > RingCenterPoint.x)
+                    RingAngle += ringNewAngle - RingPrevAngle;
+                else
+                    RingAngle -= ringNewAngle - RingPrevAngle;
             }
-            else
-            {
-                CurTouchedRing.SetTouchRotateSpeed(0f);
-            }
-
-            LastWorldTouchPos = touchVec;
-            LastCenterToWorldAngle = centerToWorldTouchPosAngle;
+            RingPrevAngle = ringNewAngle;
+            CurTouchedRing.transform.localEulerAngles = new Vector3(0f, RingAngle, 0f);
         }
         else if (Input.GetMouseButtonUp(0))
         {
@@ -492,7 +489,9 @@ public class LockPicking : MiniGame
         }        
         
     }    
- 
+
+    //  public Text DebugText;
+
     // ou can rotate a direction Vector3 with a Quaternion by multiplying the quaternion with the direction(in that order)
     //    Then you just use Quaternion.AngleAxis to create the rotation
     public void RotateRings()
