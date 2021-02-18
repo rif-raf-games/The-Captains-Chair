@@ -371,7 +371,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                 // we're going to a mini game, so fill up the mini game info container with the current pause object's information, then start the mini game                               
                 Mini_Game_Jump jumpSave = ArticyDatabase.GetObject<Mini_Game_Jump>("Mini_Game_Data_Container");
                 Mini_Game_Jump curJump = CurPauseObject as Mini_Game_Jump;
-                Debug.Log("Set Up Mini game: " + curJump.TechnicalName + ", is SaveFragment null: " + (curJump.Template.Success_Save_Fragment.SaveFragment == null));
+                //Debug.Log("Set Up Mini game: " + curJump.TechnicalName + ", is SaveFragment null: " + (curJump.Template.Success_Save_Fragment.SaveFragment == null));
                 //jumpSave.Template.Mini_Game_Scene.Scene_Name = curJump.Template.Mini_Game_Scene.Scene_Name;
                 jumpSave.Template.LoadingScreen.SceneToLoad = curJump.Template.LoadingScreen.SceneToLoad;
                 jumpSave.Template.LoadingScreen.LoadingImages = curJump.Template.LoadingScreen.LoadingImages;
