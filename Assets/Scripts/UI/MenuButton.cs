@@ -21,4 +21,5 @@ public class MenuButton : MonoBehaviour
     public Success_Mini_Game_ResultFeature SuccessResult = null;
     public Quit_Mini_Game_ResultFeature QuitResult = null;
     public Success_Save_FragmentFeature SuccessSaveFragment = null;
+    public paymentFeature PaymentFragment = null;
 }

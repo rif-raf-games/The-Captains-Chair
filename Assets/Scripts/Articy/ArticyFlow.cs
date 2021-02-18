@@ -395,6 +395,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                 jumpSave.Template.Quit_Mini_Game_Result.Dialogue = curJump.Template.Quit_Mini_Game_Result.Dialogue;
 
                 jumpSave.Template.Success_Save_Fragment.SaveFragment = curJump.Template.Success_Save_Fragment.SaveFragment;
+                jumpSave.Template.payment.Payment_Value = curJump.Template.payment.Payment_Value;
 
                 ArticyGlobalVariables.Default.Mini_Games.Coming_From_Main_Game = true;
                 ArticyGlobalVariables.Default.Mini_Games.Returning_From_Mini_Game = false;

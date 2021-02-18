@@ -18,6 +18,7 @@ public class RifRafExchangeJobBoard : MonoBehaviour
     public Text PointOfContact;
     public Text Description;
 
+
     [Header("Popups")]
     public GameObject QuitPopup;
     public GameObject AcceptPopup;
@@ -140,7 +141,7 @@ public class RifRafExchangeJobBoard : MonoBehaviour
             s += emf.Job_Description + "\n"; ;
             s += emf.ToGoSceneFirstTime + "\n";
             s += emf.ToGoSceneAfterFirstTime + "\n";
-            s += emf.ProgressVariable + "\n";
+            s += emf.ProgressVariable + "\n";            
             string varName = /*"Activity.Progress_" +*/ emf.ProgressVariable;
             //ArticyGlobalVariables.Default.Mission.cur
             s += varName + "\n";
@@ -190,6 +191,8 @@ public class RifRafExchangeJobBoard : MonoBehaviour
             jumpSave.Template.Quit_Mini_Game_Result.Dialogue = menuButton.QuitResult.Dialogue;
 
             jumpSave.Template.Success_Save_Fragment.SaveFragment = menuButton.SuccessSaveFragment.SaveFragment;
+            jumpSave.Template.payment.Payment_Value = menuButton.PaymentFragment.Payment_Value;
+            
 
             ArticyGlobalVariables.Default.Mini_Games.Coming_From_Main_Game = true;
             ArticyGlobalVariables.Default.Mini_Games.Returning_From_Mini_Game = false;

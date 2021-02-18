@@ -19,6 +19,7 @@ public class RifRafInGamePopUp : MonoBehaviour
     public VolumeControl MusicVolume;
     public VolumeControl SoundFXVolume;
     public MCP MCP;
+    public Text Cash;
     [Header("MainPopUpButtons")]
     public Button[] MainPopUpButtons;
 
@@ -54,7 +55,8 @@ public class RifRafInGamePopUp : MonoBehaviour
         }
         else
         {
-            this.MCP.StartPopupPanel();            
+            this.MCP.StartPopupPanel();
+            Cash.text = ArticyGlobalVariables.Default.Captains_Chair.Crew_Money.ToString();
         }      
     }
 
@@ -113,13 +115,16 @@ public class RifRafInGamePopUp : MonoBehaviour
         List<Job_Card> jobs = new List<Job_Card>();
         List<Articy.The_Captain_s_Chair.Codex> codexes = new List<Articy.The_Captain_s_Chair.Codex>();
         containersToCheck.Add(MissionFlowRef.GetObject() as FlowFragment);
-        containersToCheck.Add(CodexRef.GetObject() as FlowFragment);        
+        containersToCheck.Add(CodexRef.GetObject() as FlowFragment);             
         while(containersToCheck.Count > 0)
-        {
+        {            
             FlowFragment container = containersToCheck[0];            
             containersToCheck.RemoveAt(0);
+            if (container == null) Debug.LogError("WTF 1");
+            if (container.Children == null) Debug.LogError("WTF 2");
             foreach(ArticyObject child in container.Children)
             {
+                if (child == null) Debug.LogError("WTF 3");
                 Job_Card job = child as Job_Card;
                 Articy.The_Captain_s_Chair.Codex codex = child as Articy.The_Captain_s_Chair.Codex;               
                 if (job != null) 
@@ -135,8 +140,8 @@ public class RifRafInGamePopUp : MonoBehaviour
                 else
                 {
                     FlowFragment childFrag = child as FlowFragment;
-                  if(childFrag.InputPins[0].Text.CallScript() == true)
-                   //if(true)
+                 // if(childFrag.InputPins[0].Text.CallScript() == true)
+                   if(true)
                     {
                        // Debug.Log("add container: " + childFrag.DisplayName + " to the containers to check");
                         containersToCheck.Add(childFrag);
@@ -175,6 +180,7 @@ public class RifRafInGamePopUp : MonoBehaviour
             button.SuccessResult = job.Template.Success_Mini_Game_Result;
             button.QuitResult = job.Template.Quit_Mini_Game_Result;
             button.SuccessSaveFragment = job.Template.Success_Save_Fragment;
+            button.PaymentFragment = job.Template.payment;
 
             button.GetComponent<Button>().onClick.RemoveAllListeners();
             button.GetComponent<Button>().onClick.AddListener(() => OnClickMenuButton(button));
@@ -406,7 +412,7 @@ public class RifRafInGamePopUp : MonoBehaviour
 
     public void ShowResultsText(string result)
     {
-          Debug.Log("ShowResultsText()");
+         // Debug.Log("ShowResultsText()");
         MissionHint.gameObject.SetActive(true);
         MissionHint.HintText.text = result;
         //MissionHint.ToggleResetMiniGameButton(false);
