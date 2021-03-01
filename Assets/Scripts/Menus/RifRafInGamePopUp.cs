@@ -140,8 +140,8 @@ public class RifRafInGamePopUp : MonoBehaviour
                 else
                 {
                     FlowFragment childFrag = child as FlowFragment;
-                 // if(childFrag.InputPins[0].Text.CallScript() == true)
-                   if(true)
+                  if(childFrag.InputPins[0].Text.CallScript() == true)
+                   //if(true)
                     {
                        // Debug.Log("add container: " + childFrag.DisplayName + " to the containers to check");
                         containersToCheck.Add(childFrag);
