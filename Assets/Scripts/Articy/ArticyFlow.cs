@@ -724,7 +724,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
 
     void FlowDebug(bool waitingOnAL)
     {
-        if (DebugText != null)
+        /*if (DebugText != null)
         {
             DebugText.text = this.name + "\n";
             DebugText.text += CurArticyState.ToString() + "\n";
@@ -735,14 +735,10 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             else DebugText.text += "NextFragment is: " + NextFragment.TechnicalName + "\n";
             DebugText.text += "num active CAL pause objects: " + ActiveCALPauseObjects.Count + "\n";
             foreach (ArticyObject ao in ActiveCALPauseObjects) DebugText.text += "\t" + ao.TechnicalName + "\n";
-            DebugText.text += "WaitingOnActionList()? " + waitingOnAL + "\n";
-           /* foreach (string s in FlowFragsVisited)
-            {
-                // DebugText.text += s + "\n";
-            }*/
+            DebugText.text += "WaitingOnActionList()? " + waitingOnAL + "\n";           
             DebugText.text += "ShutOffAI's:\n";
             DebugText.text += StageDirectionPlayer.GetShutOffAINames();
-        }
+        }*/
     }
     
 

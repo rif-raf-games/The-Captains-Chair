@@ -48,7 +48,7 @@ public class LockPicking : MiniGame
     public float SpeedAdjNumGates = 1f;         // Number of gates collected     
     [Header("Wheel Control")]
     Vector2 RingCenterPoint;
-    float RingPrevAngle;
+    float PointerPrevAngle;
     Vector2 MousePosition;
     float RingAngle = 0f;
 
@@ -415,6 +415,8 @@ public class LockPicking : MiniGame
     }
 
     static float MAX_SPIN_SPEED = 20f; // Brent here
+   // float RotAtTimeOfClick = 0f;
+    //float LocalRotAtTimeOfClick = 0f;
     // Update is called once per frame
     void Update()
     {
@@ -426,8 +428,10 @@ public class LockPicking : MiniGame
         GameTime += Time.deltaTime;
         System.TimeSpan span = System.TimeSpan.FromSeconds(GameTime);
         
-        if(StatsText != null ) StatsText.TimeSpent.text = string.Format("{0}:{1:00}", (int)span.TotalMinutes, span.Seconds);
-       
+        if(StatsText != null ) StatsText.TimeSpent.text = string.Format("{0}:{1:00}", (int)span.TotalMinutes, span.Seconds);        
+        float pointerNewAngle = -999999f;
+        float ringAngleBefore = -9999999f;
+        float angleDiff = -99999f;
         if (Input.GetMouseButtonDown(0)) // initial press
         {                        
             LayerMask mask = LayerMask.GetMask("Lockpick Touch Control");
@@ -437,24 +441,32 @@ public class LockPicking : MiniGame
             {
                 CurTouchedRing = hit.collider.gameObject.transform.GetChild(0).transform.GetChild(0).GetComponent<Ring>();
                 RingCenterPoint = RectTransformUtility.WorldToScreenPoint(Camera.main, CurTouchedRing.transform.position);
-                MousePosition = Input.mousePosition;                
-               // Debug.Log("OURS: centerPoint: " + centerPoint.ToString("F2") + ", eventDataPosition: " + eventDataPosition.ToString("F2"));
-                RingPrevAngle = Vector2.Angle(Vector2.up, MousePosition - RingCenterPoint);                
+                MousePosition = Input.mousePosition;                               
+                PointerPrevAngle = Vector2.Angle(Vector2.up, MousePosition - RingCenterPoint);                                
+                //RotAtTimeOfClick = CurTouchedRing.transform.eulerAngles.y;
+               // LocalRotAtTimeOfClick = CurTouchedRing.transform.localEulerAngles.y;
+                RingAngle = CurTouchedRing.transform.localEulerAngles.y;
             }
         }        
         else if (Input.GetMouseButton(0) && CurTouchedRing != null)
         {
             Vector2 pointerPos = Input.mousePosition;
-            float ringNewAngle = Vector2.Angle(Vector2.up, pointerPos - RingCenterPoint);
-            if ((pointerPos - RingCenterPoint).sqrMagnitude >= 4f && Mathf.Abs(ringNewAngle - RingPrevAngle) < MAX_SPIN_SPEED)
-            {
-              //  Debug.Log("speed: " + Mathf.Abs(ringNewAngle - RingPrevAngle).ToString("F2"));
+            pointerNewAngle = Vector2.Angle(Vector2.up, pointerPos - RingCenterPoint);
+            float delta = (pointerPos - RingCenterPoint).sqrMagnitude;
+            ringAngleBefore = RingAngle;
+            angleDiff = pointerNewAngle - PointerPrevAngle;
+            if (delta >= 4f && Mathf.Abs(pointerNewAngle - PointerPrevAngle) < MAX_SPIN_SPEED)
+            {                
                 if (pointerPos.x > RingCenterPoint.x)
-                    RingAngle += ringNewAngle - RingPrevAngle;
+                {
+                    RingAngle += angleDiff;                    
+                }
                 else
-                    RingAngle -= ringNewAngle - RingPrevAngle;
+                {
+                    RingAngle -= angleDiff;                    
+                }
             }
-            RingPrevAngle = ringNewAngle;
+            PointerPrevAngle = pointerNewAngle;
             CurTouchedRing.transform.localEulerAngles = new Vector3(0f, RingAngle, 0f);
         }
         else if (Input.GetMouseButtonUp(0))
@@ -466,8 +478,26 @@ public class LockPicking : MiniGame
             }            
         }
 
+       /* if(TooManyDebugTextObjects != null)
+        {
+            TooManyDebugTextObjects.text = Rings[1].name + ", rot: " + Rings[1].gameObject.transform.eulerAngles.y.ToString("F2") + "\n";
+            TooManyDebugTextObjects.text = Rings[1].name + ", local rot: " + Rings[1].gameObject.transform.localEulerAngles.y.ToString("F2") + "\n";
+            TooManyDebugTextObjects.text += "Ring 1 RotAtTimeOfClick: " + RotAtTimeOfClick.ToString("F2") + "\n";
+            TooManyDebugTextObjects.text += "Ring 1 LocalRotAtTimeOfClick: " + LocalRotAtTimeOfClick.ToString("F2") + "\n";
+            TooManyDebugTextObjects.text += s + "\n";
+            TooManyDebugTextObjects.text += "pointerNewAngle: " + pointerNewAngle.ToString("F2") + "\n";
+            TooManyDebugTextObjects.text += "ringAngleBefore: " + ringAngleBefore.ToString("F2") + "\n";
+            TooManyDebugTextObjects.text += "angleDiff: " + angleDiff.ToString("F2") + "\n";
+            TooManyDebugTextObjects.text += "RingAngle (after): " + RingAngle.ToString("F2") + "\n";
+            TooManyDebugTextObjects.text += "PointerPrevAngle: " + PointerPrevAngle.ToString("F2") + "\n";
+            TooManyDebugTextObjects.text += "Ring 1 new rot: " + Rings[1].gameObject.transform.eulerAngles.y.ToString("F2") + "\n";
+            TooManyDebugTextObjects.text += "Ring 1 new local rot: " + Rings[1].gameObject.transform.localEulerAngles.y.ToString("F2") + "\n";
+
+
+        }*/
+
         // evil diode stuff
-        if(EvilDiodes.Count < MaxEvilDiodes)
+        if (EvilDiodes.Count < MaxEvilDiodes)
         {
             if (EvilSpawnBegan == false)
             {
@@ -490,9 +520,11 @@ public class LockPicking : MiniGame
             }
         }        
         
-    }    
+    }
 
-    //  public Text DebugText;
+    public Text TooManyDebugTextObjects;
+
+     // public Text DebugText;
 
     // ou can rotate a direction Vector3 with a Quaternion by multiplying the quaternion with the direction(in that order)
     //    Then you just use Quaternion.AngleAxis to create the rotation
