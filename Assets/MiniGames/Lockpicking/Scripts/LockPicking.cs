@@ -467,7 +467,7 @@ public class LockPicking : MiniGame
                 }
             }
             PointerPrevAngle = pointerNewAngle;
-            CurTouchedRing.transform.localEulerAngles = new Vector3(0f, RingAngle, 0f);
+            //CurTouchedRing.transform.localEulerAngles = new Vector3(0f, RingAngle, 0f);
         }
         else if (Input.GetMouseButtonUp(0))
         {
@@ -532,8 +532,14 @@ public class LockPicking : MiniGame
     {
         foreach (Ring r in Rings)
         {
-           // if (r != CurTouchedRing) r.CurRotateSpeed = 0f;
-            r.Rotate();
+            if(r == CurTouchedRing)
+            {
+                CurTouchedRing.transform.localEulerAngles = new Vector3(0f, RingAngle, 0f);
+            }
+            else
+            {
+                r.Rotate();
+            }            
         }
     }
     
