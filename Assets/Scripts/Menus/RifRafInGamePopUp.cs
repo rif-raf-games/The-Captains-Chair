@@ -91,9 +91,9 @@ public class RifRafInGamePopUp : MonoBehaviour
     eInGameMenus CurMenu;
     
     public void TurnOnPopupMenu( bool initContents )
-    {        
-       // Debug.Log("RifRafInGamePopUp.TurnOnPopupMenu()");
-       
+    {
+        // Debug.Log("RifRafInGamePopUp.TurnOnPopupMenu()");
+       // Debug.Log("------------------------------TurnOnPopupMenu() num menu buttons: " + GetNumMenuButtons() + ", numTimes: " + numTimes++);
         ToggleMainPopupPanel(true);
         if (initContents == false) return;
         int debugVar = 0;
@@ -134,7 +134,7 @@ public class RifRafInGamePopUp : MonoBehaviour
                 }               
                 else if(codex != null)
                 {
-                    //Debug.Log("We've got a CODEX called: " + codex.DisplayName);
+                   // Debug.Log("We've got a CODEX called: " + codex.DisplayName);
                     codexes.Add(codex);
                 }
                 else
@@ -159,10 +159,12 @@ public class RifRafInGamePopUp : MonoBehaviour
             }
         }
 
-        //Debug.Log("num jobs: " + jobs.Count);
+       /// Debug.Log("------------------------------before creating jobs: " + GetNumMenuButtons());
+
+       // Debug.Log("num jobs: " + jobs.Count);
         foreach (Job_Card job in jobs)
         {
-            MenuButton button = Instantiate<MenuButton>(ButtonPrefab);            
+            MenuButton button = CreateButton();
 
             button.JobNameText.text = job.Template.Exchange_Mission.Job_Name;
             button.JobNumText.text = job.Template.Exchange_Mission.Job_ID;
@@ -186,9 +188,13 @@ public class RifRafInGamePopUp : MonoBehaviour
             button.GetComponent<Button>().onClick.AddListener(() => OnClickMenuButton(button));
         }
 
+       // Debug.Log("------------------------------after creating jobs: " + GetNumMenuButtons());
+       // Debug.Log("------------------------------before creating codexes: " + GetNumMenuButtons());
+
+       // Debug.Log("num codexes: " + codexes.Count);
         foreach(Articy.The_Captain_s_Chair.Codex codex in codexes)
         {
-            MenuButton button = Instantiate<MenuButton>(ButtonPrefab);
+            MenuButton button = CreateButton();
             button.JobNameText.text = codex.Template.Codex.Entry_Name;
             button.JobNumText.text = "";
 
@@ -202,11 +208,14 @@ public class RifRafInGamePopUp : MonoBehaviour
             button.GetComponent<Button>().onClick.RemoveAllListeners();
             button.GetComponent<Button>().onClick.AddListener(() => OnClickMenuButton(button));
         }
+       // Debug.Log("---------------------------after creating codexes: " + GetNumMenuButtons());
 
+       // Debug.Log("--------------------------- 1: " + GetNumMenuButtons());
         ToggleContent(false);
         ExchangeContent.SetActive(true);
         ContentScrollView.content = ExchangeContent.GetComponent<RectTransform>();
         InitMenuButtonInfo(null, eInGameMenus.EXCHANGE);
+      //  Debug.Log("---------------------------2: " + GetNumMenuButtons());
 
         if (FindObjectOfType<TheCaptainsChair>() != null)
         {   // main game
@@ -218,6 +227,13 @@ public class RifRafInGamePopUp : MonoBehaviour
             AcceptJobText.SetActive(false);
             SuspendJobText.SetActive(true);
         }
+    }
+
+
+    MenuButton CreateButton()
+    {
+       // Debug.Log("CreateButton(): " + Time.time);
+        return Instantiate<MenuButton>(ButtonPrefab);
     }
 
     private void Update()
@@ -266,6 +282,7 @@ public class RifRafInGamePopUp : MonoBehaviour
 
     void ClearContent()
     {
+       // Debug.Log("**************** ClearContent()");
         ToggleContent(true);
         foreach (Transform child in ExchangeContent.transform) Destroy(child.gameObject);
         foreach (Transform child in TasksContent.transform) Destroy(child.gameObject);
@@ -313,13 +330,13 @@ public class RifRafInGamePopUp : MonoBehaviour
     }
     void OnClickMenuButton(MenuButton button)
     {
-        Debug.Log("OnClickMenuButton(): " + button.name);
+       // Debug.Log("OnClickMenuButton(): " + button.name);
         InitMenuButtonInfo(button, CurMenu);
     }
 
     public void ShutOffExchangeBoard()
     {
-        Debug.Log("ShutOffExchangeBoard()");
+      //  Debug.Log("ShutOffExchangeBoard()");
         ExchangeBoard.ShutOffQuitAcceptPopups();        
         ToggleExchangeBoard(false);
         ClearContent();
@@ -374,6 +391,8 @@ public class RifRafInGamePopUp : MonoBehaviour
         ArticyGlobalVariables.Default.Mini_Games.Mini_Game_Success = false;
         string sceneName = jumpSave.Template.Quit_Mini_Game_Result.SceneName;
         FindObjectOfType<MCP>().LoadNextScene(sceneName, null, jumpSave);
+        ShutOffExchangeBoard();
+        this.MCP.ShutOffAllUI();
     }
 
     public void ResetGameClicked()

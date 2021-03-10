@@ -112,7 +112,7 @@ public class RifRafExchangeJobBoard : MonoBehaviour
     
     public void OnClickAcceptJob()
     {
-         Debug.Log("RifRafExchangeJobBoard.OnClickAccpetJob().");
+       //  Debug.Log("RifRafExchangeJobBoard.OnClickAccpetJob().");
 
         //  Debug.LogWarning("OK we now have a job set up so lets rock it");
         InGamePopUp.ShutOffExchangeBoard();
@@ -205,7 +205,7 @@ public class RifRafExchangeJobBoard : MonoBehaviour
     }
     public void OnClickAccept()
     {
-          Debug.Log("RifRafExchangeJobBoard.OnClickAcceptJob().  JobIndex: " + JobIndex);
+        //  Debug.Log("RifRafExchangeJobBoard.OnClickAcceptJob().  JobIndex: " + JobIndex);
         if (QuitPopup.activeSelf == true) return;
 
         if (FindObjectOfType<TheCaptainsChair>() != null)
