@@ -340,7 +340,7 @@ public class RifRafInGamePopUp : MonoBehaviour
     
     public void ToggleExchangeBoard(bool isActive)
     {
-        Debug.LogError("monewui FIX THIS ToggleExchangeBoard(): " + isActive);
+        //Debug.LogError("monewui FIX THIS ToggleExchangeBoard(): " + isActive);
         if (isActive == true) ExchangeBoard.FillBoard();        
         ToggleMainPopUpButtons(!isActive);
         if (isActive == false) ClearContent();
