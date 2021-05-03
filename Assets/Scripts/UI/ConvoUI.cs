@@ -159,6 +159,8 @@ public class ConvoUI : MonoBehaviour
         int charIndex = 0;                
         float remainder = 0f;
         startTime = Time.time;
+        TextTyping = true;
+
 
         DataText.text = CurDialogueText;        
         yield return new WaitForEndOfFrame();        
@@ -170,28 +172,7 @@ public class ConvoUI : MonoBehaviour
         
         int tgLineCount = DataText.cachedTextGenerator.lineCount;
         int tglLineCount = DataText.cachedTextGeneratorForLayout.lineCount;
-
-     //   Debug.Log("characterCount: " + tgCount + ", " + tglCount + " || characters.Count: " + tgCharCount + ", " + tglCharCount);
-    //    Debug.Log("lineCount: " + tgLineCount + ", " + tglLineCount);
-      //  Debug.LogWarning("LINES");
-     //   foreach(UILineInfo info in DataText.cachedTextGenerator.lines)
-     //   {
-     //       s += info.startCharIdx + ", " + DataText.text[info.startCharIdx] + ", " + info.topY + "\n";
-     //   }
-     //   Debug.Log(s);
-     //   s = "";
-    //    Debug.LogWarning("CHARACTERS");
-    //    int idx = 0;
-    //    foreach (UICharInfo info in DataText.cachedTextGenerator.characters)
-    //    {
-    //        s += idx + ": " +info.charWidth + ", " + info.cursorPos.ToString() + "\n";
-    //        idx++;
-    //    }
-    //    Debug.Log(s);
-
-    //    string oldText = new string(charArray);
-     //   Debug.Log("preUnderscore: " + preUnderscore);
-     //   Debug.Log("oldText: " + oldText);
+     
         if (DataText.cachedTextGenerator.lines.Count > 1)
         {
             for(int i=1; i< DataText.cachedTextGenerator.lines.Count; i++)
@@ -200,14 +181,13 @@ public class ConvoUI : MonoBehaviour
                 charArray[info.startCharIdx-1] = '\n';
             }
         }
-        string newText = new string(charArray);
-     //   Debug.Log("newText: " + newText);
-
+        string newText = new string(charArray);     
         
         SpeakerText.text = "";
         while (charIndex < totalChars)
         {
             yield return new WaitForEndOfFrame();
+            if (TextTyping == false) break;
           //  s += "deltaTime: " + Time.deltaTime + ", remainder: " + remainder + ", ";
             float numToDisplay = Time.deltaTime / timePerChar + remainder;
             remainder = numToDisplay % 1;
@@ -221,40 +201,10 @@ public class ConvoUI : MonoBehaviour
                 
             }
             if (Time.time - startTime > 60f) break;
-        }
-       /* yield return new WaitForEndOfFrame();
-        timeDiff = Time.time - startTime;
-        tgCount = SpeakerText.cachedTextGenerator.characterCount;
-        tgCharCount = SpeakerText.cachedTextGenerator.characters.Count;
-        tglCount = SpeakerText.cachedTextGeneratorForLayout.characterCount;
-        tglCharCount = SpeakerText.cachedTextGeneratorForLayout.characters.Count;
-        Debug.Log("tgCount: " + tgCount + ", tgCharCount: " + tgCharCount + "----tglCount: " + tglCount + ", tglCharCount: " + tglCharCount + "-------");
-
-        string postUnderscore = SpeakerText.text.Replace(" ", "_");
-        Debug.Log("PostUnderscaore: " + postUnderscore);*/
-        //  Debug.Log("timeDiff: " + timeDiff);
-
-
-
-
-        // Debug.Log(s);
-
-
-        /* startTime = Time.time;
-          foreach (char character in CurDialogueText.ToCharArray())
-          {
-              SpeakerText.text += character;
-              //yield return new WaitForSeconds(1f / TypewriterSpeed);
-              yield return new WaitForEndOfFrame();
-              TextTyping = true; 
-          }
-         timeDiff = Time.time - startTime;
-         Debug.Log("timeDiff: " + timeDiff);*/
-
-
+        }       
 
         TextTyping = false;
-       // Debug.Log("TypewriterEffect end: " + IsInteractive);
+       
         if(IsInteractive == false)
         {
             StartCoroutine(NextDialogueFragmentDelay());
@@ -263,6 +213,30 @@ public class ConvoUI : MonoBehaviour
         {            
             for (int i = 0; i < NumValidButtons; i++) DialogueOptions[i].SetActive(true);
         }        
+    }
+
+    void EndTypewriterEffect()
+    {
+        TextTyping = false;
+        StopCoroutine(TypewriterCoroutine);
+        TypewriterCoroutine = null;
+        SpeakerText.text = CurDialogueText;
+        if (IsInteractive == false)
+        {
+            StartCoroutine(NextDialogueFragmentDelay());
+        }
+        else
+        {
+            for (int i = 0; i < NumValidButtons; i++) DialogueOptions[i].SetActive(true);
+        }
+    }
+
+    private void Update()
+    {
+        if(TextTyping == true && Input.GetMouseButtonUp(0))
+        {
+            EndTypewriterEffect();
+        }
     }
 
     IEnumerator NextDialogueFragmentDelay()
