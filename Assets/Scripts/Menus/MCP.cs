@@ -369,7 +369,7 @@ public class MCP : MonoBehaviour
         {
             float loadStart = Time.time;
             AsyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
-            AsyncLoad.allowSceneActivation = false;
+            AsyncLoad.allowSceneActivation = false;            
             while (AsyncLoad.isDone == false)
             {
                 // Debug.Log("load: " + AsyncLoad.progress);            
@@ -497,7 +497,15 @@ public class MCP : MonoBehaviour
             {
                 FindObjectOfType<TheCaptainsChair>().CheckStartDialogue(DialogueToStartOnThisScene);
             }          
-        }        
+        }
+
+        for (int i = 0; i < SceneManager.sceneCount; i++)
+        {
+            if (SceneManager.GetSceneAt(i).name.Contains("Front") == false)
+            {
+                SceneManager.SetActiveScene(SceneManager.GetSceneAt(i));
+            }
+        }
 
         curImages = new List<RawImage>() { Curtain, SpinWheel };
         yield return StartCoroutine(FadeObjects(curImages, fadeTime, 1f));
@@ -510,7 +518,8 @@ public class MCP : MonoBehaviour
             BackgroundMusicPlayer.Play("Exchange_Background_Track");
             StartMainMenu();
         }
-    }   
+    }
+
     
 
     public void LoadCaptainAvatar(int avatar)
