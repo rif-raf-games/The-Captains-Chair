@@ -212,6 +212,11 @@ static public class StaticStuff
         }
     }
 
+    static public void GoToCreditsScreen()
+    {
+        GameObject.FindObjectOfType<MCP>().LoadNextScene("Episode End");
+    }
+
     
     public static ProfileInfo[] GetProfileInfo()
     {
@@ -386,6 +391,13 @@ static public class StaticStuff
     {
 
     }
+
+    static public void ShareOnSocial(GameObject goToShutOff)
+    {
+        goToShutOff.SetActive(false);
+
+    }
+    
 
     static public void SetOpaque(Material material)
     {

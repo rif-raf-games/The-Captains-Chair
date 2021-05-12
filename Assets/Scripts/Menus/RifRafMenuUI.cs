@@ -4,6 +4,7 @@ using Articy.Unity;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,7 +20,7 @@ public class RifRafMenuUI : MonoBehaviour
     public GameObject[] PopUps;
     public ePopUpType CurActivePopup = ePopUpType.NUM_POPUPS;
 
-    public enum eMainMenuButtons { MAIN_GAME, CONTINUE, DELETE, AUDIO_SETTINGS, NUM_MENU_MENU_BUTTONS };
+    public enum eMainMenuButtons { MAIN_GAME, CONTINUE, DELETE, AUDIO_SETTINGS, TELL_YOUR_FRIENDS, NUM_MENU_MENU_BUTTONS };
     [Header("Main Menu Buttons")]    
     public Button[] MainMenuButtons;
     public Text[] MainMenuButtonsText;
@@ -136,8 +137,19 @@ public class RifRafMenuUI : MonoBehaviour
             PopUps[(int)popUpID].SetActive(true);
             CurActivePopup = popUpID;
         }        
-    }        
+    }
 
+   /* private void OnGUI()
+    {
+        if(GUI.Button(new Rect(0,0,100,100), "test"))
+        {
+            Button b = MainMenuButtons[(int)eMainMenuButtons.TELL_YOUR_FRIENDS];
+            string s = b.spriteState.ToString() + ", ";
+            b = MainMenuButtons[(int)eMainMenuButtons.AUDIO_SETTINGS];
+            s += b.spriteState.ToString() + ", ";
+            Debug.Log(s);
+        }
+    }*/
     #region MAIN_MENU        
     public void InitMainMenu()
     {
@@ -152,6 +164,8 @@ public class RifRafMenuUI : MonoBehaviour
             if (b == MainMenuButtons[(int)eMainMenuButtons.AUDIO_SETTINGS]) continue;            
             b.interactable = false;                 
         }
+
+        MainMenuButtons[(int)eMainMenuButtons.TELL_YOUR_FRIENDS].interactable = true;
         
         switch (CurNumActiveProfiles)
         {
@@ -233,6 +247,11 @@ public class RifRafMenuUI : MonoBehaviour
                 else ProfilesButtons[i].interactable = false;
             }
         }
+    }
+
+    public void OnClickShowCredits()
+    {
+        StaticStuff.GoToCreditsScreen();
     }
     
     public void OnClickCloseProfiles()
@@ -471,6 +490,14 @@ public class RifRafMenuUI : MonoBehaviour
         TogglePopUp(0, false);
     }
     #endregion
+
+    public void OnClickShareWithFriends()
+    {
+        Debug.Log("OnClickShareWithFriends()");
+
+        //StartCoroutine(TakeScreenshotAndShare());
+        MCP.ShareOnSocial(null);
+    }    
 
     public void OnClickAudioSettings()
     {

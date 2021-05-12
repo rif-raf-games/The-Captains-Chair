@@ -62,13 +62,13 @@ public class RifRafInGamePopUp : MonoBehaviour
 
     void ToggleMainPopUpButtons(bool isActive)
     {
-        //Debug.Log("*********ToggleMainPopUpButtons(): " + isActive);
+       // Debug.Log("ToggleMainPopUpButtons(): " + isActive);
         foreach (Button b in MainPopUpButtons) b.interactable = isActive;
     }
 
     public void ToggleMainPopupPanel(bool isActive)
     {
-        //Debug.LogWarning("monewui CHECK THIS ToggleMainPopupPanel(): " + isActive);
+       // Debug.Log("ToggleMainPopupPanel(): " + isActive);
         MainPopupPanel.SetActive(isActive);       
         ToggleMainPopUpButtons(true); 
     }
@@ -76,6 +76,7 @@ public class RifRafInGamePopUp : MonoBehaviour
     [Header("Menu Content")]
     public ArticyRef MissionFlowRef;
     public ArticyRef CodexRef;
+    public ArticyRef ShipsLogRef;
     public ScrollRect ContentScrollView;
     public GameObject ExchangeContent;
     public GameObject TasksContent;
@@ -92,7 +93,7 @@ public class RifRafInGamePopUp : MonoBehaviour
     
     public void TurnOnPopupMenu( bool initContents )
     {
-        // Debug.Log("RifRafInGamePopUp.TurnOnPopupMenu()");
+         //Debug.Log("RifRafInGamePopUp.TurnOnPopupMenu(): initContents: " + initContents);
        // Debug.Log("------------------------------TurnOnPopupMenu() num menu buttons: " + GetNumMenuButtons() + ", numTimes: " + numTimes++);
         ToggleMainPopupPanel(true);
         if (initContents == false) return;
@@ -114,19 +115,25 @@ public class RifRafInGamePopUp : MonoBehaviour
         List<FlowFragment> containersToCheck = new List<FlowFragment>();        
         List<Job_Card> jobs = new List<Job_Card>();
         List<Articy.The_Captain_s_Chair.Codex> codexes = new List<Articy.The_Captain_s_Chair.Codex>();
+        List<Ships_Log> shipsLogs = new List<Ships_Log>();        
+        
         containersToCheck.Add(MissionFlowRef.GetObject() as FlowFragment);
-        containersToCheck.Add(CodexRef.GetObject() as FlowFragment);             
+        containersToCheck.Add(CodexRef.GetObject() as FlowFragment);
+        containersToCheck.Add(ShipsLogRef.GetObject() as FlowFragment);
+        
         while(containersToCheck.Count > 0)
-        {            
-            FlowFragment container = containersToCheck[0];            
+        {
+            //Debug.Log("num containersToCheck: " + containersToCheck.Count);
+            FlowFragment containerToCheck = containersToCheck[0];            
             containersToCheck.RemoveAt(0);
-            if (container == null) Debug.LogError("WTF 1");
-            if (container.Children == null) Debug.LogError("WTF 2");
-            foreach(ArticyObject child in container.Children)
+            if (containerToCheck == null) Debug.LogError("WTF 1");
+            if (containerToCheck.Children == null) Debug.LogError("WTF 2");
+            foreach(ArticyObject child in containerToCheck.Children)
             {
                 if (child == null) Debug.LogError("WTF 3");
                 Job_Card job = child as Job_Card;
-                Articy.The_Captain_s_Chair.Codex codex = child as Articy.The_Captain_s_Chair.Codex;               
+                Articy.The_Captain_s_Chair.Codex codex = child as Articy.The_Captain_s_Chair.Codex;
+                Ships_Log shipsLog = child as Ships_Log;
                 if (job != null) 
                 {     
                    // Debug.Log("We've found a JOB called " + job.DisplayName);
@@ -137,18 +144,23 @@ public class RifRafInGamePopUp : MonoBehaviour
                    // Debug.Log("We've got a CODEX called: " + codex.DisplayName);
                     codexes.Add(codex);
                 }
+                else if(shipsLog != null)
+                {
+                   // Debug.Log("We got a SHIPS LOG called: " + shipsLog.DisplayName);
+                    shipsLogs.Add(shipsLog);
+                }
                 else
                 {
                     FlowFragment childFrag = child as FlowFragment;
-                  if(childFrag.InputPins[0].Text.CallScript() == true)
-                   //if(true)
+                    if(childFrag.InputPins[0].Text.CallScript() == true)
+                    //if(true)
                     {
-                       // Debug.Log("add container: " + childFrag.DisplayName + " to the containers to check");
+                        //Debug.Log("add container: " + childFrag.DisplayName + " to the containers to check");
                         containersToCheck.Add(childFrag);
                     }
                     else
                     {
-                        //Debug.Log("Do not add container: " + childFrag.DisplayName + " to containers to check;");
+                       /// Debug.Log("Do not add container: " + childFrag.DisplayName + " to containers to check;");
                     }
                 }
             }
@@ -202,8 +214,21 @@ public class RifRafInGamePopUp : MonoBehaviour
             button.PointOfContact = "";
             button.JobDescription = codex.Template.Codex.Entry_Info;
             button.transform.SetParent(CodexContent.transform);
-
             
+            button.GetComponent<Button>().onClick.RemoveAllListeners();
+            button.GetComponent<Button>().onClick.AddListener(() => OnClickMenuButton(button));
+        }
+
+        foreach(Ships_Log shipsLog in shipsLogs)
+        {
+            MenuButton button = CreateButton();
+            button.JobNameText.text = shipsLog.Template.Codex.Entry_Name;
+            button.JobNumText.text = "";
+
+            button.JobLocation = "";
+            button.PointOfContact = "";
+            button.JobDescription = shipsLog.Template.Codex.Entry_Info;
+            button.transform.SetParent(ShipLogContent.transform);
 
             button.GetComponent<Button>().onClick.RemoveAllListeners();
             button.GetComponent<Button>().onClick.AddListener(() => OnClickMenuButton(button));
@@ -271,6 +296,14 @@ public class RifRafInGamePopUp : MonoBehaviour
 
     void InitMenuButtonInfo(MenuButton button, eInGameMenus menu)
     {
+        /*string s = "InitMenuButtonInfo(): ";
+        if (button == null) 
+            s += "null button, "; 
+        else 
+            s += "button: " + button.name + ", ";
+        s += menu.ToString();
+        Debug.Log(s);*/
+
         CurMenu = menu;
         CurJobButton = button;        
 
@@ -321,6 +354,7 @@ public class RifRafInGamePopUp : MonoBehaviour
         }
         else if (button.name.Contains("Log") && CurMenu != eInGameMenus.SHIPS_LOG)
         {
+            //Debug.Log("set up ship's log");
             ShipLogContent.SetActive(true);
             currentContent = ShipLogContent;
             InitMenuButtonInfo(null, eInGameMenus.SHIPS_LOG);
@@ -330,7 +364,7 @@ public class RifRafInGamePopUp : MonoBehaviour
     }
     void OnClickMenuButton(MenuButton button)
     {
-       // Debug.Log("OnClickMenuButton(): " + button.name);
+        //Debug.Log("OnClickMenuButton(): " + button.name);
         InitMenuButtonInfo(button, CurMenu);
     }
 
@@ -452,7 +486,11 @@ public class RifRafInGamePopUp : MonoBehaviour
         StaticStuff.SaveCurrentSettings("OnClickResumeGame()");
         ClearContent();
         this.MCP.StartFreeRoam();
+    }
 
+    public void OnClickShareOnSocial()
+    {
+        this.MCP.ShareOnSocial(this.gameObject);
     }
 
     void ToggleQuitConfirmPopUp(bool isActive)

@@ -337,7 +337,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                 }
                 else
                 {   // We're on a Hub that has an actual target, so that means we're in a dialogue that's going to continue                    
-                    Debug.LogWarning("Tell Mo if you see this and let him know where you are in the game so he can look into it more");
+                    //Debug.LogWarning("Tell Mo if you see this and let him know where you are in the game so he can look into it more");
                     FlowFragsVisited.Clear();
                     SetNextBranch(CurBranches[0]);
                 }

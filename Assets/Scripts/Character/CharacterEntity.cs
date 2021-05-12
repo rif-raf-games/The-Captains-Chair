@@ -81,9 +81,24 @@ public class CharacterEntity : MonoBehaviour
         LastPos = transform.position;
 
         NavMeshAgent = this.GetComponent<NavMeshAgent>();
-        NavMeshAgent.SetDestination(transform.position);
+        if(NavMeshAgent == null)
+        {
+            Debug.LogError("This CharacterEntity has no NavMeshAgent: " + this.name);
+        }
+        else
+        {
+            if(NavMeshAgent.isOnNavMesh == true)
+            {
+                NavMeshAgent.SetDestination(transform.position);
+            }
+            else
+            {
+                Debug.LogError("This CharacterEntity isn't on a NavMesh: " + this.name);
+            }            
+        }
 
         // get the floor if necessary
+        //Debug.Log("CalcCurrentFloor: " + this.name);
         CalcCurrentFloor();
     }
 

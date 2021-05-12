@@ -46,7 +46,7 @@ public class RifRafExchangeJobBoard : MonoBehaviour
 
     public void ToggleMainButtons(bool isActive)
     {
-       // Debug.Log("++++++++++ToggleMainButtons(): " + isActive);
+        Debug.Log("RifRafExchangeJobBoard.ToggleMainButtons(): " + isActive);
         foreach (Button b in MainButtons) b.interactable = isActive;
     }
 

@@ -4,6 +4,7 @@ using Articy.Unity;
 using CodeStage.AdvancedFPSCounter;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -160,6 +161,60 @@ public class MCP : MonoBehaviour
         //VideoPlayerRR.ToggleVideoPlayerChild(false);
 
         // Debug.LogWarning("-------------ShutOffAllUI() end");
+    }
+
+    public void ShareOnSocial(GameObject goToShutOff)
+    {        
+        StartCoroutine(TakeScreenshotAndShare(goToShutOff));
+    }
+    
+    private IEnumerator TakeScreenshotAndShare(GameObject goToShutOff)
+    {
+        if(goToShutOff != null) goToShutOff.SetActive(false);
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        if(goToShutOff == null)
+        {
+            // if we're here then we're coming from the main menu so load up the image        
+            Debug.Log("trying db image");
+            string imageName = "Ast_3C217021";
+            ArticyObject imageAO = ArticyDatabase.GetObject(imageName);
+            if (imageAO == null) Debug.LogError("ERROR: no image to load named " + imageName);
+            Sprite s = ((Asset)imageAO).LoadAssetAsSprite();
+            if (s == null) Debug.LogError("ERROR: couldn't load sprite from asset named: " + imageName);
+
+            new NativeShare().AddFile(s.texture)
+                .SetSubject("RifRaf Subject goes here").SetText("I wanted you to see this, check out Tales from the Crossing!").SetUrl("https://github.com/yasirkula/UnityNativeShare")
+                .SetCallback((result, shareTarget) => Debug.Log("Share result: " + result + ", selected app: " + shareTarget))
+                .Share();
+
+            yield return new WaitForEndOfFrame();
+            Destroy(s);
+            s = null;
+            //Resources.UnloadAsset(s);
+        }
+        else
+        {
+            Texture2D ss = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
+            ss.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
+            ss.Apply();
+
+            string filePath = System.IO.Path.Combine(Application.temporaryCachePath, "shared img.png");
+            Debug.Log("filePath: " + filePath);
+            File.WriteAllBytes(filePath, ss.EncodeToPNG());
+
+            // To avoid memory leaks
+            Destroy(ss);
+
+            new NativeShare().AddFile(filePath)
+                .SetSubject("RifRaf Subject goes here").SetText("I wanted you to see this, check out Tales from the Crossing!").SetUrl("https://github.com/yasirkula/UnityNativeShare")
+                .SetCallback((result, shareTarget) => Debug.Log("Share result: " + result + ", selected app: " + shareTarget))
+                .Share();
+        }
+        
+
+        yield return new WaitForEndOfFrame();
+        if (goToShutOff != null) goToShutOff.SetActive(true);
     }
 
     public void StartMiniGame()
