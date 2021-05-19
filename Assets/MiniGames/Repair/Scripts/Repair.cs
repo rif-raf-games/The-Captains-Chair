@@ -11,7 +11,7 @@ using Articy.Unity;
 
 public class Repair : MiniGame
 {    
-    public enum eFluidType { NONE, FUEL, COOLANT }; // two types of fluid are possible in the game
+    public enum eFluidType { NONE, FUEL, COOLANT, GREEN_FLUID, RED_FLUID }; // unlimited types of fluid are possible in the game
     public enum eRepairPieceType { PIPE, SPLITTER, XOVER, BLOCKER, DAMAGED, TERMINAL }; // types of pieces
     enum eGameState { OFF, ON };
     eGameState CurGameState = eGameState.OFF;    
@@ -38,6 +38,8 @@ public class Repair : MiniGame
     public Text ResultsText;
     public Material FuelMat;
     public Material CoolantMat;
+    public Material GreenMat;
+    public Material RedMat;
     public Material NoneMat;
     public GameObject[] Lights;
     
@@ -104,7 +106,7 @@ public class Repair : MiniGame
     }*/
     public override void ResetGame()
     {
-     //   Debug.Log("Repair.ResetGame()");
+        Debug.Log("Repair.ResetGame()");
         base.ResetGame();
         base.BeginPuzzleStartTime();     
         foreach (RepairPiece piece in AllPieces) piece.ResetItem();
@@ -699,6 +701,7 @@ public class Repair : MiniGame
     GameObject EndColPiece;
     void SetupPathError(string s, RepairPiece curPiece, Collider collider, Vector3 rayDir)
     {
+        Debug.Log("SetupPathError()");
         string err = "<FAIL>: SetupPathError() s: " + s + ", curPiece: " + curPiece.name;        
         RepairPiece collPiece = null;
         Vector3 collPos = Vector3.zero;
@@ -706,11 +709,13 @@ public class Repair : MiniGame
         PathErrorMessage = s;        
         if (collider == null)
         {
+            Debug.Log("a");
             err += ", collider was null so setting PathErrorSphere to rayDir*3";
             PathErrorSphere.transform.position = curPiece.transform.position + rayDir * 3f;            
         }
         else
         {
+            Debug.Log("b");
             err += ", collider name is: " + collider.gameObject.name;
             PathErrorSphere.transform.position = collider.transform.position + new Vector3(0f, .5f, 0f);
             collPiece = collider.transform.parent.GetComponent<RepairPiece>();            
@@ -865,8 +870,15 @@ public class Repair : MiniGame
                             StaticStuff.PrintRepairPath("There is a piece called: " + hit.collider.transform.parent.name + " on the spot that " + curPiece.name + "'s ray collided with that does NOT have the same fluid type " +
                             "as our current path so assign the fluid type and create a new conn Us: " + hit.collider.transform.parent.name + ", From: " + curPiece.name);                            
                             adjacentPiece.FluidType = CurTerminalStartFluidType;
-                            if (adjacentPiece.FluidType == eFluidType.FUEL) adjacentPiece.GetComponentInChildren<MeshRenderer>().material = FuelMat;
-                            else adjacentPiece.GetComponentInChildren<MeshRenderer>().material = CoolantMat;
+                            switch(adjacentPiece.FluidType)
+                            {
+                                case eFluidType.FUEL: adjacentPiece.GetComponentInChildren<MeshRenderer>().material = FuelMat; break;
+                                case eFluidType.COOLANT: adjacentPiece.GetComponentInChildren<MeshRenderer>().material = CoolantMat; break;
+                                case eFluidType.GREEN_FLUID: adjacentPiece.GetComponentInChildren<MeshRenderer>().material = GreenMat; break;
+                                case eFluidType.RED_FLUID: adjacentPiece.GetComponentInChildren<MeshRenderer>().material = RedMat; break;
+                            }
+                            //if (adjacentPiece.FluidType == eFluidType.FUEL) adjacentPiece.GetComponentInChildren<MeshRenderer>().material = FuelMat;
+                            //else adjacentPiece.GetComponentInChildren<MeshRenderer>().material = CoolantMat;
 
                         }
 
@@ -958,6 +970,7 @@ public class Repair : MiniGame
                 puzzleSolved = false;
                 //msg = "WE HAVE AT LEAST 1 TERMINAL " + pieceNotReached.name + " THAT HAS NOT BEEN REACHED SO WE FAIL!!!!!!";
                 msg = "At least one Terminal has not been properly connected.";
+                Debug.Log("c");
                 PathErrorSphere.transform.position = pieceNotReached.transform.position + new Vector3(0f, .5f, 0f);
             }
         }
@@ -993,7 +1006,7 @@ public class Repair : MiniGame
 
     IEnumerator ShowResults(string result, bool success)
     {
-        Debug.Log("Repair.ShowResults() result: " + result);
+        Debug.Log("Repair.ShowResults() result: " + result + ", success: " + success);
         if (success == false) result = "Result Fail: Current configuration will cause meltdown and cannot be completed. Re-confirm all lines connect to matching terminals.";
         if (success == true)
         {
