@@ -100,13 +100,7 @@ public class Repair : MiniGame
 
     public Transform BoardPieces;
     public Transform Belt;
- /*   public void OnGUI()
-    {
-        if (GUI.Button(new Rect(0, 200, 100, 100), "Reset"))
-        {
-            ResetGame();
-        }
-    }*/
+ 
     public override void ResetGame()
     {
         Debug.Log("Repair.ResetGame()");
@@ -660,15 +654,7 @@ public class Repair : MiniGame
             }             
         }
         return foundIssue;
-    }
-
-    private void OnGUI()
-    {
-        if(GUI.Button(new Rect(0,0,100,100), "feh"))
-        {
-            CheckBelt();
-        }
-    }
+    }   
 
     bool CheckBeltSorting()
     {
