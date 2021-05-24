@@ -84,9 +84,12 @@ public class Repair : MiniGame
     }
     private void Start()
     {
-        BeltIndexAdjusts.Clear(); // this is a bullshit way around a bug but i'll do all the cleanup during next project pre-production i mean it        
+        BeltIndexAdjusts.Clear(); // these should be set up by clicking Set Board but for some reason it gets trashed over time so just set it up here
         BeltIndexAdjusts.Add(-1);
         BeltIndexAdjusts.Add(1);
+        InitialBeltIndexStops.Clear();
+        InitialBeltIndexStops.Add(-1);
+        InitialBeltIndexStops.Add(BeltAnchors.Count);
         ScanLines.ResetLines();
         if (IsSolo == true)
         {
@@ -220,7 +223,7 @@ public class Repair : MiniGame
     }
 
     List<int> InitialBeltIndexStops = new List<int>();
-    List<int> BeltIndexAdjusts = new List<int>();
+    public List<int> BeltIndexAdjusts = new List<int>();
     RepairPiece HeldPiece;
     Vector3 LastWorldTouchPos;
     Vector3 StartWorldTouchPos;
@@ -237,7 +240,7 @@ public class Repair : MiniGame
     {
         bool menuActive = false;
         if (FindObjectOfType<RifRafInGamePopUp>() != null) menuActive = !FindObjectOfType<RifRafInGamePopUp>().MenusActiveCheck();
-        Debug.Log("I JUST CLICKED THE SCAN BUTTON: " + menuActive);
+        //Debug.Log("I JUST CLICKED THE SCAN BUTTON: " + menuActive);
         if (menuActive == true) return;
 
         SoundFXPlayer.Play("Repair_StartScan");
@@ -369,6 +372,7 @@ public class Repair : MiniGame
             }
             else
             {   // ok we've released our touch after moving a piece around, so figure out what to do
+              //  Debug.LogWarning("---a");
                 SnapPieceIntoPlace(HeldPiece, StartHeldPieceWorldPos);
                 if (HeldPiece.Type != eRepairPieceType.DAMAGED)
                 {
@@ -416,8 +420,9 @@ public class Repair : MiniGame
 
         BeltAnchors = GameObject.FindGameObjectsWithTag("Repair Piece Belt Anchor").ToList<GameObject>();
         BeltAnchors = BeltAnchors.OrderBy(go => go.name).ToList<GameObject>();
-        InitialBeltIndexStops.Clear();
         BeltIndexAdjusts.Clear();
+        Debug.Log("wtf a");
+        InitialBeltIndexStops.Clear();        
         InitialBeltIndexStops.Add(-1);
         InitialBeltIndexStops.Add(BeltAnchors.Count);
         BeltIndexAdjusts.Add(-1);
@@ -492,15 +497,17 @@ public class Repair : MiniGame
     
     bool SnapPieceIntoPlace(RepairPiece piece, Vector3 origPos)
     {
+        //Debug.Log("SnapPieceIntoPlace(): " + piece.name);
+
         bool newLocFound = false;   // this lets us know whether or not to put the piece back to it's original position
+        bool snappedBack = false;
+        eLocationType startLocType = (piece.transform.parent == Belt ? eLocationType.BELT : eLocationType.BOARD);
+       // Debug.Log("startLocType: " + startLocType);
         int piecesAndAnchorMask = 1 << LayerMask.NameToLayer("Repair Piece Anchor");
         piecesAndAnchorMask |= (1 << LayerMask.NameToLayer("Repair Piece Belt Anchor"));        
         piece.GetComponentInChildren<MeshCollider>().enabled = false; // turn this off temporarily while we just want to raycast for anchor points                    
-        Vector3 checkLoc = new Vector3(piece.transform.position.x, 0f, piece.transform.position.z);        
-        //Debug.Log("pieces anchor mask: " + piecesAndAnchorMask);
-        Collider[] overlapColliders = Physics.OverlapSphere(checkLoc, 1f, piecesAndAnchorMask); // get all the anchor points within 1 unit of distance                                        
-        //Debug.Log("num overlapColliders: " + overlapColliders.Length);
-        PrintShit("num overlapColliders: " + overlapColliders.Length, piece);
+        Vector3 checkLoc = new Vector3(piece.transform.position.x, 0f, piece.transform.position.z);                
+        Collider[] overlapColliders = Physics.OverlapSphere(checkLoc, 1f, piecesAndAnchorMask); // get all the anchor points within 1 unit of distance                                                        
         if (overlapColliders.Count() != 0)
         {   // we have at least one AnchorHitPoint, so get a sorted list by distance
             List<AnchorHitPoint> anchorPoints = new List<AnchorHitPoint>();
@@ -511,66 +518,185 @@ public class Repair : MiniGame
             }
             anchorPoints = anchorPoints.OrderBy(p => p.Dist).ToList<AnchorHitPoint>();
             // find out the type of location were looking for
-            eLocationType locType;
-            if (overlapColliders[0].gameObject.tag == "Repair Piece Anchor") locType = eLocationType.BOARD;
-            else locType = eLocationType.BELT;
-            foreach (AnchorHitPoint p in anchorPoints)
-            {
-                RaycastHit hit = GetHitAtAnchorPos(p.Coll);
-                if (hit.collider == null) { Debug.LogError("We should have collided with an anchor point"); return false; }
-                if (hit.collider.tag == "Repair Piece") continue; // if there's a piece on this anchor spot, then keep looking                         
-                else if (hit.collider.tag == "Repair Piece Anchor" || hit.collider.tag == "Repair Piece Belt Anchor")
-                {   // nope, the anchor point is empty so put the HeldPiece there and assign it's parent                          
-                    piece.transform.position = p.Coll.transform.position;
-                    piece.transform.parent = (locType == eLocationType.BOARD ? BoardPieces : Belt);                    
-                    newLocFound = true;
-                    break;
+            eLocationType colliderLocationType;
+            //if (overlapColliders[0].gameObject.tag == "Repair Piece Anchor") colliderLocationType = eLocationType.BOARD;
+            if (anchorPoints[0].Coll.tag == "Repair Piece Anchor") colliderLocationType = eLocationType.BOARD;
+            else colliderLocationType = eLocationType.BELT;
+
+          //  Debug.Log("ok we're going to be snapping to a: " + colliderLocationType.ToString() + " anchor point");
+            if(colliderLocationType == eLocationType.BOARD)            
+            {   // BOARD TYPE
+                foreach (AnchorHitPoint p in anchorPoints)
+                {
+                    RaycastHit hit = GetHitAtAnchorPos(p.Coll);
+                    if (hit.collider == null) { Debug.LogError("We should have collided with an anchor point"); return false; }
+                    if (hit.collider.tag == "Repair Piece") continue; // if there's a piece on this anchor spot, then keep looking                         
+                    else if (hit.collider.tag == "Repair Piece Anchor")
+                    {   // nope, the anchor point is empty so put the HeldPiece there and assign it's parent                          
+                        piece.transform.position = p.Coll.transform.position;
+                        piece.transform.parent = BoardPieces;// (colliderLocationType == eLocationType.BOARD ? BoardPieces : Belt);
+                        newLocFound = true;
+                        break;
+                    }
+                }
+                if (newLocFound == false)
+                {
+                    snappedBack = true;
+                    piece.transform.position = origPos;
                 }
             }
-            // if we're here and we're belt type then try to move the pieces on the belt up or down to make room for this spot
-            if (newLocFound == false && locType == eLocationType.BELT)
+            
+              
+            // if we're here then we found a location, so see what's up
+            if (snappedBack == true) 
+            {   
+                Debug.Log("snappedBack == true do so do nothing");
+            }           
+            else
             {
-                newLocFound = AssignBeltSpot(piece, anchorPoints[0]);
+                //string s = "no snap back, found a collider. ";
+                if (newLocFound == true && startLocType == eLocationType.BOARD) { /* board to board so do nothing*/}// s += "Board to board so do nothing.";
+                else if (newLocFound == true && startLocType == eLocationType.BELT)
+                {
+                    // s += "Belt to board, so REDO with empty anchor";
+                    RebuildBelt(piece, null, "BeltToBoard");
+                }
+                else if (colliderLocationType != eLocationType.BELT) Debug.LogError("WTF, how can colliderLocationType not be BELT?");
+                else if (startLocType == eLocationType.BOARD)
+                {
+                    // s += "Board to Belt, so REDO with an additional piece.";
+                    if (RebuildBelt(piece, anchorPoints[0], "BoardToBelt") == true)
+                    {
+                        piece.transform.parent = Belt;
+                    }
+                    else
+                    {
+                        piece.transform.position = origPos;
+                    }
+                }
+                else if (startLocType == eLocationType.BELT)
+                {
+                    // s += "Belt to Belt, so REDO with same # of pieces";
+                    //Debug.Log("belt to belt do we have an anchor point: " + anchorPoints[0].Coll.name);
+                    RebuildBelt(piece, anchorPoints[0], "BeltToBelt");
+                }
+                else Debug.LogError("Not sure what this case is");//s += "I have no idea WTF";
+               // Debug.Log(s);
+                //if (newLocFound == true) Debug.Log("newLocFound")
+                //Debug.Log("no snap back, found a collider so lets see what's up. newLocFound: " + newLocFound + ", colliderLocationType: " + colliderLocationType);
             }
         }
-        piece.GetComponentInChildren<MeshCollider>().enabled = true; // make sure to turn this back on 
-        if (newLocFound == false)
-        {   // didn't find an empty spot, so put the piece back to where it started from           
-            piece.transform.position = origPos;
-            //Debug.Log("newLocFound is false, so put piece to original position");
-            PrintShit("newLocFound is false, so put piece to original position", piece);
-        }        
         else
         {
-            bool adjustmentMade = CheckBeltSorting();
-            //Debug.Log("piece found a new position, but was there an adjustment made to the belt?: " + adjustmentMade);
-            PrintShit("piece found a new position, but was there an adjustment made to the belt?: " + adjustmentMade, piece);
+           // Debug.Log("no overlap colliders so send it back and do nothing");
+            piece.transform.position = origPos;            
         }
-        
+
+        piece.GetComponentInChildren<MeshCollider>().enabled = true; // make sure to turn this back on           
         return newLocFound;
+    }
+
+    bool RebuildBelt(RepairPiece piece, AnchorHitPoint anchorHit, string type)
+    {
+        // Debug.Log("RebuildBelt() piece: " + piece.name + "");
+        List<RepairPiece> piecesToPlace = new List<RepairPiece>();
+        RaycastHit hit;
+        bool[] beltState = new bool[BeltAnchors.Count];
+        for (int i = 0; i < BeltAnchors.Count; i++)
+        {
+            hit = GetHitAtAnchorPos(BeltAnchors[i]);
+            beltState[i] = hit.collider.tag == "Repair Piece";
+            if (beltState[i] == true) piecesToPlace.Add(hit.collider.GetComponentInParent<RepairPiece>());
+            if (anchorHit != null && BeltAnchors[i] == anchorHit.Coll) piecesToPlace.Add(piece);
+        }
+
+        if (piecesToPlace.Count == 0) {/* Debug.Log("No pieces on the belt so bail.");*/ return false; }
+        if (piecesToPlace.Count > BeltAnchors.Count) { /*Debug.Log("BELT FULL so return false and snap piece back into place"); */return false; }
+
+        // we've got at least 1 piece
+        int numTotalSpaces = BeltAnchors.Count - piecesToPlace.Count;
+        int startIndex = numTotalSpaces / 2;
+        int curIndex = startIndex;
+        foreach (RepairPiece rp in piecesToPlace)
+        {
+            rp.transform.position = BeltAnchors[curIndex].transform.position;
+            curIndex++;
+        }
+
+        return true;
+
+        
+    }
+    
+    IEnumerator CheckBeltIE()
+    {
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        CheckBelt();
+    }
+    bool CheckBelt()
+    {
+        bool foundIssue = false;
+        bool[] beltState = new bool[BeltAnchors.Count];
+        RaycastHit[] hits;
+        for (int i = 0; i < BeltAnchors.Count; i++)
+        {
+            Vector3 colliderPos = BeltAnchors[i].transform.position + 2f * Vector3.up;
+            hits = Physics.RaycastAll(colliderPos, Vector3.down);
+            int hitCount = 0;
+            foreach(RaycastHit hit in hits)
+            {
+                if (hit.collider.tag == "Repair Piece") hitCount++;
+            }
+            if (hitCount > 1)
+            {
+                foundIssue = true;
+                string s = "ERROR: we have more than one piece here: " + i + ", hitCount: " + hitCount + ", ";
+                foreach(RaycastHit h in hits)
+                {
+                    if (h.collider.tag == "Repair Piece") s += h.collider.name + ", ";
+                }
+               // Debug.LogError(s);
+            }             
+        }
+        return foundIssue;
+    }
+
+    private void OnGUI()
+    {
+        if(GUI.Button(new Rect(0,0,100,100), "feh"))
+        {
+            CheckBelt();
+        }
     }
 
     bool CheckBeltSorting()
     {
+      //  Debug.Log("CheckBeltSorting()");
         int topIndex = 0;
         int bottomIndex = BeltAnchors.Count - 1;        
         bool adjustmentMade = false;
         RaycastHit hit;
+                        
         while(adjustmentMade == false)
         {   //int indexDataIndex = (HeldPiece.transform.position.z < p.Coll.transform.position.z ? 0 : 1); // 0 = move up, 1 = move down
             //Debug.Log("topIndex: " + topIndex);
             hit = GetHitAtAnchorPos(BeltAnchors[topIndex]);            
             if (hit.collider.tag == "Repair Piece")
-            {   // hit the top index, so move down
+            {   // hit the top index, so move down                
                 int a = (BeltAnchors.Count / 2) + 1;
-                adjustmentMade = PushPiecesToMakeSpace(BeltAnchors[topIndex], a, BeltIndexAdjusts[1]); ;
+                adjustmentMade = PushPiecesToMakeSpace(BeltAnchors[topIndex], a, BeltIndexAdjusts[1]);
+               // Debug.Log("move down adjustmentMade: " + adjustmentMade);
+               // Debug.Log("move down stub");
             }
             if(adjustmentMade == false )
             {
                 hit = GetHitAtAnchorPos(BeltAnchors[bottomIndex]);
                 if (hit.collider.tag == "Repair Piece")
-                {   // hit the bottom index, so move up
+                {   // hit the bottom index, so move up   
+                   // Debug.Log("stub move up");
                     adjustmentMade = PushPiecesToMakeSpace(BeltAnchors[bottomIndex], (BeltAnchors.Count / 2) - 1, BeltIndexAdjusts[0]);
+                   // Debug.Log("move up adjustmentMade: " + adjustmentMade);
                 }
             }
             topIndex++;
@@ -586,8 +712,11 @@ public class Repair : MiniGame
     /// </summary>    
     bool PushPiecesToMakeSpace(GameObject beltAnchor, int initialIndexStop, int indexAdj)
     {
+        string s = "PushPiecesToMakeSpace() beltAnchor: " + beltAnchor.name + ", initialIndexStop: " + initialIndexStop + ", indexAdj: " + indexAdj + ", ";
         //Debug.Log("PushPiecesToMakeSpace() beltAnchor: " + beltAnchor.name + ", initialIndexStop: " + initialIndexStop + ", indexAdj: " + indexAdj);
         int baIndex = BeltAnchors.IndexOf(beltAnchor);
+        s += "baIndex: " + baIndex;
+        //Debug.Log(s);
        // Debug.Log("PushPiecesToMakeSpace() baIndex: " + baIndex);
         if (baIndex == -1) { Debug.LogError("we're trying to PushPiecesToMakeSpace but the beltAnchor isn't in the list: " + beltAnchor.name); return false; }
         // start going through the list, looking for an empty spot
@@ -603,22 +732,24 @@ public class Repair : MiniGame
                 spotFound = true;
                 foundSpotIndex = i;
               //  Debug.Log("spot found.  foundSpotIndex: " + foundSpotIndex);
-                hit.collider.name = "index: " + foundSpotIndex;
+               // hit.collider.name = "index: " + foundSpotIndex;
                 break;
             }
             i += indexAdj;
         }
         if (spotFound == true)
-        {
-           // Debug.Log("found an empty spot at index: " + foundSpotIndex + " so push pieces");
+        {            
             i = baIndex;
-            while(i != foundSpotIndex)
-            {
+            bool didWeMoveAnything = false;
+            while (i != foundSpotIndex)
+            {                
                 RaycastHit hit = GetHitAtAnchorPos(BeltAnchors[i]);
                 if (hit.collider == null || hit.collider.tag != "Repair Piece") { Debug.LogError("we have some odd behavior finding a belt spot."); return false; }
                 hit.collider.transform.parent.gameObject.transform.position = BeltAnchors[i + indexAdj].transform.position;
+                didWeMoveAnything = true;
                 i += indexAdj;
             }
+           // Debug.LogWarning("why are we moving shit? found an empty spot at index: " + foundSpotIndex + " so push pieces.  did we move: " + didWeMoveAnything);
             return true;
         }
         return false;
@@ -630,12 +761,12 @@ public class Repair : MiniGame
     /// </summary>
     bool AssignBeltSpot(RepairPiece piece, AnchorHitPoint p)
     {
-        // Debug.Log("AssignBeltSpot() coll: " + p.Coll.name + ", which is index: " + BeltAnchors.IndexOf(p.Coll));        
+       // Debug.Log("AssignBeltSpot() coll: " + p.Coll.name + ", which is index: " + BeltAnchors.IndexOf(p.Coll));        
         int indexDataIndex = (piece.transform.position.z < p.Coll.transform.position.z ? 0 : 1); // 0 = move up, 1 = move down
         bool piecesMoved = false;
         if(InitialBeltIndexStops.Count == 0)
         {
-            Debug.LogWarning("You REALLY need to get more careful about your mini game flow, Mo.");
+            Debug.LogWarning("This should never be 0.  Something odd is happening.");
             InitialBeltIndexStops.Add(-1);
             InitialBeltIndexStops.Add(BeltAnchors.Count);
         }
@@ -668,13 +799,15 @@ public class Repair : MiniGame
     /// </summary>
     /// <param name="anchorPoint"></param>
     /// <returns></returns>
-    RaycastHit GetHitAtAnchorPos(GameObject anchorPoint)
+    RaycastHit GetHitAtAnchorPos(GameObject anchorPoint, bool drawRay = false)
     {
         RaycastHit hit;
         Vector3 colliderPos = anchorPoint.transform.position + 2f * Vector3.up;
         Physics.Raycast(colliderPos, Vector3.down, out hit, Mathf.Infinity);
+        if(drawRay) Debug.DrawRay(colliderPos, Vector3.down*1000f, Color.red, 100f);
         return hit;
     }
+
     class AnchorHitPoint
     {
         public float Dist;
@@ -701,7 +834,7 @@ public class Repair : MiniGame
     GameObject EndColPiece;
     void SetupPathError(string s, RepairPiece curPiece, Collider collider, Vector3 rayDir)
     {
-        Debug.Log("SetupPathError()");
+       // Debug.Log("SetupPathError()");
         string err = "<FAIL>: SetupPathError() s: " + s + ", curPiece: " + curPiece.name;        
         RepairPiece collPiece = null;
         Vector3 collPos = Vector3.zero;
@@ -709,13 +842,13 @@ public class Repair : MiniGame
         PathErrorMessage = s;        
         if (collider == null)
         {
-            Debug.Log("a");
+           // Debug.Log("a");
             err += ", collider was null so setting PathErrorSphere to rayDir*3";
             PathErrorSphere.transform.position = curPiece.transform.position + rayDir * 3f;            
         }
         else
         {
-            Debug.Log("b");
+           // Debug.Log("b");
             err += ", collider name is: " + collider.gameObject.name;
             PathErrorSphere.transform.position = collider.transform.position + new Vector3(0f, .5f, 0f);
             collPiece = collider.transform.parent.GetComponent<RepairPiece>();            
@@ -729,6 +862,8 @@ public class Repair : MiniGame
         }
 
         //Debug.Log("SetupPathError() err: " + err);
+       // if (collPiece == null) Debug.LogError("null collPiece");
+       // if (curPiece == null) Debug.LogError("null curPiece");
         PieceConn newConn = new PieceConn(collPiece, curPiece);
         DEBUG_ConnsOnThisPath.Add(newConn);
     }    
@@ -1006,7 +1141,7 @@ public class Repair : MiniGame
 
     IEnumerator ShowResults(string result, bool success)
     {
-        Debug.Log("Repair.ShowResults() result: " + result + ", success: " + success);
+        //Debug.Log("Repair.ShowResults() result: " + result + ", success: " + success);
         if (success == false) result = "Result Fail: Current configuration will cause meltdown and cannot be completed. Re-confirm all lines connect to matching terminals.";
         if (success == true)
         {
@@ -1118,7 +1253,11 @@ public class Repair : MiniGame
         {
             Cur = cur;
             From = from;
-            ID = "Cur: " + Cur.name + " From: " + From.name;
+            string curName = (cur == null ? "Null Cur" : Cur.name);
+            string fromName = (from == null ? "Null From" : From.name);
+            ID = "Cur: " + curName + " From: " + fromName;
+            //ID = "Cur: " + Cur.name + " From: " + From.name;
         }
     }
 }
+
