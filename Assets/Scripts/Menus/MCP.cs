@@ -497,11 +497,11 @@ public class MCP : MonoBehaviour
             {
                 FindObjectOfType<TheCaptainsChair>().CheckStartDialogue(DialogueToStartOnThisScene);
             }          
-        }
+        }                
 
         for (int i = 0; i < SceneManager.sceneCount; i++)
         {
-            if (SceneManager.GetSceneAt(i).name.Contains("Front") == false)
+            if (SceneManager.GetSceneAt(i).name.Contains("Front") == false && SceneManager.GetSceneAt(i).name.Contains("MG_") == false)
             {
                 SceneManager.SetActiveScene(SceneManager.GetSceneAt(i));
             }

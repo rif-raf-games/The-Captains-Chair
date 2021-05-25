@@ -106,13 +106,13 @@ public class MiniGameMCP : MonoBehaviour
             {
                 puzzleName = PuzzleNameRoot + PuzzlesToLoad[i].ToString("D3");
             }            
-            //Debug.Log("load puzzle: " + puzzleName);
+          //  Debug.Log("MiniGameMCP.LoadPuzzleScenes() load puzzle: " + puzzleName);
             AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(puzzleName, LoadSceneMode.Additive);
             while (!asyncLoad.isDone)
             {
                 yield return null;
             }
-            //Debug.Log("Load Done: " + puzzleName);            
+           // Debug.Log("MiniGameMCP.LoadPuzzleScenes() Load Done: " + puzzleName);            
             UnityEngine.SceneManagement.Scene puzzleScene = SceneManager.GetSceneAt(2);
             MiniGame newPuzzle = null;
             Vector3 camPos = Vector3.zero;
@@ -153,7 +153,7 @@ public class MiniGameMCP : MonoBehaviour
             {
                 yield return null;
             }
-            // Debug.Log("Unload Done: " + puzzleScene);
+            //Debug.Log("MiniGameMCP.LoadPuzzleScenes() Unload Done: " + puzzleScene);
             Button resetButton = this.MCP.InGamePopUp.ResetPuzzleButton.GetComponent<Button>();
             Puzzles[i].Init(this, puzzleName, SoundFXUsedInScene, resetButton);                        
         }
