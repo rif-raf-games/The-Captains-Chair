@@ -177,7 +177,7 @@ public class MCP : MonoBehaviour
         {
             // if we're here then we're coming from the main menu so load up the image        
             Debug.Log("trying db image");
-            string imageName = "Ast_3C217021";
+            string imageName = "Ast_9E5BBE78";
             ArticyObject imageAO = ArticyDatabase.GetObject(imageName);
             if (imageAO == null) Debug.LogError("ERROR: no image to load named " + imageName);
             Sprite s = ((Asset)imageAO).LoadAssetAsSprite();
