@@ -184,7 +184,7 @@ public class MCP : MonoBehaviour
             if (s == null) Debug.LogError("ERROR: couldn't load sprite from asset named: " + imageName);
 
             new NativeShare().AddFile(s.texture)
-                .SetSubject("RifRaf Subject goes here").SetText("I wanted you to see this, check out Tales from the Crossing!").SetUrl("https://github.com/yasirkula/UnityNativeShare")
+                .SetSubject("Hey, look what I found!").SetText("I wanted you to see this great new game! Check out Tales from the Crossing!").SetUrl("https://rifrafgames.carrd.co/")
                 .SetCallback((result, shareTarget) => Debug.Log("Share result: " + result + ", selected app: " + shareTarget))
                 .Share();
 
@@ -207,7 +207,7 @@ public class MCP : MonoBehaviour
             Destroy(ss);
 
             new NativeShare().AddFile(filePath)
-                .SetSubject("RifRaf Subject goes here").SetText("I wanted you to see this, check out Tales from the Crossing!").SetUrl("https://github.com/yasirkula/UnityNativeShare")
+                .SetSubject("Hey, look what I found!").SetText("I wanted you to see this great new game! Check out Tales from the Crossing!").SetUrl("https://rifrafgames.carrd.co/")
                 .SetCallback((result, shareTarget) => Debug.Log("Share result: " + result + ", selected app: " + shareTarget))
                 .Share();
         }
