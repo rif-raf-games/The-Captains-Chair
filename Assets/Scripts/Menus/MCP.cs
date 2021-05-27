@@ -167,16 +167,31 @@ public class MCP : MonoBehaviour
     {        
         StartCoroutine(TakeScreenshotAndShare(goToShutOff));
     }
+        
     
     private IEnumerator TakeScreenshotAndShare(GameObject goToShutOff)
     {
         if(goToShutOff != null) goToShutOff.SetActive(false);
+
+#if UNITY_IOS
+        string subject = "Hey, look what I found!";
+        string body = "I wanted you to see this great new game! Check out Tales from the Crossing!";
+        string url = "http://bit.ly/TalesEp1";
+#elif UNITY_ANDROID
+        string subject = "Hey, look what I found!";
+        string body = "I wanted you to see this great new game! Check out Tales from the Crossing!";
+        string url = "https://bit.ly/Tales-A";
+#else
+        string subject = "Hey, look what I found!";
+        string body = "I wanted you to see this great new game! Check out Tales from the Crossing!";
+        string url = "www.unity3d.com";
+#endif
+
         yield return new WaitForEndOfFrame();
         yield return new WaitForEndOfFrame();
         if(goToShutOff == null)
         {
-            // if we're here then we're coming from the main menu so load up the image        
-            Debug.Log("trying db image");
+            // if we're here then we're coming from the main menu so load up the image                    
             string imageName = "Ast_9E5BBE78";
             ArticyObject imageAO = ArticyDatabase.GetObject(imageName);
             if (imageAO == null) Debug.LogError("ERROR: no image to load named " + imageName);
@@ -184,14 +199,13 @@ public class MCP : MonoBehaviour
             if (s == null) Debug.LogError("ERROR: couldn't load sprite from asset named: " + imageName);
 
             new NativeShare().AddFile(s.texture)
-                .SetSubject("Hey, look what I found!").SetText("I wanted you to see this great new game! Check out Tales from the Crossing!").SetUrl("https://rifrafgames.carrd.co/")
+                .SetSubject(subject).SetText(body).SetUrl(url)
                 .SetCallback((result, shareTarget) => Debug.Log("Share result: " + result + ", selected app: " + shareTarget))
                 .Share();
 
             yield return new WaitForEndOfFrame();
             Destroy(s);
-            s = null;
-            //Resources.UnloadAsset(s);
+            s = null;           
         }
         else
         {
@@ -199,7 +213,7 @@ public class MCP : MonoBehaviour
             ss.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
             ss.Apply();
 
-            string filePath = System.IO.Path.Combine(Application.temporaryCachePath, "shared img.png");
+            string filePath = System.IO.Path.Combine(Application.temporaryCachePath, "TCC Share.png");
             Debug.Log("filePath: " + filePath);
             File.WriteAllBytes(filePath, ss.EncodeToPNG());
 
@@ -207,7 +221,7 @@ public class MCP : MonoBehaviour
             Destroy(ss);
 
             new NativeShare().AddFile(filePath)
-                .SetSubject("Hey, look what I found!").SetText("I wanted you to see this great new game! Check out Tales from the Crossing!").SetUrl("https://rifrafgames.carrd.co/")
+                .SetSubject(subject).SetText(body).SetUrl(url)
                 .SetCallback((result, shareTarget) => Debug.Log("Share result: " + result + ", selected app: " + shareTarget))
                 .Share();
         }
@@ -222,7 +236,7 @@ public class MCP : MonoBehaviour
         StartFreeRoam();
     }
     
-    #region SCENE_TRANSITIONS
+#region SCENE_TRANSITIONS
     public void LoadNextScene(string sceneName = "", Scene_Jump sceneJump = null, Mini_Game_Jump miniGameJump = null, string posToSave = "", string savedPos = "", MenuButton menuButton = null)
     {
         StartCoroutine(LoadNextSceneDelay(sceneName, sceneJump, miniGameJump, posToSave, savedPos));
@@ -615,7 +629,7 @@ public class MCP : MonoBehaviour
         DialogueToStartOnThisScene = dialogueToStartOn;
     }
         
-    #endregion    
+#endregion
 
     public void TurnOnMainMenu()
     {
@@ -648,7 +662,7 @@ public class MCP : MonoBehaviour
         InGamePopUp.gameObject.SetActive(isActive);
     }
 
-    #region GAME_SETTINGS
+#region GAME_SETTINGS
     public int GetMusicVolume()
     {
         //Debug.LogError("mosound GetMusicVolume(): " + StaticStuff.MusicVolume);
@@ -676,6 +690,6 @@ public class MCP : MonoBehaviour
         SoundFX.SetVolume(vol);
     }
 
-    #endregion    
+#endregion
     
 }
