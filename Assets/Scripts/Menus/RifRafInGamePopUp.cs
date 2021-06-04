@@ -34,6 +34,8 @@ public class RifRafInGamePopUp : MonoBehaviour
         //ExchangeBoard.gameObject.SetActive(false); // monewui
         QuitConfirmPopup.gameObject.SetActive(false);
 
+        ButtonPrefab.gameObject.SetActive(false);
+
         this.gameObject.SetActive(false); // monewui           
     }
     public void SetMCP(MCP mcp)
@@ -257,8 +259,10 @@ public class RifRafInGamePopUp : MonoBehaviour
 
     MenuButton CreateButton()
     {
-       // Debug.Log("CreateButton(): " + Time.time);
-        return Instantiate<MenuButton>(ButtonPrefab);
+        Debug.Log("CreateButton(): " + Time.time);
+        MenuButton menuButton = Instantiate<MenuButton>(ButtonPrefab);
+        menuButton.gameObject.SetActive(true);
+        return menuButton;
     }
 
     private void Update()

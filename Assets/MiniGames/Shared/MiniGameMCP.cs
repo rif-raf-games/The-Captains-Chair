@@ -34,6 +34,7 @@ public class MiniGameMCP : MonoBehaviour
 
     [Header("Sound")]
     public List<SoundFX.FXInfo> SoundFXUsedInScene;
+    public string BackgroundMusicName;    
 
     [Header("Misc Stuff")]
     public Text ResultsText;

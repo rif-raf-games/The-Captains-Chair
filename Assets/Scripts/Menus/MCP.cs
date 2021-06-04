@@ -260,7 +260,7 @@ public class MCP : MonoBehaviour
         LoadingImage.gameObject.SetActive(false);
 
         // start the music fade
-        BGMusic.StartFade();
+        BGMusic.StartFadeOut();
 
         if (sceneJump != null)
         {
@@ -294,8 +294,7 @@ public class MCP : MonoBehaviour
             }
         }
         else if(menuButton != null)
-        {
-            Debug.Log("via menu button");
+        {            
             if (ArticyGlobalVariables.Default.Mini_Games.Coming_From_Main_Game == true)
             {
                 loadingImageAOs = menuButton.LoadingScreen.LoadingImages;
@@ -324,7 +323,6 @@ public class MCP : MonoBehaviour
             Sprite s = ((Asset)imageAO).LoadAssetAsSprite();
             loadingTextures.Add(s.texture);
         }
-
 
         if (loadingTextures.Count == 0 || delayTime == 0f || fadeTime == 0f)
         {
@@ -519,6 +517,12 @@ public class MCP : MonoBehaviour
             {
                 SceneManager.SetActiveScene(SceneManager.GetSceneAt(i));
             }
+        }
+
+        if(SceneManager.GetActiveScene().name.Contains("Game_MCP"))
+        {
+            Debug.Log("fade up music");
+            BackgroundMusicPlayer.Play("MiniGames/" + FindObjectOfType<MiniGameMCP>().BackgroundMusicName);           
         }
 
         curImages = new List<RawImage>() { Curtain, SpinWheel };
