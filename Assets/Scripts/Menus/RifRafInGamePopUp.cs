@@ -319,11 +319,14 @@ public class RifRafInGamePopUp : MonoBehaviour
 
     void ClearContent()
     {
-       // Debug.Log("**************** ClearContent()");
+        Debug.Log("**************** ClearContent()");
         ToggleContent(true);
         foreach (Transform child in ExchangeContent.transform) Destroy(child.gameObject);
         foreach (Transform child in TasksContent.transform) Destroy(child.gameObject);
-        foreach (Transform child in CodexContent.transform) Destroy(child.gameObject);
+        foreach (Transform child in CodexContent.transform)
+        {
+            if(child.name != "Job Menu Button IN_SCENE") Destroy(child.gameObject);
+        }
         foreach (Transform child in ShipLogContent.transform) Destroy(child.gameObject);
     }
     void ToggleContent(bool isActive)
