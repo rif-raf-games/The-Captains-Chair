@@ -1,13 +1,13 @@
 ﻿using Articy.The_Captain_s_Chair;
 using Articy.The_Captain_s_Chair.GlobalVariables;
 using Articy.Unity;
-using CodeStage.AdvancedFPSCounter;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.UDP;
 
 public class MCP : MonoBehaviour
 {
@@ -33,9 +33,11 @@ public class MCP : MonoBehaviour
     [Header("Aspect Ratio")]
     public bool TabletMode = false;
     public float AspectVal = 0f;
-    
+   
+    IInitListener listener = new InitListener();
+
     private void Awake()
-    {        
+    {                
         if (MenuUI == null || InGamePopUp == null) 
         {
             string s = "MenuUI==null: " + (MenuUI == null) + ", InGamePopUp==null: " + (InGamePopUp == null);
@@ -75,7 +77,12 @@ public class MCP : MonoBehaviour
         Debug.Log("AspectVal: " + AspectVal + ", TabletMode: " + TabletMode);
     }
 
-   
+    private void Start()
+    {
+        StoreService.Initialize(listener);
+    }
+
+
     private void Update()
     {
         
