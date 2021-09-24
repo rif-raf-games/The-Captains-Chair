@@ -155,7 +155,7 @@ public class RifRafMenuUI : MonoBehaviour
     {
       //  Debug.Log("InitMainMenu()");
         RefreshProfileInfo();
-        BackButton.gameObject.SetActive(false);        
+       // BackButton.gameObject.SetActive(false);        
         MainMenuButtons[(int)eMainMenuButtons.MAIN_GAME].onClick.RemoveAllListeners();
         MainMenuButtons[(int)eMainMenuButtons.CONTINUE].onClick.RemoveAllListeners();
         
