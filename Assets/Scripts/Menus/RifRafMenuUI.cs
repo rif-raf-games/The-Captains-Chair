@@ -155,6 +155,7 @@ public class RifRafMenuUI : MonoBehaviour
     {
       //  Debug.Log("InitMainMenu()");
         RefreshProfileInfo();
+       // ***BRENT SET THIS TO TEST IAP ON THE START MENU SCREEN***
        // BackButton.gameObject.SetActive(false);        
         MainMenuButtons[(int)eMainMenuButtons.MAIN_GAME].onClick.RemoveAllListeners();
         MainMenuButtons[(int)eMainMenuButtons.CONTINUE].onClick.RemoveAllListeners();
