@@ -101,9 +101,14 @@ public class MCP : MonoBehaviour
 
     public void StartDialogueConversation()
     {
+       // Debug.Log("--------------------------------------------------StartDialogueConversation()");
         ShutOffAllUI();
+        ConvoUI.gameObject.SetActive(true);           
+    }
 
-        ConvoUI.gameObject.SetActive(true);
+    public bool IsConvoUIOn()
+    {
+        return ConvoUI.gameObject.activeSelf;
     }
 
     void StartSplashScreen()

@@ -59,11 +59,11 @@ static public class StaticStuff
     [System.Serializable]
     public class SaveDataDic
     {
-        public Dictionary<string, object> saveData;
+        public Dictionary<string, object> saveData;        
 
         public SaveDataDic()
         {
-            saveData = new Dictionary<string, object>();
+            saveData = new Dictionary<string, object>();            
         }
     }
     [System.Serializable]
@@ -71,11 +71,12 @@ static public class StaticStuff
     {
         public int soundFXVolume;
         public int musicFXVolume;
-
-        public Settings(int sound, int music)
+        public bool hasUnlockedFullGame;
+        public Settings(int sound, int music, bool hasUnlockedFullGame)
         {
             soundFXVolume = sound;
             musicFXVolume = music;
+            this.hasUnlockedFullGame = hasUnlockedFullGame;
         }
     }
     
@@ -83,16 +84,45 @@ static public class StaticStuff
     {
         Debug.Log(Application.persistentDataPath);
     }
+    static public string GetProfileName(int profileNum)
+    {
+        string s = Application.persistentDataPath + "/" + PROFILE_NAME_ROOT + profileNum.ToString() + ".dat";
+       // Debug.LogError("mosave - GetProfileName(): " + s);
+        return s;
+    }
+    static public string GetSettingsName()
+    {
+        string s = Application.persistentDataPath + "/" + SETTINGS_FILE_NAME + ".dat";
+      //  Debug.Log(s);
+        return s;
+    }
 
-    static public string SETTINGS_FILE_NAME = "TCCSettings";
-    static public int SoundFXVolume = 100;
-    static public int MusicVolume = 40;
+    static public void LoadSettings()
+    {
+       // ShowDataPath();
+      //  GetSettingsName();
+        //  Debug.LogWarning("LoadSettings()");
+        string saveName = GetSettingsName();
+        if (SaveFileExists(saveName) == false) //{ Debug.LogError("Trying to load settings but it doesn't exist."); return; }
+        {            
+            CreateNewSettings();
+        }        
+
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream file = File.Open(saveName, FileMode.Open);
+        Settings settings = (Settings)bf.Deserialize(file);
+        SoundFXVolume = settings.soundFXVolume;
+        MusicVolume = settings.musicFXVolume;
+        file.Close();
+
+    }
+
     static public void SaveCurrentSettings(string s)
     {
         //Debug.LogWarning("SaveCurrentSettings(): " + s);
         string saveName = GetSettingsName();
 
-        Settings settings = new Settings(SoundFXVolume, MusicVolume);
+        Settings settings = new Settings(SoundFXVolume, MusicVolume, HasUnlockedFullGame);
 
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file;
@@ -107,6 +137,13 @@ static public class StaticStuff
         bf.Serialize(file, settings);
         file.Close();
     }
+
+    static public string SETTINGS_FILE_NAME = "TCCSettings";
+    static public int SoundFXVolume = 100;
+    static public int MusicVolume = 100;
+    static public bool HasUnlockedFullGame = false;
+
+    
 
     static public void SaveCurrentProfile(string s)
     {
@@ -141,6 +178,7 @@ static public class StaticStuff
 
         SoundFXVolume = 100;
         MusicVolume = 100;
+        HasUnlockedFullGame = false;
         SaveCurrentSettings("CreateNewSettings()");
     }
 
@@ -164,23 +202,7 @@ static public class StaticStuff
         Current_Profile_Num = profile;
     }
 
-    static public void LoadSettings()
-    {
-      //  Debug.LogWarning("LoadSettings()");
-        string saveName = GetSettingsName();
-        if (SaveFileExists(saveName) == false) //{ Debug.LogError("Trying to load settings but it doesn't exist."); return; }
-        {
-            CreateNewSettings();
-        }
-        
-        BinaryFormatter bf = new BinaryFormatter();
-        FileStream file = File.Open(saveName, FileMode.Open);
-        Settings settings = (Settings)bf.Deserialize(file);
-        SoundFXVolume = settings.soundFXVolume;
-        MusicVolume = settings.musicFXVolume;       
-        file.Close();
-
-    }
+    
     static public void LoadCurrentProfile() // called from LoadProfileStartScene()
     {
       //  Debug.LogWarning("LoadCurrentProfile()");
@@ -191,6 +213,7 @@ static public class StaticStuff
         FileStream file = File.Open(saveName, FileMode.Open);
         SaveDataDic saveData = (SaveDataDic)bf.Deserialize(file);
         ArticyDatabase.DefaultGlobalVariables.Variables = saveData.saveData;
+        
         file.Close();
     }
     static public void LoadProfileStartScene() // called from avatar select AND main menu continue
@@ -260,20 +283,7 @@ static public class StaticStuff
             }            
         }
         return saveFiles;
-    }         
-    
-    static public string GetProfileName(int profileNum)
-    {
-        string s = Application.persistentDataPath + "/" + PROFILE_NAME_ROOT + profileNum.ToString() + ".dat";        
-        //Debug.LogError("mosave - GetProfileName(): " + s);
-        return s;            
-    }
-    static public string GetSettingsName()
-    {
-        string s = Application.persistentDataPath + "/" + SETTINGS_FILE_NAME + ".dat";
-        //Debug.Log(s);
-        return s;
-    }
+    }                
 
     
 

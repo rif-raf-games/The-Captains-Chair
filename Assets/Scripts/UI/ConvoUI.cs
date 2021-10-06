@@ -13,18 +13,19 @@ public class ConvoUI : MonoBehaviour
     public Text SpeakerText;
     public Text DataText;
     public Image SpeakerImage;
+    public Button SkipMovieButton;
     public float DefaultTypewriterSpeed = 20f;
     public float TypewriterSpeed;
     public GameObject[] DialogueOptions;
 
-    public ArticyFlow ArticyFlow;
+    public ArticyFlow ArticyFlow;    
     MCP MCP;
     bool TextTyping = false;
     bool IsInteractive = true;
     List<ArticyObject> CurValidAOTargets = null;
     IList<Branch> CurDialogueOptions = null;
 
-    public CCPlayer Player;
+   // public CCPlayer Player;
     Coroutine TypewriterCoroutine;
     string CurDialogueText;
 
@@ -35,7 +36,7 @@ public class ConvoUI : MonoBehaviour
     private void Awake()
     {
         TypewriterSpeed = DefaultTypewriterSpeed;
-       
+        SetSkipMovieButtonActive(false);
     }    
 
     public void SetSceneArticyFlowObject()
@@ -51,7 +52,7 @@ public class ConvoUI : MonoBehaviour
     {
         StaticStuff.PrintUI("going to set up a dialogue fragment with speaker: " + dialogueFrag.Speaker + " with text: " + dialogueFrag.Text + ", tech name: " + dialogueFrag.TechnicalName);
         //Debug.Log("going to set up a dialogue fragment with speaker: " + dialogueFrag.Speaker + ", isInteractive: " + isInteractive + ", with text: " + dialogueFrag.Text + ", tech name: " + dialogueFrag.TechnicalName);
-        this.MCP.StartDialogueConversation();
+        this.MCP.StartDialogueConversation();        
         if (dialogueOptions != null)
         {   // if dialogeOptions is null then we're calling this from a debug spot
             StaticStuff.PrintUI("this dialogue fragment has: " + dialogueOptions.Count + " options");
@@ -117,6 +118,17 @@ public class ConvoUI : MonoBehaviour
     {
         foreach (GameObject go in DialogueOptions) go.SetActive(false);
     }
+
+    public bool IsSkipMovieButtonActive()
+    {
+        return SkipMovieButton.gameObject.activeSelf;
+    }
+    public void SetSkipMovieButtonActive(bool isActive)
+    {
+       // Debug.Log("SetSkipMovieButtonActive(): " + isActive);
+        SkipMovieButton.gameObject.SetActive(isActive);
+    }
+
     public void TurnOnValidButtons()
     {
         for (int i = 0; i < NumValidButtons; i++)

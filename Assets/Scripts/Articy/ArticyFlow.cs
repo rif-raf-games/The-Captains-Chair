@@ -578,8 +578,56 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
 
     public DialogueFragment DebugDF = null;
     public bool SHOW_SKIP_BUTTON = false;
+    public void SkipDialogue()
+    {
+        DialogueFragment df = CurPauseObject as DialogueFragment;
+        if (df == null) return;
+
+        DebugDF = df;
+        ArticyObject curAO = CurPauseObject as ArticyObject;
+        //  int numCheck = 0;
+        bool iSaySo = true;
+        //Debug.Log("*************************************skip");
+        while (iSaySo == true)
+        {
+            // numCheck++;
+            // Debug.LogWarning("curAO Type: " + curAO.GetType() + ", with TechnicalName: " + curAO.TechnicalName, this);
+
+            List<ArticyObject> validArticyObjects = GetValidArticyObjects(curAO);
+            if (validArticyObjects.Count == 0)
+            {
+                //  Debug.LogWarning("No valid branches so we must be at the end: " + curAO.TechnicalName);
+                iSaySo = false;
+                CurPauseObject = DebugDF as IFlowObject;
+                CurBranches.Clear();
+                validArticyObjects = GetValidArticyObjects(DebugDF as ArticyObject);
+                if (validArticyObjects.Count == 1 && (validArticyObjects[0] as Dialogue) != null)
+                {
+                    validArticyObjects = GetValidArticyObjects(validArticyObjects[0]);
+                }
+                // Debug.LogWarning("num valid branches at end: " + validArticyObjects.Count);
+                ActiveCALPauseObjects.Clear();
+                FlowFragsVisited.Clear();
+                SetNextBranch(null);
+                NextFragment = null;
+                ConvoUI.ShowDialogueFragment(DebugDF, CurPauseObject, null, IsDialogueFragmentsInteractive, TypewriterSpeed, validArticyObjects); // show the UI                        
+                ConvoUI.TurnOnValidButtons();
+            }
+            else
+            {
+                int choice = UnityEngine.Random.Range(0, validArticyObjects.Count);
+                //  Debug.LogWarning("You chose option index: " + choice);
+                curAO = validArticyObjects[choice];
+                if (curAO as DialogueFragment != null)
+                {
+                    // Debug.Log("We now have a new DebugDF: " + curAO.TechnicalName);
+                    DebugDF = curAO as DialogueFragment;
+                }
+            }
+        }
+    }
 #if true
-   void OnGUI()
+    void OnGUI()
     {
       //  if (SHOW_SKIP_BUTTON == false) return;
         if (CurArticyState == eArticyState.DIALOGUE && CurPauseObject != null)
