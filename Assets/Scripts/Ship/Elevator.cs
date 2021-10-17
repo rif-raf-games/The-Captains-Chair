@@ -6,8 +6,8 @@ public class Elevator : MonoBehaviour
 {
     public float TopY, BottomY;
     public int TopFloor, BottomFloor;
-    [SerializeField]
-    int CurrentFloor;
+    
+    public int CurrentFloor;
 
     Vector3 StartPos, EndPos;
     bool IsMoving = false;

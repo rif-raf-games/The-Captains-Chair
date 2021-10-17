@@ -71,15 +71,67 @@ static public class StaticStuff
     {
         public int soundFXVolume;
         public int musicFXVolume;
-        public bool hasUnlockedFullGame;
-        public Settings(int sound, int music, bool hasUnlockedFullGame)
+       // public bool hasUnlockedFullGame;
+        public Settings(int sound, int music/*, bool hasUnlockedFullGame*/)
         {
             soundFXVolume = sound;
             musicFXVolume = music;
-            this.hasUnlockedFullGame = hasUnlockedFullGame;
+           // this.hasUnlockedFullGame = hasUnlockedFullGame;
         }
     }
-    
+
+    static public void SaveCurrentSettings(string s)
+    {
+        //Debug.LogWarning("SaveCurrentSettings(): " + s);
+        string saveName = GetSettingsName();
+
+        Settings settings = new Settings(SoundFXVolume, MusicVolume/*, HasUnlockedFullGame*/);
+
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream file;
+        if (SaveFileExists(saveName) == true)
+        {
+            file = File.Open(saveName, FileMode.Open);
+        }
+        else
+        {
+            file = File.Create(saveName);
+        }
+        bf.Serialize(file, settings);
+        file.Close();
+    }
+
+    static public void LoadSettings()
+    {        
+        //  Debug.LogWarning("LoadSettings()");
+        string saveName = GetSettingsName();
+        if (SaveFileExists(saveName) == false) //{ Debug.LogError("Trying to load settings but it doesn't exist."); return; }
+        {
+            CreateNewSettings();
+        }
+
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream file = File.Open(saveName, FileMode.Open);
+        Settings settings = (Settings)bf.Deserialize(file);
+        SoundFXVolume = settings.soundFXVolume;
+        MusicVolume = settings.musicFXVolume;
+       // HasUnlockedFullGame = settings.hasUnlockedFullGame;
+        file.Close();
+    }
+
+    static public void CreateNewSettings()
+    {
+        // Debug.LogWarning("CreateNewSettings()");
+        string saveName = GetSettingsName();
+
+        if (SaveFileExists(saveName) == true) { Debug.LogError("Cannot create new settings over existing settings data."); return; }
+
+        SoundFXVolume = 100;
+        MusicVolume = 100;
+        HasUnlockedFullGame = false;
+        SaveCurrentSettings("CreateNewSettings()");
+    }
+
     static public void ShowDataPath()
     {
         Debug.Log(Application.persistentDataPath);
@@ -97,46 +149,9 @@ static public class StaticStuff
         return s;
     }
 
-    static public void LoadSettings()
-    {
-       // ShowDataPath();
-      //  GetSettingsName();
-        //  Debug.LogWarning("LoadSettings()");
-        string saveName = GetSettingsName();
-        if (SaveFileExists(saveName) == false) //{ Debug.LogError("Trying to load settings but it doesn't exist."); return; }
-        {            
-            CreateNewSettings();
-        }        
+    
 
-        BinaryFormatter bf = new BinaryFormatter();
-        FileStream file = File.Open(saveName, FileMode.Open);
-        Settings settings = (Settings)bf.Deserialize(file);
-        SoundFXVolume = settings.soundFXVolume;
-        MusicVolume = settings.musicFXVolume;
-        file.Close();
-
-    }
-
-    static public void SaveCurrentSettings(string s)
-    {
-        //Debug.LogWarning("SaveCurrentSettings(): " + s);
-        string saveName = GetSettingsName();
-
-        Settings settings = new Settings(SoundFXVolume, MusicVolume, HasUnlockedFullGame);
-
-        BinaryFormatter bf = new BinaryFormatter();
-        FileStream file;
-        if (SaveFileExists(saveName) == true)
-        {
-            file = File.Open(saveName, FileMode.Open);
-        }
-        else
-        {
-            file = File.Create(saveName);
-        }
-        bf.Serialize(file, settings);
-        file.Close();
-    }
+    
 
     static public string SETTINGS_FILE_NAME = "TCCSettings";
     static public int SoundFXVolume = 100;
@@ -169,18 +184,7 @@ static public class StaticStuff
         file.Close();
     }
 
-    static public void CreateNewSettings()
-    {
-       // Debug.LogWarning("CreateNewSettings()");
-        string saveName = GetSettingsName();
-
-        if (SaveFileExists(saveName) == true) { Debug.LogError("Cannot create new settings over existing settings data."); return; }
-
-        SoundFXVolume = 100;
-        MusicVolume = 100;
-        HasUnlockedFullGame = false;
-        SaveCurrentSettings("CreateNewSettings()");
-    }
+   
 
     public static int Current_Profile_Num = 1;    
     static public void CreateNewProfile(int avatar, int profile) // called from from avatar select

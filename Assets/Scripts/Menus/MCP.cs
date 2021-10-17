@@ -8,6 +8,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.UDP;
+using System.Linq;
+using System;
 
 public class MCP : MonoBehaviour
 {
@@ -32,9 +34,7 @@ public class MCP : MonoBehaviour
     
     [Header("Aspect Ratio")]
     public bool TabletMode = false;
-    public float AspectVal = 0f;
-   
-    IInitListener listener = new InitListener();
+    public float AspectVal = 0f;      
 
     private void Awake()
     {                
@@ -74,22 +74,14 @@ public class MCP : MonoBehaviour
         float h = Screen.height;
         AspectVal = w / h;
         TabletMode = (AspectVal < 1.44f);
-        Debug.Log("AspectVal: " + AspectVal + ", TabletMode: " + TabletMode);
-    }
-
-    private void Start()
-    {
-        StoreService.Initialize(listener);
-    }
-
+       // Debug.Log("AspectVal: " + AspectVal + ", TabletMode: " + TabletMode);
+    }   
 
     private void Update()
     {
         
     }
-
     
-
     public void StartPopupPanel()
     {
         //Debug.Log("StartPopupPanel()");
@@ -500,6 +492,7 @@ public class MCP : MonoBehaviour
                 index++;
             }
         }
+        
         /* if (curSceneName.Contains("E1.Exchange") && sceneName.Contains("E1.Plaza"))
          {
              GameObject go = GameObject.Find("Captain");
@@ -535,6 +528,36 @@ public class MCP : MonoBehaviour
         {
             Debug.Log("fade up music");
             BackgroundMusicPlayer.Play("MiniGames/" + FindObjectOfType<MiniGameMCP>().BackgroundMusicName);           
+        }
+
+        // string elevatorPosString = ArticyGlobalVariables.Default.Save_Info.Majestic_Elevators;
+        //   string[] elevatorPosiitions = elevatorPosString.Split(',');
+
+        string elevatorPosString = ArticyGlobalVariables.Default.Save_Info.Majestic_Elevators;
+        string[] elevatorPositions = elevatorPosString.Split(',');
+        //Debug.Log("Loading next scene elevatorPosString: " + elevatorPosString + ", elevatorPositions count: " + elevatorPositions.Length);
+        List<Elevator> elevators = FindObjectsOfType<Elevator>().ToList();
+        if (elevators.Count > 0 && elevatorPosString != "")
+        {
+            List<Elevator> sortedElevatorList = elevators.OrderBy(o => o.name).ToList<Elevator>();                       
+            int index = 0;
+            foreach (Elevator elevator in sortedElevatorList)
+            {
+                int elevatorCurFloor = Int32.Parse(elevatorPositions[index]);
+             //   Debug.Log("elevator: " + elevator.name + " is on floor: " + elevator.CurrentFloor + " and should be on floor: " + elevatorCurFloor);
+                if(elevator.CurrentFloor != elevatorCurFloor)
+                {
+                //    Debug.LogWarning("elevator: " + elevator.name + " is on floor: " + elevator.CurrentFloor + " but needs to go to: " + elevatorCurFloor);
+                    elevator.CurrentFloor = elevatorCurFloor;
+                    float yPos = (elevatorCurFloor == elevator.TopFloor ? elevator.TopY : elevator.BottomY);
+                    Vector3 pos = new Vector3(elevator.transform.localPosition.x, yPos, elevator.transform.localPosition.z);
+                    elevator.transform.localPosition = pos;
+                }
+                    //   elevatorPositions += elevator.CurrentFloor.ToString() + ",";
+            }
+          //  elevatorPositions.Remove(elevatorPositions.Length - 2);
+          //  ArticyGlobalVariables.Default.Save_Info.Majestic_Elevators = elevatorPositions;
+          //  Debug.Log("elevatorPosition: " + elevatorPositions);
         }
 
         curImages = new List<RawImage>() { Curtain, SpinWheel };
