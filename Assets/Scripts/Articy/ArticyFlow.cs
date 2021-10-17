@@ -489,29 +489,28 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                 charPositions += pos + ",";
             }
             charPositions = charPositions.Remove(charPositions.Length - 1, 1);
-            ArticyGlobalVariables.Default.Save_Info.Saved_Positions = charPositions;
-
-            List<Elevator> elevators = FindObjectsOfType<Elevator>().ToList();
-            if(elevators.Count > 0)
-            {
-                string elevatorPositions = "";
-                List<Elevator> sortedList = elevators.OrderBy(o => o.name).ToList<Elevator>();
-                foreach (Elevator elevator in sortedList)
-                {
-                   // Debug.Log("elevator: " + elevator.name + " is on floor: " + elevator.CurrentFloor);
-                    elevatorPositions += elevator.CurrentFloor.ToString() + ",";
-                }
-                elevatorPositions = elevatorPositions.Remove(elevatorPositions.Length - 1);
-                ArticyGlobalVariables.Default.Save_Info.Majestic_Elevators = elevatorPositions;
-              //  Debug.Log("elevatorPosition: " + elevatorPositions);
-            }
-            
+            ArticyGlobalVariables.Default.Save_Info.Saved_Positions = charPositions;                        
         }
         else
         {
             ArticyGlobalVariables.Default.Save_Info.Positions_To_Save = "";
             ArticyGlobalVariables.Default.Save_Info.Saved_Positions = "";
-        }     
+        }
+
+        List<Elevator> elevators = FindObjectsOfType<Elevator>().ToList();
+        if (elevators.Count > 0)
+        {
+            string elevatorPositions = "";
+            List<Elevator> sortedList = elevators.OrderBy(o => o.name).ToList<Elevator>();
+            foreach (Elevator elevator in sortedList)
+            {
+                // Debug.Log("elevator: " + elevator.name + " is on floor: " + elevator.CurrentFloor);
+                elevatorPositions += elevator.CurrentFloor.ToString() + ",";
+            }
+            elevatorPositions = elevatorPositions.Remove(elevatorPositions.Length - 1);
+            ArticyGlobalVariables.Default.Save_Info.Majestic_Elevators = elevatorPositions;
+            //  Debug.Log("elevatorPosition: " + elevatorPositions);
+        }
 
         if (savePoint.Template.Save_Info.AnalyticsToTrack != "")
         {

@@ -528,10 +528,7 @@ public class MCP : MonoBehaviour
         {
             Debug.Log("fade up music");
             BackgroundMusicPlayer.Play("MiniGames/" + FindObjectOfType<MiniGameMCP>().BackgroundMusicName);           
-        }
-
-        // string elevatorPosString = ArticyGlobalVariables.Default.Save_Info.Majestic_Elevators;
-        //   string[] elevatorPosiitions = elevatorPosString.Split(',');
+        }        
 
         string elevatorPosString = ArticyGlobalVariables.Default.Save_Info.Majestic_Elevators;
         string[] elevatorPositions = elevatorPosString.Split(',');
@@ -552,12 +549,8 @@ public class MCP : MonoBehaviour
                     float yPos = (elevatorCurFloor == elevator.TopFloor ? elevator.TopY : elevator.BottomY);
                     Vector3 pos = new Vector3(elevator.transform.localPosition.x, yPos, elevator.transform.localPosition.z);
                     elevator.transform.localPosition = pos;
-                }
-                    //   elevatorPositions += elevator.CurrentFloor.ToString() + ",";
-            }
-          //  elevatorPositions.Remove(elevatorPositions.Length - 2);
-          //  ArticyGlobalVariables.Default.Save_Info.Majestic_Elevators = elevatorPositions;
-          //  Debug.Log("elevatorPosition: " + elevatorPositions);
+                }                    
+            }          
         }
 
         curImages = new List<RawImage>() { Curtain, SpinWheel };
