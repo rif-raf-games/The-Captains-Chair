@@ -9,17 +9,28 @@ using UnityEngine.UI;
 
 public class RifRafInGamePopUp : MonoBehaviour
 {
-    public GameObject MainPopupPanel;
+    public MCP MCP;
+    [Header("Main Panel Stuff")]
+    public GameObject MainPopupPanel;    
     public GameObject AcceptButton;
     public GameObject ResetPuzzleButton;
     public GameObject AcceptJobText, SuspendJobText;
     public MissionHint MissionHint;
-    public GameObject QuitConfirmPopup;
-    public RifRafExchangeJobBoard ExchangeBoard;
+    public GameObject QuitConfirmPopup;    
+    public RifRafExchangeJobBoard ExchangeBoard;        
     public VolumeControl MusicVolume;
     public VolumeControl SoundFXVolume;
-    public MCP MCP;
     public Text Cash;
+
+    [Header("IAP Panel Stuff")]
+    public GameObject IAPPanel;
+    public GameObject IAPQuitConfirmPopup;
+    public GameObject IAPBuyPopup;
+    public GenericPopup GenericPopup;
+    /*public GameObject IAPResultsPopup;
+    public Text IAPTextPopupText;
+    public Button IAPResultsButton;*/
+
     [Header("MainPopUpButtons")]
     public Button[] MainPopUpButtons;
 
@@ -30,13 +41,13 @@ public class RifRafInGamePopUp : MonoBehaviour
 
         MainPopupPanel.SetActive(false);       
         this.MissionHint.Init();
-        MissionHint.gameObject.SetActive(false);
-        //ExchangeBoard.gameObject.SetActive(false); // monewui
+        MissionHint.gameObject.SetActive(false);        
         QuitConfirmPopup.gameObject.SetActive(false);
-
+        IAPPanel.gameObject.SetActive(false);
         ButtonPrefab.gameObject.SetActive(false);
+        GenericPopup.gameObject.SetActive(false);
 
-        this.gameObject.SetActive(false); // monewui           
+        this.gameObject.SetActive(false);        
     }
     public void SetMCP(MCP mcp)
     {
@@ -49,15 +60,19 @@ public class RifRafInGamePopUp : MonoBehaviour
         //Debug.Log("OnClickBurger()");
         if (PopupActiveCheck() == false) return;
 
-        // burger won't be clickable with new UI so we don't need to check this        
-        if (MainPopupPanel.activeSelf == true)
+        if(IAPPanel.activeSelf == true)
+        {
+            // we don't want the burger button to do anything with the IAP stuff open
+            return;
+        }        
+        if (MainPopupPanel.activeSelf == true )
         {
             this.MCP.StartFreeRoam();            
             StaticStuff.SaveCurrentSettings("OnClickBurger()");
         }
         else
         {
-            this.MCP.StartPopupPanel();
+            this.MCP.StartPopupPanel(); // moiap - start of turning on UI
             Cash.text = ArticyGlobalVariables.Default.Captains_Chair.Crew_Money.ToString();
         }      
     }
@@ -93,10 +108,139 @@ public class RifRafInGamePopUp : MonoBehaviour
     enum eInGameMenus { EXCHANGE, TASKS, CODEX, SHIPS_LOG};
     eInGameMenus CurMenu;
     
-    public void TurnOnPopupMenu( bool initContents )
+    public void TurnOnIAPPanel()
     {
-         //Debug.Log("RifRafInGamePopUp.TurnOnPopupMenu(): initContents: " + initContents);
-       // Debug.Log("------------------------------TurnOnPopupMenu() num menu buttons: " + GetNumMenuButtons() + ", numTimes: " + numTimes++);
+        Debug.Log("TurnOnIAPPanel()");
+        //InGamePopUp.gameObject.SetActive(false);
+        this.gameObject.SetActive(true);
+        IAPPanel.SetActive(true);
+        IAPQuitConfirmPopup.SetActive(false);
+        IAPBuyPopup.SetActive(false);        
+        //IAPResultsPopup.SetActive(false);
+       // IAPResultsButton.gameObject.SetActive(false);
+    }
+
+    // QUIT TO MAIN
+    public void OnClickIAPQuitToMainMenu()
+    {
+        Debug.Log("OnClickIAPQuitToMainMenu()");        
+        if (IAPQuitConfirmPopup.activeSelf == true) return;
+        IAPQuitConfirmPopup.gameObject.SetActive(true);        
+    }
+    // QUIT TO MAIN END
+
+    // QUIT TO MAIN CONFIRM
+    public void OnClickIAPQuitToMainConfirm()
+    {
+        Debug.Log("OnClickIAPQuitToMainConfirm()");
+        IAPQuitConfirmPopup.gameObject.SetActive(false);
+        this.MCP.LoadNextScene("Front End Launcher");
+    }
+
+    public void OnClickIAPQuitToMainCancel()
+    {
+        Debug.Log("OnClickQuitToMainCancel()");        
+        IAPQuitConfirmPopup.gameObject.SetActive(false);
+    }
+    // QUIT TO MAIN END
+
+    // ON CLICK BUY
+    public void OnClickIAPUnlockButton()
+    {
+        Debug.Log("OnClickIAPUnlockButton()");
+        IAPBuyPopup.SetActive(true);
+    }    
+
+    public void OnClickIAPCancelUnlock()
+    {
+        Debug.Log("OnClickIAPCancelUnlock()");
+        IAPBuyPopup.SetActive(false);
+    }
+
+    public void OnClickIAPBuyUnlock()
+    {
+        Debug.Log("OnClickIAPBuyUnlock()");      
+        FindObjectOfType<IAPManager>().PurchaseButtonClick(IAPManager.CUR_SAVE_FILE);
+    }   
+    
+    public void IAPPurchaseSuccessful()
+    {
+        Debug.Log("UI() IAPPurchaseSuccessful()");
+        GenericPopup.gameObject.SetActive(true);
+        GenericPopup.TitleText.text = "Congrats!";
+        GenericPopup.MainText.text = "Purchase Successful"; ;
+        GenericPopup.Button01.GetComponentInChildren<Text>().text = "OK";
+        GenericPopup.Button01.onClick.RemoveAllListeners();
+        GenericPopup.Button01.onClick.AddListener(this.OnClickIAPResults);
+        GenericPopup.Button02.gameObject.SetActive(false);
+    }    
+
+    public void IAPPurchaseFailed(string message)
+    {
+        Debug.Log("UI() IAPPurchaseFailed()");
+        GenericPopup.gameObject.SetActive(true);
+        GenericPopup.TitleText.text = "Purchase Failed";
+        GenericPopup.MainText.text = message;
+        GenericPopup.Button01.GetComponentInChildren<Text>().text = "OK";
+        GenericPopup.Button01.onClick.RemoveAllListeners();
+        GenericPopup.Button01.onClick.AddListener(this.OnClickIAPResults);
+        GenericPopup.Button02.gameObject.SetActive(false);        
+    }
+
+    public void OnClickIAPResults()
+    {
+        Debug.Log("OnClickIAPResults()");
+        if(GenericPopup.MainText.text.Contains("Success"))
+        {
+            IAPPanel.SetActive(false);
+            this.GenericPopup.gameObject.SetActive(false);
+            FindObjectOfType<IAPTest>().IAPPurchaseSuccessful();
+        }
+        else if(GenericPopup.MainText.text.Contains("Error") || GenericPopup.MainText.text.Contains("Failed") || GenericPopup.MainText.text.Contains("fake"))
+        {
+            this.GenericPopup.gameObject.SetActive(false);
+        }
+        else if(GenericPopup.MainText.text.Contains("init"))
+        {
+            this.GenericPopup.gameObject.SetActive(false);
+        }
+    }
+
+    public void SetupResultsPopup(string title, string message)
+    {
+        Debug.Log("SetupResultsPopup() message: " + message);
+        GenericPopup.gameObject.SetActive(true);
+        GenericPopup.TitleText.text = title;
+        GenericPopup.MainText.text = message;
+        GenericPopup.Button01.GetComponentInChildren<Text>().text = "OK";
+        GenericPopup.Button01.onClick.RemoveAllListeners();
+        GenericPopup.Button01.onClick.AddListener(this.OnClickIAPResults);
+        GenericPopup.Button02.gameObject.SetActive(false);
+        // IAPResultsPopup.gameObject.SetActive(true);
+        //  IAPTextPopupText.text = "Error: " + message;
+        //  IAPResultsButton.gameObject.SetActive(true);
+        //  IAPResultsButton.GetComponentInChildren<Text>().text = "OK";
+    }
+    // END ON IAP BUY
+
+    // IAP RESTORE
+    public void OnClickIAPRestore()
+    {
+        FindObjectOfType<IAPManager>().RestoreButtonClick();
+    }
+
+    public void IAPPurchasesRestored()
+    {
+        Debug.Log("IAPPurchasesRestored()");       
+    }
+    // END IAP RESTORE
+
+    /************************ IAP END **************************************/
+
+    public void TurnOnSetUpMainPopupPanel( bool initContents )
+    {
+       //  Debug.Log("RifRafInGamePopUp.TurnOnPopupMenu(): initContents: " + initContents);
+      //  Debug.Log("------------------------------TurnOnPopupMenu() num menu buttons: " + GetNumMenuButtons() + ", numTimes: " + numTimes++);
         ToggleMainPopupPanel(true);
         if (initContents == false) return;
         int debugVar = 0;
@@ -259,7 +403,7 @@ public class RifRafInGamePopUp : MonoBehaviour
 
     MenuButton CreateButton()
     {
-        Debug.Log("CreateButton(): " + Time.time);
+       // Debug.Log("CreateButton(): " + Time.time);
         MenuButton menuButton = Instantiate<MenuButton>(ButtonPrefab);
         menuButton.gameObject.SetActive(true);
         return menuButton;
@@ -289,24 +433,15 @@ public class RifRafInGamePopUp : MonoBehaviour
         return CurJobButton;
     }
 
-    /*private void OnGUI()
-    {
-        string s = "CurMenu: " + CurMenu + "\nCurButton: " + (CurJobButton == null ? "null" : CurJobButton.JobNameText.text);
-        if(GUI.Button(new Rect(0,0,300,100), s ))
-        {
-            ClearContent();          
-        }
-    }*/
-
     void InitMenuButtonInfo(MenuButton button, eInGameMenus menu)
     {
-        /*string s = "InitMenuButtonInfo(): ";
+        string s = "InitMenuButtonInfo(): ";
         if (button == null) 
             s += "null button, "; 
         else 
             s += "button: " + button.name + ", ";
         s += menu.ToString();
-        Debug.Log(s);*/
+        Debug.Log(s);
 
         CurMenu = menu;
         CurJobButton = button;        

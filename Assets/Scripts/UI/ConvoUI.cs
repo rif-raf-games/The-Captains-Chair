@@ -268,16 +268,19 @@ public class ConvoUI : MonoBehaviour
    
     public void EndConversation()
     { 
-        //Debug.LogWarning("----------------------- EndConversation()");
+        Debug.LogWarning("----------------------- EndConversation()");
         this.MCP.StartFreeRoam();        
     }
     
     public void OnClickDialogueButton(int buttonIndex)
     {
-        //Debug.LogError("OnClickDialogueButton() buttonIndex: " + buttonIndex + ", ArticyFlow hash: " + ArticyFlow.GetHashCode());        
+        Debug.Log("OnClickDialogueButton() buttonIndex: " + buttonIndex + ", ArticyFlow hash: " + ArticyFlow.GetHashCode());        
         ArticyObject target = null;
         if (CurValidAOTargets != null) target = CurValidAOTargets[buttonIndex];
-        if (ArticyFlow == null) SetSceneArticyFlowObject(); // needed if starting a scene not via FE
+        if (ArticyFlow == null)
+        {
+            SetSceneArticyFlowObject(); // needed if starting a scene not via FE
+        }
         ArticyFlow.ConvoButtonClicked(buttonIndex, target);
     }
     

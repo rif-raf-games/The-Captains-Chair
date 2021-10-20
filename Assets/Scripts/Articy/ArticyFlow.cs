@@ -144,7 +144,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         
         FlowPlayer.StartOn = convoStart;
         if (Player != null) Player.ToggleMovementBlocked(true);
-        this.MCP.ShutOffAllUI();
+        this.MCP.ShutOffAllUI(); // ArticyFlow.CheckIfDialogueShouldStart() == true
 
         return true;
     }
@@ -330,7 +330,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                         StageDirectionPlayer.ShutOnAllAIs();
                     }
                     
-                    SetArticyState(eArticyState.FREE_ROAM);                    
+                    SetArticyState(eArticyState.FREE_ROAM);     // moiap - this is ArticyFlow.OnBranchesUpdated where we're calling EndCoversation               
                     ConvoUI.EndConversation();
                     FlowFragsVisited.Clear();
                     if (this.MiniGameMCP != null) this.MiniGameMCP.CurrentDiaogueEnded();                   
@@ -359,6 +359,13 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             }            
             else if (CurPauseObject.GetType().Equals(typeof(Scene_Jump)))
             {   // Jump to the scene specified
+                if(this.MCP.SaveNextObjectForIAP == true)
+                {
+                    Debug.Log("OK we want to hold the dialogue until we handle the IAP stuff so save the current pause object");
+                    this.MCP.IAPPauseObject = CurPauseObject;                    
+                    this.MCP.StartIAPPanel();
+                    return;
+                }
                 Scene_Jump sj = CurPauseObject as Scene_Jump;
                 //SceneManager.Load Scene(sj.Template.Next_Game_Scene.Scene_Name);
                 this.ConvoUI.gameObject.SetActive(false); // don't use EndConversation because that also shuts off the burger menu temporarily.  This UI needs an enema
@@ -407,7 +414,8 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             }
             else if(CurPauseObject.GetType().Equals(typeof(Save_Point)))
             {
-                StaticStuff.PrintFlowBranchesUpdate("We're on a Save_Point, so parse the data and save it", this);                
+                StaticStuff.PrintFlowBranchesUpdate("We're on a Save_Point, so parse the data and save it", this);
+                Debug.Log("We're on a Save_Point, so parse the data and save it");
                 HandleSavePoint(CurPauseObject as Save_Point);                
                 SetNextBranch(CurBranches[0]);
             }
@@ -596,7 +604,11 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     public void SkipDialogue()
     {
         DialogueFragment df = CurPauseObject as DialogueFragment;
-        if (df == null) return;
+        if (df == null)
+        {
+            Debug.Log("SkipDialogue(): df is null so bail");
+            return;
+        }
 
         DebugDF = df;
         ArticyObject curAO = CurPauseObject as ArticyObject;
@@ -763,18 +775,19 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         if (df != null)
         {
             StaticStuff.PrintUI("Chosen branch is a dialogue fragment, so just let the engine handle the next phase.");
+            Debug.Log("--------------------------- Chosen branch is a dialogue fragment, so just let the engine handle the next phase.");
         }
         else if (target.GetType().Equals(typeof(Character_Action_List_Template)))
         {
             StaticStuff.PrintUI("Next thing is a Character_Actions_List_Template, so shut off the UI and let the action list do it's thing.");
-            //Debug.Log("---------------------------Next thing is a Character_Actions_List_Template, so shut off the UI and let the action list do it's thing.");
+            Debug.Log("---------------------------Next thing is a Character_Actions_List_Template, so shut off the UI and let the action list do it's thing.");
             //ConvoUI.EndConversation();
         }
         else
         {
            // Debug.Log("type is: " + CurBranches[buttonIndex].Target.GetType());                                          
             StaticStuff.PrintUI("Chosen branch isn't a DialogueFragment or a Character_Movement so for now just assume we're done talking and shut off the UI");
-            //Debug.Log("----------------------------------- Chosen branch isn't a DialogueFragment or a Character_Movement so for now just assume we're done talking and shut off the UI");
+            Debug.Log("----------------------------------- Chosen branch isn't a DialogueFragment or a Character_Movement so for now just assume we're done talking and shut off the UI");
            // ConvoUI.EndConversation();            
         }
     }

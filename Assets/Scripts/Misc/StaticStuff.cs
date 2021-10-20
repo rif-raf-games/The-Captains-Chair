@@ -21,34 +21,39 @@ static public class StaticStuff
     public const string PROFILE_NAME_ROOT = "tcc_savegame_00";
     public const string CURRENT_PROFILE_NAME = "tcc_savegameid";
 
-   /* static public void SetOrientation(eOrientation orientation, string screenName)
-    {
-        //Debug.Log("=============================================== SetOrientation(): " + orientation.ToString() + " from: " + screenName);
-        if(orientation == eOrientation.LANDSCAPE)
-        {   // landscape
-            Screen.autorotateToPortrait = false;
-            Screen.autorotateToPortraitUpsideDown = false;
-            Screen.autorotateToLandscapeLeft = true;
-            Screen.autorotateToLandscapeRight = true;
-            Screen.orientation = ScreenOrientation.LandscapeLeft;
-            if (Input.deviceOrientation == DeviceOrientation.Portrait || Input.deviceOrientation == DeviceOrientation.PortraitUpsideDown)
-            {
-                Screen.orientation = ScreenOrientation.LandscapeLeft;
-            }
-        }
-        else
-        {   // portrait            
-            Screen.autorotateToPortrait = true;
-            Screen.autorotateToPortraitUpsideDown = true;         
-            Screen.autorotateToLandscapeLeft = false;
-            Screen.autorotateToLandscapeRight = false;
-            Screen.orientation = ScreenOrientation.Portrait;
-            if (Input.deviceOrientation == DeviceOrientation.LandscapeLeft || Input.deviceOrientation == DeviceOrientation.LandscapeRight)
-            {
-                Screen.orientation = ScreenOrientation.Portrait;
-            }
-        }        
-    }*/
+    static public string SETTINGS_FILE_NAME = "TCCSettings";
+    static public int SoundFXVolume = 100;
+    static public int MusicVolume = 100;
+    static public bool HasUnlockedFullGame = false;
+
+    /* static public void SetOrientation(eOrientation orientation, string screenName)
+     {
+         //Debug.Log("=============================================== SetOrientation(): " + orientation.ToString() + " from: " + screenName);
+         if(orientation == eOrientation.LANDSCAPE)
+         {   // landscape
+             Screen.autorotateToPortrait = false;
+             Screen.autorotateToPortraitUpsideDown = false;
+             Screen.autorotateToLandscapeLeft = true;
+             Screen.autorotateToLandscapeRight = true;
+             Screen.orientation = ScreenOrientation.LandscapeLeft;
+             if (Input.deviceOrientation == DeviceOrientation.Portrait || Input.deviceOrientation == DeviceOrientation.PortraitUpsideDown)
+             {
+                 Screen.orientation = ScreenOrientation.LandscapeLeft;
+             }
+         }
+         else
+         {   // portrait            
+             Screen.autorotateToPortrait = true;
+             Screen.autorotateToPortraitUpsideDown = true;         
+             Screen.autorotateToLandscapeLeft = false;
+             Screen.autorotateToLandscapeRight = false;
+             Screen.orientation = ScreenOrientation.Portrait;
+             if (Input.deviceOrientation == DeviceOrientation.LandscapeLeft || Input.deviceOrientation == DeviceOrientation.LandscapeRight)
+             {
+                 Screen.orientation = ScreenOrientation.Portrait;
+             }
+         }        
+     }*/
 
     public static void CreateMCPScene()
     {
@@ -71,21 +76,22 @@ static public class StaticStuff
     {
         public int soundFXVolume;
         public int musicFXVolume;
-       // public bool hasUnlockedFullGame;
-        public Settings(int sound, int music/*, bool hasUnlockedFullGame*/)
+        public bool hasUnlockedFullGame;
+        public Settings(int sound, int music, bool hasUnlockedFullGame)
         {
             soundFXVolume = sound;
             musicFXVolume = music;
-           // this.hasUnlockedFullGame = hasUnlockedFullGame;
+            this.hasUnlockedFullGame = hasUnlockedFullGame;
         }
     }
 
     static public void SaveCurrentSettings(string s)
     {
-        //Debug.LogWarning("SaveCurrentSettings(): " + s);
+       // Debug.Log("SaveCurrentSettings(): " + s);
         string saveName = GetSettingsName();
 
-        Settings settings = new Settings(SoundFXVolume, MusicVolume/*, HasUnlockedFullGame*/);
+      //  Debug.Log("CurSettings: SoundFX: " + SoundFXVolume + ", Music: " + MusicVolume + ", hasUnlocked: " + HasUnlockedFullGame);
+        Settings settings = new Settings(SoundFXVolume, MusicVolume, HasUnlockedFullGame);
 
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file;
@@ -102,10 +108,9 @@ static public class StaticStuff
     }
 
     static public void LoadSettings()
-    {        
-        //  Debug.LogWarning("LoadSettings()");
+    {                
         string saveName = GetSettingsName();
-        if (SaveFileExists(saveName) == false) //{ Debug.LogError("Trying to load settings but it doesn't exist."); return; }
+        if (SaveFileExists(saveName) == false)
         {
             CreateNewSettings();
         }
@@ -115,13 +120,14 @@ static public class StaticStuff
         Settings settings = (Settings)bf.Deserialize(file);
         SoundFXVolume = settings.soundFXVolume;
         MusicVolume = settings.musicFXVolume;
-       // HasUnlockedFullGame = settings.hasUnlockedFullGame;
+        HasUnlockedFullGame = settings.hasUnlockedFullGame;
+       // Debug.Log("LoadSettings() has unlock: " + HasUnlockedFullGame);
         file.Close();
     }
 
     static public void CreateNewSettings()
     {
-        // Debug.LogWarning("CreateNewSettings()");
+       // Debug.Log("CreateNewSettings()");
         string saveName = GetSettingsName();
 
         if (SaveFileExists(saveName) == true) { Debug.LogError("Cannot create new settings over existing settings data."); return; }
@@ -148,22 +154,11 @@ static public class StaticStuff
       //  Debug.Log(s);
         return s;
     }
-
     
-
-    
-
-    static public string SETTINGS_FILE_NAME = "TCCSettings";
-    static public int SoundFXVolume = 100;
-    static public int MusicVolume = 100;
-    static public bool HasUnlockedFullGame = false;
-
-    
-
     static public void SaveCurrentProfile(string s)
     {
         string saveName = GetProfileName(Current_Profile_Num);
-      //  Debug.LogWarning("SaveCurrentProfile(): saveName: " + saveName + ", s: " + s + ", stack track: " + Environment.StackTrace);
+       // Debug.Log("SaveCurrentProfile(): saveName: " + saveName + ", s: " + s + ", stack track: " + Environment.StackTrace);
 
         SaveDataDic saveData = new SaveDataDic();
 
@@ -190,7 +185,7 @@ static public class StaticStuff
     static public void CreateNewProfile(int avatar, int profile) // called from from avatar select
     {
         string saveName = GetProfileName(profile);
-       // Debug.LogWarning("CreateNewProfile() avatar: " + avatar + ", profile: " + profile + ", saveName: " + saveName);
+       // Debug.Log("CreateNewProfile() avatar: " + avatar + ", profile: " + profile + ", saveName: " + saveName);
 
         if (SaveFileExists(saveName) == true) { Debug.LogError("Cannot create new profile over existing profile data: " + profile); return; }
 
@@ -209,7 +204,7 @@ static public class StaticStuff
     
     static public void LoadCurrentProfile() // called from LoadProfileStartScene()
     {
-      //  Debug.LogWarning("LoadCurrentProfile()");
+        Debug.Log("LoadCurrentProfile()");
         string saveName = GetProfileName(Current_Profile_Num);
         if (SaveFileExists(saveName) == false) { Debug.LogError("Trying to load current profile: " + saveName + " but it doesn't exist."); return; }
 
@@ -230,12 +225,14 @@ static public class StaticStuff
         if (returnScene.Equals("null") || returnScene.Equals(""))
         {
             //Debug.Log("Loading default start scene");
-            GameObject.FindObjectOfType<MCP>().LoadNextScene("New_Intro", null, null, posToSave, savedPos); 
+             //GameObject.FindObjectOfType<MCP>().LoadNextScene("New_Intro", null, null, posToSave, savedPos); 
+            GameObject.FindObjectOfType<MCP>().LoadNextScene("IAPTest", null, null, posToSave, savedPos);
         }
         else
         {
            // Debug.Log("loading returnScene: " + returnScene);
-            GameObject.FindObjectOfType<MCP>().LoadNextScene(returnScene, null, null, posToSave, savedPos); 
+            //GameObject.FindObjectOfType<MCP>().LoadNextScene(returnScene, null, null, posToSave, savedPos);
+            GameObject.FindObjectOfType<MCP>().LoadNextScene("IAPTest", null, null, posToSave, savedPos);
         }
     }
 
@@ -308,41 +305,7 @@ static public class StaticStuff
 
         File.Delete(fileName);
     }
-
-    static public void CopySaveDataDebug()
-    {
-        //Debug.Log("mosave - CopySaveData()");
-        /* if (File.Exists(GetSaveFileName()) == true)
-         {
-             File.Copy(GetSaveFileName(), GetSaveFileCopyName(), true);
-         }
-         else Debug.LogWarning("Save file doesn't exist");*/
-    }
-    public static void LoadSaveDataDebug()
-    {
-        //Debug.Log("mosave - LoadSaveData()");
-        /*  if (File.Exists(GetSaveFileName()) == true)
-          {
-              File.Copy(GetSaveFileCopyName(), GetSaveFileName(), true);
-              CheckSceneLoadSave(); // Load debug
-          }
-          else Debug.LogWarning("Save file copy doesn't exist");*/
-    }
-    public static void DeleteDaveDataDebug()
-    {
-        //Debug.Log("mosave - DeleteDaveDataDebug()");
-        /*  string dirName = Application.persistentDataPath;
-          if (Directory.Exists(dirName) == true)
-          {
-              string[] files = Directory.GetFiles(dirName);
-              foreach (string file in files)
-              {
-                  Debug.Log("Delete this file: " + file);
-                  File.Delete(file);
-              }
-              //Directory.Delete(dirName);
-          }*/
-    }
+    
     static public string GetSaveFileCopyName(int profileNum)
     {
         string s = Application.persistentDataPath + "/" + PROFILE_NAME_ROOT + profileNum.ToString() + "Copy.dat";

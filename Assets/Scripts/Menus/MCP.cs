@@ -28,6 +28,11 @@ public class MCP : MonoBehaviour
     public VideoPlayerRR VideoPlayerRR;
     public Camera UICamera;
 
+    [Header("IAP")]
+    public IAPManager IAPManager;
+    public bool SaveNextObjectForIAP = false;
+    public IFlowObject IAPPauseObject = null;
+
     [Header("Sound")]
     public SoundFX SoundFX;
     public BackgroundMusic BGMusic;
@@ -59,7 +64,7 @@ public class MCP : MonoBehaviour
         // below is bullshit but it's the only way for the UI to not send
         // callback events when opening up the in game popup the first time
         InGamePopUp.gameObject.SetActive(true);
-        InGamePopUp.TurnOnPopupMenu(false);
+        InGamePopUp.TurnOnSetUpMainPopupPanel(false);
         InGamePopUp.gameObject.SetActive(false);
         //
         StaticStuff.LoadSettings();
@@ -75,20 +80,35 @@ public class MCP : MonoBehaviour
         AspectVal = w / h;
         TabletMode = (AspectVal < 1.44f);
        // Debug.Log("AspectVal: " + AspectVal + ", TabletMode: " + TabletMode);
-    }   
+    }
 
-    private void Update()
+    private void Start()
     {
-        
+        StartCoroutine(LoadIAPManager());
+    }
+
+    IEnumerator LoadIAPManager()
+    {
+        yield return new WaitForSeconds(1);
+        this.IAPManager.gameObject.SetActive(true);
+    }
+
+    public void StartIAPPanel()
+    {
+        //Debug.Log("StartIAPPanel()");
+        ShutOffAllUI();
+
+        InGamePopUp.gameObject.SetActive(true);
+        InGamePopUp.TurnOnIAPPanel();
     }
     
     public void StartPopupPanel()
     {
-        //Debug.Log("StartPopupPanel()");
+       // Debug.Log("StartPopupPanel()");
         ShutOffAllUI();
 
         InGamePopUp.gameObject.SetActive(true);
-        InGamePopUp.TurnOnPopupMenu(true);
+        InGamePopUp.TurnOnSetUpMainPopupPanel(true);
     }
 
     public void StartDialogueConversation()
@@ -341,7 +361,7 @@ public class MCP : MonoBehaviour
         curImages = new List<RawImage>() { Curtain, SpinWheel };
         yield return StartCoroutine(FadeObjects(curImages, fadeTime, 0f));
         //  Debug.LogWarning("----- end of curtain/spinwheel fade in");
-        ShutOffAllUI();        
+        ShutOffAllUI();   // MCP.LoadNextSceneDelay() right after starting a coroutine to fade in spinwheel    
 
         // 3) Fade in the first image        
         // Debug.LogWarning("-------- fade in first image");
@@ -672,11 +692,10 @@ public class MCP : MonoBehaviour
     }
 
     public void TurnOnInGamePopUp()
-    {
-       // Debug.LogWarning("fix");
+    {       
         ToggleMenuUI(false);
         ToggleInGamePopUp(true);
-        InGamePopUp.TurnOnPopupMenu(true);
+        InGamePopUp.TurnOnSetUpMainPopupPanel(true);
     }
 
     

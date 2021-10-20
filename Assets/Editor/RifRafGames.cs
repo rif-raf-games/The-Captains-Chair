@@ -9,19 +9,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 
 public class RifRafGames
-{
-    [MenuItem("RifRaf Games/Copy Save Data")]
-    public static void CopySaveData()
-    {
-        StaticStuff.CopySaveDataDebug();
-    }
-
-    [MenuItem("RifRaf Games/Load Save Data")]
-    public static void LoadSaveData()
-    {
-        StaticStuff.LoadSaveDataDebug();
-    }
-
+{   
    [MenuItem("RifRaf Games/Initialize Lockpick Puzzle Objects")]
    public static void InitializeLockpickPuzzleObjects()
     {        

@@ -559,13 +559,14 @@ public class RifRafMenuUI : MonoBehaviour
     }
 
     #region SPLASH
+    public GameObject IAPManager;
     public void OnClickTapToBegin()
     {
         StaticStuff.PrintRifRafUI("OnClickTapToBegin()");
         if (MenusActiveCheck() == false) return;
 
-        this.MCP.StartMainMenu();        
-    }   
+        this.MCP.StartMainMenu();                  
+    }
 
     #endregion
 

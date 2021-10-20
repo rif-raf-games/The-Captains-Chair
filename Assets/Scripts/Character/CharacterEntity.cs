@@ -221,7 +221,7 @@ public class CharacterEntity : MonoBehaviour
         }
 
         if(EntityToFollow != null && ShouldFollowEntity == true)
-        {
+        {           
             NavMeshAgent.SetDestination(EntityToFollow.transform.position);
         }
     }    

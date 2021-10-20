@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Video;
 
 public class VideoPlayerRR : MonoBehaviour
@@ -65,6 +66,11 @@ public class VideoPlayerRR : MonoBehaviour
         ToggleVideoPlayerChild(false);
         ConvoUI.SetSkipMovieButtonActive(false);
         FindObjectOfType<CCPlayer>().GetComponent<ArticyFlow>().SkipDialogue();
-        // Player.GetComponent<ArticyFlow>().CheckIfDialogueShouldStart(dialogueToStartOn, Player.gameObject);    
+        // check if we need to hold off to handle IAP
+        if(SceneManager.GetActiveScene().name.Contains("E1.Hanger_Intro"))
+        {
+            Debug.Log("We want to do the IAP after this dialogue so set the flag");
+            this.MCP.SaveNextObjectForIAP = true;
+        }
     }
 }
