@@ -26,10 +26,7 @@ public class RifRafInGamePopUp : MonoBehaviour
     public GameObject IAPPanel;
     public GameObject IAPQuitConfirmPopup;
     public GameObject IAPBuyPopup;
-    public GenericPopup GenericPopup;
-    /*public GameObject IAPResultsPopup;
-    public Text IAPTextPopupText;
-    public Button IAPResultsButton;*/
+    public GenericPopup GenericPopup;    
 
     [Header("MainPopUpButtons")]
     public Button[] MainPopUpButtons;
@@ -110,7 +107,7 @@ public class RifRafInGamePopUp : MonoBehaviour
     
     public void TurnOnIAPPanel()
     {
-        Debug.Log("TurnOnIAPPanel()");
+        //Debug.Log("TurnOnIAPPanel()");
         //InGamePopUp.gameObject.SetActive(false);
         this.gameObject.SetActive(true);
         IAPPanel.SetActive(true);
@@ -123,7 +120,7 @@ public class RifRafInGamePopUp : MonoBehaviour
     // QUIT TO MAIN
     public void OnClickIAPQuitToMainMenu()
     {
-        Debug.Log("OnClickIAPQuitToMainMenu()");        
+       // Debug.Log("OnClickIAPQuitToMainMenu()");        
         if (IAPQuitConfirmPopup.activeSelf == true) return;
         IAPQuitConfirmPopup.gameObject.SetActive(true);        
     }
@@ -132,14 +129,14 @@ public class RifRafInGamePopUp : MonoBehaviour
     // QUIT TO MAIN CONFIRM
     public void OnClickIAPQuitToMainConfirm()
     {
-        Debug.Log("OnClickIAPQuitToMainConfirm()");
+        //Debug.Log("OnClickIAPQuitToMainConfirm()");
         IAPQuitConfirmPopup.gameObject.SetActive(false);
         this.MCP.LoadNextScene("Front End Launcher");
     }
 
     public void OnClickIAPQuitToMainCancel()
     {
-        Debug.Log("OnClickQuitToMainCancel()");        
+       // Debug.Log("OnClickQuitToMainCancel()");        
         IAPQuitConfirmPopup.gameObject.SetActive(false);
     }
     // QUIT TO MAIN END
@@ -147,25 +144,25 @@ public class RifRafInGamePopUp : MonoBehaviour
     // ON CLICK BUY
     public void OnClickIAPUnlockButton()
     {
-        Debug.Log("OnClickIAPUnlockButton()");
+       // Debug.Log("OnClickIAPUnlockButton()");
         IAPBuyPopup.SetActive(true);
     }    
 
     public void OnClickIAPCancelUnlock()
     {
-        Debug.Log("OnClickIAPCancelUnlock()");
+       // Debug.Log("OnClickIAPCancelUnlock()");
         IAPBuyPopup.SetActive(false);
     }
 
     public void OnClickIAPBuyUnlock()
     {
-        Debug.Log("OnClickIAPBuyUnlock()");      
+      //  Debug.Log("OnClickIAPBuyUnlock()");      
         FindObjectOfType<IAPManager>().PurchaseButtonClick(IAPManager.CUR_SAVE_FILE);
     }   
     
     public void IAPPurchaseSuccessful()
     {
-        Debug.Log("UI() IAPPurchaseSuccessful()");
+      //  Debug.Log("UI() IAPPurchaseSuccessful()");
         GenericPopup.gameObject.SetActive(true);
         GenericPopup.TitleText.text = "Congrats!";
         GenericPopup.MainText.text = "Purchase Successful"; ;
@@ -177,7 +174,7 @@ public class RifRafInGamePopUp : MonoBehaviour
 
     public void IAPPurchaseFailed(string message)
     {
-        Debug.Log("UI() IAPPurchaseFailed()");
+      //  Debug.Log("UI() IAPPurchaseFailed()");
         GenericPopup.gameObject.SetActive(true);
         GenericPopup.TitleText.text = "Purchase Failed";
         GenericPopup.MainText.text = message;
@@ -189,14 +186,15 @@ public class RifRafInGamePopUp : MonoBehaviour
 
     public void OnClickIAPResults()
     {
-        Debug.Log("OnClickIAPResults()");
+        //Debug.Log("OnClickIAPResults()");
         if(GenericPopup.MainText.text.Contains("Success"))
         {
             IAPPanel.SetActive(false);
             this.GenericPopup.gameObject.SetActive(false);
             FindObjectOfType<IAPTest>().IAPPurchaseSuccessful();
         }
-        else if(GenericPopup.MainText.text.Contains("Error") || GenericPopup.MainText.text.Contains("Failed") || GenericPopup.MainText.text.Contains("fake"))
+        else if(GenericPopup.MainText.text.Contains("Error") || GenericPopup.MainText.text.Contains("Failed") || 
+                GenericPopup.MainText.text.Contains("fake") || GenericPopup.MainText.text.Contains("No product"))
         {
             this.GenericPopup.gameObject.SetActive(false);
         }
@@ -204,11 +202,15 @@ public class RifRafInGamePopUp : MonoBehaviour
         {
             this.GenericPopup.gameObject.SetActive(false);
         }
+        else
+        {
+            Debug.LogWarning("Warning: don't have an IAP results hanlder for: " + GenericPopup.MainText.text);
+        }
     }
 
     public void SetupResultsPopup(string title, string message)
     {
-        Debug.Log("SetupResultsPopup() message: " + message);
+      //  Debug.Log("SetupResultsPopup() message: " + message);
         GenericPopup.gameObject.SetActive(true);
         GenericPopup.TitleText.text = title;
         GenericPopup.MainText.text = message;
