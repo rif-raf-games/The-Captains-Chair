@@ -190,8 +190,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
     {
         Debug.Log("PurchaseButtonClick(): " + productID);
         
-        //if (m_Controller == null)              
-        if(true)
+        if (m_Controller == null)                      
         {
             Debug.LogError("Purchasing is not initialized");
             FindObjectOfType<RifRafInGamePopUp>().SetupResultsPopup("Error", "Purchasing is not initialized.");
