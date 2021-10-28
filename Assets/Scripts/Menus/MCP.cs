@@ -84,7 +84,7 @@ public class MCP : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(LoadIAPManager());
+        StartCoroutine(LoadIAPManager());        
     }
 
     IEnumerator LoadIAPManager()

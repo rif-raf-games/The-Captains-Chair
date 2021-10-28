@@ -12,6 +12,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
 
     private IStoreController m_Controller;
 
+    private IAppleExtensions m_AppleExtensions;
     private bool m_IsGooglePlayStoreSelected;
     private IGooglePlayStoreExtensions m_GooglePlayStoreExtensions;
     private ITransactionHistoryExtensions m_TransactionHistoryExtensions;
@@ -66,9 +67,14 @@ public class IAPManager : MonoBehaviour, IStoreListener
     public void OnInitialized(IStoreController controller, IExtensionProvider extensions)
     {        
         m_Controller = controller;
+        m_AppleExtensions = extensions.GetExtension<IAppleExtensions>();
         m_GooglePlayStoreExtensions = extensions.GetExtension<IGooglePlayStoreExtensions>();
         m_TransactionHistoryExtensions = extensions.GetExtension<ITransactionHistoryExtensions>();
-        
+
+        // On Apple platforms we need to handle deferred purchases caused by Apple's Ask to Buy feature.
+        // On non-Apple platforms this will have no effect; OnDeferred will never be called.
+        m_AppleExtensions.RegisterPurchaseDeferredListener(OnDeferred);
+
         Debug.Log("Available items:");
         foreach (Product item in controller.products.all)
         {
@@ -113,7 +119,22 @@ public class IAPManager : MonoBehaviour, IStoreListener
                 }
             }            
         }   
-    }    
+    }
+
+    /// <summary>
+    /// iOS Specific.
+    /// This is called as part of Apple's 'Ask to buy' functionality,
+    /// when a purchase is requested by a minor and referred to a parent
+    /// for approval.
+    ///
+    /// When the purchase is approved or rejected, the normal purchase events
+    /// will fire.
+    /// </summary>
+    /// <param name="item">Item.</param>
+    private void OnDeferred(Product item)
+    {
+        Debug.Log("Purchase deferred: " + item.definition.id);
+    }
 
     /// <summary>
     /// Purchasing failed to initialise for a non recoverable reason.
@@ -208,22 +229,33 @@ public class IAPManager : MonoBehaviour, IStoreListener
     }
 
     public void RestoreButtonClick()
-    {
-        Debug.Log("RestoreButtonClick()");
+    {        
         if (m_IsGooglePlayStoreSelected)
         {
-            Debug.Log("Do the google restore");
+            Debug.Log("RestoreButtonClick() - Google");
             m_GooglePlayStoreExtensions.RestoreTransactions(OnTransactionsRestored);
         }
         else
         {
-            //m_AppleExtensions.RestoreTransactions(OnTransactionsRestored);
+            Debug.Log("RestoreButtonClick() - Apple");
+            m_AppleExtensions.RestoreTransactions(OnTransactionsRestored);
+            //m_AppleExtensions.RefreshAppReceipt(OnTransactionsRefreshedSuccess, OnTransactionsRefreshedFail);
         }
     }
+    //OnTransactionsRefreshedSuccess
+    //OnTransactionsRefreshedFail
+    private void OnTransactionsRefreshedSuccess(string message)
+    {
+        Debug.Log("OnTransactionsRefreshedSuccess() message: " + message);
+    }
+    private void OnTransactionsRefreshedFail()
+    {
+        Debug.Log("Transaction refresh failed");
+    }    
 
     private void OnTransactionsRestored(bool success)
     {
-        Debug.Log("Transactions restored." + success);
+        Debug.Log("OnTransactionsRestored() success: " + success);
         FindObjectOfType<RifRafInGamePopUp>().IAPPurchasesRestored();
     }
     

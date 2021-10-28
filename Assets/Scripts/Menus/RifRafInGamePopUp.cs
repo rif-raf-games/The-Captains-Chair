@@ -26,6 +26,7 @@ public class RifRafInGamePopUp : MonoBehaviour
     public GameObject IAPPanel;
     public GameObject IAPQuitConfirmPopup;
     public GameObject IAPBuyPopup;
+    public GameObject RestoreButton;
     public GenericPopup GenericPopup;    
 
     [Header("MainPopUpButtons")]
@@ -43,6 +44,14 @@ public class RifRafInGamePopUp : MonoBehaviour
         IAPPanel.gameObject.SetActive(false);
         ButtonPrefab.gameObject.SetActive(false);
         GenericPopup.gameObject.SetActive(false);
+
+# if UNITY_IOS
+        Debug.Log("Turn on Restore button because you're on iOS.");
+        RestoreButton.SetActive(true);
+#elif UNITY_ANDROID
+        Debug.Log("Turn off Restore button because you're on Android");
+        RestoreButton.SetActive(false);
+#endif
 
         this.gameObject.SetActive(false);        
     }
@@ -228,6 +237,7 @@ public class RifRafInGamePopUp : MonoBehaviour
     // IAP RESTORE
     public void OnClickIAPRestore()
     {
+        Debug.Log("OnClickIAPRestore()");
         FindObjectOfType<IAPManager>().RestoreButtonClick();
     }
 

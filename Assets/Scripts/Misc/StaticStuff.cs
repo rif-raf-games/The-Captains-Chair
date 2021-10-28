@@ -140,7 +140,7 @@ static public class StaticStuff
 
     static public void ShowDataPath()
     {
-        Debug.Log(Application.persistentDataPath);
+        Debug.Log("Data path: " + Application.persistentDataPath);
     }
     static public string GetProfileName(int profileNum)
     {
@@ -158,8 +158,8 @@ static public class StaticStuff
     static public void SaveCurrentProfile(string s)
     {
         string saveName = GetProfileName(Current_Profile_Num);
-       // Debug.Log("SaveCurrentProfile(): saveName: " + saveName + ", s: " + s + ", stack track: " + Environment.StackTrace);
-
+        // Debug.Log("SaveCurrentProfile(): saveName: " + saveName + ", s: " + s + ", stack track: " + Environment.StackTrace);
+        
         SaveDataDic saveData = new SaveDataDic();
 
         ArticyGlobalVariables.Default.TheCaptain.SaveTime = DateTime.Now.ToString();
