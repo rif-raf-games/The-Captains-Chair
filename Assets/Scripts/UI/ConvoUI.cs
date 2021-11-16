@@ -274,7 +274,7 @@ public class ConvoUI : MonoBehaviour
     
     public void OnClickDialogueButton(int buttonIndex)
     {
-        Debug.Log("OnClickDialogueButton() buttonIndex: " + buttonIndex + ", ArticyFlow hash: " + ArticyFlow.GetHashCode());        
+       // Debug.Log("OnClickDialogueButton() buttonIndex: " + buttonIndex + ", ArticyFlow hash: " + ArticyFlow.GetHashCode());        
         ArticyObject target = null;
         if (CurValidAOTargets != null) target = CurValidAOTargets[buttonIndex];
         if (ArticyFlow == null)
