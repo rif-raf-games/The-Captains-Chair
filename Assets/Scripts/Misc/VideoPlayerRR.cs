@@ -48,8 +48,7 @@ public class VideoPlayerRR : MonoBehaviour
     {
        // videoName = "Maj_Intro_Cinematic__Compressed";
       //  Debug.Log("-----------------------------------VideoPlayerRR.PlayVideo(): videoName: " + videoName);
-        ToggleVideoPlayerChild(true);
-        videoName = "Maj_Intro_Cinematic__Compressed";
+        ToggleVideoPlayerChild(true);        
         VideoClip clip = Resources.Load<VideoClip>("Movies/" + videoName);
         VideoPlayer.clip = clip;
         OnVideoEnd = callback;        
