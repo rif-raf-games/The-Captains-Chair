@@ -13,7 +13,7 @@ using UnityEngine.SceneManagement;
 
 static public class StaticStuff 
 {
-    static string DEBUG_SCENE_TO_LOAD = "E1.Plaza";
+    //static string DEBUG_SCENE_TO_LOAD = "E1.Plaza";
     public enum eOrientation { LANDSCAPE, PORTRAIT };
 
     
@@ -231,7 +231,8 @@ static public class StaticStuff
         else
         {
            // Debug.Log("loading returnScene: " + returnScene);
-            GameObject.FindObjectOfType<MCP>().LoadNextScene(returnScene, null, null, posToSave, savedPos);
+            //GameObject.FindObjectOfType<MCP>().LoadNextScene(returnScene, null, null, posToSave, savedPos);
+            GameObject.FindObjectOfType<MCP>().LoadNextScene("New_Intro", null, null, posToSave, savedPos);
             //GameObject.FindObjectOfType<MCP>().LoadNextScene("IAPTest", null, null, posToSave, savedPos);
         }
     }
