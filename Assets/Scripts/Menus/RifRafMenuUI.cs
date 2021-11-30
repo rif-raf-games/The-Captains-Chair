@@ -392,7 +392,7 @@ public class RifRafMenuUI : MonoBehaviour
             CaptainSelect.transform.parent = Menus[(int)eMenuType.AVATAR_SELECT].transform;
             CapRayCaster = CaptainSelect.GetComponentInChildren<CaptainSelectRayCaster>();
             CaptainModelsContainer = CaptainSelect.transform.GetChild(2).gameObject;
-            Button confirm = CaptainSelect.transform.GetChild(5).GetChild(1).gameObject.GetComponent<Button>();
+            Button confirm = CaptainSelect.transform.GetChild(5).GetChild(0).gameObject.GetComponent<Button>();
             confirm.onClick.RemoveAllListeners();
             confirm.onClick.AddListener(OnClickCaptainSelectConfirm);
             ///Resources.UnloadAsset(captainContainerPrefab);            
