@@ -13,10 +13,12 @@ using UnityEngine.SceneManagement;
 
 static public class StaticStuff 
 {
-    //static string DEBUG_SCENE_TO_LOAD = "E1.Plaza";
-    public enum eOrientation { LANDSCAPE, PORTRAIT };
+    /********************** DESIGNER TWEAK AREA *********************/
+    static string STARTING_SCENE_TO_LOAD = "Majestic_Intro";
+    /****************************************************************/
 
-    
+
+    public enum eOrientation { LANDSCAPE, PORTRAIT };    
     public const int NUM_PROFILES = 4;
     public const string PROFILE_NAME_ROOT = "tcc_savegame_00";
     public const string CURRENT_PROFILE_NAME = "tcc_savegameid";
@@ -224,16 +226,13 @@ static public class StaticStuff
                         
         if (returnScene.Equals("null") || returnScene.Equals(""))
         {
-            //Debug.Log("Loading default start scene");
-             GameObject.FindObjectOfType<MCP>().LoadNextScene("Majestic_Intro", null, null, posToSave, savedPos); 
-           // GameObject.FindObjectOfType<MCP>().LoadNextScene("IAPTest", null, null, posToSave, savedPos);
+            //Debug.Log("Loading start scene: " + STARTING_SCENE_TO_LOAD);
+            GameObject.FindObjectOfType<MCP>().LoadNextScene(STARTING_SCENE_TO_LOAD, null, null, posToSave, savedPos);           
         }
         else
         {
-           // Debug.Log("loading returnScene: " + returnScene);
-            //GameObject.FindObjectOfType<MCP>().LoadNextScene(returnScene, null, null, posToSave, savedPos);
-            GameObject.FindObjectOfType<MCP>().LoadNextScene("Majestic_Intro", null, null, posToSave, savedPos);
-            //GameObject.FindObjectOfType<MCP>().LoadNextScene("IAPTest", null, null, posToSave, savedPos);
+            //Debug.Log("loading returnScene: " + returnScene);
+            GameObject.FindObjectOfType<MCP>().LoadNextScene(returnScene, null, null, posToSave, savedPos);                        
         }
     }
 
