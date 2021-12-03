@@ -17,10 +17,14 @@ public class IAPManager : MonoBehaviour, IStoreListener
     private IGooglePlayStoreExtensions m_GooglePlayStoreExtensions;
     private ITransactionHistoryExtensions m_TransactionHistoryExtensions;
 
-    private void Awake()
+    /* private void Awake()
+     {
+         InitIAP();
+     }*/
+    void Start()
     {
-        InitIAP();
-    }
+        Screen.SetResolution(1280, 960, true);
+    }    
 
     void InitIAP()
     {
@@ -86,8 +90,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
                         item.definition.id,
                         item.metadata.localizedTitle,
                         item.definition.type.ToString(),                      
-                        item.hasReceipt.ToString(),
-                        "/n",                        
+                        item.hasReceipt.ToString(),                                               
                         item.receipt
                     }));
             }
@@ -227,6 +230,12 @@ public class IAPManager : MonoBehaviour, IStoreListener
                 
         m_Controller.InitiatePurchase(m_Controller.products.WithID(productID), "developerPayload");
     }
+    /*
+    public void OnClickIAPBuyUnlock()
+    {      
+        FindObjectOfType<IAPManager>().PurchaseButtonClick(IAPManager.CUR_SAVE_FILE);
+    } 
+     */
 
     public void RestoreButtonClick()
     {        
@@ -258,38 +267,50 @@ public class IAPManager : MonoBehaviour, IStoreListener
         Debug.Log("OnTransactionsRestored() success: " + success);
         FindObjectOfType<RifRafInGamePopUp>().IAPPurchasesRestored();
     }
-    
-    //public GUIStyle guiStyle = new GUIStyle();
-    //bool showIAPInfo = false;
-    //public Texture Black;
-    //private void OnGUI()
-    //{
-    //    if (m_Controller != null && showIAPInfo == true)
-    //    {
-    //        int topY = 130;
-    //        int numButtons = m_Controller.products.all.Length;
-    //        int buttonHeight = (Screen.height - topY) / numButtons;
-    //        int i = 0;
-    //        foreach (Product product in m_Controller.products.all)
-    //        {
-    //            string st = "ID: " + product.definition.id + ". Type: " + product.definition.type + "\n";
-    //            st += "Enabled: " + product.definition.enabled + ". Available: " + product.availableToPurchase + ". Has Receipt: " + product.hasReceipt;
-    //            GUI.DrawTexture(new Rect(0, topY + (i * buttonHeight), Screen.width, buttonHeight), Black);
-    //            GUI.TextArea(new Rect(0, topY + (i * buttonHeight), Screen.width, buttonHeight), st, guiStyle);
-    //            i++;
-    //        }
-    //    }
-    //    if (GUI.Button(new Rect(Screen.width - 250, 0, 250, 125), "Toggle\nIAP Info"))
-    //    {
-    //        showIAPInfo = !showIAPInfo;
-    //    }
-    //    if (GUI.Button(new Rect(Screen.width - 600, 0, 250, 125), "Reset Save"))
-    //    {
-    //        StaticStuff.HasUnlockedFullGame = false;
-    //        StaticStuff.SaveCurrentSettings("IAPManager.ResetUnlockInLocalSave()");
-    //        Debug.LogWarning("Deleted unlock from local save.");
-    //    }
 
-    //    CUR_SAVE_FILE = GUI.TextArea(new Rect(Screen.width - 1375, 0, 750, 100), CUR_SAVE_FILE, guiStyle);
-    //}
+    public GUIStyle guiStyle = new GUIStyle();
+    bool showIAPInfo = false;
+   public Texture Black;
+    private void OnGUI()
+    {
+        if (m_Controller != null && showIAPInfo == true)
+        {
+            int topY = 130;
+            int numButtons = m_Controller.products.all.Length;
+            int buttonHeight = (Screen.height - topY) / numButtons;
+            int i = 0;
+            foreach (Product product in m_Controller.products.all)
+            {
+                string st = "ID: " + product.definition.id + ". Type: " + product.definition.type + "\n";
+                st += "Enabled: " + product.definition.enabled + ". Available: " + product.availableToPurchase + ". Has Receipt: " + product.hasReceipt;
+                GUI.DrawTexture(new Rect(0, topY + (i * buttonHeight), Screen.width, buttonHeight), Black);
+                GUI.TextArea(new Rect(0, topY + (i * buttonHeight), Screen.width, buttonHeight), st, guiStyle);
+                i++;
+            }
+        }
+        if (GUI.Button(new Rect(Screen.width - 250, 0, 250, 125), "Toggle\nIAP Info"))
+        {
+            showIAPInfo = !showIAPInfo;
+        }
+        if (GUI.Button(new Rect(Screen.width - 600, 0, 250, 125), "Reset Save"))
+        {
+            StaticStuff.HasUnlockedFullGame = false;
+            StaticStuff.SaveCurrentSettings("IAPManager.ResetUnlockInLocalSave()");
+            Debug.LogWarning("Deleted unlock from local save.");
+        }
+
+        CUR_SAVE_FILE = GUI.TextArea(new Rect(Screen.width - 1375, 0, 750, 100), CUR_SAVE_FILE, guiStyle);
+    }
+
+
+    /*
+     private void OnGUI()
+    {
+        if (GUI.Button(new Rect(Screen.width - 300, 100, 100, 100), "init IAP"))
+        {
+
+            InitIAP();
+        }        
+    }
+     */
 }
