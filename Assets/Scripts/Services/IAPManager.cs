@@ -7,9 +7,7 @@ using UnityEngine.Purchasing;
 
 
 public class IAPManager : MonoBehaviour, IStoreListener
-{
-    public RifRafInGamePopUp IGPopup;
-
+{ 
     private IStoreController m_Controller;
 
     private IAppleExtensions m_AppleExtensions;
@@ -17,14 +15,14 @@ public class IAPManager : MonoBehaviour, IStoreListener
     private IGooglePlayStoreExtensions m_GooglePlayStoreExtensions;
     private ITransactionHistoryExtensions m_TransactionHistoryExtensions;
 
-    /* private void Awake()
-     {
-         InitIAP();
-     }*/
     void Start()
     {
+#if UNITY_ANDROID
+       // Screen.SetResolution(1123, 540, true);
+#else
         Screen.SetResolution(1280, 960, true);
-    }    
+#endif
+    }
 
     void InitIAP()
     {
@@ -69,7 +67,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
     /// <param name="controller"> The <c>IStoreController</c> created during initialization. </param>
     /// <param name="extensions"> The <c>IExtensionProvider</c> created during initialization. </param>
     public void OnInitialized(IStoreController controller, IExtensionProvider extensions)
-    {        
+    {
         m_Controller = controller;
         m_AppleExtensions = extensions.GetExtension<IAppleExtensions>();
         m_GooglePlayStoreExtensions = extensions.GetExtension<IGooglePlayStoreExtensions>();
@@ -78,6 +76,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
         // On Apple platforms we need to handle deferred purchases caused by Apple's Ask to Buy feature.
         // On non-Apple platforms this will have no effect; OnDeferred will never be called.
         m_AppleExtensions.RegisterPurchaseDeferredListener(OnDeferred);
+        List<string> hasReceipt = new List<string>();
 
         Debug.Log("Available items:");
         foreach (Product item in controller.products.all)
@@ -89,14 +88,27 @@ public class IAPManager : MonoBehaviour, IStoreListener
                     {
                         item.definition.id,
                         item.metadata.localizedTitle,
-                        item.definition.type.ToString(),                      
-                        item.hasReceipt.ToString(),                                               
+                        item.definition.type.ToString(),
+                        item.hasReceipt.ToString(),
                         item.receipt
                     }));
+                if (item.hasReceipt == true)
+                {
+                    hasReceipt.Add("id: " + item.definition.id + " has receipt: " + item.receipt);
+                }
             }
         }
-        
-        for (int i=0; i<m_Controller.products.all.Length; i++)
+
+        if (hasReceipt.Count > 0)
+        {
+            Debug.Log("These items have a receipt:");
+            foreach (string s in hasReceipt)
+            {
+                Debug.Log(s);
+            }
+        }
+
+        for (int i = 0; i < m_Controller.products.all.Length; i++)
         {
             Product product = m_Controller.products.all[i];
             if (product.definition.id == CUR_SAVE_FILE)
@@ -112,7 +124,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
                     StaticStuff.HasUnlockedFullGame = true;
                     StaticStuff.SaveCurrentSettings("IAPManager.OnInitialized()");
                 }
-                else if(product.hasReceipt == false && StaticStuff.HasUnlockedFullGame == false)
+                else if (product.hasReceipt == false && StaticStuff.HasUnlockedFullGame == false)
                 {
                     Debug.Log("receipt and settings are false so no purchase");
                 }
@@ -120,8 +132,37 @@ public class IAPManager : MonoBehaviour, IStoreListener
                 {
                     Debug.LogError("receipt is false but settings is true...this is odd");
                 }
-            }            
-        }   
+            }
+        }
+    }
+
+    public void FetchInfoButtonClicked()
+    {        
+        HashSet<ProductDefinition> productsHash = new HashSet<ProductDefinition>();
+        foreach (Product product in m_Controller.products.all)
+        {
+            productsHash.Add(new ProductDefinition(product.definition.id, product.definition.type));
+        }
+
+        m_Controller.FetchAdditionalProducts(productsHash, FetchInfoSuccessCallback, FetchInfoFailCallback);
+    }
+
+    public void FetchInfoSuccessCallback()
+    {
+        Debug.Log("FetchInfoSuccessCallback()");
+    }
+    public void FetchInfoFailCallback(InitializationFailureReason reason)
+    {
+        Debug.LogError("FetchInfoFailCallback() reason: " + reason.ToString());
+    }
+
+    private void LogProductDefinitions()
+    {
+        var products = m_Controller.products.all;
+        foreach (var product in products)
+        {
+            Debug.Log(string.Format("id: {0}\nstore-specific id: {1}\ntype: {2}\nenabled: {3}\n", product.definition.id, product.definition.storeSpecificId, product.definition.type.ToString(), product.definition.enabled ? "enabled" : "disabled"));
+        }
     }
 
     /// <summary>
@@ -162,24 +203,21 @@ public class IAPManager : MonoBehaviour, IStoreListener
         }
     }
 
-    
-
     /// <summary>
     /// A purchase succeeded.
     /// </summary>
     /// <param name="e"> The <c>PurchaseEventArgs</c> for the purchase event. </param>
     /// <returns> The result of the successful purchase </returns>
     public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs e)
-    {        
+    {
         Debug.Log("----------------Purchase OK: " + e.purchasedProduct.definition.id);
         Debug.Log("----------------Receipt: " + e.purchasedProduct.receipt);
 
-        if(e.purchasedProduct.definition.id == CUR_SAVE_FILE)
+        if (e.purchasedProduct.definition.id == CUR_SAVE_FILE)
         {
             Debug.Log("just unlocked game so update settings");
             StaticStuff.HasUnlockedFullGame = true;
-            StaticStuff.SaveCurrentSettings("IAPManager.PurchaseProcessingResult()");
-            FindObjectOfType<RifRafInGamePopUp>().IAPPurchaseSuccessful();
+            StaticStuff.SaveCurrentSettings("IAPManager.PurchaseProcessingResult()");            
         }
 
         return PurchaseProcessingResult.Complete;
@@ -200,8 +238,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
         if (m_TransactionHistoryExtensions.GetLastPurchaseFailureDescription() != null)
         {
             string message = m_TransactionHistoryExtensions.GetLastPurchaseFailureDescription().message;
-            Debug.Log("Purchase failure description message: " + message);
-            FindObjectOfType<RifRafInGamePopUp>().IAPPurchaseFailed(message);
+            Debug.Log("Purchase failure description message: " + message);            
         }
     }
 
@@ -211,34 +248,26 @@ public class IAPManager : MonoBehaviour, IStoreListener
     /// </summary>
     /// <param name="productID">The product identifier to buy</param>
     public void PurchaseButtonClick(string productID)
-    {
+    {        
         Debug.Log("PurchaseButtonClick(): " + productID);
-        
-        if (m_Controller == null)                      
+
+        if (m_Controller == null)
         {
-            Debug.LogError("Purchasing is not initialized");
-            FindObjectOfType<RifRafInGamePopUp>().SetupResultsPopup("Error", "Purchasing is not initialized.");
+            Debug.LogError("Purchasing is not initialized");     
             return;
         }
 
         if (m_Controller.products.WithID(productID) == null)
-        {            
-            Debug.LogError("No product has id " + productID);
-            FindObjectOfType<RifRafInGamePopUp>().SetupResultsPopup("Error", "No product has id " + productID);
+        {
+            Debug.LogError("No product has id " + productID);            
             return;
-        }        
-                
+        }
+
         m_Controller.InitiatePurchase(m_Controller.products.WithID(productID), "developerPayload");
-    }
-    /*
-    public void OnClickIAPBuyUnlock()
-    {      
-        FindObjectOfType<IAPManager>().PurchaseButtonClick(IAPManager.CUR_SAVE_FILE);
-    } 
-     */
+    }   
 
     public void RestoreButtonClick()
-    {        
+    {
         if (m_IsGooglePlayStoreSelected)
         {
             Debug.Log("RestoreButtonClick() - Google");
@@ -247,12 +276,10 @@ public class IAPManager : MonoBehaviour, IStoreListener
         else
         {
             Debug.Log("RestoreButtonClick() - Apple");
-            m_AppleExtensions.RestoreTransactions(OnTransactionsRestored);
-            //m_AppleExtensions.RefreshAppReceipt(OnTransactionsRefreshedSuccess, OnTransactionsRefreshedFail);
+            m_AppleExtensions.RestoreTransactions(OnTransactionsRestored);            
         }
     }
-    //OnTransactionsRefreshedSuccess
-    //OnTransactionsRefreshedFail
+    
     private void OnTransactionsRefreshedSuccess(string message)
     {
         Debug.Log("OnTransactionsRefreshedSuccess() message: " + message);
@@ -260,20 +287,68 @@ public class IAPManager : MonoBehaviour, IStoreListener
     private void OnTransactionsRefreshedFail()
     {
         Debug.Log("Transaction refresh failed");
-    }    
+    }
 
     private void OnTransactionsRestored(bool success)
     {
         Debug.Log("OnTransactionsRestored() success: " + success);
-        FindObjectOfType<RifRafInGamePopUp>().IAPPurchasesRestored();
     }
 
     public GUIStyle guiStyle = new GUIStyle();
     bool showIAPInfo = false;
-   public Texture Black;
+    public Texture Black;
     private void OnGUI()
     {
-        if (m_Controller != null && showIAPInfo == true)
+        
+
+        int top = 100;
+        int w = 100;
+        int h = 100;
+        if (GUI.Button(new Rect(Screen.width - 300, top, w, h), "Init IAP"))
+        {
+            InitIAP();
+        }
+        if (GUI.Button(new Rect(Screen.width - 200, top, w, h), "Fetch Info"))
+        {
+            FetchInfoButtonClicked();
+        }
+        if (GUI.Button(new Rect(Screen.width - 100, top, w, h), "Restore"))
+        {
+            RestoreButtonClick();
+        }
+        if (GUI.Button(new Rect(Screen.width - 200, top+h, w, h), "Buy\nDBG001"))
+        {
+            PurchaseButtonClick("com.tales_tcc1_modebug001");
+        }
+        if (GUI.Button(new Rect(Screen.width - 200, top + (h*2), w, h), "Buy\n_gameunlock"))
+        {
+            PurchaseButtonClick("com.tales_tcc1_gameunlock");
+        }
+        if (GUI.Button(new Rect(Screen.width - 200, top + (h * 3), w, h), "Buy\n.gameunlock"))
+        {
+            PurchaseButtonClick("com.tales_tcc1.gameunlock");
+        }
+        if (GUI.Button(new Rect(Screen.width - 100, top + h, w, h), "Buy\ngameunlock3"))
+        {
+            PurchaseButtonClick("com.tales_tcc1.gameunlock3");
+        }
+        if (GUI.Button(new Rect(Screen.width - 100, top + (h * 2), w, h), "Buy\ngameunlock4"))
+        {
+            PurchaseButtonClick("com.tales_tcc1.gameunlock4");
+        }
+        if (GUI.Button(new Rect(Screen.width - 100, top + (h * 3), w, h), "Buy\ngameunlock5"))
+        {
+            PurchaseButtonClick("com.tales_tcc1.gameunlock5");
+        }
+        if (GUI.Button(new Rect(Screen.width - 100, top + (h * 4), w, h), "Buy\ngameunlock5"))
+        {
+            PurchaseButtonClick("com.tales_tcc1.gameunlock5");
+        }        
+    }
+
+
+    /*
+     /*if (m_Controller != null && showIAPInfo == true)
         {
             int topY = 130;
             int numButtons = m_Controller.products.all.Length;
@@ -298,19 +373,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
             StaticStuff.SaveCurrentSettings("IAPManager.ResetUnlockInLocalSave()");
             Debug.LogWarning("Deleted unlock from local save.");
         }
-
-        CUR_SAVE_FILE = GUI.TextArea(new Rect(Screen.width - 1375, 0, 750, 100), CUR_SAVE_FILE, guiStyle);
-    }
-
-
-    /*
-     private void OnGUI()
-    {
-        if (GUI.Button(new Rect(Screen.width - 300, 100, 100, 100), "init IAP"))
-        {
-
-            InitIAP();
-        }        
-    }
-     */
+    
+    CUR_SAVE_FILE = GUI.TextArea(new Rect(Screen.width - 1375, 0, 750, 100), CUR_SAVE_FILE, guiStyle);
+     */     
 }

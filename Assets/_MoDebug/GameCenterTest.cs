@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
+#if !UNITY_ANDROID
 using UnityEngine.SocialPlatforms.GameCenter;
+#endif
 
 public class GameCenterTest : MonoBehaviour
 {
+#if !UNITY_ANDROID
     // Start is called before the first frame update
     void Start()
     {
@@ -125,5 +128,5 @@ public class GameCenterTest : MonoBehaviour
     
 
     
-
+#endif
 }

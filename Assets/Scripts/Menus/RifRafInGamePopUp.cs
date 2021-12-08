@@ -165,7 +165,7 @@ public class RifRafInGamePopUp : MonoBehaviour
 
     public void OnClickIAPBuyUnlock()
     {      
-        FindObjectOfType<IAPManager>().PurchaseButtonClick(IAPManager.CUR_SAVE_FILE);
+       // FindObjectOfType<IAPManager>().PurchaseButtonClick(IAPManager.CUR_IAP_ID);
     }   
     
     public void IAPPurchaseSuccessful()
