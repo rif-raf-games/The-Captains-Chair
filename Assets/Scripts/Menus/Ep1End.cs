@@ -32,15 +32,5 @@ public class Ep1End : MonoBehaviour
                 Menus[CurMenu].SetActive(true);
             }            
         }
-    }
-
-    /*void OnGUI()
-    {
-        if(GUI.Button(new Rect(Screen.width-100, Screen.height-100, 100, 100),"Next"))
-        {
-            Menus[CurMenu].SetActive(false);
-            CurMenu = (CurMenu + 1) % Menus.Length;
-            Menus[CurMenu].SetActive(true);
-        }
-    }*/
+    }    
 }

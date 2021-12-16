@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿//#define USE_RR_ONGU
+using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
@@ -230,6 +231,7 @@ public class MiniGameMCP : MonoBehaviour
         //EndCurrentPuzzle();
     }
 
+#if USE_RR_ONGU
     private void OnGUI()
     {
         if (GUI.Button(new Rect(Screen.width - 100, Screen.height / 2 - 100, 100, 100), "Win"))
@@ -237,7 +239,7 @@ public class MiniGameMCP : MonoBehaviour
             Puzzles[CurPuzzleIndex].TMP_WinGame();
         }        
     }
-
+#endif
     public void SavePuzzlesProgress(bool success, string cameFrom = "not set in call")
     {
        // Debug.LogError("SavePuzzleProgress() success: " + success + ", cameFrom: " + cameFrom);// + ", ProgressVarName: " + ProgressVarName + ", FinishedVarName: " + FinishedVarName);

@@ -40,6 +40,7 @@ public class RifRafMenuUI : MonoBehaviour
     [Header("Misc")]
     public Button BackButton;
     public Sprite DefaultProfileIcon;
+    public AudioClip CaptainSelectConfirm;
     
     public enum eSaveGameFunction { NEW, CONTINUE, DELETE, NUM_SAVE_GAME_FUNCTIONS };
     public eSaveGameFunction CurActiveSaveGameFunction;    
@@ -138,18 +139,7 @@ public class RifRafMenuUI : MonoBehaviour
             CurActivePopup = popUpID;
         }        
     }
-
-   /* private void OnGUI()
-    {
-        if(GUI.Button(new Rect(0,0,100,100), "test"))
-        {
-            Button b = MainMenuButtons[(int)eMainMenuButtons.TELL_YOUR_FRIENDS];
-            string s = b.spriteState.ToString() + ", ";
-            b = MainMenuButtons[(int)eMainMenuButtons.AUDIO_SETTINGS];
-            s += b.spriteState.ToString() + ", ";
-            Debug.Log(s);
-        }
-    }*/
+   
     #region MAIN_MENU        
     public void InitMainMenu()
     {
@@ -425,7 +415,8 @@ public class RifRafMenuUI : MonoBehaviour
         StaticStuff.CreateNewProfile(avatar, CurProfileSlot);
 
         this.MCP.ShutOffAllUI();
-        //  this.MCP.VideoPlayerRR.PlayVideo("Maj_Warp_In", VideoCallback);
+        
+        SoundFXPlayer.PlayVO(CaptainSelectConfirm);
         StaticStuff.LoadProfileStartScene();
     }
 

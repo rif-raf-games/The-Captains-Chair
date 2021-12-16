@@ -166,28 +166,6 @@ public class CamFollow : MonoBehaviour
 
         }
     }
-
-    /*private void OnGUI()
-    {
-        switch(CurCamState)
-        {
-            case eCamState.FOLLOW:
-                if (GUI.Button(new Rect(Screen.width - 100, 0, 100, 50), "zoom out"))
-                {
-                    if (Player.IsInFreeRoam() == false) { Debug.LogWarning("Trying to start a zoom but we're not in free roam"); return; }
-                    BeginZoomOut();
-                }
-                break;
-            case eCamState.TRANSITION:
-                break;
-            case eCamState.SHIP_VIEW:
-                if (GUI.Button(new Rect(Screen.width - 100, 0, 100, 50), "zoom in"))
-                {
-                    BeginZoomIn();
-                }
-                break;
-        }        
-    }*/
     
     void BeginZoomIn()
     {

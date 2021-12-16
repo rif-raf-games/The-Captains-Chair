@@ -101,14 +101,6 @@ public class Parking : MiniGame
         }
     }
 
-  /*  public void OnGUI()
-    {
-        if (GUI.Button(new Rect(0, 200, 100, 100), "Reset"))
-        {
-            ResetGame();
-        }
-    }*/
-
     public override void ResetGame()
     {
       //  Debug.Log("Parking.ResetGame()");

@@ -1,4 +1,6 @@
-﻿using Articy.The_Captain_s_Chair;
+﻿
+#define USE_RR_ONGUI
+using Articy.The_Captain_s_Chair;
 using Articy.The_Captain_s_Chair.GlobalVariables;
 using Articy.Unity;
 using System.Collections;
@@ -42,7 +44,25 @@ public class MCP : MonoBehaviour
     public float AspectVal = 0f;      
 
     private void Awake()
-    {                
+    {
+#if UNITY_ANDROID
+        Debug.Log("You're on UNITY_ANDROID");
+#elif UNITY_IOS
+        Debug.Log("You're on UNITY_IOS");
+#elif UNITY_IPHONE
+    Debug.Log("You're on UNITY_IPHONE");
+#elif UNITY_EDITOR_WIN
+    Debug.Log("You're on UNITY_EDITOR_WIN");
+#elif UNITY_STANDALONE_WIN
+    Debug.Log("You're on UNITY_STANDALONE_WIN");
+#elif UNITY_EDITOR_OSX
+    Debug.Log("You're on UNITY_EDITOR_OSX");
+#elif UNITY_STANDALONE_OSX
+    Debug.Log("You're on UNITY_STANDALONE_OSX");
+#else
+    Debug.LogError("Unknown platform");
+#endif
+
         if (MenuUI == null || InGamePopUp == null) 
         {
             string s = "MenuUI==null: " + (MenuUI == null) + ", InGamePopUp==null: " + (InGamePopUp == null);
@@ -238,7 +258,7 @@ public class MCP : MonoBehaviour
             ss.Apply();
 
             string filePath = System.IO.Path.Combine(Application.temporaryCachePath, "TCC Share.png");
-            Debug.Log("filePath: " + filePath);
+            //Debug.Log("filePath: " + filePath);
             File.WriteAllBytes(filePath, ss.EncodeToPNG());
 
             // To avoid memory leaks
@@ -259,7 +279,55 @@ public class MCP : MonoBehaviour
     {
         StartFreeRoam();
     }
-    
+
+#if USE_RR_ONGUI
+    bool ShowSceneSelect = false;
+    public Vector2 ScrollPosition = Vector2.zero;
+    public Rect ScrollViewPos = new Rect(10, 300, 240, 100);
+    Rect ScrollViewScrollPos = new Rect(0, 0, 220, 200);
+    public int ButtonHeight = 50;
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Vector2 mousePos = new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y);
+            Rect toggleBox = new Rect(Screen.width - 100, Screen.height - 100, 100, 100);
+            //Debug.Log("mousePos: " + mousePos.ToString("F2"));
+            if (toggleBox.Contains(new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y)))
+            {
+                //Debug.Log("toggle scene select");
+                ShowSceneSelect = !ShowSceneSelect;
+            }
+        }
+    }
+    private void OnGUI()
+    {
+        if (ShowSceneSelect == false) return;
+
+        // scrollPosition = GUI.BeginScrollView(new Rect(10, 300, 200, 400), scrollPosition, new Rect(0, 0, 220, 200));
+        ScrollPosition = GUI.BeginScrollView(ScrollViewPos, ScrollPosition, ScrollViewScrollPos);
+
+        int numScenes = SceneManager.sceneCountInBuildSettings;
+        ScrollViewScrollPos.height = numScenes * ButtonHeight;
+        for (int i = 0; i < numScenes; i++)
+        {
+            string scenePath = SceneUtility.GetScenePathByBuildIndex(i);
+            string[] sceneInfo = scenePath.Split('/');
+            string sceneName = sceneInfo[sceneInfo.Length - 1];
+            sceneName = sceneName.Remove(sceneName.Length - (".unity".Length), (".unity".Length));
+            if (GUI.Button(new Rect(0, i * ButtonHeight, 200, ButtonHeight), sceneName))
+            {
+               // Debug.Log("clicked on " + sceneName);
+                LoadNextScene(sceneName);
+                //FindObjectOfType<MCP>().LoadNextScene(sj.Template.LoadingScreen.SceneToLoad, sj);
+                //FindObjectOfType<MCP>().LoadNextScene
+            }
+        }
+
+        GUI.EndScrollView();
+    }
+#endif
+
 #region SCENE_TRANSITIONS
     public void LoadNextScene(string sceneName = "", Scene_Jump sceneJump = null, Mini_Game_Jump miniGameJump = null, string posToSave = "", string savedPos = "", MenuButton menuButton = null)
     {
@@ -742,5 +810,4 @@ public class MCP : MonoBehaviour
     }
 
 #endregion
-    
 }

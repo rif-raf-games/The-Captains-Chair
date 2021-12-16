@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿//#define USE_RR_ONGU
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -49,6 +50,7 @@ public class RepairDebug : MonoBehaviour
     public GameObject pt1, pt2, plane;
 
     public float rotDir = 0f;
+#if USE_RR_ONGU
     private void OnGUI()
     {
         if(GUI.Button(new Rect(0,0,100,100), "left"))
@@ -61,8 +63,8 @@ public class RepairDebug : MonoBehaviour
             rotDir += 30;
             //cube.transform.eulerAngles = new Vector3(0f, rotDir, 0f);
         }
-    }
-
+    }  
+#endif
 
     float GetAngle(Vector3 dir, bool adjust)
     {

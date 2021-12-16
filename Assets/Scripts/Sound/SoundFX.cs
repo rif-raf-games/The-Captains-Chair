@@ -37,16 +37,7 @@ public class SoundFX : MonoBehaviour
             SoundFXNames.Add(info.GetName());
         }
     }
-
-    /*private void Start()
-    {        
-        foreach (FXInfo info in SoundFXList)
-        {
-            info.SetName();
-            SoundFXNames.Add(info.GetName());
-        }
-    }*/
-
+   
     public void PlayVO(AudioClip voClip)
     {
         this.AudioSource.PlayOneShot(voClip);

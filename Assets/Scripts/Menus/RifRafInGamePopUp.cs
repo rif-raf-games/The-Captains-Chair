@@ -49,7 +49,7 @@ public class RifRafInGamePopUp : MonoBehaviour
         Debug.Log("Turn on Restore button because you're on iOS.");
         RestoreButton.SetActive(true);
 #elif UNITY_ANDROID
-        Debug.Log("Turn off Restore button because you're on Android");
+       // Debug.Log("Turn off Restore button because you're on Android");
         RestoreButton.SetActive(false);
 #endif
 

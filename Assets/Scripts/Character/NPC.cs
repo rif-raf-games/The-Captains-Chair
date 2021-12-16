@@ -112,53 +112,7 @@ public class NPC : CharacterEntity
         {
             RestartBehavior();
         }        
-    }
-
-    /*public void SetBarkText(string text)
-    {
-        //Debug.LogWarning("Setting text: " + text + " on object: " + this.name);
-        BarkText.text = text;
-    }
-    public void ToggleBarkText(bool val)
-    {
-        BarkText.GetComponent<MeshRenderer>().enabled = val;
-        if(val == true)
-        {
-            BarkText.transform.LookAt(Camera.main.transform);
-            BarkText.transform.Rotate(0f, 180, 0f);
-        }
-    }*/
-
-  /*  public GameObject DestObject;
-    private void OnGUI()
-    {
-        if(this.name.Contains("Mall"))
-        {
-            if(GUI.Button(new Rect(0,Screen.height/2-25, 50, 50), "OMall"))
-            {
-                Debug.Log("go to the new spot Omally");                
-                SetNavMeshDest(DestObject.transform.position);
-            }
-            if (GUI.Button(new Rect(0, Screen.height / 2 + 25, 50, 50), "stop"))
-            {
-                Debug.Log("FUCKING STOP");
-                SetNavMeshDest(transform.position);
-                SetIsStopped(true);
-                Rigidbody rb = GetComponent<Rigidbody>();
-                rb.velocity = Vector3.zero;
-
-            }
-        }
-        if(this.name.Contains("Stu"))
-        {
-            if (GUI.Button(new Rect(Screen.width-50, Screen.height - 50, 50, 50), "Stu"))
-            {
-                Debug.Log("go to the new spot Stu");
-                SetStoppingDist(0f);
-                SetNavMeshDest(DestObject.transform.position);
-            }
-        }
-    }*/
+    }    
 
    // public GameObject DestSphere;
     // Update is called once per frame

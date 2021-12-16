@@ -152,17 +152,7 @@ public class CharacterEntity : MonoBehaviour
     {
         return CurFloor;
     }
-    /*private void OnGUI()
-    {
-        if(this.name.Contains("Captain"))
-        {
-            if (GUI.Button(new Rect(Screen.width - 100, Screen.height / 2 - 150, 100, 100), "set"))
-            {
-                this.transform.rotation = DebugPlayerRot;
-            }
-        }
-        
-    }*/
+   
     public Quaternion DebugPlayerRot = Quaternion.identity;
     public void SetFloor(int newFloor, string floorName = "")
     {

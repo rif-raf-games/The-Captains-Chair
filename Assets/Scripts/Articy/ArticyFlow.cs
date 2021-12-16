@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿//#define USE_RR_ONGU
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Articy.Unity;
@@ -653,7 +654,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             }
         }
     }
-#if true
+#if USE_RR_ONGU
     void OnGUI()
     {
       //  if (SHOW_SKIP_BUTTON == false) return;
@@ -888,46 +889,6 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
 
     public float GetDefaultTypewriterSpeed() { return ConvoUI.DefaultTypewriterSpeed; }
 
-    public Text debugText;
-    /*private void OnGUI()
-    {
-        if(GUI.Button(new Rect(Screen.width-100,300,100,100), "feh"))
-        {                        
-            string s = "OnGUI() branch hash code: " + CurBranches[0].GetHashCode() + ", CurBranches hash code: " + CurBranches.GetHashCode() + ", this hash code: " + this.GetHashCode();
-            int numAF = FindObjectsOfType<ArticyFlow>().Length;
-            int numAFP = FindObjectsOfType<ArticyFlowPlayer>().Length;
-            s += ", numAF: " + numAF + ", numAFP: " + numAFP;
-            Debug.LogError(s);
-        }
-
-        if (debugText == null)
-        {
-            GameObject go = GameObject.Find("debugText");
-            if (go != null) debugText = go.GetComponent<Text>();            
-        }
-        else
-        {
-            string s = "num branches: " + CurBranches.Count + "\n";
-            foreach (Branch b in CurBranches)
-            {
-                s += "branchID: " + b.BranchId + ", Target type: " + b.Target.GetType() + "\n";
-
-                if (CurBranches[0].Target.GetType() == typeof(Articy.The_Captain_s_Chair.OutputPin))
-                {
-                    string techName = ((ArticyObject)CurPauseObject).TechnicalName;
-                    Debug.LogError("WHAT THE FUCK 3 we're in OnGUI printing out all the branches and we have an OutputPin: " + CurBranches[0].DefaultDescription + ", CurPauseObject: " + techName);
-                }
-            }
-
-            int numAF = FindObjectsOfType<ArticyFlow>().Length;
-            int numAFP = FindObjectsOfType<ArticyFlowPlayer>().Length;
-
-            s += "numAF: " + numAF + ", numAFP : " + numAFP + "\n";            
-            int branchHashCode = (CurBranches.Count > 0 ? CurBranches[0].GetHashCode() : -987654321);
-            s += "branch hash code: " + branchHashCode + ", CurBranches has code: " + CurBranches.GetHashCode() + ", this hash code: " + this.GetHashCode();
-
-            debugText.text = s;
-        }                
-    }*/
+    //public Text debugText;    
 }
 

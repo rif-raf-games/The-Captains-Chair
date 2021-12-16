@@ -1,4 +1,4 @@
-﻿
+﻿//#define USE_RR_ONGUI
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -297,10 +297,9 @@ public class IAPManager : MonoBehaviour, IStoreListener
     public GUIStyle guiStyle = new GUIStyle();
     bool showIAPInfo = false;
     public Texture Black;
+#if USE_RR_ONGUI
     private void OnGUI()
-    {
-        
-
+    {        
         int top = 100;
         int w = 100;
         int h = 100;
@@ -345,6 +344,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
             PurchaseButtonClick("com.tales_tcc1.gameunlock5");
         }        
     }
+#endif
 
 
     /*

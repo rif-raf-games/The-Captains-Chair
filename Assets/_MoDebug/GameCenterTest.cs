@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿//#define USE_RR_ONGUI
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
@@ -8,13 +9,11 @@ using UnityEngine.SocialPlatforms.GameCenter;
 
 public class GameCenterTest : MonoBehaviour
 {
-#if !UNITY_ANDROID
-    // Start is called before the first frame update
-    void Start()
-    {
-        Screen.SetResolution(1280, 960, true);
-    }
 
+#if !UNITY_ANDROID
+    // Start is called before the first frame update    
+
+#if USE_RR_ONGUI
     private void OnGUI()
     {
         if(GUI.Button(new Rect(Screen.width-300, 100, 100, 100), "init gc"))
@@ -61,6 +60,7 @@ public class GameCenterTest : MonoBehaviour
             Social.ShowAchievementsUI();
         }                
     }
+#endif
 
     void ResetAllAchievementsCallback(bool val)
     {
@@ -122,11 +122,6 @@ public class GameCenterTest : MonoBehaviour
             string s = "ID: " + ach.id + ", % comp: " + ach.percentCompleted;
             Debug.Log(s);
         }
-    }
-    
-
-    
-
-    
+    }            
 #endif
 }

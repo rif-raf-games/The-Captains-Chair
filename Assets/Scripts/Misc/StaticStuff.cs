@@ -206,7 +206,7 @@ static public class StaticStuff
     
     static public void LoadCurrentProfile() // called from LoadProfileStartScene()
     {
-        Debug.Log("LoadCurrentProfile()");
+      //  Debug.Log("LoadCurrentProfile()");
         string saveName = GetProfileName(Current_Profile_Num);
         if (SaveFileExists(saveName) == false) { Debug.LogError("Trying to load current profile: " + saveName + " but it doesn't exist."); return; }
 
