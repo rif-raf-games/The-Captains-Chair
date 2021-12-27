@@ -849,15 +849,15 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     /// <summary>
     /// This is called from an Articy fragment defined in the project file
     /// </summary>
-    public void OpenCaptainsDoor()
+    public void ArticyTrophyCallback(string trophyID)
     {
         if (IsCalledInForecast == false)
         {
-            Debug.Log("-------------------------------------------------------------- called OpenCaptainsDoor() but we're changing functionality");
+            Debug.Log("called ArticyTropyCallback(). IsCalledInForecast == false so do the thing: " + trophyID);
         }
         else
         {
-            Debug.Log("-------------------------------------------------------------- OpenCaptainDoor(): Do NOT open door, we're just forecasting");
+            Debug.Log("called ArticyTropyCallback(). IsCalledInForecast == true so do NOT do the thing: " + trophyID);
         }
     }
 #endregion
