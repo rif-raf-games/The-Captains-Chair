@@ -73,6 +73,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         ConvoUI = FindObjectOfType<MCP>().GetConvoUI();
         TypewriterSpeed = ConvoUI.DefaultTypewriterSpeed;
         ArticyDatabase.DefaultGlobalVariables.Notifications.AddListener("*.*", MyGameStateVariablesChanged);
+        ArticyDatabase.DefaultMethodProvider = this;
         ActiveCALPauseObjects.Clear();
         this.MCP = FindObjectOfType<MCP>();
         if (this.MCP == null) Debug.LogError("ERROR: no MCP");
