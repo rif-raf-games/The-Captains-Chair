@@ -854,11 +854,12 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     {
         if (IsCalledInForecast == false)
         {
-            Debug.Log("called ArticyTropyCallback(). IsCalledInForecast == false so do the thing: " + trophyID);
+            Debug.Log("called ArticyTropyCallback(). IsCalledInForecast == false so give trophy: " + trophyID);
+            FindObjectOfType<GameCenterManager>().GiveTrophy(trophyID);
         }
         else
         {
-            Debug.Log("called ArticyTropyCallback(). IsCalledInForecast == true so do NOT do the thing: " + trophyID);
+            Debug.Log("called ArticyTropyCallback(). IsCalledInForecast == true so do NOT give trophy: " + trophyID);            
         }
     }
 #endregion

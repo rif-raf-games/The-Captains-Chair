@@ -1,4 +1,4 @@
-﻿//#define USE_RR_ONGUI
+﻿#define USE_RR_ONGUI
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,12 +11,16 @@ public class GameCenterTest : MonoBehaviour
 {
 
 #if !UNITY_ANDROID
-    // Start is called before the first frame update    
+
+    private void Awake()
+    {
+        Screen.SetResolution(1280, 960, true);
+    }
 
 #if USE_RR_ONGUI
     private void OnGUI()
     {
-        if(GUI.Button(new Rect(Screen.width-300, 100, 100, 100), "init gc"))
+        if(GUI.Button(new Rect(Screen.width-300, 100, 100, 100), "Init GC"))
         {
             // Authenticate and register a ProcessAuthentication callback
             // This call needs to be made before we can proceed to other calls in the Social API
@@ -24,11 +28,11 @@ public class GameCenterTest : MonoBehaviour
         } 
         if(GUI.Button(new Rect(Screen.width-300, 200, 100, 100), "Load Desc"))
         {
-            Social.LoadAchievementDescriptions(LoadDescCallback);
+            Social.LoadAchievementDescriptions(ProcessAchievementDescriptions);
         }
         if (GUI.Button(new Rect(Screen.width - 100, 300, 100, 100), "Load Ach"))
         {
-            Social.LoadAchievements(LoadAchCallback);
+            Social.LoadAchievements(ProcessLoadedAchievements);
         }
         if (GUI.Button(new Rect(Screen.width - 100, 400, 100, 100), "01 100%"))
         {
@@ -73,35 +77,34 @@ public class GameCenterTest : MonoBehaviour
     {
         if (success)
         {
-            Debug.Log("Authenticated, checking achievements");
+            Debug.Log("ProcessAuthentication() Authenticated, checking achievements");
 
             // Request loaded achievements, and register a callback for processing them
+            Social.LoadAchievementDescriptions(ProcessAchievementDescriptions);
             Social.LoadAchievements(ProcessLoadedAchievements);
         }
         else
-            Debug.Log("Failed to authenticate");
+            Debug.Log("ProcessAuthentication() Failed to authenticate");
     }
 
     // This function gets called when the LoadAchievement call completes
     void ProcessLoadedAchievements(IAchievement[] achievements)
     {
         if (achievements.Length == 0)
-            Debug.Log("Error: no achievements found");
+            Debug.Log("ProcessLoadedAchievements() No achievements found, which we should mean the user hasn't achieved any.");
         else
-            Debug.Log("Got " + achievements.Length + " achievements");
-
-        // You can also call into the functions like this
-        Social.ReportProgress("Achievement01", 100.0, result => {
-            if (result)
-                Debug.Log("Successfully reported achievement progress");
-            else
-                Debug.Log("Failed to report achievement");
-        });
+        {
+            Debug.Log("ProcessLoadedAchievements() Got " + achievements.Length + " achievements");
+            foreach(IAchievement achievement in achievements)
+            {
+                Debug.Log("id: " + achievement.id + ", completed: " + achievement.completed + ", %: " + achievement.percentCompleted);
+            }
+        }          
     }
 
-    void LoadDescCallback(IAchievementDescription[] descriptions)
+    void ProcessAchievementDescriptions(IAchievementDescription[] descriptions)
     {
-        Debug.Log("Num Desc: " + descriptions.Length);
+        Debug.Log("LoadDescCallback() Num Desc: " + descriptions.Length);
         foreach (IAchievementDescription desc in descriptions)
         {
             string s = "ID: " + desc.id + ", Title: " + desc.title + ", unachDesc: " + desc.unachievedDescription;
@@ -112,16 +115,6 @@ public class GameCenterTest : MonoBehaviour
     void ProgressCallback(bool val)
     {
         Debug.Log("ProgressCallback() val: " + val);
-    }
-
-    void LoadAchCallback(IAchievement[] achievements)
-    {
-        Debug.Log("Num Ach: " + achievements.Length);
-        foreach(IAchievement ach in achievements)
-        {
-            string s = "ID: " + ach.id + ", % comp: " + ach.percentCompleted;
-            Debug.Log(s);
-        }
-    }            
+    }              
 #endif
 }
