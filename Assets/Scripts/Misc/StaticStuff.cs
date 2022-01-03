@@ -14,7 +14,7 @@ using UnityEngine.SceneManagement;
 static public class StaticStuff 
 {
     /********************** DESIGNER TWEAK AREA *********************/
-    static string STARTING_SCENE_TO_LOAD = "Loop_Intro";
+    static string STARTING_SCENE_TO_LOAD = "E1_Loop_Intro";
     /****************************************************************/
 
 
