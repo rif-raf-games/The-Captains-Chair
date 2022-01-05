@@ -14,9 +14,8 @@ using UnityEngine.SceneManagement;
 static public class StaticStuff 
 {
     /********************** DESIGNER TWEAK AREA *********************/
-    static string STARTING_SCENE_TO_LOAD = "E1_Loop_Intro";
+    static string STARTING_SCENE_TO_LOAD = "E1_Loop_Intro"; /*"E1_Hangar_Intro";*/
     /****************************************************************/
-
 
     public enum eOrientation { LANDSCAPE, PORTRAIT };    
     public const int NUM_PROFILES = 4;

@@ -7,6 +7,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Linq;
 using Articy.The_Captain_s_Chair.GlobalVariables;
+using UnityEngine.SceneManagement;
 
 public class TheCaptainsChair : MonoBehaviour
 {    
@@ -40,6 +41,7 @@ public class TheCaptainsChair : MonoBehaviour
    
     void Start()
     {
+        Debug.Log("--TheCaptainsChair.Start()--");
         bool forceDialogueStart = false;
         if(this.MCP == null)
         {
@@ -94,8 +96,33 @@ public class TheCaptainsChair : MonoBehaviour
         }
         else
         {
-            dialogueToStartOn = DialogueToStartOn.GetObject() as Dialogue;
-        }
+            Debug.Log("Check the IAP stuff");
+            bool iapDialogueSet = false;
+            for (int i = 0; i < SceneManager.sceneCount; i++)
+            {
+                //Debug.Log("Scene: " + SceneManager.GetSceneAt(i).name);
+                if(SceneManager.GetSceneAt(i).name.Contains("E1_Hangar_Intro"))
+                {
+                    Debug.Log("We're on the hangar intro so check the dialogueToStartOn based on save data");
+                    iapDialogueSet = true;
+                    if(StaticStuff.HasUnlockedFullGame == true)
+                    {
+                        Debug.Log("IAP is bought in save data so load up the intro");
+                        dialogueToStartOn = FindObjectOfType<IAPDialogues>().IntroDialogue.GetObject() as Dialogue;
+                    }
+                    else
+                    {
+                        Debug.Log("IAP is NOT bought in save data so load movie");
+                        dialogueToStartOn = FindObjectOfType<IAPDialogues>().PaywallDialogue.GetObject() as Dialogue;
+                    }
+                }
+            }
+            // check to see if we're on the E1_Hangar_Intro scene to check for IAP stuff
+            if (iapDialogueSet == false)
+            {                
+                dialogueToStartOn = DialogueToStartOn.GetObject() as Dialogue;
+            }            
+        }        
 
         if (dialogueToStartOn == null) { Debug.LogError("We've got no Dialogue to start on in this scene"); return; }
         if(forceDialogueStart == true)
