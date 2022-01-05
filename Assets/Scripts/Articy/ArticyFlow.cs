@@ -360,14 +360,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                 SetNextBranch(CurBranches[0]);
             }            
             else if (CurPauseObject.GetType().Equals(typeof(Scene_Jump)))
-            {   // Jump to the scene specified
-                if(this.MCP.SaveNextObjectForIAP == true)
-                {
-                    Debug.Log("OK we want to hold the dialogue until we handle the IAP stuff so save the current pause object");
-                    this.MCP.IAPPauseObject = CurPauseObject;                    
-                    this.MCP.StartIAPPanel();
-                    return;
-                }
+            {   // Jump to the scene specified                
                 Scene_Jump sj = CurPauseObject as Scene_Jump;
                 //SceneManager.Load Scene(sj.Template.Next_Game_Scene.Scene_Name);
                 this.ConvoUI.gameObject.SetActive(false); // don't use EndConversation because that also shuts off the burger menu temporarily.  This UI needs an enema
@@ -416,6 +409,14 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             }
             else if(CurPauseObject.GetType().Equals(typeof(Save_Point)))
             {
+                if (this.MCP.SaveNextObjectForIAP == true)
+                {
+                    Debug.Log("OK we want to hold the dialogue until we handle the IAP stuff so save the current pause object");
+                    this.MCP.IAPPauseObject = CurPauseObject;
+                    CurArticyState = eArticyState.FREE_ROAM;
+                    // the IAP panel will be brought up once the video playing is over moiap
+                    return;
+                }
                 StaticStuff.PrintFlowBranchesUpdate("We're on a Save_Point, so parse the data and save it", this);
                 Debug.Log("We're on a Save_Point, so parse the data and save it");
                 HandleSavePoint(CurPauseObject as Save_Point);                

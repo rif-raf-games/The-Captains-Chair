@@ -53,7 +53,13 @@ public class VideoPlayerRR : MonoBehaviour
         VideoPlayer.clip = clip;
         OnVideoEnd = callback;        
         BackgroundMusicPlayer.Play("Off");
-        VideoPlayer.Play();        
+        VideoPlayer.Play();
+        // check if we need to hold off to handle IAP
+        if (SceneManager.GetActiveScene().name.Contains("Hangar_Intro"))
+        {
+            Debug.Log("We're about to play the IAP video so hold the dialogue object until after the IAP popups");
+            this.MCP.SaveNextObjectForIAP = true; //moiap
+        }
     }
 
     void EndReached(UnityEngine.Video.VideoPlayer vp)
@@ -65,11 +71,11 @@ public class VideoPlayerRR : MonoBehaviour
         ToggleVideoPlayerChild(false);
         ConvoUI.SetSkipMovieButtonActive(false);
         FindObjectOfType<CCPlayer>().GetComponent<ArticyFlow>().SkipDialogue();
-        // check if we need to hold off to handle IAP
-        if(SceneManager.GetActiveScene().name.Contains("E1.Hanger_Intro"))
+
+        if (SceneManager.GetActiveScene().name.Contains("Hangar_Intro"))
         {
-            Debug.Log("We want to do the IAP after this dialogue so set the flag");
-            this.MCP.SaveNextObjectForIAP = true;
+            Debug.Log("Finished IAP video so get the popups ready to go");
+            FindObjectOfType<IAPManager>().RRBeginIAPProcess();
         }
     }
 }

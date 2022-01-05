@@ -580,19 +580,7 @@ public class MCP : MonoBehaviour
                 index++;
             }
         }
-        
-        /* if (curSceneName.Contains("E1.Exchange") && sceneName.Contains("E1.Plaza"))
-         {
-             GameObject go = GameObject.Find("Captain");
-             if (go == null) Debug.LogError("No object named Captain in this scene");
-             else go.transform.position = new Vector3(-48f, 0f, 30f);
-             go = GameObject.Find("Grunfeld");
-             if (go == null) Debug.LogError("No object named Grunfeld in this scene");
-             go.transform.position = new Vector3(-44f, 0f, -24f);
-             go = GameObject.Find("Carver");
-             if (go == null) Debug.LogError("No object named Carver in this scene");
-             go.transform.position = new Vector3(-44f, 0f, -40f);
-         }*/
+                
         BGMusic.ResetVolume();
 
         if (sceneName.Contains("Front") == false)
@@ -601,6 +589,16 @@ public class MCP : MonoBehaviour
             if (FindObjectOfType<TheCaptainsChair>() != null)
             {
                 FindObjectOfType<TheCaptainsChair>().CheckStartDialogue(DialogueToStartOnThisScene);
+               /* // check to see if we're on the E1_Hangar_Intro scene to check for IAP stuff
+                if (sceneName.Contains("E1_Hangar_Intro") == true)
+                {
+                    // IF IAP is initialized and the flag is true, then continue on with normal intro
+                    Debug.Log("Check the IAP stuff");
+                }
+                else
+                {
+                    FindObjectOfType<TheCaptainsChair>().CheckStartDialogue(DialogueToStartOnThisScene);
+                }         */       
             }          
         }                
 
@@ -613,8 +611,7 @@ public class MCP : MonoBehaviour
         }
 
         if(SceneManager.GetActiveScene().name.Contains("Game_MCP"))
-        {
-            Debug.Log("fade up music");
+        {            
             BackgroundMusicPlayer.Play("MiniGames/" + FindObjectOfType<MiniGameMCP>().BackgroundMusicName);           
         }        
 
@@ -777,7 +774,7 @@ public class MCP : MonoBehaviour
     }
     public void ToggleInGamePopUp(bool isActive)
     {
-        Debug.Log("MCP.ToggleInGamePopUp(): " + isActive);
+        //Debug.Log("MCP.ToggleInGamePopUp(): " + isActive);
         InGamePopUp.gameObject.SetActive(isActive);
     }
 
