@@ -1,5 +1,5 @@
 ﻿
-#define USE_RR_ONGUI
+//#define USE_RR_ONGUI
 using Articy.The_Captain_s_Chair;
 using Articy.The_Captain_s_Chair.GlobalVariables;
 using Articy.Unity;

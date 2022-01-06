@@ -151,7 +151,7 @@ public class ConvoUI : MonoBehaviour
             }
             else
             {
-                DialogueOptions[i].GetComponentInChildren<Text>().text = "Continue";
+                DialogueOptions[i].GetComponentInChildren<Text>().text = "";
             }
         }
     }
