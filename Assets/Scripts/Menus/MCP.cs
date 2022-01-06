@@ -635,7 +635,8 @@ public class MCP : MonoBehaviour
                     Vector3 pos = new Vector3(elevator.transform.localPosition.x, yPos, elevator.transform.localPosition.z);
                     elevator.transform.localPosition = pos;
                 }                    
-            }          
+            }
+            index++;
         }
 
         curImages = new List<RawImage>() { Curtain, SpinWheel };
