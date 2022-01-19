@@ -853,6 +853,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     /// </summary>
     public void ArticyTrophyCallback(string trophyID)
     {
+#if !UNITY_ANDROID
         if (IsCalledInForecast == false)
         {
             Debug.Log("called ArticyTropyCallback(). IsCalledInForecast == false so give trophy: " + trophyID);
@@ -862,6 +863,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         {
             Debug.Log("called ArticyTropyCallback(). IsCalledInForecast == true so do NOT give trophy: " + trophyID);            
         }
+#endif
     }
 #endregion
 
