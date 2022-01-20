@@ -257,8 +257,10 @@ public class MCP : MonoBehaviour
             ss.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
             ss.Apply();
 
+
             string filePath = System.IO.Path.Combine(Application.temporaryCachePath, "TCC Share.png");
-            //Debug.Log("filePath: " + filePath);
+           // string filePath = Application.persistentDataPath + "/TCC Share.png";
+            Debug.Log("filePath: " + filePath);
             File.WriteAllBytes(filePath, ss.EncodeToPNG());
 
             // To avoid memory leaks

@@ -59,7 +59,7 @@ public class VideoPlayerRR : MonoBehaviour
         {
             Debug.Log("We're about to play the IAP video so hold the dialogue object until after the IAP popups");
             this.MCP.SaveNextObjectForIAP = true; //moiap
-        }
+        }        
     }
 
     void EndReached(UnityEngine.Video.VideoPlayer vp)
@@ -76,6 +76,14 @@ public class VideoPlayerRR : MonoBehaviour
         {
             Debug.Log("Finished IAP video so get the popups ready to go");
             FindObjectOfType<IAPManager>().RRBeginIAPProcess();
+            return;
+        }
+        ArticyFlow af = FindObjectOfType<ArticyFlow>();
+        if (af == null) { Debug.LogError("ERROR: no ArticyFlow object in scene."); return; }
+        if (af.VideoPlayerPauseDialogue != null)
+        {
+            Debug.Log("We have a non null VideoPlayerPauseObject so get the flow going again");
+            af.StartAfterVideoPlayer();
         }
     }
 }

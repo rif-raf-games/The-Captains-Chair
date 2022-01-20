@@ -32,7 +32,8 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     // The objects you have to wait until you have visited before the dialogue will continue if you're in the middle of a CAL
     List<ArticyObject> ActiveCALPauseObjects = new List<ArticyObject>(); 
     List<string> FlowFragsVisited = new List<string>(); // List of flow fragments visited to check against ActiveCALPauseObjects
-    
+    public Dialogue VideoPlayerPauseDialogue = null; // The dialogue we're holding on in the case where a video is being played as the last action in the flow/scene    
+
     NPC DialogueNPC = null; // The NPC you're in conversation with    
 
     MiniGameMCP MiniGameMCP; // if we're in a mini game we'll have a mini game mcp
@@ -295,8 +296,34 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         else if (CurPauseObject.GetType().Equals(typeof(Stage_Directions_Container)))
         {   // for stage direction containers we again get the next fragment automatically since we're temp taking over for this fragment        
             Stage_Directions_Container sdc = CurPauseObject as Stage_Directions_Container;
-            NextFragment = (sdc.OutputPins[0].Connections[0].Target as ArticyObject);            
-            if(StageDirectionPlayer != null) StageDirectionPlayer.HandleStangeDirectionContainer(sdc);            
+            NextFragment = (sdc.OutputPins[0].Connections[0].Target as ArticyObject);
+            if (StageDirectionPlayer != null)
+            {
+                StageDirectionPlayer.eSDSpecialCases sc = StageDirectionPlayer.HandleStangeDirectionContainer(sdc);
+                // At this late stage in the game we're handling new flow cases manually, so in this case we need to check if the last
+                // node in the dialogue is a video.
+                if (sc == StageDirectionPlayer.eSDSpecialCases.PLAYING_VIDEO)
+                {
+                    ArticyObject target = sdc.OutputPins[0].Connections[0].Target;
+                    if (target as VO_Dialogue_Fragment != null)
+                    {
+                        Debug.Log("Playing video but there's dialogue after it so just let it go as normal.");
+                    }
+                    else if (target as Articy.The_Captain_s_Chair.Dialogue)
+                    {
+                        Debug.Log("Playing video and it's the last node so do all the special case stuff");
+                        VideoPlayerPauseDialogue = (sdc.OutputPins[0].Connections[0].Target as Dialogue);
+                        Debug.Log(VideoPlayerPauseDialogue.OutputPins[0].Text);
+                        this.ConvoUI.gameObject.SetActive(false);
+                        CurPauseObject = null;
+                        SetNextBranch(null);
+                        NextFragment = null;
+                        CurArticyState = eArticyState.FREE_ROAM;
+                    }
+                }
+            }
+            //NextFragment = (sdc.OutputPins[0].Connections[0].Target as ArticyObject);            
+            //if(StageDirectionPlayer != null) StageDirectionPlayer.HandleStangeDirectionContainer(sdc);            
         }
         else if (CurBranches.Count == 1)
         {   // We're paused and there's only one valid branch available. This is common so have it's own section                 
@@ -362,11 +389,8 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             else if (CurPauseObject.GetType().Equals(typeof(Scene_Jump)))
             {   // Jump to the scene specified                
                 Scene_Jump sj = CurPauseObject as Scene_Jump;
-                //SceneManager.Load Scene(sj.Template.Next_Game_Scene.Scene_Name);
-                this.ConvoUI.gameObject.SetActive(false); // don't use EndConversation because that also shuts off the burger menu temporarily.  This UI needs an enema
-                //Debug.Log("---- about to do a regular scene jump");
+                this.ConvoUI.gameObject.SetActive(false); // don't use EndConversation because that also shuts off the burger menu temporarily.  
                 FindObjectOfType<MCP>().LoadNextScene(sj.Template.LoadingScreen.SceneToLoad, sj);
-                //FindObjectOfType<MCP>().LoadNextScene(sj.Template.Next_Game_Scene.Scene_Name, sj); 
             }
             else if (CurPauseObject.GetType().Equals(typeof(Mini_Game_Jump)))
             {
@@ -656,64 +680,26 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             }
         }
     }
-#if USE_RR_ONGU
-    void OnGUI()
+
+    /*
+        We're not redoing our whole ArticyFlow stuff so this is to handle the case where a movie is the last part of the dialouge and scene.
+        This is called from VideoPlayerRR().EndReached()*/
+    public void StartAfterVideoPlayer()
     {
-      //  if (SHOW_SKIP_BUTTON == false) return;
-        if (CurArticyState == eArticyState.DIALOGUE && CurPauseObject != null)
-        {
-            DialogueFragment df = CurPauseObject as DialogueFragment;
-            if (df == null) return;
+        Debug.Log("ArticyFlow.StartAfterVideoPlayer()");
+        CurPauseObject = null;// VideoPlayerPauseObject;
+        CurArticyState = eArticyState.DIALOGUE;
+        Debug.Log(VideoPlayerPauseDialogue.OutputPins[0].Text);
+        VideoPlayerPauseDialogue.OutputPins[0].Text.CallScript();
 
-            if (GUI.Button(new Rect(Screen.width - 100, Screen.height / 2 - 50, 100, 100), "Skip"))
-            {
-                DebugDF = df;
-                ArticyObject curAO = CurPauseObject as ArticyObject;
-              //  int numCheck = 0;
-                bool iSaySo = true;
-                //Debug.Log("*************************************skip");
-                while (iSaySo == true)
-                {
-                   // numCheck++;
-                   // Debug.LogWarning("curAO Type: " + curAO.GetType() + ", with TechnicalName: " + curAO.TechnicalName, this);
+        Save_Point sp = VideoPlayerPauseDialogue.OutputPins[0].Connections[0].Target as Save_Point;
+        HandleSavePoint(sp);
 
-                    List<ArticyObject> validArticyObjects = GetValidArticyObjects(curAO);
-                    if (validArticyObjects.Count == 0)
-                    {
-                      //  Debug.LogWarning("No valid branches so we must be at the end: " + curAO.TechnicalName);
-                        iSaySo = false;
-                        CurPauseObject = DebugDF as IFlowObject;
-                        CurBranches.Clear();
-                        validArticyObjects = GetValidArticyObjects(DebugDF as ArticyObject);
-                        if(validArticyObjects.Count == 1 && (validArticyObjects[0] as Dialogue) != null)
-                        {                            
-                            validArticyObjects = GetValidArticyObjects(validArticyObjects[0]);
-                        }
-                       // Debug.LogWarning("num valid branches at end: " + validArticyObjects.Count);
-                        ActiveCALPauseObjects.Clear();
-                        FlowFragsVisited.Clear();
-                        SetNextBranch(null);
-                        NextFragment = null;
-                        ConvoUI.ShowDialogueFragment(DebugDF, CurPauseObject, null, IsDialogueFragmentsInteractive, TypewriterSpeed, validArticyObjects); // show the UI                        
-                        ConvoUI.TurnOnValidButtons();
-                    }
-                    else
-                    {
-                        int choice = UnityEngine.Random.Range(0, validArticyObjects.Count);
-                      //  Debug.LogWarning("You chose option index: " + choice);
-                        curAO = validArticyObjects[choice];
-                        if (curAO as DialogueFragment != null)
-                        {
-                           // Debug.Log("We now have a new DebugDF: " + curAO.TechnicalName);
-                            DebugDF = curAO as DialogueFragment;
-                        }
-                    }
-                }
-            }
-        }
-    } 
+        Scene_Jump sj = sp.OutputPins[0].Connections[0].Target as Scene_Jump;
+        FindObjectOfType<MCP>().LoadNextScene(sj.Template.LoadingScreen.SceneToLoad, sj);
+    }
 
-#endif
+
     MCP OurMCP;
     bool WaitingOnALLastFrame = false;
     // Update is called once per frame
@@ -894,6 +880,63 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
 
     public float GetDefaultTypewriterSpeed() { return ConvoUI.DefaultTypewriterSpeed; }
 
-    //public Text debugText;    
+#if USE_RR_ONGU
+    void OnGUI()
+    {
+      //  if (SHOW_SKIP_BUTTON == false) return;
+        if (CurArticyState == eArticyState.DIALOGUE && CurPauseObject != null)
+        {
+            DialogueFragment df = CurPauseObject as DialogueFragment;
+            if (df == null) return;
+
+            if (GUI.Button(new Rect(Screen.width - 100, Screen.height / 2 - 50, 100, 100), "Skip"))
+            {
+                DebugDF = df;
+                ArticyObject curAO = CurPauseObject as ArticyObject;
+              //  int numCheck = 0;
+                bool iSaySo = true;
+                //Debug.Log("*************************************skip");
+                while (iSaySo == true)
+                {
+                   // numCheck++;
+                   // Debug.LogWarning("curAO Type: " + curAO.GetType() + ", with TechnicalName: " + curAO.TechnicalName, this);
+
+                    List<ArticyObject> validArticyObjects = GetValidArticyObjects(curAO);
+                    if (validArticyObjects.Count == 0)
+                    {
+                      //  Debug.LogWarning("No valid branches so we must be at the end: " + curAO.TechnicalName);
+                        iSaySo = false;
+                        CurPauseObject = DebugDF as IFlowObject;
+                        CurBranches.Clear();
+                        validArticyObjects = GetValidArticyObjects(DebugDF as ArticyObject);
+                        if(validArticyObjects.Count == 1 && (validArticyObjects[0] as Dialogue) != null)
+                        {                            
+                            validArticyObjects = GetValidArticyObjects(validArticyObjects[0]);
+                        }
+                       // Debug.LogWarning("num valid branches at end: " + validArticyObjects.Count);
+                        ActiveCALPauseObjects.Clear();
+                        FlowFragsVisited.Clear();
+                        SetNextBranch(null);
+                        NextFragment = null;
+                        ConvoUI.ShowDialogueFragment(DebugDF, CurPauseObject, null, IsDialogueFragmentsInteractive, TypewriterSpeed, validArticyObjects); // show the UI                        
+                        ConvoUI.TurnOnValidButtons();
+                    }
+                    else
+                    {
+                        int choice = UnityEngine.Random.Range(0, validArticyObjects.Count);
+                      //  Debug.LogWarning("You chose option index: " + choice);
+                        curAO = validArticyObjects[choice];
+                        if (curAO as DialogueFragment != null)
+                        {
+                           // Debug.Log("We now have a new DebugDF: " + curAO.TechnicalName);
+                            DebugDF = curAO as DialogueFragment;
+                        }
+                    }
+                }
+            }
+        }
+    } 
+
+#endif
 }
 

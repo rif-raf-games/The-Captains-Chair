@@ -10,7 +10,9 @@ public class StageDirectionPlayer : MonoBehaviour
 {
     TheCaptainsChair CaptainsChair;
     ArticyFlow ArticyFlow;
-    List<NPC> ShutOffAIs = new List<NPC>();    
+    List<NPC> ShutOffAIs = new List<NPC>();
+
+    public enum eSDSpecialCases { NONE, PLAYING_VIDEO };
 
     private void Awake()
     {
@@ -18,8 +20,9 @@ public class StageDirectionPlayer : MonoBehaviour
         this.ArticyFlow = GetComponent<ArticyFlow>();        
     }    
 
-    public void HandleStangeDirectionContainer(Stage_Directions_Container sdc)
+    public eSDSpecialCases HandleStangeDirectionContainer(Stage_Directions_Container sdc)
     {
+        eSDSpecialCases specialCase = eSDSpecialCases.NONE;
         List<ArticyScriptInstruction> outputsToExecute = new List<ArticyScriptInstruction>();
         foreach (OutgoingConnection oc in sdc.InputPins[0].Connections)
         {
@@ -28,12 +31,20 @@ public class StageDirectionPlayer : MonoBehaviour
             if (sd.InputPins[0].Text.CallScript() == true && HandleStageDirection(sd) == true)
             {
                 outputsToExecute.Add(sd.OutputPins[0].Text);
+                // we're starting to get a bit hacky but it's way deep into this game's dev cycle so we're handing
+                // new cases the forced way.  Sometimes we want to end a dialogue with a video and in that case we
+                // don't want any UI happening so just let the ArticyFlow.cs know we're playing a video.
+                if(sd.Template.Stage_Direction.Direction == Direction.Play_Video)
+                {
+                    specialCase = eSDSpecialCases.PLAYING_VIDEO;
+                }
             }                        
         }
         foreach(ArticyScriptInstruction i in outputsToExecute)
         {
             i.CallScript();
         }
+        return specialCase;
     }
     
     public bool HandleStageDirection(Stage_Directions sd) 
