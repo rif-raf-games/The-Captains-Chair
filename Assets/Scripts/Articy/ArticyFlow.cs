@@ -302,28 +302,22 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                 StageDirectionPlayer.eSDSpecialCases sc = StageDirectionPlayer.HandleStangeDirectionContainer(sdc);
                 // At this late stage in the game we're handling new flow cases manually, so in this case we need to check if the last
                 // node in the dialogue is a video.
-                if (sc == StageDirectionPlayer.eSDSpecialCases.PLAYING_VIDEO)
+                if (sc == StageDirectionPlayer.eSDSpecialCases.VIDEO_IS_LAST_NODE)
                 {
-                    ArticyObject target = sdc.OutputPins[0].Connections[0].Target;
-                    if (target as VO_Dialogue_Fragment != null)
-                    {
-                        Debug.Log("Playing video but there's dialogue after it so just let it go as normal.");
-                    }
-                    else if (target as Articy.The_Captain_s_Chair.Dialogue)
-                    {
-                        Debug.Log("Playing video and it's the last node so do all the special case stuff");
-                        VideoPlayerPauseDialogue = (sdc.OutputPins[0].Connections[0].Target as Dialogue);
-                        Debug.Log(VideoPlayerPauseDialogue.OutputPins[0].Text);
-                        this.ConvoUI.gameObject.SetActive(false);
-                        CurPauseObject = null;
-                        SetNextBranch(null);
-                        NextFragment = null;
-                        CurArticyState = eArticyState.FREE_ROAM;
-                    }
+                    Debug.Log("Playing video and it's the last node so do all the special case stuff");
+                    VideoPlayerPauseDialogue = (sdc.OutputPins[0].Connections[0].Target as Dialogue);
+                    Debug.Log(VideoPlayerPauseDialogue.OutputPins[0].Text);
+                    this.ConvoUI.gameObject.SetActive(false);
+                    CurPauseObject = null;
+                    SetNextBranch(null);
+                    NextFragment = null;
+                    CurArticyState = eArticyState.FREE_ROAM;                    
                 }
-            }
-            //NextFragment = (sdc.OutputPins[0].Connections[0].Target as ArticyObject);            
-            //if(StageDirectionPlayer != null) StageDirectionPlayer.HandleStangeDirectionContainer(sdc);            
+                else
+                {
+                    Debug.Log("Not playing video as last node so just behave as normal.");
+                }
+            }              
         }
         else if (CurBranches.Count == 1)
         {   // We're paused and there's only one valid branch available. This is common so have it's own section                 
@@ -630,6 +624,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     public bool SHOW_SKIP_BUTTON = false;
     public void SkipDialogue()
     {
+        Debug.Log("SkipDialogue()");
         DialogueFragment df = CurPauseObject as DialogueFragment;
         if (df == null)
         {

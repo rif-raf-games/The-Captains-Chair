@@ -70,7 +70,7 @@ public class VideoPlayerRR : MonoBehaviour
         OnVideoEnd = null;
         ToggleVideoPlayerChild(false);
         ConvoUI.SetSkipMovieButtonActive(false);
-        FindObjectOfType<CCPlayer>().GetComponent<ArticyFlow>().SkipDialogue();
+        //FindObjectOfType<CCPlayer>().GetComponent<ArticyFlow>().SkipDialogue();
 
         if (SceneManager.GetActiveScene().name.Contains("Hangar_Intro"))
         {

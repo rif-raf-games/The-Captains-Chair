@@ -12,7 +12,7 @@ public class StageDirectionPlayer : MonoBehaviour
     ArticyFlow ArticyFlow;
     List<NPC> ShutOffAIs = new List<NPC>();
 
-    public enum eSDSpecialCases { NONE, PLAYING_VIDEO };
+    public enum eSDSpecialCases { NONE, VIDEO_IS_LAST_NODE };
 
     private void Awake()
     {
@@ -36,7 +36,12 @@ public class StageDirectionPlayer : MonoBehaviour
                 // don't want any UI happening so just let the ArticyFlow.cs know we're playing a video.
                 if(sd.Template.Stage_Direction.Direction == Direction.Play_Video)
                 {
-                    specialCase = eSDSpecialCases.PLAYING_VIDEO;
+                    //Debug.Log("Play_Video direction targets: " + sd.Template.Stage_Direction.DirectionTargets);
+                    if (sd.Template.Stage_Direction.DirectionTargets == "FINAL_NODE")
+                    {
+                        //Debug.Log("FINAL_NODE");
+                        specialCase = eSDSpecialCases.VIDEO_IS_LAST_NODE;
+                    }                    
                 }
             }                        
         }
