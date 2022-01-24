@@ -22,7 +22,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
     float m_ActionTimer = 0f;
 
     string PurchaseFailMessage = "";
-    public static string CUR_IAP_ID = "com.tales_tcc1_modebug002";
+    public static string CUR_IAP_ID = "com.tales_tcc1_modebug003";
 
     Product IAPProduct = null;
     string InitFailureReason = "";
@@ -30,9 +30,12 @@ public class IAPManager : MonoBehaviour, IStoreListener
     System.Action IAPInitSuccessCallback = null;
     System.Action IAPInitFailCallback = null;
 
-    string TimeoutCause = "";
-    enum eIAPPopup { NONE, MAIN, INIT_ERROR, RESTORE_FAILED, PURCHASE_SUCCESS, PURCASE_FAILED, ACTION_TIMED_OUT };
-    eIAPPopup CurIAPPopup = eIAPPopup.NONE;
+    public string TimeoutCause = "";
+    public enum eIAPPopup { NONE, MAIN, QUIT_CONFIRM, INIT_ERROR, RESTORE_FAILED, PURCHASE_SUCCESS, PURCASE_FAILED, ACTION_TIMED_OUT };
+    public eIAPPopup CurIAPPopup = eIAPPopup.NONE;
+
+    public MCP _MCP;
+    public RifRafInGamePopUp _RifRafInGamePopup;
 
     void Start()
     {
@@ -50,13 +53,13 @@ public class IAPManager : MonoBehaviour, IStoreListener
         string result = ActionBeingTaken();
         if (result != "") { Debug.LogWarning("Can't InitIAP() because: " + result); return; }
 
-        Debug.Log("--InitIAP()--");
+        Debug.Log("InitIAP() --IAP--");
         StandardPurchasingModule module = StandardPurchasingModule.Instance();
         ConfigurationBuilder builder = ConfigurationBuilder.Instance(module); //ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
 
         m_IsGooglePlayStoreSelected =
             Application.platform == RuntimePlatform.Android && module.appStore == AppStore.GooglePlay;
-        Debug.Log("m_IsGooglePlayStoreSelected: " + m_IsGooglePlayStoreSelected);
+      //  Debug.Log("m_IsGooglePlayStoreSelected: " + m_IsGooglePlayStoreSelected);
 
         ProductCatalog catalog = ProductCatalog.LoadDefaultCatalog();
 
@@ -96,7 +99,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
     /// <param name="extensions"> The <c>IExtensionProvider</c> created during initialization. </param>
     public void OnInitialized(IStoreController controller, IExtensionProvider extensions)
     {
-        Debug.Log("--OnInitialized()--");
+        Debug.Log("OnInitialized() --IAP--");
         m_InitInProgress = false;
         m_Controller = controller;
         m_AppleExtensions = extensions.GetExtension<IAppleExtensions>();
@@ -108,12 +111,13 @@ public class IAPManager : MonoBehaviour, IStoreListener
         m_AppleExtensions.RegisterPurchaseDeferredListener(OnDeferred);
         List<string> hasReceipt = new List<string>();
 
-        Debug.Log("Available items:");
+        Debug.Log("Available items: --IAP--");
         foreach (Product item in controller.products.all)
         {
             if (item.availableToPurchase)
             {
-                Debug.Log(string.Join(" - ",
+                //Debug.Log(string.Join(" - ",
+                string s = string.Join(" - ",
                     new[]
                     {
                         item.definition.id,
@@ -121,7 +125,9 @@ public class IAPManager : MonoBehaviour, IStoreListener
                         item.definition.type.ToString(),
                         item.hasReceipt.ToString(),
                         item.receipt
-                    }));
+                    });
+                s += " --IAP--";
+                Debug.Log(s);
                 if (item.hasReceipt == true)
                 {
                     hasReceipt.Add("id: " + item.definition.id + " has receipt: " + item.receipt);
@@ -144,27 +150,28 @@ public class IAPManager : MonoBehaviour, IStoreListener
             if (product.definition.id == CUR_IAP_ID)
             {
                 IAPProduct = product;
-                Debug.Log("gameunlock: product is CUR_SAVE FILE. hasReceipt: " + product.hasReceipt + ", HasUnlockedFullGame: " + StaticStuff.HasUnlockedFullGame);
+                Debug.Log("gameunlock: product is CUR_SAVE FILE. hasReceipt: " + product.hasReceipt + ", HasUnlockedFullGame: " + StaticStuff.HasUnlockedFullGame + " --IAP--");
+
                 if (product.hasReceipt == true && StaticStuff.HasUnlockedFullGame == true)
                 {
-                    Debug.Log("gameunlock: receipt and settings are both true");
+                    Debug.Log("gameunlock: receipt and settings are both true --IAP--");
                     // Skip IAP popup go to intro dialogue
                 }
                 else if (product.hasReceipt == true && StaticStuff.HasUnlockedFullGame == false)
                 {
-                    Debug.Log("gameunlock: SCS receipt is true but settings is false so update settings");
+                    Debug.Log("gameunlock: SCS receipt is true but settings is false so update settings --IAP--");
                     StaticStuff.HasUnlockedFullGame = true;
                     StaticStuff.SaveCurrentSettings("IAPManager.OnInitialized()");
                     // Skip IAP popup go to intro dialogue
                 }
                 else if (product.hasReceipt == false && StaticStuff.HasUnlockedFullGame == false)
                 {
-                    Debug.Log("gameunlock: receipt and settings are false so no purchase");
+                    Debug.Log("gameunlock: receipt and settings are false so no purchase --IAP--");
                     // Show IAP popup
                 }
                 else if (product.hasReceipt == false && StaticStuff.HasUnlockedFullGame == true)
                 {   // mobrent
-                    Debug.LogError("gameunlock: receipt is false but settings is true...this is odd");
+                    Debug.LogError("gameunlock: receipt is false but settings is true...this is odd --IAP--");
                 }
             }
         }
@@ -199,103 +206,25 @@ public class IAPManager : MonoBehaviour, IStoreListener
                 //Debug.LogError("No products available for purchase!");
                 break;
         }
-        Debug.LogError(InitFailureReason);
+        Debug.LogError("OnInitializeFailed() reason: " + InitFailureReason + "--IAP--");
 
         if (IAPInitFailCallback != null) IAPInitFailCallback.Invoke();
     }
     #endregion // IAP_INIT
-
-    #region IAP_PURCHASE
-    /// <summary>
-    /// Triggered when the user presses the <c>Buy</c> button on a product user interface component.
-    /// </summary>
-    /// <param name="productID">The product identifier to buy</param>
-    public void PurchaseButtonClick(string productID)
-    {
-        Debug.Log("--PurchaseButtonClick(): " + productID + "--");
-        string result = ActionBeingTaken();
-        if (result != "") { Debug.LogWarning("Can't Purchase because: " + result); return; }
-
-        if (m_Controller == null)
-        {
-            Debug.LogError("Purchasing is not initialized");
-            InitIAP(RestoreButtonClick, RRInitFailed);
-            return;
-        }
-
-        if (m_Controller.products.WithID(productID) == null)
-        {
-            Debug.LogError("No product has id " + productID);
-            return;
-        }
-
-        m_PurchaseInProgress = true;
-        m_ActionTimer = 0f;
-        m_Controller.InitiatePurchase(m_Controller.products.WithID(productID), "developerPayload");
-    }
-
-    /// <summary>
-    /// A purchase succeeded.
-    /// </summary>
-    /// <param name="e"> The <c>PurchaseEventArgs</c> for the purchase event. </param>
-    /// <returns> The result of the successful purchase </returns>
-    public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs e)
-    {
-        m_PurchaseInProgress = false;
-        Debug.Log("--PurchaseProcessingResult()--");
-        Debug.Log("Purchase OK: " + e.purchasedProduct.definition.id);
-        Debug.Log("Receipt: " + e.purchasedProduct.receipt);
-
-        if (e.purchasedProduct.definition.id == CUR_IAP_ID)
-        {
-            Debug.Log("gameunlock: SCS just unlocked game so update settings");
-            StaticStuff.HasUnlockedFullGame = true;
-            StaticStuff.SaveCurrentSettings("IAPManager.PurchaseProcessingResult()");
-            if(CurIAPPopup != eIAPPopup.NONE)
-            {
-                RRPurchaseSuccess();
-            }
-        }
-
-        return PurchaseProcessingResult.Complete;
-    }
-
-    /// <summary>
-    /// A purchase failed with specified reason.
-    /// </summary>
-    /// <param name="item">The product that was attempted to be purchased. </param>
-    /// <param name="r">The failure reason.</param>
-    public void OnPurchaseFailed(Product item, PurchaseFailureReason r)
-    {
-        m_PurchaseInProgress = false;
-        Debug.Log("--OnPurchaseFailed(): " + item.definition.id + "--");
-        Debug.Log(r);
-
-        // Detailed debugging information
-        Debug.Log("Store specific error code: " + m_TransactionHistoryExtensions.GetLastStoreSpecificPurchaseErrorCode());
-        if (m_TransactionHistoryExtensions.GetLastPurchaseFailureDescription() != null)
-        {
-            string message = m_TransactionHistoryExtensions.GetLastPurchaseFailureDescription().message;
-            PurchaseFailMessage = message;
-            RRPurchaseFailed();
-            Debug.Log("Purchase failure description message: " + message);
-        }
-    }
-    #endregion // IAP_PURCHASE
-
-    #region IAP_RESTORE
-    public void RestoreButtonClick()
-    {
+    
+    #region IAP_RESTORE    
+    public void RestorePurchases()
+    {        
         string result = ActionBeingTaken();
         if (result != "") { Debug.LogWarning("Can't Restore because: " + result); return; }
         if (m_IsGooglePlayStoreSelected)
         {
-            Debug.Log("--RestoreButtonClick() - Google--");
+            Debug.Log("RestoreButtonClick() Google --IAP--");
             m_GooglePlayStoreExtensions.RestoreTransactions(OnTransactionsRestored);
         }
         else
         {
-            Debug.Log("--RestoreButtonClick() - Apple--");
+            Debug.Log("RestoreButtonClick() Apple --IAP--");
             m_AppleExtensions.RestoreTransactions(OnTransactionsRestored);
         }
         m_RestoreInProgress = true;
@@ -365,7 +294,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
                 }
                 else
                 {
-                    Debug.Log("Action timeout and we're on hangar scene so show popup about it: " + result);
+                    Debug.Log("Action timeout and we're on hangar scene so show popup about it: " + result + " --IAP--");
                     TimeoutCause = result;
                     RRActionTimedOut();
                 }
@@ -373,14 +302,160 @@ public class IAPManager : MonoBehaviour, IStoreListener
         }
     }
 
-    public void RRBeginIAPProcess()
+    public void OnClickRestorePurchases()
     {
-        CurIAPPopup = eIAPPopup.MAIN;
+        Debug.Log("OnClickRestorePurchases() --IAP--");
+        if (m_Controller == null)
+        {
+            Debug.LogWarning("Trying to restore purchases but IAP isn't active so re-init --IAP--");
+            InitIAP(OnClickRestorePurchases, RRInitFailed);
+        }
+        else if (m_Controller != null && IAPProduct == null)
+        {
+            Debug.LogError("We have a Controller but not Product. Should not be here. Check catalog and control panel --IAP--");
+        }
+        else
+        {
+            Debug.Log("we have a valid controller and a valid product so try the restore --IAP--");
+            RestorePurchases();
+        }
     }
+
+    #region PURCHASE
+    /// <summary>
+    /// Triggered when the user presses the <c>Buy</c> button on a product user interface component.
+    /// </summary>
+    /// <param name="productID">The product identifier to buy</param>
+    public void OnClickBuyIAP(string productID)
+    {
+        productID = CUR_IAP_ID;
+        Debug.Log("OnClickBuyIAP(): " + productID + " --IAP--");
+        string result = ActionBeingTaken();
+        if (result != "") { Debug.LogWarning("Can't Purchase because: " + result + " --IAP--"); return; }
+
+        if (m_Controller == null)
+        {
+            Debug.LogError("Purchasing is not initialized --IAP--");
+            InitIAP(RestorePurchases, RRInitFailed);
+            return;
+        }
+
+        if (m_Controller.products.WithID(productID) == null)
+        {
+            Debug.LogError("No product has id " + productID + " --IAP--");
+            return;
+        }
+
+        m_PurchaseInProgress = true;
+        m_ActionTimer = 0f;
+        m_Controller.InitiatePurchase(m_Controller.products.WithID(productID));
+    }
+
+    /// <summary>
+    /// A purchase succeeded.
+    /// </summary>
+    /// <param name="e"> The <c>PurchaseEventArgs</c> for the purchase event. </param>
+    /// <returns> The result of the successful purchase </returns>
+    public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs e)
+    {
+        m_PurchaseInProgress = false;
+        Debug.Log("PurchaseProcessingResult() ID: " + e.purchasedProduct.definition.id + ", Receipt: " + e.purchasedProduct.receipt + " --IAP--");
+
+        if (e.purchasedProduct.definition.id == CUR_IAP_ID)
+        {
+            Debug.Log("gameunlock: SCS just unlocked game so update settings --IAP--");
+            StaticStuff.HasUnlockedFullGame = true;
+            StaticStuff.SaveCurrentSettings("IAPManager.PurchaseProcessingResult()");
+            if (CurIAPPopup != eIAPPopup.NONE)
+            {
+                RRPurchaseSuccess();
+            }
+        }
+
+        return PurchaseProcessingResult.Complete;
+    }
+
+    /// <summary>
+    /// A purchase failed with specified reason.
+    /// </summary>
+    /// <param name="item">The product that was attempted to be purchased. </param>
+    /// <param name="r">The failure reason.</param>
+    public void OnPurchaseFailed(Product item, PurchaseFailureReason r)
+    {
+        m_PurchaseInProgress = false;
+        Debug.Log("--OnPurchaseFailed(): " + item.definition.id + "--IAP--");
+        Debug.Log(r);
+
+        // Detailed debugging information
+        Debug.Log("Store specific error code: " + m_TransactionHistoryExtensions.GetLastStoreSpecificPurchaseErrorCode() + " --IAP--");
+        if (m_TransactionHistoryExtensions.GetLastPurchaseFailureDescription() != null)
+        {
+            string message = m_TransactionHistoryExtensions.GetLastPurchaseFailureDescription().message;
+            PurchaseFailMessage = message;
+            RRPurchaseFailed();
+        }
+    }
+
     void RRPurchaseSuccess()
     {
-        CurIAPPopup = eIAPPopup.PURCHASE_SUCCESS;
+        Debug.Log("RRPurchaseSuccess() --IAP--");
+        CurIAPPopup = eIAPPopup.NONE;
+        _MCP.StopIAPPanel();
+        CCPlayer p = FindObjectOfType<CCPlayer>();
+        IAPDialogues iadd = FindObjectOfType<IAPDialogues>();
+        if (iadd == null) { Debug.LogError("ERROR: no IAPDialogues in this scene"); return; }
+        Dialogue dialogue = iadd.IntroDialogue.GetObject() as Dialogue;
+        p.GetComponent<ArticyFlow>().CheckIfDialogueShouldStart(iadd.IntroDialogue.GetObject() as Dialogue, p.gameObject);
     }
+
+    void RRPurchaseFailed()
+    {
+        Debug.Log("RRPurchaseFailed() PurchaseFailMessage: " + PurchaseFailMessage + " --IAP--");
+        CurIAPPopup = eIAPPopup.PURCASE_FAILED;
+        _RifRafInGamePopup.IAPPurchaseFailed(PurchaseFailMessage, OnClickPurchaseFailRetry, OnClickPurchaseFailClose);
+    }
+
+    public void OnClickPurchaseFailRetry()
+    {
+        Debug.Log("OnClickPurchaseFailRetry() --IAP--");
+        _RifRafInGamePopup.GenericPopup.gameObject.SetActive(false);
+        OnClickBuyIAP(CUR_IAP_ID);
+    }
+    public void OnClickPurchaseFailClose()
+    {
+        Debug.Log("OnClickPurchaseFailClose() --IAP--");
+        _RifRafInGamePopup.GenericPopup.gameObject.SetActive(false);        
+    }
+    #endregion
+
+
+    public void OnClickGoToMainMenu()
+    {
+        Debug.Log("OnClickGoToMainMenu() --IAP--");        
+        if(_RifRafInGamePopup.IAPQuitConfirmPopup.activeSelf == true ) { Debug.Log("checking UI Logic DELETE THIS --IAP--"); return; }
+        CurIAPPopup = eIAPPopup.QUIT_CONFIRM;
+        _RifRafInGamePopup.IAPQuitConfirmPopup.gameObject.SetActive(true);
+    }
+
+    public void OnClickGoToMainCancel()
+    {
+        CurIAPPopup = eIAPPopup.MAIN;
+        _RifRafInGamePopup.IAPQuitConfirmPopup.gameObject.SetActive(false);
+    }
+    public void OnClickGoToMainConfirm()
+    {
+        CurIAPPopup = eIAPPopup.NONE;
+        _RifRafInGamePopup.IAPQuitConfirmPopup.gameObject.SetActive(false);
+        _MCP.LoadNextScene("Front End Launcher");        
+    }
+
+    public void RRBeginIAPProcess()
+    {
+        Debug.Log("IAPManager.RRBeginIAPProcess() (called from VideoPlayer) --IAP--");
+        CurIAPPopup = eIAPPopup.MAIN;
+        _MCP.StartIAPPanel();
+    }
+    
     void RRInitFailed()
     {
         CurIAPPopup = eIAPPopup.INIT_ERROR;
@@ -392,13 +467,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
     void RRRestoreFailed()
     {
         CurIAPPopup = eIAPPopup.RESTORE_FAILED;
-    }
-
-    void RRPurchaseFailed()
-    {
-        CurIAPPopup = eIAPPopup.PURCASE_FAILED;
-    }
-
+    }        
     string ActionBeingTaken()
     {
         string result = "";
@@ -421,14 +490,14 @@ public class IAPManager : MonoBehaviour, IStoreListener
             case eIAPPopup.MAIN:
                 GUI.DrawTexture(new Rect(x, y, w, h), Black);
                 GUI.Label(new Rect(x + 10, y + 10, w - 20, h - 20), "Buy IAP?");
-                if (GUI.Button(new Rect(x, y + 100, 90, 90), "Restore"))
+                /*if (GUI.Button(new Rect(x, y + 100, 90, 90), "Restore"))
                 {
                     m_Controller = null;
                     Debug.Log("Restore purchases");
                     if (m_Controller == null)
                     {
                         Debug.LogWarning("Trying to restore purchases but IAP isn't active so re-init IAP");
-                        InitIAP(RestoreButtonClick, RRInitFailed);
+                        InitIAP(RestorePurchases, RRInitFailed);
                     }
                     else if (m_Controller != null && IAPProduct == null)
                     {
@@ -437,21 +506,50 @@ public class IAPManager : MonoBehaviour, IStoreListener
                     else
                     {
                         Debug.Log("we have a valid controller and a valid product so try the restore");
-                        RestoreButtonClick();
+                        RestorePurchases();
                     }
 
-                }
-                if (GUI.Button(new Rect(x + 100, y + 100, 90, 90), "Buy"))
+                }*/
+                /*if (GUI.Button(new Rect(x + 100, y + 100, 90, 90), "Buy"))
                 {
                     Debug.Log("Buy IAP");
                     PurchaseButtonClick(CUR_IAP_ID);
 
-                }
-                if (GUI.Button(new Rect(x + 200, y + 100, 90, 90), "Leave"))
+                }*/
+               /* if (GUI.Button(new Rect(x + 200, y + 100, 90, 90), "Leave"))
                 {
                     FindObjectOfType<MCP>().LoadNextScene("Front End Launcher");
                     CurIAPPopup = eIAPPopup.NONE;
+                }*/
+                break;
+            case eIAPPopup.PURCHASE_SUCCESS:
+                GUI.DrawTexture(new Rect(x, y, w, h), Black);
+                GUI.Label(new Rect(x + 10, y + 10, w - 20, h - 20), "Purchase success!");
+                /*if (GUI.Button(new Rect(x, y + 100, 90, 90), "Continue"))
+                {
+                    Debug.Log("successful purchase so move onto the intro");
+                    CurIAPPopup = eIAPPopup.NONE;
+                    CCPlayer p = FindObjectOfType<CCPlayer>();
+                    IAPDialogues iadd = FindObjectOfType<IAPDialogues>();
+                    if (iadd == null) { Debug.LogError("ERROR: no IAPDialogues in this scene"); return; }
+                    Dialogue dialogue = iadd.IntroDialogue.GetObject() as Dialogue;
+                    p.GetComponent<ArticyFlow>().CheckIfDialogueShouldStart(iadd.IntroDialogue.GetObject() as Dialogue, p.gameObject);
+                }*/
+                break;
+            case eIAPPopup.PURCASE_FAILED:
+                GUI.DrawTexture(new Rect(x, y, w, h), Black);
+                GUI.Label(new Rect(x + 10, y + 10, w - 20, h - 20), "Purchase fail\n!" + PurchaseFailMessage);
+                /*if (GUI.Button(new Rect(x, y + 100, 90, 90), "Retry Purchase"))
+                {
+                    Debug.Log("Retry purchase");
+                    OnClickBuyIAP(CUR_IAP_ID);
                 }
+                if (GUI.Button(new Rect(x + 100, y + 100, 90, 90), "Leave"))
+                {
+                    Debug.Log("Purchase error but going back to front end");
+                    FindObjectOfType<MCP>().LoadNextScene("Front End Launcher");
+                    CurIAPPopup = eIAPPopup.NONE;
+                }*/
                 break;
             case eIAPPopup.INIT_ERROR:
                 GUI.DrawTexture(new Rect(x, y, w, h), Black);
@@ -474,7 +572,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
                 if (GUI.Button(new Rect(x, y + 100, 90, 90), "Retry Restore"))
                 {
                     Debug.Log("Retry Restore");
-                    RestoreButtonClick();
+                    RestorePurchases();
                 }
                 if (GUI.Button(new Rect(x + 100, y + 100, 90, 90), "Leave"))
                 {
@@ -483,35 +581,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
                     CurIAPPopup = eIAPPopup.NONE;
                 }
                 break;
-            case eIAPPopup.PURCHASE_SUCCESS:
-                GUI.DrawTexture(new Rect(x, y, w, h), Black);
-                GUI.Label(new Rect(x + 10, y + 10, w - 20, h - 20), "Purchase success!");
-                if (GUI.Button(new Rect(x, y + 100, 90, 90), "Continue"))
-                {
-                    Debug.Log("successful purchase so move onto the intro");
-                    CurIAPPopup = eIAPPopup.NONE;
-                    CCPlayer p = FindObjectOfType<CCPlayer>();
-                    IAPDialogues iadd = FindObjectOfType<IAPDialogues>();
-                    if (iadd == null) { Debug.LogError("ERROR: no IAPDialogues in this scene"); return; }
-                    Dialogue dialogue = iadd.IntroDialogue.GetObject() as Dialogue;
-                    p.GetComponent<ArticyFlow>().CheckIfDialogueShouldStart(iadd.IntroDialogue.GetObject() as Dialogue, p.gameObject);
-                }
-                break;
-            case eIAPPopup.PURCASE_FAILED:
-                GUI.DrawTexture(new Rect(x, y, w, h), Black);
-                GUI.Label(new Rect(x + 10, y + 10, w - 20, h - 20), "Purchase fail\n!" + PurchaseFailMessage);
-                if (GUI.Button(new Rect(x, y + 100, 90, 90), "Retry Purchase"))
-                {
-                    Debug.Log("Retry purchase");
-                    PurchaseButtonClick(CUR_IAP_ID);
-                }
-                if (GUI.Button(new Rect(x + 100, y + 100, 90, 90), "Leave"))
-                {
-                    Debug.Log("Purchase error but going back to front end");
-                    FindObjectOfType<MCP>().LoadNextScene("Front End Launcher");
-                    CurIAPPopup = eIAPPopup.NONE;
-                }
-                break;
+            
             case eIAPPopup.ACTION_TIMED_OUT:
                 GUI.DrawTexture(new Rect(x, y, w, h), Black);
                 GUI.Label(new Rect(x + 10, y + 10, w - 20, h - 20), "Timeout:\n" + TimeoutCause);
@@ -525,12 +595,12 @@ public class IAPManager : MonoBehaviour, IStoreListener
                     else if (m_PurchaseInProgress == true)
                     {
                         m_PurchaseInProgress = false;
-                        PurchaseButtonClick(CUR_IAP_ID);
+                        OnClickBuyIAP(CUR_IAP_ID);
                     }
                     else if (m_RestoreInProgress == true)
                     {
                         m_RestoreInProgress = false;
-                        RestoreButtonClick();
+                        RestorePurchases();
                     }
                 }
                 break;

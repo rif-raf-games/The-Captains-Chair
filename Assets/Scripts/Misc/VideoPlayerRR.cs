@@ -57,7 +57,7 @@ public class VideoPlayerRR : MonoBehaviour
         // check if we need to hold off to handle IAP
         if (SceneManager.GetActiveScene().name.Contains("Hangar_Intro"))
         {
-            Debug.Log("We're about to play the IAP video so hold the dialogue object until after the IAP popups");
+            Debug.Log("We're about to play the IAP video so hold the dialogue object until after the IAP popups --IAP--");
             this.MCP.SaveNextObjectForIAP = true; //moiap
         }        
     }
@@ -74,7 +74,7 @@ public class VideoPlayerRR : MonoBehaviour
 
         if (SceneManager.GetActiveScene().name.Contains("Hangar_Intro"))
         {
-            Debug.Log("Finished IAP video so get the popups ready to go");
+            Debug.Log("Finished IAP video so get the popups ready to go --IAP--");
             FindObjectOfType<IAPManager>().RRBeginIAPProcess();
             return;
         }
@@ -82,7 +82,7 @@ public class VideoPlayerRR : MonoBehaviour
         if (af == null) { Debug.LogError("ERROR: no ArticyFlow object in scene."); return; }
         if (af.VideoPlayerPauseDialogue != null)
         {
-            Debug.Log("We have a non null VideoPlayerPauseObject so get the flow going again");
+            Debug.Log("We have a non null VideoPlayerPauseObject so get the flow going again --IAP--");
             af.StartAfterVideoPlayer();
         }
     }

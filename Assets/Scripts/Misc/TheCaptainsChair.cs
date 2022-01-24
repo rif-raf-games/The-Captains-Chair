@@ -41,7 +41,7 @@ public class TheCaptainsChair : MonoBehaviour
    
     void Start()
     {
-        Debug.Log("--TheCaptainsChair.Start()--");
+       // Debug.Log("--TheCaptainsChair.Start()--");
         bool forceDialogueStart = false;
         if(this.MCP == null)
         {
@@ -96,23 +96,23 @@ public class TheCaptainsChair : MonoBehaviour
         }
         else
         {
-            Debug.Log("Check the IAP stuff");
+            Debug.Log("TheCaptainsChair.Start() not coming back from mini game so check IAP --IAP--");
             bool iapDialogueSet = false;
             for (int i = 0; i < SceneManager.sceneCount; i++)
             {
                 //Debug.Log("Scene: " + SceneManager.GetSceneAt(i).name);
                 if(SceneManager.GetSceneAt(i).name.Contains("E1_Hangar_Intro"))
                 {
-                    Debug.Log("We're on the hangar intro so check the dialogueToStartOn based on save data");
+                    Debug.Log("We're on the hangar intro so check the dialogueToStartOn based on save data --IAP--");
                     iapDialogueSet = true;
                     if(StaticStuff.HasUnlockedFullGame == true)
                     {
-                        Debug.Log("IAP is bought in save data so load up the intro");
+                        Debug.Log("IAP is bought in save data so load up the intro --IAP--");
                         dialogueToStartOn = FindObjectOfType<IAPDialogues>().IntroDialogue.GetObject() as Dialogue;
                     }
                     else
                     {
-                        Debug.Log("IAP is NOT bought in save data so load movie");
+                        Debug.Log("IAP is NOT bought in save data so load movie --IAP--");
                         dialogueToStartOn = FindObjectOfType<IAPDialogues>().PaywallDialogue.GetObject() as Dialogue;
                     }
                 }

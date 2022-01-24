@@ -315,7 +315,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                 }
                 else
                 {
-                    Debug.Log("Not playing video as last node so just behave as normal.");
+                   // Debug.Log("Not playing video as last node so just behave as normal.");
                 }
             }              
         }
@@ -429,14 +429,14 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             {
                 if (this.MCP.SaveNextObjectForIAP == true)
                 {
-                    Debug.Log("OK we want to hold the dialogue until we handle the IAP stuff so save the current pause object");
+                    Debug.Log("OK we want to hold the dialogue until we handle the IAP stuff so save the current pause object --IAP--");
                     this.MCP.IAPPauseObject = CurPauseObject;
                     CurArticyState = eArticyState.FREE_ROAM;
                     // the IAP panel will be brought up once the video playing is over moiap
                     return;
                 }
                 StaticStuff.PrintFlowBranchesUpdate("We're on a Save_Point, so parse the data and save it", this);
-                Debug.Log("We're on a Save_Point, so parse the data and save it");
+               // Debug.Log("We're on a Save_Point, so parse the data and save it");
                 HandleSavePoint(CurPauseObject as Save_Point);                
                 SetNextBranch(CurBranches[0]);
             }
@@ -759,19 +759,19 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         if (df != null)
         {
             StaticStuff.PrintUI("Chosen branch is a dialogue fragment, so just let the engine handle the next phase.");
-            Debug.Log("--------------------------- Chosen branch is a dialogue fragment, so just let the engine handle the next phase.");
+//            Debug.Log("--------------------------- Chosen branch is a dialogue fragment, so just let the engine handle the next phase.");
         }
         else if (target.GetType().Equals(typeof(Character_Action_List_Template)))
         {
             StaticStuff.PrintUI("Next thing is a Character_Actions_List_Template, so shut off the UI and let the action list do it's thing.");
-            Debug.Log("---------------------------Next thing is a Character_Actions_List_Template, so shut off the UI and let the action list do it's thing.");
+           // Debug.Log("---------------------------Next thing is a Character_Actions_List_Template, so shut off the UI and let the action list do it's thing.");
             //ConvoUI.EndConversation();
         }
         else
         {
            // Debug.Log("type is: " + CurBranches[buttonIndex].Target.GetType());                                          
             StaticStuff.PrintUI("Chosen branch isn't a DialogueFragment or a Character_Movement so for now just assume we're done talking and shut off the UI");
-            Debug.Log("----------------------------------- Chosen branch isn't a DialogueFragment or a Character_Movement so for now just assume we're done talking and shut off the UI");
+          //  Debug.Log("----------------------------------- Chosen branch isn't a DialogueFragment or a Character_Movement so for now just assume we're done talking and shut off the UI");
            // ConvoUI.EndConversation();            
         }
     }
@@ -838,7 +838,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         if (IsCalledInForecast == false)
         {
             Debug.Log("called ArticyTropyCallback(). IsCalledInForecast == false so give trophy: " + trophyID);
-            FindObjectOfType<GameCenterManager>().GiveTrophy(trophyID);
+//            FindObjectOfType<GameCenterManager>().GiveTrophy(trophyID);
         }
         else
         {

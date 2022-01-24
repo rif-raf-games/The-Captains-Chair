@@ -31,7 +31,7 @@ public class MCP : MonoBehaviour
     public Camera UICamera;
 
     [Header("IAP")]
-    public IAPManager IAPManager;
+    //public IAPManager IAPManager;
     public bool SaveNextObjectForIAP = false;
     public IFlowObject IAPPauseObject = null;
 
@@ -102,29 +102,37 @@ public class MCP : MonoBehaviour
        // Debug.Log("AspectVal: " + AspectVal + ", TabletMode: " + TabletMode);
     }
 
-    private void Start()
+   /* private void Start()
     {
-        StartCoroutine(LoadIAPManager());        
-    }
+        //StartCoroutine(LoadIAPManager());        
+    }*/
 
-    IEnumerator LoadIAPManager()
+    #region IAP
+   /* IEnumerator LoadIAPManager()
     {
         yield return new WaitForSeconds(1);
         this.IAPManager.gameObject.SetActive(true);
-    }
+    }*/
 
-    public void StartIAPPanel()
+    public void StopIAPPanel()
     {
-        //Debug.Log("StartIAPPanel()");
+        ShutOffAllUI();
+
+        InGamePopUp.ToggleIAPUI(false);
+        InGamePopUp.gameObject.SetActive(false);
+    }
+    public void StartIAPPanel()
+    {        
         ShutOffAllUI();
 
         InGamePopUp.gameObject.SetActive(true);
-        InGamePopUp.TurnOnIAPPanel();
+        InGamePopUp.ToggleIAPUI(true);
     }
-    
+    #endregion
+
     public void StartPopupPanel()
     {
-       // Debug.Log("StartPopupPanel()");
+        // Debug.Log("StartPopupPanel()");        
         ShutOffAllUI();
 
         InGamePopUp.gameObject.SetActive(true);

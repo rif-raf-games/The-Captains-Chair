@@ -96,8 +96,8 @@ public class RifRafMenuUI : MonoBehaviour
 
     public void ToggleMenu(eMenuType menuID, bool isActive)
     {
-      //  Debug.Log("ToggleMenu() menuID: " + menuID.ToString() + ", isActive: " + isActive);
-        StaticStuff.PrintRifRafUI("ToggleMenu() menuID: " + menuID.ToString() + ", isActive: " + isActive);
+        Debug.Log("ToggleMenu() menuID: " + menuID.ToString() + ", isActive: " + isActive + " --Menu--");
+        //StaticStuff.PrintRifRafUI("ToggleMenu() menuID: " + menuID.ToString() + ", isActive: " + isActive);
         if (menuID > eMenuType.NUM_MENUS) { Debug.LogError("Invalid menu: " + menuID); return; }
         foreach (GameObject go in Menus) go.SetActive(false);
         if(menuID == eMenuType.NUM_MENUS || isActive == false)
@@ -112,7 +112,7 @@ public class RifRafMenuUI : MonoBehaviour
     }
     public void TogglePopUp(ePopUpType popUpID, bool isActive)
     {
-       // Debug.Log("TogglePopUp() popUpID: " + popUpID.ToString() + ", isActive: " + isActive);
+        Debug.Log("TogglePopUp() popUpID: " + popUpID.ToString() + ", isActive: " + isActive + " --Menu--");
         StaticStuff.PrintRifRafUI("TogglePopUp() popUpID: " + popUpID.ToString() + ", isActive: " + isActive);
         if (popUpID > ePopUpType.NUM_POPUPS) { Debug.LogError("Invalid popUp: " + popUpID); return; }
         

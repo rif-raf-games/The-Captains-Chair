@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class IAPTest : MonoBehaviour
 {
+#if false
     public GameObject Congrats;
     
     // Start is called before the first frame update
@@ -41,5 +42,6 @@ public class IAPTest : MonoBehaviour
     public void OnClickMM()
     {
         FindObjectOfType<MCP>().LoadNextScene("Front End Launcher");
-    }       
+    }
+#endif
 }

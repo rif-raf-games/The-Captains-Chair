@@ -46,7 +46,7 @@ public class RifRafInGamePopUp : MonoBehaviour
         GenericPopup.gameObject.SetActive(false);
 
 # if UNITY_IOS
-        Debug.Log("Turn on Restore button because you're on iOS.");
+       // Debug.Log("Turn on Restore button because you're on iOS.");
         RestoreButton.SetActive(true);
 #elif UNITY_ANDROID
        // Debug.Log("Turn off Restore button because you're on Android");
@@ -113,138 +113,41 @@ public class RifRafInGamePopUp : MonoBehaviour
     MenuButton CurJobButton;
     enum eInGameMenus { EXCHANGE, TASKS, CODEX, SHIPS_LOG};
     eInGameMenus CurMenu;
-    
-    public void TurnOnIAPPanel()
-    {
-        //Debug.Log("TurnOnIAPPanel()");
-        //InGamePopUp.gameObject.SetActive(false);
-        this.gameObject.SetActive(true);
-        IAPPanel.SetActive(true);
+
+    #region IAP
+    public void ToggleIAPUI(bool isActive)
+    {                        
+        IAPPanel.SetActive(isActive);
         IAPQuitConfirmPopup.SetActive(false);
-        IAPBuyPopup.SetActive(false);        
-        //IAPResultsPopup.SetActive(false);
-       // IAPResultsButton.gameObject.SetActive(false);
-    }
-
-    // QUIT TO MAIN
-    public void OnClickIAPQuitToMainMenu()
-    {
-       // Debug.Log("OnClickIAPQuitToMainMenu()");        
-        if (IAPQuitConfirmPopup.activeSelf == true) return;
-        IAPQuitConfirmPopup.gameObject.SetActive(true);        
-    }
-    // QUIT TO MAIN END
-
-    // QUIT TO MAIN CONFIRM
-    public void OnClickIAPQuitToMainConfirm()
-    {
-        //Debug.Log("OnClickIAPQuitToMainConfirm()");
-        IAPQuitConfirmPopup.gameObject.SetActive(false);
-        this.MCP.LoadNextScene("Front End Launcher");
-    }
-
-    public void OnClickIAPQuitToMainCancel()
-    {
-       // Debug.Log("OnClickQuitToMainCancel()");        
-        IAPQuitConfirmPopup.gameObject.SetActive(false);
-    }
-    // QUIT TO MAIN END
-
-    // ON CLICK BUY
-    public void OnClickIAPUnlockButton()
-    {
-       // Debug.Log("OnClickIAPUnlockButton()");
-        IAPBuyPopup.SetActive(true);
-    }    
-
-    public void OnClickIAPCancelUnlock()
-    {
-       // Debug.Log("OnClickIAPCancelUnlock()");
         IAPBuyPopup.SetActive(false);
+        GenericPopup.gameObject.SetActive(false);
     }
 
-    public void OnClickIAPBuyUnlock()
-    {      
-       // FindObjectOfType<IAPManager>().PurchaseButtonClick(IAPManager.CUR_IAP_ID);
-    }   
-    
     public void IAPPurchaseSuccessful()
     {
-      //  Debug.Log("UI() IAPPurchaseSuccessful()");
-        GenericPopup.gameObject.SetActive(true);
-        GenericPopup.TitleText.text = "Congrats!";
-        GenericPopup.MainText.text = "Purchase Successful"; ;
-        GenericPopup.Button01.GetComponentInChildren<Text>().text = "OK";
-        GenericPopup.Button01.onClick.RemoveAllListeners();
-        GenericPopup.Button01.onClick.AddListener(this.OnClickIAPResults);
-        GenericPopup.Button02.gameObject.SetActive(false);
-    }    
+        
+    }
 
-    public void IAPPurchaseFailed(string message)
-    {
-      //  Debug.Log("UI() IAPPurchaseFailed()");
+    string PURCHASE_FAIL_MESSAGE = "Purchase Failed";
+    public void IAPPurchaseFailed(string message, UnityEngine.Events.UnityAction button01Action, UnityEngine.Events.UnityAction button02Action)
+    {        
         GenericPopup.gameObject.SetActive(true);
-        GenericPopup.TitleText.text = "Purchase Failed";
+        GenericPopup.TitleText.text = PURCHASE_FAIL_MESSAGE;
         GenericPopup.MainText.text = message;
-        GenericPopup.Button01.GetComponentInChildren<Text>().text = "OK";
+
+        GenericPopup.Button01.gameObject.SetActive(true);
+        GenericPopup.Button01.GetComponentInChildren<Text>().text = "Retry";
         GenericPopup.Button01.onClick.RemoveAllListeners();
-        GenericPopup.Button01.onClick.AddListener(this.OnClickIAPResults);
-        GenericPopup.Button02.gameObject.SetActive(false);        
+        GenericPopup.Button01.onClick.AddListener(button01Action);
+
+        GenericPopup.Button02.gameObject.SetActive(true);
+        GenericPopup.Button02.GetComponentInChildren<Text>().text = "Close";
+        GenericPopup.Button02.onClick.RemoveAllListeners();
+        GenericPopup.Button02.onClick.AddListener(button02Action);
     }
 
-    public void OnClickIAPResults()
-    {
-        //Debug.Log("OnClickIAPResults()");
-        if(GenericPopup.MainText.text.Contains("Success"))
-        {
-            IAPPanel.SetActive(false);
-            this.GenericPopup.gameObject.SetActive(false);
-            FindObjectOfType<IAPTest>().IAPPurchaseSuccessful();
-        }
-        else if(GenericPopup.MainText.text.Contains("Error") || GenericPopup.MainText.text.Contains("Failed") || 
-                GenericPopup.MainText.text.Contains("fake") || GenericPopup.MainText.text.Contains("No product"))
-        {
-            this.GenericPopup.gameObject.SetActive(false);
-        }
-        else if(GenericPopup.MainText.text.Contains("init"))
-        {
-            this.GenericPopup.gameObject.SetActive(false);
-        }
-        else
-        {
-            Debug.LogWarning("Warning: don't have an IAP results hanlder for: " + GenericPopup.MainText.text);
-        }
-    }
-
-    public void SetupResultsPopup(string title, string message)
-    {
-      //  Debug.Log("SetupResultsPopup() message: " + message);
-        GenericPopup.gameObject.SetActive(true);
-        GenericPopup.TitleText.text = title;
-        GenericPopup.MainText.text = message;
-        GenericPopup.Button01.GetComponentInChildren<Text>().text = "OK";
-        GenericPopup.Button01.onClick.RemoveAllListeners();
-        GenericPopup.Button01.onClick.AddListener(this.OnClickIAPResults);
-        GenericPopup.Button02.gameObject.SetActive(false);
-        // IAPResultsPopup.gameObject.SetActive(true);
-        //  IAPTextPopupText.text = "Error: " + message;
-        //  IAPResultsButton.gameObject.SetActive(true);
-        //  IAPResultsButton.GetComponentInChildren<Text>().text = "OK";
-    }
-    // END ON IAP BUY
-
-    // IAP RESTORE
-    public void OnClickIAPRestore()
-    {
-        Debug.Log("OnClickIAPRestore()");
-        FindObjectOfType<IAPManager>().RestoreButtonClick();
-    }
-
-    public void IAPPurchasesRestored()
-    {
-        Debug.Log("IAPPurchasesRestored()");       
-    }
-    // END IAP RESTORE
+    
+    #endregion
 
     /************************ IAP END **************************************/
 
@@ -465,7 +368,7 @@ public class RifRafInGamePopUp : MonoBehaviour
 
     void ClearContent()
     {
-        Debug.Log("**************** ClearContent()");
+//        Debug.Log("**************** ClearContent()");
         ToggleContent(true);
         foreach (Transform child in ExchangeContent.transform) Destroy(child.gameObject);
         foreach (Transform child in TasksContent.transform) Destroy(child.gameObject);
