@@ -33,7 +33,7 @@ public class MCP : MonoBehaviour
     [Header("IAP")]
     //public IAPManager IAPManager;
     public bool SaveNextObjectForIAP = false;
-    public IFlowObject IAPPauseObject = null;
+   // public IFlowObject IAPPauseObject = null;
 
     [Header("Sound")]
     public SoundFX SoundFX;

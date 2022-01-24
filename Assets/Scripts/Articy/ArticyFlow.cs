@@ -429,8 +429,8 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             {
                 if (this.MCP.SaveNextObjectForIAP == true)
                 {
-                    Debug.Log("OK we want to hold the dialogue until we handle the IAP stuff so save the current pause object --IAP--");
-                    this.MCP.IAPPauseObject = CurPauseObject;
+                    Debug.Log("OK we want sdfdfd to hold the dialogue until we handle the IAP stuff so save the current pause object --IAP--");
+                    this.MCP.SaveNextObjectForIAP = false;                    
                     CurArticyState = eArticyState.FREE_ROAM;
                     // the IAP panel will be brought up once the video playing is over moiap
                     return;
