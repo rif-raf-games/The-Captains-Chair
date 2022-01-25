@@ -66,7 +66,7 @@ public class RifRafMenuUI : MonoBehaviour
 
     void SetDisabledSprites(bool isPopupActive)
     {
-     ///   Debug.Log("SetDisabledSprites(): " + isPopupActive);
+        //Debug.Log("SetDisabledSprites(): " + isPopupActive + " --Menu--");
                  
         int buttonIndex = 0;
         foreach (Button b in MainMenuButtons)
@@ -96,7 +96,7 @@ public class RifRafMenuUI : MonoBehaviour
 
     public void ToggleMenu(eMenuType menuID, bool isActive)
     {
-        Debug.Log("ToggleMenu() menuID: " + menuID.ToString() + ", isActive: " + isActive + " --Menu--");
+        //Debug.Log("ToggleMenu() menuID: " + menuID.ToString() + ", isActive: " + isActive + " --Menu--");
         //StaticStuff.PrintRifRafUI("ToggleMenu() menuID: " + menuID.ToString() + ", isActive: " + isActive);
         if (menuID > eMenuType.NUM_MENUS) { Debug.LogError("Invalid menu: " + menuID); return; }
         foreach (GameObject go in Menus) go.SetActive(false);
@@ -112,7 +112,7 @@ public class RifRafMenuUI : MonoBehaviour
     }
     public void TogglePopUp(ePopUpType popUpID, bool isActive)
     {
-        Debug.Log("TogglePopUp() popUpID: " + popUpID.ToString() + ", isActive: " + isActive + " --Menu--");
+        //Debug.Log("TogglePopUp() popUpID: " + popUpID.ToString() + ", isActive: " + isActive + " --Menu--");
         StaticStuff.PrintRifRafUI("TogglePopUp() popUpID: " + popUpID.ToString() + ", isActive: " + isActive);
         if (popUpID > ePopUpType.NUM_POPUPS) { Debug.LogError("Invalid popUp: " + popUpID); return; }
         
@@ -120,11 +120,13 @@ public class RifRafMenuUI : MonoBehaviour
         {   // don't mess with this if the main menu hasn't been initted yet
             if (CurActivePopup == ePopUpType.NUM_POPUPS && isActive == true)
             {   // going from no popup to popup, so save sprite states and set all the main menu buttons to non-active
-                SetDisabledSprites(true);
+                //Debug.Log("handle states here --Menu--");
+                //SetDisabledSprites(true);
             }
             else if (CurActivePopup != ePopUpType.NUM_POPUPS && isActive == false)
             {   // going from popup to no popup, so reset the sprites to their original state
-                SetDisabledSprites(false);
+               // Debug.Log("handle states here as well --Menu--");
+                //SetDisabledSprites(false);
             }
         }
              
@@ -143,10 +145,9 @@ public class RifRafMenuUI : MonoBehaviour
     #region MAIN_MENU        
     public void InitMainMenu()
     {
-      //  Debug.Log("InitMainMenu()");
+       // Debug.Log("InitMainMenu() --Menu--");
         RefreshProfileInfo();
-       // ***BRENT SET THIS TO TEST IAP ON THE START MENU SCREEN***
-       // BackButton.gameObject.SetActive(false);        
+       
         MainMenuButtons[(int)eMainMenuButtons.MAIN_GAME].onClick.RemoveAllListeners();
         MainMenuButtons[(int)eMainMenuButtons.CONTINUE].onClick.RemoveAllListeners();
         

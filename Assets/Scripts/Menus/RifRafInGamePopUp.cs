@@ -85,8 +85,8 @@ public class RifRafInGamePopUp : MonoBehaviour
 
     void ToggleMainPopUpButtons(bool isActive)
     {
-       // Debug.Log("ToggleMainPopUpButtons(): " + isActive);
-        foreach (Button b in MainPopUpButtons) b.interactable = isActive;
+        //Debug.Log("ToggleMainPopUpButtons(): " + isActive + "...IGNORE NOW --Menu--");
+        //foreach (Button b in MainPopUpButtons) b.interactable = isActive;
     }
 
     public void ToggleMainPopupPanel(bool isActive)
@@ -157,15 +157,7 @@ public class RifRafInGamePopUp : MonoBehaviour
       //  Debug.Log("------------------------------TurnOnPopupMenu() num menu buttons: " + GetNumMenuButtons() + ", numTimes: " + numTimes++);
         ToggleMainPopupPanel(true);
         if (initContents == false) return;
-        int debugVar = 0;
-       /* ArticyGlobalVariables.Default.Mission.Exchange_001 = 1;
-        ArticyGlobalVariables.Default.Mission.Exchange_002 = 1;
-        ArticyGlobalVariables.Default.Mission.Exchange_003 = 1;
-        ArticyGlobalVariables.Default.Mission.Exchange_Group_A = true;
-        ArticyGlobalVariables.Default.Mission.Exchange_Group_B = true;
-        ArticyGlobalVariables.Default.Mission.Task_001 = 1;
-        ArticyGlobalVariables.Default.Mission.Task_002 = 1;
-        ArticyGlobalVariables.Default.Mission.Task_Group_A = true;*/
+        int debugVar = 0;       
 
         MusicVolume.Slider.value = this.MCP.GetMusicVolume();
         MusicVolume.Toggle.isOn = (MusicVolume.Slider.value > 0f);
@@ -493,8 +485,7 @@ public class RifRafInGamePopUp : MonoBehaviour
     }
 
     public void ToggleMissionHint(bool isActive)
-    {
-        //StaticStuff.PrintRifRafUI("ToggleMissionHint(): " + isActive);        
+    {        
         //Debug.Log("ToggleMissionHint(): " + isActive);        
         //MissionHint.ToggleResetMiniGameButton(false);
         if (isActive == true)
@@ -511,11 +502,10 @@ public class RifRafInGamePopUp : MonoBehaviour
     }
 
     public void OnClickMissionHint()
-    {
-        StaticStuff.PrintRifRafUI("OnClickMissionHint()");
-      //  Debug.Log("OnClickMissionHint()");
-        if (PopupActiveCheck() == false) return;
+    {        
+        Debug.Log("OnClickMissionHint()");
 
+        if (PopupActiveCheck() == false) return;
         ToggleMissionHint(true);
     }
 
