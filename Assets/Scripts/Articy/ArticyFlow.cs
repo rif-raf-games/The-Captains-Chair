@@ -492,11 +492,11 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             Debug.LogError("The save info is not set up in the articy nodes yet so we're temporarily skipping saving at this moment.");
             return;
         }
-       // Debug.Log("HandleSavePoint() Sav_Var: " + savePoint.Template.Save_Info.Sav_Var);
+        Debug.Log("HandleSavePoint() Sav_Var: " + savePoint.Template.Save_Info.Sav_Var + " --elev--");
 
         ArticyGlobalVariables.Default.Save_Info.Return_Scene = savePoint.Template.Save_Info.ReturnScene;
 
-        //Debug.LogError("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! mosavepos01 HandleSavePoint()");
+        
         if(savePoint.Template.Save_Info.PositionsToSave != "")
         {            
            // Debug.LogError("we want to save these positions: " + savePoint.Template.Save_Info.PositionsToSave);
@@ -533,12 +533,12 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             List<Elevator> sortedList = elevators.OrderBy(o => o.name).ToList<Elevator>();
             foreach (Elevator elevator in sortedList)
             {
-                // Debug.Log("elevator: " + elevator.name + " is on floor: " + elevator.CurrentFloor);
+                Debug.Log("elevator: " + elevator.name + " is on floor: " + elevator.CurrentFloor + " --elev--");
                 elevatorPositions += elevator.CurrentFloor.ToString() + ",";
             }
             elevatorPositions = elevatorPositions.Remove(elevatorPositions.Length - 1);
             ArticyGlobalVariables.Default.Save_Info.Majestic_Elevators = elevatorPositions;
-            //  Debug.Log("elevatorPosition: " + elevatorPositions);
+            Debug.Log("elevatorPosition: " + elevatorPositions + "--elev--");
         }
 
         if (savePoint.Template.Save_Info.AnalyticsToTrack != "")

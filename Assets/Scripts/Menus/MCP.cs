@@ -627,7 +627,7 @@ public class MCP : MonoBehaviour
 
         string elevatorPosString = ArticyGlobalVariables.Default.Save_Info.Majestic_Elevators;
         string[] elevatorPositions = elevatorPosString.Split(',');
-        //Debug.Log("Loading next scene elevatorPosString: " + elevatorPosString + ", elevatorPositions count: " + elevatorPositions.Length);
+        Debug.Log("Loading next scene elevatorPosString: " + elevatorPosString + ", elevatorPositions count: " + elevatorPositions.Length + "--elev--");
         List<Elevator> elevators = FindObjectsOfType<Elevator>().ToList();
         if (elevators.Count > 0 && elevatorPosString != "")
         {
@@ -636,17 +636,17 @@ public class MCP : MonoBehaviour
             foreach (Elevator elevator in sortedElevatorList)
             {
                 int elevatorCurFloor = Int32.Parse(elevatorPositions[index]);
-             //   Debug.Log("elevator: " + elevator.name + " is on floor: " + elevator.CurrentFloor + " and should be on floor: " + elevatorCurFloor);
+                //Debug.Log("elevator: " + elevator.name + " is on floor: " + elevator.CurrentFloor + " and should be on floor: " + elevatorCurFloor + " --elev--");
                 if(elevator.CurrentFloor != elevatorCurFloor)
                 {
-                //    Debug.LogWarning("elevator: " + elevator.name + " is on floor: " + elevator.CurrentFloor + " but needs to go to: " + elevatorCurFloor);
+                    Debug.Log("elevator: " + elevator.name + " is on floor: " + elevator.CurrentFloor + " but needs to go to: " + elevatorCurFloor + " --elev--");
                     elevator.CurrentFloor = elevatorCurFloor;
                     float yPos = (elevatorCurFloor == elevator.TopFloor ? elevator.TopY : elevator.BottomY);
                     Vector3 pos = new Vector3(elevator.transform.localPosition.x, yPos, elevator.transform.localPosition.z);
                     elevator.transform.localPosition = pos;
-                }                    
-            }
-            index++;
+                }
+                index++;
+            }            
         }
 
         curImages = new List<RawImage>() { Curtain, SpinWheel };
