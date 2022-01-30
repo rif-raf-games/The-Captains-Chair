@@ -127,12 +127,11 @@ public class RifRafInGamePopUp : MonoBehaviour
     {
         
     }
-
-    string PURCHASE_FAIL_MESSAGE = "Purchase Failed";
-    public void IAPPurchaseFailed(string message, UnityEngine.Events.UnityAction button01Action, UnityEngine.Events.UnityAction button02Action)
+    
+    public void IAPGenericPopupSetup(string title, string message, UnityEngine.Events.UnityAction button01Action, UnityEngine.Events.UnityAction button02Action)
     {        
         GenericPopup.gameObject.SetActive(true);
-        GenericPopup.TitleText.text = PURCHASE_FAIL_MESSAGE;
+        GenericPopup.TitleText.text = title;
         GenericPopup.MainText.text = message;
 
         GenericPopup.Button01.gameObject.SetActive(true);

@@ -16,13 +16,14 @@ public class IAPManager : MonoBehaviour, IStoreListener
     private IGooglePlayStoreExtensions m_GooglePlayStoreExtensions;
     private ITransactionHistoryExtensions m_TransactionHistoryExtensions;
 
-    bool m_InitInProgress = false;
-    bool m_PurchaseInProgress = false;
-    bool m_RestoreInProgress = false;    
-    float m_ActionTimer = 0f;
+    [Header("Timers")]
+    public bool m_InitInProgress = false;
+    public bool m_PurchaseInProgress = false;
+    public bool m_RestoreInProgress = false;    
+    public float m_ActionTimer = 0f;
 
     string PurchaseFailMessage = "";
-    public static string CUR_IAP_ID = "com.tales_tcc1_modebug003";
+    public static string CUR_IAP_ID = "com.tales_tcc1_modebug004";
 
     Product IAPProduct = null;
     string InitFailureReason = "";
@@ -210,116 +211,25 @@ public class IAPManager : MonoBehaviour, IStoreListener
 
         if (IAPInitFailCallback != null) IAPInitFailCallback.Invoke();
     }
+
+    void RRInitFailed()
+    {
+        Debug.Log("RRInitFailed() --IAP--");
+        CurIAPPopup = eIAPPopup.INIT_ERROR;
+        _RifRafInGamePopup.IAPGenericPopupSetup("Init Failed.", "", OnClickInitFailRetry, OnClickInitFailClose);
+    }
+    public void OnClickInitFailRetry()
+    {
+        _RifRafInGamePopup.GenericPopup.gameObject.SetActive(false);
+        CurIAPPopup = eIAPPopup.MAIN;
+        InitIAP(OnClickRestorePurchases, RRInitFailed);
+    }
+    public void OnClickInitFailClose()
+    {
+        _RifRafInGamePopup.GenericPopup.gameObject.SetActive(false);
+        CurIAPPopup = eIAPPopup.MAIN;
+    }
     #endregion // IAP_INIT
-    
-    #region IAP_RESTORE    
-    public void RestorePurchases()
-    {        
-        string result = ActionBeingTaken();
-        if (result != "") { Debug.LogWarning("Can't Restore because: " + result); return; }
-        if (m_IsGooglePlayStoreSelected)
-        {
-            Debug.Log("RestoreButtonClick() Google --IAP--");
-            m_GooglePlayStoreExtensions.RestoreTransactions(OnTransactionsRestored);
-        }
-        else
-        {
-            Debug.Log("RestoreButtonClick() Apple --IAP--");
-            m_AppleExtensions.RestoreTransactions(OnTransactionsRestored);
-        }
-        m_RestoreInProgress = true;
-        m_ActionTimer = 0f;
-    }
-    private void OnTransactionsRestored(bool success)
-    {
-        m_RestoreInProgress = false;
-        Debug.Log("--OnTransactionsRestored() success: " + success + "--");
-        if (success == true)
-        {
-            Debug.Log("Restore was a success, so we should be seeing PurchaseProcessingResult stuff above and built in popups should handle it.");
-        }
-        else
-        {
-            Debug.LogError("Restore failed, show fail popup");
-            RRRestoreFailed();
-        }
-    }
-    #endregion // IAPRESTORE
-
-    #region IAP_FETCH_INFO
-    public void FetchInfoButtonClicked()
-    {
-        Debug.Log("--FetchInfoButtonClicked()--");
-        HashSet<ProductDefinition> productsHash = new HashSet<ProductDefinition>();
-        foreach (Product product in m_Controller.products.all)
-        {
-            productsHash.Add(new ProductDefinition(product.definition.id, product.definition.type));
-        }
-
-        m_Controller.FetchAdditionalProducts(productsHash, FetchInfoSuccessCallback, FetchInfoFailCallback);
-    }
-
-    public void FetchInfoSuccessCallback()
-    {
-        Debug.Log("--FetchInfoSuccessCallback()--");
-    }
-    public void FetchInfoFailCallback(InitializationFailureReason reason)
-    {
-        Debug.LogError("--FetchInfoFailCallback() reason: " + reason.ToString() + "--");
-    }
-
-    private void LogProductDefinitions()
-    {
-        Debug.Log("--LogProductDefinitions()--");
-        var products = m_Controller.products.all;
-        foreach (var product in products)
-        {
-            Debug.Log(string.Format("id: {0}\nstore-specific id: {1}\ntype: {2}\nenabled: {3}\n", product.definition.id, product.definition.storeSpecificId, product.definition.type.ToString(), product.definition.enabled ? "enabled" : "disabled"));
-        }
-    }
-    #endregion // IAP_FETCH_INFO
-
-    private void Update()
-    {
-        string result = ActionBeingTaken();
-        if (result != "" && CurIAPPopup != eIAPPopup.ACTION_TIMED_OUT)
-        {
-            m_ActionTimer += Time.deltaTime;
-            if (m_ActionTimer > 10f)
-            {
-                if (FindObjectOfType<IAPDialogues>() == null)
-                {
-                    Debug.LogWarning("IAP timeout due to: " + result + ", but we're on the front end so just ignore");
-                    ResetActionTimerItems();
-                }
-                else
-                {
-                    Debug.Log("Action timeout and we're on hangar scene so show popup about it: " + result + " --IAP--");
-                    TimeoutCause = result;
-                    RRActionTimedOut();
-                }
-            }
-        }
-    }
-
-    public void OnClickRestorePurchases()
-    {
-        Debug.Log("OnClickRestorePurchases() --IAP--");
-        if (m_Controller == null)
-        {
-            Debug.LogWarning("Trying to restore purchases but IAP isn't active so re-init --IAP--");
-            InitIAP(OnClickRestorePurchases, RRInitFailed);
-        }
-        else if (m_Controller != null && IAPProduct == null)
-        {
-            Debug.LogError("We have a Controller but not Product. Should not be here. Check catalog and control panel --IAP--");
-        }
-        else
-        {
-            Debug.Log("we have a valid controller and a valid product so try the restore --IAP--");
-            RestorePurchases();
-        }
-    }
 
     #region PURCHASE
     /// <summary>
@@ -364,6 +274,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
         if (e.purchasedProduct.definition.id == CUR_IAP_ID)
         {
             Debug.Log("gameunlock: SCS just unlocked game so update settings --IAP--");
+            RestoredValidIAP = true;
             StaticStuff.HasUnlockedFullGame = true;
             StaticStuff.SaveCurrentSettings("IAPManager.PurchaseProcessingResult()");
             if (CurIAPPopup != eIAPPopup.NONE)
@@ -407,12 +318,11 @@ public class IAPManager : MonoBehaviour, IStoreListener
         Dialogue dialogue = iadd.IntroDialogue.GetObject() as Dialogue;
         p.GetComponent<ArticyFlow>().CheckIfDialogueShouldStart(iadd.IntroDialogue.GetObject() as Dialogue, p.gameObject);
     }
-
     void RRPurchaseFailed()
     {
         Debug.Log("RRPurchaseFailed() PurchaseFailMessage: " + PurchaseFailMessage + " --IAP--");
         CurIAPPopup = eIAPPopup.PURCASE_FAILED;
-        _RifRafInGamePopup.IAPPurchaseFailed(PurchaseFailMessage, OnClickPurchaseFailRetry, OnClickPurchaseFailClose);
+        _RifRafInGamePopup.IAPGenericPopupSetup("Purchase Failed.", PurchaseFailMessage, OnClickPurchaseFailRetry, OnClickPurchaseFailClose);
     }
 
     public void OnClickPurchaseFailRetry()
@@ -424,11 +334,178 @@ public class IAPManager : MonoBehaviour, IStoreListener
     public void OnClickPurchaseFailClose()
     {
         Debug.Log("OnClickPurchaseFailClose() --IAP--");
-        _RifRafInGamePopup.GenericPopup.gameObject.SetActive(false);        
+        CurIAPPopup = eIAPPopup.MAIN;
+        _RifRafInGamePopup.GenericPopup.gameObject.SetActive(false);
     }
+    
     #endregion
 
 
+    #region IAP_RESTORE    
+    public void RestorePurchases()
+    {
+        Debug.Log("RestorePurchases() --IAP--");
+
+        string result = ActionBeingTaken();
+        if (result != "") { Debug.LogWarning("Can't Restore because: " + result); return; }
+
+        RestoredValidIAP = false;
+        Debug.Log("1 --IAP--");
+        m_RestoreInProgress = true;
+        m_ActionTimer = 0f;
+
+        if (m_IsGooglePlayStoreSelected)
+        {
+            Debug.Log("RestoreButtonClick() Google --IAP--");
+            m_GooglePlayStoreExtensions.RestoreTransactions(OnTransactionsRestored);
+        }
+        else
+        {
+            Debug.Log("RestoreButtonClick() Apple --IAP--");
+            m_AppleExtensions.RestoreTransactions(OnTransactionsRestored);
+        }        
+    }
+    private void OnTransactionsRestored(bool success)
+    {
+        m_RestoreInProgress = false;
+        Debug.Log("--OnTransactionsRestored() success: " + success + " --IAP--");
+        if (success == true)
+        {
+            string s = "Restore was a success, so check to see if the valid IAP was part of the ProcessPurchase stuff: ";
+            if(RestoredValidIAP == true)
+            {
+                s += "We got the valid IAP during the restore process so show a success --IAP--";
+            }
+            else
+            {
+                s += "We did not get the valid IAP so show RRestoreFailed with message from notes --IAP--";
+                RRRestoreFailed("No purchases to be restored.");
+            }
+            Debug.Log(s);
+        }
+        else
+        {
+            Debug.Log("Restore failed, show fail popup --IAP--");
+            RRRestoreFailed("Transactions unable to be restored.");
+        }
+    }
+
+    public bool RestoredValidIAP = false;
+    public void OnClickRestorePurchases()
+    {
+        Debug.Log("OnClickRestorePurchases() --IAP--");
+        if (m_Controller == null)
+        {
+            Debug.LogWarning("Trying to restore purchases but IAP isn't active so re-init --IAP--");
+            InitIAP(OnClickRestorePurchases, RRInitFailed);
+        }
+        else if (m_Controller != null && IAPProduct == null)
+        {
+            Debug.LogError("We have a Controller but not Product. Should not be here. Check catalog and control panel --IAP--");
+        }
+        else
+        {
+            Debug.Log("we have a valid controller and a valid product so try the restore --IAP--");
+            RestorePurchases();
+        }
+    }
+
+    void RRRestoreFailed(string message)
+    {
+        Debug.Log("RRRestoreFailed() message: " + message + " --IAP--");
+        CurIAPPopup = eIAPPopup.RESTORE_FAILED;
+        _RifRafInGamePopup.IAPGenericPopupSetup("Restore Failed", message, OnClickRestoreFailRetry, OnClickRestoreFailClose);
+    }
+    public void OnClickRestoreFailRetry()
+    {
+        RestorePurchases();
+    }
+    public void OnClickRestoreFailClose()
+    {
+        Debug.Log("OnClickPurchaseFailClose() --IAP--");
+        CurIAPPopup = eIAPPopup.MAIN;
+        _RifRafInGamePopup.GenericPopup.gameObject.SetActive(false);
+    }            
+    #endregion // IAPRESTORE
+
+    #region IAP_FETCH_INFO
+    public void FetchInfoButtonClicked()
+    {
+        Debug.Log("--FetchInfoButtonClicked()--");
+        HashSet<ProductDefinition> productsHash = new HashSet<ProductDefinition>();
+        foreach (Product product in m_Controller.products.all)
+        {
+            productsHash.Add(new ProductDefinition(product.definition.id, product.definition.type));
+        }
+
+        m_Controller.FetchAdditionalProducts(productsHash, FetchInfoSuccessCallback, FetchInfoFailCallback);
+    }
+
+    public void FetchInfoSuccessCallback()
+    {
+        Debug.Log("--FetchInfoSuccessCallback()--");
+    }
+    public void FetchInfoFailCallback(InitializationFailureReason reason)
+    {
+        Debug.LogError("--FetchInfoFailCallback() reason: " + reason.ToString() + "--");
+    }
+
+    private void LogProductDefinitions()
+    {
+        Debug.Log("--LogProductDefinitions()--");
+        var products = m_Controller.products.all;
+        foreach (var product in products)
+        {
+            Debug.Log(string.Format("id: {0}\nstore-specific id: {1}\ntype: {2}\nenabled: {3}\n", product.definition.id, product.definition.storeSpecificId, product.definition.type.ToString(), product.definition.enabled ? "enabled" : "disabled"));
+        }
+    }
+    #endregion // IAP_FETCH_INFO
+
+    private void Update()
+    {
+        string result = ActionBeingTaken();
+        if (result != "" && CurIAPPopup != eIAPPopup.ACTION_TIMED_OUT)
+        {
+            m_ActionTimer += Time.deltaTime;
+            if (m_ActionTimer > 15f)
+            {
+                if (FindObjectOfType<IAPDialogues>() == null)
+                {
+                    Debug.LogWarning("IAP timeout due to: " + result + ", but we're on the front end so just ignore");
+                    ResetActionTimerItems();
+                }
+                else
+                {
+                    Debug.Log("Action timeout and we're on hangar scene so show popup about it: " + result + " --IAP--");
+                    TimeoutCause = result;
+                    RRActionTimedOut();
+                }
+            }
+        }
+    }
+
+    void RRActionTimedOut()
+    {
+        Debug.Log("RRActionTimedOut() TimeoutCause: " + TimeoutCause + " --IAP--");
+        CurIAPPopup = eIAPPopup.ACTION_TIMED_OUT;
+        if (TimeoutCause.Contains("Purchase"))
+        {
+            _RifRafInGamePopup.IAPGenericPopupSetup("Action Timed Out.", TimeoutCause, OnClickPurchaseFailRetry, OnClickPurchaseFailClose);
+        }
+        else if (TimeoutCause.Contains("Restore"))
+        {
+            _RifRafInGamePopup.IAPGenericPopupSetup("Action Timed Out.", TimeoutCause, OnClickRestoreFailRetry, OnClickRestoreFailClose);
+        }
+        else if (TimeoutCause.Contains("Init"))
+        {            
+            _RifRafInGamePopup.IAPGenericPopupSetup("Action Timed Out.", TimeoutCause, OnClickInitFailRetry, OnClickInitFailClose);
+        }
+
+        
+    }
+
+    
+    
     public void OnClickGoToMainMenu()
     {
         Debug.Log("OnClickGoToMainMenu() --IAP--");        
@@ -454,20 +531,16 @@ public class IAPManager : MonoBehaviour, IStoreListener
         Debug.Log("IAPManager.RRBeginIAPProcess() (called from VideoPlayer) --IAP--");
         CurIAPPopup = eIAPPopup.MAIN;
         _MCP.StartIAPPanel();
+        _MCP.StartIAPPanel();
+
     }
-    
-    void RRInitFailed()
+
+    IEnumerator LoadUpIAPPanelDelay()
     {
-        CurIAPPopup = eIAPPopup.INIT_ERROR;
+        yield return new WaitForEndOfFrame();
+        _MCP.StartIAPPanel();
     }
-    void RRActionTimedOut()
-    {
-        CurIAPPopup = eIAPPopup.ACTION_TIMED_OUT;
-    }
-    void RRRestoreFailed()
-    {
-        CurIAPPopup = eIAPPopup.RESTORE_FAILED;
-    }        
+                      
     string ActionBeingTaken()
     {
         string result = "";
@@ -485,43 +558,61 @@ public class IAPManager : MonoBehaviour, IStoreListener
         int x = 0;
         int y = Screen.height - 300;
         int w = 300; int h = 300;
+
+        GUI.DrawTexture(new Rect(x, y, w, h), Black);
+        //GUI.Label(new Rect(x + 10, y + 10, w - 20, h - 20), "Buy IAP?");
+        string s = "Init: " + m_InitInProgress + "\n";
+        s += "Restore: " + m_RestoreInProgress + "\n";
+        s += "Purchase: " + m_PurchaseInProgress + "\n";
+        s += "Timer: " + m_ActionTimer.ToString("F2");
+        GUI.Label(new Rect(x + 10, y + 10, w - 20, h - 20), s);
+        if (GUI.Button(new Rect(x+300, y + 100, 90, 90), "Try Again"))
+        {
+            RRBeginIAPProcess();
+        }
+        return;
+#if false
         switch (CurIAPPopup)
         {
             case eIAPPopup.MAIN:
                 GUI.DrawTexture(new Rect(x, y, w, h), Black);
                 GUI.Label(new Rect(x + 10, y + 10, w - 20, h - 20), "Buy IAP?");
-                /*if (GUI.Button(new Rect(x, y + 100, 90, 90), "Restore"))
+                /*if (GUI.Button(new Rect(x, y + 100, 90, 90), "Try Again"))
                 {
-                    m_Controller = null;
-                    Debug.Log("Restore purchases");
-                    if (m_Controller == null)
+                    RRBeginIAPProcess();
+                }*/
+                    /*if (GUI.Button(new Rect(x, y + 100, 90, 90), "Restore"))
                     {
-                        Debug.LogWarning("Trying to restore purchases but IAP isn't active so re-init IAP");
-                        InitIAP(RestorePurchases, RRInitFailed);
-                    }
-                    else if (m_Controller != null && IAPProduct == null)
-                    {
-                        Debug.LogError("We have a Controller but not Product. Should not be here. Check catalog and control panel");
-                    }
-                    else
-                    {
-                        Debug.Log("we have a valid controller and a valid product so try the restore");
-                        RestorePurchases();
-                    }
+                        m_Controller = null;
+                        Debug.Log("Restore purchases");
+                        if (m_Controller == null)
+                        {
+                            Debug.LogWarning("Trying to restore purchases but IAP isn't active so re-init IAP");
+                            InitIAP(RestorePurchases, RRInitFailed);
+                        }
+                        else if (m_Controller != null && IAPProduct == null)
+                        {
+                            Debug.LogError("We have a Controller but not Product. Should not be here. Check catalog and control panel");
+                        }
+                        else
+                        {
+                            Debug.Log("we have a valid controller and a valid product so try the restore");
+                            RestorePurchases();
+                        }
 
-                }*/
-                /*if (GUI.Button(new Rect(x + 100, y + 100, 90, 90), "Buy"))
-                {
-                    Debug.Log("Buy IAP");
-                    PurchaseButtonClick(CUR_IAP_ID);
+                    }*/
+                    /*if (GUI.Button(new Rect(x + 100, y + 100, 90, 90), "Buy"))
+                    {
+                        Debug.Log("Buy IAP");
+                        PurchaseButtonClick(CUR_IAP_ID);
 
-                }*/
-               /* if (GUI.Button(new Rect(x + 200, y + 100, 90, 90), "Leave"))
-                {
-                    FindObjectOfType<MCP>().LoadNextScene("Front End Launcher");
-                    CurIAPPopup = eIAPPopup.NONE;
-                }*/
-                break;
+                    }*/
+                    /* if (GUI.Button(new Rect(x + 200, y + 100, 90, 90), "Leave"))
+                     {
+                         FindObjectOfType<MCP>().LoadNextScene("Front End Launcher");
+                         CurIAPPopup = eIAPPopup.NONE;
+                     }*/
+                    break;
             case eIAPPopup.PURCHASE_SUCCESS:
                 GUI.DrawTexture(new Rect(x, y, w, h), Black);
                 GUI.Label(new Rect(x + 10, y + 10, w - 20, h - 20), "Purchase success!");
@@ -569,7 +660,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
             case eIAPPopup.RESTORE_FAILED:
                 GUI.DrawTexture(new Rect(x, y, w, h), Black);
                 GUI.Label(new Rect(x + 10, y + 10, w - 20, h - 20), "Restore failed. Try again?");
-                if (GUI.Button(new Rect(x, y + 100, 90, 90), "Retry Restore"))
+                /*if (GUI.Button(new Rect(x, y + 100, 90, 90), "Retry Restore"))
                 {
                     Debug.Log("Retry Restore");
                     RestorePurchases();
@@ -579,7 +670,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
                     Debug.Log("Restore error but going back to front end");
                     FindObjectOfType<MCP>().LoadNextScene("Front End Launcher");
                     CurIAPPopup = eIAPPopup.NONE;
-                }
+                }*/
                 break;
             
             case eIAPPopup.ACTION_TIMED_OUT:
@@ -599,6 +690,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
                     }
                     else if (m_RestoreInProgress == true)
                     {
+                        Debug.Log("3 --IAP--");
                         m_RestoreInProgress = false;
                         RestorePurchases();
                     }
@@ -625,9 +717,10 @@ public class IAPManager : MonoBehaviour, IStoreListener
          {
              PurchaseButtonClick("com.tales_tcc1_modebugFullGameBuy");
          }*/
+#endif
     }
 
-    #region IAP_NOT_USED
+        #region IAP_NOT_USED
     /// <summary>
     /// iOS Specific.
     /// This is called as part of Apple's 'Ask to buy' functionality,
@@ -651,15 +744,15 @@ public class IAPManager : MonoBehaviour, IStoreListener
     {
         Debug.Log("--OnTransactionsRefreshedFail()--");
     }
-    #endregion // IAP_NOT_USED
+        #endregion // IAP_NOT_USED
 
     
     void ResetActionTimerItems()
     {
         m_InitInProgress = false;
-        m_PurchaseInProgress = false;
+        m_PurchaseInProgress = false;        
         m_RestoreInProgress = false;
         m_ActionTimer = 0f;
     }
-#endif 
-}
+#endif
+    }
