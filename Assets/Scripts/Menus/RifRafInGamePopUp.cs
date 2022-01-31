@@ -355,6 +355,16 @@ public class RifRafInGamePopUp : MonoBehaviour
         JobLocationText.text = (button == null ? "" : button.JobLocation);
         POCText.text = (button == null ? "" : button.PointOfContact);
         JobDescriptionText.text = (button == null ? "" : button.JobDescription);
+        if(FindObjectOfType<MiniGameMCP>() == null)
+        {
+            // no mini game so shut off the reset button
+            ResetPuzzleButton.SetActive(false);
+        }
+        else
+        {
+            // we're on a mini game so show reset button
+            ResetPuzzleButton.SetActive(true);
+        }
     }
 
     void ClearContent()
