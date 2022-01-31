@@ -1,4 +1,4 @@
-﻿#define USE_RR_ONGUI
+﻿//#define USE_RR_ONGUI
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -719,8 +719,9 @@ public class IAPManager : MonoBehaviour, IStoreListener
          }*/
 #endif
     }
+#endif
 
-        #region IAP_NOT_USED
+    #region IAP_NOT_USED
     /// <summary>
     /// iOS Specific.
     /// This is called as part of Apple's 'Ask to buy' functionality,
@@ -754,5 +755,5 @@ public class IAPManager : MonoBehaviour, IStoreListener
         m_RestoreInProgress = false;
         m_ActionTimer = 0f;
     }
-#endif
+
     }
