@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 4118526445048031987}
   - component: {fileID: 7111081568872036212}
   - component: {fileID: 6842613492636423955}
-  - component: {fileID: 8749173034737365274}
+  - component: {fileID: 7057390816801151039}
   m_Layer: 9
   m_Name: Medical_Bed_01
   m_TagString: Untagged
@@ -87,6 +87,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -111,8 +112,8 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &8749173034737365274
-MeshCollider:
+--- !u!65 &7057390816801151039
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -121,10 +122,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: -3772232607956594652, guid: 8c7bbcd1685a048b9941bb3a769606cb, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 454.44385, y: 266.6399, z: 960.26526}
+  m_Center: {x: -0.0005645752, y: 0, z: 0.00012207031}
 --- !u!1001 &8882749061617454786
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -132,10 +132,25 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4328515919533562381}
     m_Modifications:
-    - target: {fileID: -927199367670048503, guid: 726ba214e11474433b02dfb826b91f07,
+    - target: {fileID: -4216859302048453862, guid: 726ba214e11474433b02dfb826b91f07,
         type: 3}
-      propertyPath: m_Name
-      value: Bed_Screen_01
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 726ba214e11474433b02dfb826b91f07,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 726ba214e11474433b02dfb826b91f07,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 726ba214e11474433b02dfb826b91f07,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 726ba214e11474433b02dfb826b91f07,
         type: 3}
@@ -154,6 +169,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 726ba214e11474433b02dfb826b91f07,
         type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 726ba214e11474433b02dfb826b91f07,
+        type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
@@ -166,16 +186,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalRotation.z
       value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: -4216859302048453862, guid: 726ba214e11474433b02dfb826b91f07,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -4216859302048453862, guid: 726ba214e11474433b02dfb826b91f07,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 726ba214e11474433b02dfb826b91f07,
         type: 3}
@@ -192,20 +202,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -4216859302048453862, guid: 726ba214e11474433b02dfb826b91f07,
+    - target: {fileID: -927199367670048503, guid: 726ba214e11474433b02dfb826b91f07,
         type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -4216859302048453862, guid: 726ba214e11474433b02dfb826b91f07,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -4216859302048453862, guid: 726ba214e11474433b02dfb826b91f07,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
+      propertyPath: m_Name
+      value: Bed_Screen_01
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 726ba214e11474433b02dfb826b91f07, type: 3}
