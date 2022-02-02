@@ -1,10 +1,16 @@
 ﻿//#define USE_RR_ONGUI
+#define RECEIPT_VALIDATION
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using Articy.The_Captain_s_Chair;
 using UnityEngine;
 using UnityEngine.Purchasing;
+
+#if RECEIPT_VALIDATION
+using UnityEngine.Purchasing.Security;
+#endif
 
 
 public class IAPManager : MonoBehaviour, IStoreListener
@@ -83,6 +89,22 @@ public class IAPManager : MonoBehaviour, IStoreListener
             }
         }
 
+#if RECEIPT_VALIDATION
+        string appIdentifier;
+        appIdentifier = Application.identifier;
+        Debug.Log("appIdentifier: " + appIdentifier + " --IAP--");
+        try
+        {
+            validator = new CrossPlatformValidator(GooglePlayTangle.Data(), AppleTangle.Data(), appIdentifier);
+        }
+        catch (NotImplementedException exception)
+        {
+            Debug.Log("Cross Platform Validator Not Implemented: " + exception + " --IAP--");
+        }
+        if (validator == null) Debug.Log("null validator --IAP--");
+        else Debug.Log("we have a validator --IAP--");
+#endif
+
         IAPInitSuccessCallback = successCallback;
         IAPInitFailCallback = failCallback;
         m_InitInProgress = true;
@@ -131,7 +153,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
                 Debug.Log(s);
                 if (item.hasReceipt == true)
                 {
-                    hasReceipt.Add("id: " + item.definition.id + " has receipt: " + item.receipt);
+                    hasReceipt.Add("id: " + item.definition.id + " has receipt: " + item.receipt + " --IAP--");
                 }
             }
         }
@@ -269,11 +291,66 @@ public class IAPManager : MonoBehaviour, IStoreListener
     public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs e)
     {
         m_PurchaseInProgress = false;
-        Debug.Log("PurchaseProcessingResult() ID: " + e.purchasedProduct.definition.id + ", Receipt: " + e.purchasedProduct.receipt + " --IAP--");
+        Debug.Log("PurchaseProcessingResult() ID: " + e.purchasedProduct.definition.id + " --IAP--");
+        Debug.Log("Receipt: " + e.purchasedProduct.receipt + " --IAP--");
+
+#if RECEIPT_VALIDATION // Local validation is available for GooglePlay, and Apple stores
+        if (m_IsGooglePlayStoreSelected ||
+            Application.platform == RuntimePlatform.IPhonePlayer ||
+            Application.platform == RuntimePlatform.OSXPlayer ||
+            Application.platform == RuntimePlatform.tvOS)
+        {
+            try
+            {
+                IPurchaseReceipt[] result = validator.Validate(e.purchasedProduct.receipt);
+                Debug.Log("Receipt is valid. Contents: --IAP--");
+                foreach (IPurchaseReceipt productReceipt in result)
+                {
+                    Debug.Log(productReceipt.productID);
+                    Debug.Log(productReceipt.purchaseDate);
+                    Debug.Log(productReceipt.transactionID);                    
+                    
+
+                    GooglePlayReceipt google = productReceipt as GooglePlayReceipt;
+                    if (null != google)
+                    {
+                        Debug.Log(google.purchaseState);
+                        Debug.Log(google.purchaseToken);
+                    }
+                    AppleReceipt appleReceipt = productReceipt as AppleReceipt;
+                    Debug.Log("original purchase version: " + appleReceipt.originalApplicationVersion + " --IAP--");                    
+                    AppleInAppPurchaseReceipt apple = productReceipt as AppleInAppPurchaseReceipt;
+                    
+                    if (null != apple)
+                    {
+                        Debug.Log(apple.originalTransactionIdentifier);
+                        Debug.Log(apple.subscriptionExpirationDate);
+                        Debug.Log(apple.cancellationDate);
+                        Debug.Log(apple.quantity);                        
+                    }
+
+                    // For improved security, consider comparing the signed
+                    // IPurchaseReceipt.productId, IPurchaseReceipt.transactionID, and other data
+                    // embedded in the signed receipt objects to the data which the game is using
+                    // to make this purchase.
+                }
+            }
+            catch (IAPSecurityException ex)
+            {
+                Debug.LogError("Invalid receipt, not unlocking content. " + ex + " --IAP--");
+                return PurchaseProcessingResult.Complete;
+            }
+            catch (NotImplementedException exception)
+            {
+                Debug.LogError("Cross Platform Validator Not Implemented: " + exception + " --IAP--");
+            }
+        }
+#endif
 
         if (e.purchasedProduct.definition.id == CUR_IAP_ID)
         {
             Debug.Log("gameunlock: SCS just unlocked game so update settings --IAP--");
+            Debug.Log("receipt: " + e.purchasedProduct.receipt + " --IAP--");
             RestoredValidIAP = true;
             StaticStuff.HasUnlockedFullGame = true;
             StaticStuff.SaveCurrentSettings("IAPManager.PurchaseProcessingResult()");
@@ -285,6 +362,10 @@ public class IAPManager : MonoBehaviour, IStoreListener
 
         return PurchaseProcessingResult.Complete;
     }
+
+#if RECEIPT_VALIDATION
+    private CrossPlatformValidator validator;
+#endif
 
     /// <summary>
     /// A purchase failed with specified reason.
