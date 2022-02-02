@@ -562,7 +562,7 @@ public class RifRafInGamePopUp : MonoBehaviour
         
         //QuitConfirmPopup.gameObject.SetActive(true);
         ToggleQuitConfirmPopUp(true);
-        ClearContent();
+        //ClearContent();
     }
     public void OnClickQuitToMainCancel()
     {
