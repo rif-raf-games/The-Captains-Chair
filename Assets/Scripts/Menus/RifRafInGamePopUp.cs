@@ -390,28 +390,31 @@ public class RifRafInGamePopUp : MonoBehaviour
     public void OnClickMenuTab(Button button)
     {
         GameObject currentContent = ExchangeContent;
-        ToggleContent(false);
+        //ToggleContent(false);
         if (button.name.Contains("Exchange") && CurMenu != eInGameMenus.EXCHANGE)
         {
+            ToggleContent(false);
             ExchangeContent.SetActive(true);
             currentContent = ExchangeContent;
             InitMenuButtonInfo(null, eInGameMenus.EXCHANGE);
         }
         else if(button.name.Contains("Task") && CurMenu != eInGameMenus.TASKS)
         {
+            ToggleContent(false);
             TasksContent.SetActive(true);
             currentContent = TasksContent;
             InitMenuButtonInfo(null, eInGameMenus.TASKS);
         }
         else if (button.name.Contains("Codex") && CurMenu != eInGameMenus.CODEX)
         {
+            ToggleContent(false);
             CodexContent.SetActive(true);
             currentContent = CodexContent;
             InitMenuButtonInfo(null, eInGameMenus.CODEX);
         }
         else if (button.name.Contains("Log") && CurMenu != eInGameMenus.SHIPS_LOG)
-        {
-            //Debug.Log("set up ship's log");
+        {            
+            ToggleContent(false);
             ShipLogContent.SetActive(true);
             currentContent = ShipLogContent;
             InitMenuButtonInfo(null, eInGameMenus.SHIPS_LOG);
