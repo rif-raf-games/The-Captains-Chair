@@ -102,10 +102,10 @@ public class MCP : MonoBehaviour
        // Debug.Log("AspectVal: " + AspectVal + ", TabletMode: " + TabletMode);
     }
 
-   /* private void Start()
+    private void Start()
     {
-        //StartCoroutine(LoadIAPManager());        
-    }*/
+        AudioListener.volume = .5f;
+    }
 
     #region IAP
    /* IEnumerator LoadIAPManager()
@@ -288,7 +288,7 @@ public class MCP : MonoBehaviour
     public void StartMiniGame()
     {
         StartFreeRoam();
-    }
+    }    
 
 #if USE_RR_ONGUI
     bool ShowSceneSelect = false;
@@ -338,7 +338,7 @@ public class MCP : MonoBehaviour
     }
 #endif
 
-#region SCENE_TRANSITIONS
+    #region SCENE_TRANSITIONS
     public void LoadNextScene(string sceneName = "", Scene_Jump sceneJump = null, Mini_Game_Jump miniGameJump = null, string posToSave = "", string savedPos = "", MenuButton menuButton = null)
     {
         StartCoroutine(LoadNextSceneDelay(sceneName, sceneJump, miniGameJump, posToSave, savedPos));
