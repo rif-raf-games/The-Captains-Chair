@@ -63,13 +63,10 @@ public class IAPManager : MonoBehaviour, IStoreListener
 
         Debug.Log("InitIAP() --IAP--");
         StandardPurchasingModule module = StandardPurchasingModule.Instance();
-        Builder = ConfigurationBuilder.Instance(module); //ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
-
-
+        Builder = ConfigurationBuilder.Instance(module);
 
         m_IsGooglePlayStoreSelected =
-            Application.platform == RuntimePlatform.Android && module.appStore == AppStore.GooglePlay;
-      //  Debug.Log("m_IsGooglePlayStoreSelected: " + m_IsGooglePlayStoreSelected);
+            Application.platform == RuntimePlatform.Android && module.appStore == AppStore.GooglePlay;      
 
         ProductCatalog catalog = ProductCatalog.LoadDefaultCatalog();
 
@@ -82,12 +79,10 @@ public class IAPManager : MonoBehaviour, IStoreListener
                 {
                     ids.Add(storeID.id, storeID.store);
                 }
-                Builder.AddProduct(product.id, product.type, ids);
-                // Debug.Log("1) id: " + product.id + ", type: " + product.type + ", ids: " + ids);
+                Builder.AddProduct(product.id, product.type, ids);                
             }
             else
-            {
-                // Debug.Log("2) id: " + product.id + ", type: " + product.type);
+            {                
                 Builder.AddProduct(product.id, product.type);
             }
         }
@@ -113,20 +108,62 @@ public class IAPManager : MonoBehaviour, IStoreListener
         m_InitInProgress = true;
         m_ActionTimer = 0f;
 
+        CheckAppReceipt("InitIAP()");
+
+        UnityPurchasing.Initialize(this, Builder);
+    }
+
+    void CheckAppReceipt(string callingFunction)
+    {
+        if(Builder == null) { Debug.LogError("No Builder in IAPManager."); return; }
 
         IAppleConfiguration appleConfig = Builder.Configure<IAppleConfiguration>();
-        Debug.Log("BRENT HERE--- InitIAP() appleConfig.appReceipt: " + appleConfig.appReceipt + " --IAP--");
-        if(appleConfig.appReceipt != "" && appleConfig.appReceipt.Contains("fake receipt") == false)
+        string appReceipt = appleConfig.appReceipt;
+        bool canMakePayments = appleConfig.canMakePayments;
+        Debug.Log(callingFunction + ", appReceipt: " + appReceipt + ", canMakePayments: " + canMakePayments + " --IAP--");
+        if (appReceipt != "" && appReceipt.Contains("fake receipt") == false)
         {
             var receiptData = System.Convert.FromBase64String(appleConfig.appReceipt);
             AppleReceipt appleReceipt = new AppleValidator(AppleTangle.Data()).Validate(receiptData);
             Debug.Log("BRENT HERE--- InitIAP() AppleReceipt originalApplicationVersion: " + appleReceipt.originalApplicationVersion + " --IAP--");
-        }        
-
-
-        UnityPurchasing.Initialize(this, Builder);
+        }
     }
-    
+
+#if false
+    private void OnGUI()
+    {
+        int x = 0;
+        int y = Screen.height - 300;
+        int w = 300; int h = 300;
+        GUI.DrawTexture(new Rect(x, y, w, h), Black);
+
+        if (GUI.Button(new Rect(x, y + 100, 90, 90), "Check\nApp\nReceipt"))
+        {
+            CheckAppReceipt("OnGUI()");
+        }
+        if (GUI.Button(new Rect(x+100, y + 100, 90, 90), "Refresh\nApp\nReceipt"))
+        {
+            m_AppleExtensions.RefreshAppReceipt(OnRefreshAppReceiptSuccess, OnRefreshAppReceiptFailure);
+        }
+    }
+#endif
+    void OnRefreshAppReceiptSuccess(string receipt)
+    {
+        // This does not mean anything was modified,
+        // merely that the refresh process succeeded.
+        // For information on parsing receipts, see:
+        // https://developer.apple.com/library/archive/releasenotes/General/ValidateAppStoreReceipt/Chapters/ValidateLocally.html#//apple_ref/doc/uid/TP40010573-CH1-SW2
+        // as well as:
+        // https://docs.unity3d.com/Manual/UnityIAPValidatingReceipts.html
+        Debug.Log("OnRefreshAppReceiptSuccess() receipt: " + receipt + " --IAP--");        
+    }
+
+    void OnRefreshAppReceiptFailure()
+    {
+        Debug.Log("OnRefreshAppReceiptFailure() --IAP--");        
+    }
+
+
     /// <summary>
     /// Purchasing initialized successfully.
     ///
@@ -148,15 +185,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
         // On non-Apple platforms this will have no effect; OnDeferred will never be called.
         m_AppleExtensions.RegisterPurchaseDeferredListener(OnDeferred);
 
-
-        IAppleConfiguration appleConfig = Builder.Configure<IAppleConfiguration>();
-        Debug.Log("BRENT HERE--- OnInitialized() appleConfig.appReceipt: " + appleConfig.appReceipt + " --IAP--");
-        if (appleConfig.appReceipt != "" && appleConfig.appReceipt.Contains("fake receipt") == false)
-        {
-            var receiptData = System.Convert.FromBase64String(appleConfig.appReceipt);
-            AppleReceipt appleReceipt = new AppleValidator(AppleTangle.Data()).Validate(receiptData);
-            Debug.Log("BRENT HERE--- OnInitialized() AppleReceipt originalApplicationVersion: " + appleReceipt.originalApplicationVersion + " --IAP--");
-        }
+        CheckAppReceipt("OnInitialized()");
 
 
         List<string> hasReceipt = new List<string>();
@@ -277,9 +306,9 @@ public class IAPManager : MonoBehaviour, IStoreListener
         _RifRafInGamePopup.GenericPopup.gameObject.SetActive(false);
         CurIAPPopup = eIAPPopup.MAIN;
     }
-    #endregion // IAP_INIT
+#endregion // IAP_INIT
 
-    #region PURCHASE
+#region PURCHASE
     /// <summary>
     /// Triggered when the user presses the <c>Buy</c> button on a product user interface component.
     /// </summary>
@@ -451,10 +480,10 @@ public class IAPManager : MonoBehaviour, IStoreListener
         _RifRafInGamePopup.GenericPopup.gameObject.SetActive(false);
     }
     
-    #endregion
+#endregion
 
 
-    #region IAP_RESTORE    
+#region IAP_RESTORE    
     public void RestorePurchases()
     {
         Debug.Log("RestorePurchases() --IAP--");
@@ -539,9 +568,9 @@ public class IAPManager : MonoBehaviour, IStoreListener
         CurIAPPopup = eIAPPopup.MAIN;
         _RifRafInGamePopup.GenericPopup.gameObject.SetActive(false);
     }            
-    #endregion // IAPRESTORE
+#endregion // IAPRESTORE
 
-    #region IAP_FETCH_INFO
+#region IAP_FETCH_INFO
     public void FetchInfoButtonClicked()
     {
         Debug.Log("--FetchInfoButtonClicked()--");
@@ -572,7 +601,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
             Debug.Log(string.Format("id: {0}\nstore-specific id: {1}\ntype: {2}\nenabled: {3}\n", product.definition.id, product.definition.storeSpecificId, product.definition.type.ToString(), product.definition.enabled ? "enabled" : "disabled"));
         }
     }
-    #endregion // IAP_FETCH_INFO
+#endregion // IAP_FETCH_INFO
 
     private void Update()
     {
@@ -671,6 +700,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
         int x = 0;
         int y = Screen.height - 300;
         int w = 300; int h = 300;
+        //GUI.DrawTexture(new Rect(x, y, w, h), Black);
 
         GUI.DrawTexture(new Rect(x, y, w, h), Black);
         //GUI.Label(new Rect(x + 10, y + 10, w - 20, h - 20), "Buy IAP?");
@@ -834,7 +864,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
     }
 #endif
 
-    #region IAP_NOT_USED
+#region IAP_NOT_USED
     /// <summary>
     /// iOS Specific.
     /// This is called as part of Apple's 'Ask to buy' functionality,
@@ -858,7 +888,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
     {
         Debug.Log("--OnTransactionsRefreshedFail()--");
     }
-        #endregion // IAP_NOT_USED
+#endregion // IAP_NOT_USED
 
     
     void ResetActionTimerItems()
