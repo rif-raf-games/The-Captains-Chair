@@ -115,12 +115,12 @@ public class IAPManager : MonoBehaviour, IStoreListener
 
 
         IAppleConfiguration appleConfig = Builder.Configure<IAppleConfiguration>();
-        Debug.Log("InitIAP() appleConfig.appReceipt: " + appleConfig.appReceipt + " --IAP--");
+        Debug.Log("BRENT HERE--- InitIAP() appleConfig.appReceipt: " + appleConfig.appReceipt + " --IAP--");
         if(appleConfig.appReceipt != "" && appleConfig.appReceipt.Contains("fake receipt") == false)
         {
             var receiptData = System.Convert.FromBase64String(appleConfig.appReceipt);
             AppleReceipt appleReceipt = new AppleValidator(AppleTangle.Data()).Validate(receiptData);
-            Debug.Log("AppleReceipt originalApplicationVersion: " + appleReceipt.originalApplicationVersion + " --IAP--");
+            Debug.Log("BRENT HERE--- InitIAP() AppleReceipt originalApplicationVersion: " + appleReceipt.originalApplicationVersion + " --IAP--");
         }        
 
 
@@ -150,12 +150,12 @@ public class IAPManager : MonoBehaviour, IStoreListener
 
 
         IAppleConfiguration appleConfig = Builder.Configure<IAppleConfiguration>();
-        Debug.Log("OnInitialized() appleConfig.appReceipt: " + appleConfig.appReceipt + " --IAP--");
+        Debug.Log("BRENT HERE--- OnInitialized() appleConfig.appReceipt: " + appleConfig.appReceipt + " --IAP--");
         if (appleConfig.appReceipt != "" && appleConfig.appReceipt.Contains("fake receipt") == false)
         {
             var receiptData = System.Convert.FromBase64String(appleConfig.appReceipt);
             AppleReceipt appleReceipt = new AppleValidator(AppleTangle.Data()).Validate(receiptData);
-            Debug.Log("AppleReceipt originalApplicationVersion: " + appleReceipt.originalApplicationVersion + " --IAP--");
+            Debug.Log("BRENT HERE--- OnInitialized() AppleReceipt originalApplicationVersion: " + appleReceipt.originalApplicationVersion + " --IAP--");
         }
 
 
