@@ -54,6 +54,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
         InitIAP(null, null);
     }
 
+    ConfigurationBuilder Builder;
     #region IAP_INIT
     void InitIAP(System.Action successCallback, System.Action failCallback)
     {
@@ -62,7 +63,9 @@ public class IAPManager : MonoBehaviour, IStoreListener
 
         Debug.Log("InitIAP() --IAP--");
         StandardPurchasingModule module = StandardPurchasingModule.Instance();
-        ConfigurationBuilder builder = ConfigurationBuilder.Instance(module); //ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
+        Builder = ConfigurationBuilder.Instance(module); //ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
+
+
 
         m_IsGooglePlayStoreSelected =
             Application.platform == RuntimePlatform.Android && module.appStore == AppStore.GooglePlay;
@@ -79,13 +82,13 @@ public class IAPManager : MonoBehaviour, IStoreListener
                 {
                     ids.Add(storeID.id, storeID.store);
                 }
-                builder.AddProduct(product.id, product.type, ids);
+                Builder.AddProduct(product.id, product.type, ids);
                 // Debug.Log("1) id: " + product.id + ", type: " + product.type + ", ids: " + ids);
             }
             else
             {
                 // Debug.Log("2) id: " + product.id + ", type: " + product.type);
-                builder.AddProduct(product.id, product.type);
+                Builder.AddProduct(product.id, product.type);
             }
         }
 
@@ -109,7 +112,19 @@ public class IAPManager : MonoBehaviour, IStoreListener
         IAPInitFailCallback = failCallback;
         m_InitInProgress = true;
         m_ActionTimer = 0f;
-        UnityPurchasing.Initialize(this, builder);
+
+
+        IAppleConfiguration appleConfig = Builder.Configure<IAppleConfiguration>();
+        Debug.Log("InitIAP() appleConfig.appReceipt: " + appleConfig.appReceipt + " --IAP--");
+        if(appleConfig.appReceipt != "" && appleConfig.appReceipt.Contains("fake receipt") == false)
+        {
+            var receiptData = System.Convert.FromBase64String(appleConfig.appReceipt);
+            AppleReceipt appleReceipt = new AppleValidator(AppleTangle.Data()).Validate(receiptData);
+            Debug.Log("AppleReceipt originalApplicationVersion: " + appleReceipt.originalApplicationVersion + " --IAP--");
+        }        
+
+
+        UnityPurchasing.Initialize(this, Builder);
     }
     
     /// <summary>
@@ -132,8 +147,19 @@ public class IAPManager : MonoBehaviour, IStoreListener
         // On Apple platforms we need to handle deferred purchases caused by Apple's Ask to Buy feature.
         // On non-Apple platforms this will have no effect; OnDeferred will never be called.
         m_AppleExtensions.RegisterPurchaseDeferredListener(OnDeferred);
-        List<string> hasReceipt = new List<string>();
 
+
+        IAppleConfiguration appleConfig = Builder.Configure<IAppleConfiguration>();
+        Debug.Log("OnInitialized() appleConfig.appReceipt: " + appleConfig.appReceipt + " --IAP--");
+        if (appleConfig.appReceipt != "" && appleConfig.appReceipt.Contains("fake receipt") == false)
+        {
+            var receiptData = System.Convert.FromBase64String(appleConfig.appReceipt);
+            AppleReceipt appleReceipt = new AppleValidator(AppleTangle.Data()).Validate(receiptData);
+            Debug.Log("AppleReceipt originalApplicationVersion: " + appleReceipt.originalApplicationVersion + " --IAP--");
+        }
+
+
+        List<string> hasReceipt = new List<string>();
         Debug.Log("Available items: --IAP--");
         foreach (Product item in controller.products.all)
         {
@@ -295,6 +321,9 @@ public class IAPManager : MonoBehaviour, IStoreListener
         Debug.Log("Receipt: " + e.purchasedProduct.receipt + " --IAP--");
 
 #if RECEIPT_VALIDATION // Local validation is available for GooglePlay, and Apple stores
+
+        
+
         if (m_IsGooglePlayStoreSelected ||
             Application.platform == RuntimePlatform.IPhonePlayer ||
             Application.platform == RuntimePlatform.OSXPlayer ||
@@ -306,10 +335,10 @@ public class IAPManager : MonoBehaviour, IStoreListener
                 Debug.Log("Receipt is valid. Contents: --IAP--");
                 foreach (IPurchaseReceipt productReceipt in result)
                 {
-                    Debug.Log(productReceipt.productID);
-                    Debug.Log(productReceipt.purchaseDate);
-                    Debug.Log(productReceipt.transactionID);                    
-                    
+                    Debug.Log("********** receipt info ********* --IAP--");
+                    Debug.Log("productID: " + productReceipt.productID);
+                    Debug.Log("purchaseDate: " + productReceipt.purchaseDate);
+                    Debug.Log("transactionID: " + productReceipt.transactionID);                    
 
                     GooglePlayReceipt google = productReceipt as GooglePlayReceipt;
                     if (null != google)
@@ -318,16 +347,19 @@ public class IAPManager : MonoBehaviour, IStoreListener
                         Debug.Log(google.purchaseToken);
                     }
                     AppleReceipt appleReceipt = productReceipt as AppleReceipt;
-                    Debug.Log("original purchase version: " + appleReceipt.originalApplicationVersion + " --IAP--");                    
+                    if (appleReceipt == null) Debug.LogError("Null AppleReceipt --IAP--");
+                    else Debug.Log("original purchase version: " + appleReceipt.originalApplicationVersion + " --IAP--");
+
                     AppleInAppPurchaseReceipt apple = productReceipt as AppleInAppPurchaseReceipt;
                     
                     if (null != apple)
                     {
-                        Debug.Log(apple.originalTransactionIdentifier);
-                        Debug.Log(apple.subscriptionExpirationDate);
-                        Debug.Log(apple.cancellationDate);
-                        Debug.Log(apple.quantity);                        
+                        Debug.Log("originalTransactionIdentifier: " + apple.originalTransactionIdentifier);
+                       // Debug.Log(apple.subscriptionExpirationDate);
+                       // Debug.Log(apple.cancellationDate);
+                        Debug.Log("quantity: " + apple.quantity);                        
                     }
+                    Debug.Log("******** end info ******* --IAP--");
 
                     // For improved security, consider comparing the signed
                     // IPurchaseReceipt.productId, IPurchaseReceipt.transactionID, and other data
