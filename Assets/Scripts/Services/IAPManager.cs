@@ -90,17 +90,17 @@ public class IAPManager : MonoBehaviour, IStoreListener
 #if RECEIPT_VALIDATION
         string appIdentifier;
         appIdentifier = Application.identifier;
-        Debug.Log("appIdentifier: " + appIdentifier + " --IAP--");
+        Debug.Log("appIdentifier: " + appIdentifier + " --IAP App Receipt--");
         try
         {
             validator = new CrossPlatformValidator(GooglePlayTangle.Data(), AppleTangle.Data(), appIdentifier);
         }
         catch (NotImplementedException exception)
         {
-            Debug.Log("Cross Platform Validator Not Implemented: " + exception + " --IAP--");
+            Debug.Log("Cross Platform Validator Not Implemented: " + exception + " --IAP App Receipt--");
         }
-        if (validator == null) Debug.Log("null validator --IAP--");
-        else Debug.Log("we have a validator --IAP--");
+        if (validator == null) Debug.Log("null validator --IAP App Receipt--");
+        else Debug.Log("we have a validator --IAP App Receipt--");
 #endif
 
         IAPInitSuccessCallback = successCallback;
@@ -111,22 +111,6 @@ public class IAPManager : MonoBehaviour, IStoreListener
         CheckAppReceipt("InitIAP()");
 
         UnityPurchasing.Initialize(this, Builder);
-    }
-
-    void CheckAppReceipt(string callingFunction)
-    {
-        if(Builder == null) { Debug.LogError("No Builder in IAPManager."); return; }
-
-        IAppleConfiguration appleConfig = Builder.Configure<IAppleConfiguration>();
-        string appReceipt = appleConfig.appReceipt;
-        bool canMakePayments = appleConfig.canMakePayments;
-        Debug.Log(callingFunction + ", appReceipt: " + appReceipt + ", canMakePayments: " + canMakePayments + " --IAP--");
-        if (appReceipt != "" && appReceipt.Contains("fake receipt") == false)
-        {
-            var receiptData = System.Convert.FromBase64String(appleConfig.appReceipt);
-            AppleReceipt appleReceipt = new AppleValidator(AppleTangle.Data()).Validate(receiptData);
-            Debug.Log("BRENT HERE--- InitIAP() AppleReceipt originalApplicationVersion: " + appleReceipt.originalApplicationVersion + " --IAP--");
-        }
     }
 
 #if false
@@ -141,12 +125,56 @@ public class IAPManager : MonoBehaviour, IStoreListener
         {
             CheckAppReceipt("OnGUI()");
         }
-        if (GUI.Button(new Rect(x+100, y + 100, 90, 90), "Refresh\nApp\nReceipt"))
+        if (GUI.Button(new Rect(x + 100, y + 100, 90, 90), "Refresh\nApp\nReceipt"))
         {
             m_AppleExtensions.RefreshAppReceipt(OnRefreshAppReceiptSuccess, OnRefreshAppReceiptFailure);
         }
     }
 #endif
+
+    void CheckAppReceipt(string callingFunction)
+    {
+        if(Builder == null) { Debug.LogError("No Builder in IAPManager. --IAP App Receipt--"); return; }
+
+        IAppleConfiguration appleConfig = Builder.Configure<IAppleConfiguration>();        
+        if (appleConfig.appReceipt.Contains("fake receipt")) { Debug.Log(callingFunction + " we're in the editor so just bail --IAP App Receipt--"); return; }
+        
+        Debug.Log("CheckAppReceipt() called from: " + callingFunction + ", appReceipt: " + appleConfig.appReceipt + ", canMakePayments: " + appleConfig.canMakePayments + " --IAP App Receipt--");        
+
+        if (appleConfig.appReceipt != "")
+        {
+            // we have an app receipt so check the version
+            var receiptData = System.Convert.FromBase64String(appleConfig.appReceipt);
+            AppleReceipt appleReceipt = new AppleValidator(AppleTangle.Data()).Validate(receiptData);
+            Debug.Log("Apple Receipt's originalApplicationVersion: " + appleReceipt.originalApplicationVersion + " --IAP App Receipt--");
+            if(appleReceipt.originalApplicationVersion.Contains("1.0"))
+            {
+                Debug.Log("Has original app version 1.0 so make check if they need unlock --IAP App Receipt--");
+                CheckIfNeedToUnlockDueToVerion1_0(callingFunction);
+            }
+        }
+        else
+        {            
+            if(m_AppleExtensions != null)
+            {
+                Debug.Log("we have apple extensions but no appReceipt so try and refresh it --IAP App Receipt--");
+                m_AppleExtensions.RefreshAppReceipt(OnRefreshAppReceiptSuccess, OnRefreshAppReceiptFailure);
+            }
+        }        
+    }
+
+    void CheckIfNeedToUnlockDueToVerion1_0(string callingFunction)
+    {
+        if(StaticStuff.HasUnlockedFullGame == true) { Debug.Log("CheckIfNeedToUnlockDueToVerion1_0() called from: " + callingFunction + ", user already has unlock so nothing to do --IAP App Receipt--"); return; }
+
+        // if we're here then the user bought 1.0 but they do not have the unlock so do it now
+        Debug.Log("CheckIfNeedToUnlockDueToVerion1_0() user does not have game unlocked but bought 1.0 so update and save. --IAP App Receipt--");
+
+        StaticStuff.HasUnlockedFullGame = true;
+        StaticStuff.SaveCurrentSettings("IAPManager.CheckIfNeedToUnlockDueToVerion1_0()");
+    }
+
+
     void OnRefreshAppReceiptSuccess(string receipt)
     {
         // This does not mean anything was modified,
@@ -155,12 +183,13 @@ public class IAPManager : MonoBehaviour, IStoreListener
         // https://developer.apple.com/library/archive/releasenotes/General/ValidateAppStoreReceipt/Chapters/ValidateLocally.html#//apple_ref/doc/uid/TP40010573-CH1-SW2
         // as well as:
         // https://docs.unity3d.com/Manual/UnityIAPValidatingReceipts.html
-        Debug.Log("OnRefreshAppReceiptSuccess() receipt: " + receipt + " --IAP--");        
+        Debug.Log("OnRefreshAppReceiptSuccess() receipt: " + receipt + " --IAP App Receipt--");
+        CheckAppReceipt("OnRefreshAppReceiptSuccess()");
     }
 
     void OnRefreshAppReceiptFailure()
     {
-        Debug.Log("OnRefreshAppReceiptFailure() --IAP--");        
+        Debug.Log("OnRefreshAppReceiptFailure() --IAP App Receipt--");        
     }
 
 
@@ -183,10 +212,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
 
         // On Apple platforms we need to handle deferred purchases caused by Apple's Ask to Buy feature.
         // On non-Apple platforms this will have no effect; OnDeferred will never be called.
-        m_AppleExtensions.RegisterPurchaseDeferredListener(OnDeferred);
-
-        CheckAppReceipt("OnInitialized()");
-
+        m_AppleExtensions.RegisterPurchaseDeferredListener(OnDeferred);        
 
         List<string> hasReceipt = new List<string>();
         Debug.Log("Available items: --IAP--");
@@ -221,6 +247,8 @@ public class IAPManager : MonoBehaviour, IStoreListener
                 Debug.Log(s);
             }
         }
+
+        CheckAppReceipt("OnInitialized()");
 
         for (int i = 0; i < m_Controller.products.all.Length; i++)
         {
@@ -676,12 +704,6 @@ public class IAPManager : MonoBehaviour, IStoreListener
         _MCP.StartIAPPanel();
 
     }
-
-    IEnumerator LoadUpIAPPanelDelay()
-    {
-        yield return new WaitForEndOfFrame();
-        _MCP.StartIAPPanel();
-    }
                       
     string ActionBeingTaken()
     {
@@ -691,6 +713,8 @@ public class IAPManager : MonoBehaviour, IStoreListener
         if (m_PurchaseInProgress == true) result += "--Purchase in Progress";
         return result;
     }
+
+
 
     public GUIStyle guiStyle = new GUIStyle();
     public Texture Black;
