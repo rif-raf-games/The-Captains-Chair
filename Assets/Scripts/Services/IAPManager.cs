@@ -203,8 +203,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
     /// <param name="controller"> The <c>IStoreController</c> created during initialization. </param>
     /// <param name="extensions"> The <c>IExtensionProvider</c> created during initialization. </param>
     public void OnInitialized(IStoreController controller, IExtensionProvider extensions)
-    {
-        return;
+    {        
         Debug.Log("OnInitialized() --IAP--");
         m_InitInProgress = false;
         m_Controller = controller;
