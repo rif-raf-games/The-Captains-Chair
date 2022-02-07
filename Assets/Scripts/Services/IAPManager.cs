@@ -110,7 +110,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
         m_InitInProgress = true;
         m_ActionTimer = 0f;
 
-        CheckAppReceipt("InitIAP()");
+       // CheckAppReceipt("InitIAP()");
 
         UnityPurchasing.Initialize(this, Builder);
     }
@@ -204,6 +204,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
     /// <param name="extensions"> The <c>IExtensionProvider</c> created during initialization. </param>
     public void OnInitialized(IStoreController controller, IExtensionProvider extensions)
     {
+        return;
         Debug.Log("OnInitialized() --IAP--");
         m_InitInProgress = false;
         m_Controller = controller;
@@ -275,8 +276,8 @@ public class IAPManager : MonoBehaviour, IStoreListener
                     // Show IAP popup
                 }
                 else if (product.hasReceipt == false && StaticStuff.HasUnlockedFullGame == true)
-                {   // mobrent
-                    Debug.LogError("gameunlock: receipt is false but settings is true...this is odd --IAP--");
+                {   
+                   // Debug.LogError("gameunlock: receipt is false but settings is true...this is odd --IAP--");
                 }
             }
         }
@@ -322,17 +323,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
         CurIAPPopup = eIAPPopup.INIT_ERROR;
         _RifRafInGamePopup.IAPGenericPopupSetup("Init Failed.", "", OnClickInitFailRetry, OnClickInitFailClose);
     }
-    public void OnClickInitFailRetry()
-    {
-        _RifRafInGamePopup.GenericPopup.gameObject.SetActive(false);
-        CurIAPPopup = eIAPPopup.MAIN;
-        InitIAP(OnClickRestorePurchases, RRInitFailed);
-    }
-    public void OnClickInitFailClose()
-    {
-        _RifRafInGamePopup.GenericPopup.gameObject.SetActive(false);
-        CurIAPPopup = eIAPPopup.MAIN;
-    }
+    
 #endregion // IAP_INIT
 
 #region PURCHASE
@@ -492,20 +483,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
         Debug.Log("RRPurchaseFailed() PurchaseFailMessage: " + PurchaseFailMessage + " --IAP--");
         CurIAPPopup = eIAPPopup.PURCASE_FAILED;
         _RifRafInGamePopup.IAPGenericPopupSetup("Purchase Failed.", PurchaseFailMessage, OnClickPurchaseFailRetry, OnClickPurchaseFailClose);
-    }
-
-    public void OnClickPurchaseFailRetry()
-    {
-        Debug.Log("OnClickPurchaseFailRetry() --IAP--");
-        _RifRafInGamePopup.GenericPopup.gameObject.SetActive(false);
-        OnClickBuyIAP(CUR_IAP_ID);
-    }
-    public void OnClickPurchaseFailClose()
-    {
-        Debug.Log("OnClickPurchaseFailClose() --IAP--");
-        CurIAPPopup = eIAPPopup.MAIN;
-        _RifRafInGamePopup.GenericPopup.gameObject.SetActive(false);
-    }
+    }    
     
 #endregion
 
@@ -585,16 +563,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
         CurIAPPopup = eIAPPopup.RESTORE_FAILED;
         _RifRafInGamePopup.IAPGenericPopupSetup("Restore Failed", message, OnClickRestoreFailRetry, OnClickRestoreFailClose);
     }
-    public void OnClickRestoreFailRetry()
-    {
-        RestorePurchases();
-    }
-    public void OnClickRestoreFailClose()
-    {
-        Debug.Log("OnClickPurchaseFailClose() --IAP--");
-        CurIAPPopup = eIAPPopup.MAIN;
-        _RifRafInGamePopup.GenericPopup.gameObject.SetActive(false);
-    }            
+               
 #endregion // IAPRESTORE
 
 #region IAP_FETCH_INFO
@@ -657,22 +626,70 @@ public class IAPManager : MonoBehaviour, IStoreListener
     {
         Debug.Log("RRActionTimedOut() TimeoutCause: " + TimeoutCause + " --IAP--");
         CurIAPPopup = eIAPPopup.ACTION_TIMED_OUT;
-        if (TimeoutCause.Contains("Purchase"))
+        
+        //if (TimeoutCause.Contains("Purchase"))
+        if(m_PurchaseInProgress == true)
         {
             _RifRafInGamePopup.IAPGenericPopupSetup("Action Timed Out.", TimeoutCause, OnClickPurchaseFailRetry, OnClickPurchaseFailClose);
         }
-        else if (TimeoutCause.Contains("Restore"))
+        //else if (TimeoutCause.Contains("Restore"))
+        else if(m_RestoreInProgress == true)
         {
             _RifRafInGamePopup.IAPGenericPopupSetup("Action Timed Out.", TimeoutCause, OnClickRestoreFailRetry, OnClickRestoreFailClose);
         }
-        else if (TimeoutCause.Contains("Init"))
+        //else if (TimeoutCause.Contains("Init"))
+        else if(m_InitInProgress == true)
         {            
             _RifRafInGamePopup.IAPGenericPopupSetup("Action Timed Out.", TimeoutCause, OnClickInitFailRetry, OnClickInitFailClose);
-        }
-
-        
+        }        
     }
-        
+
+    public void OnClickPurchaseFailRetry()
+    {
+        Debug.Log("OnClickPurchaseFailRetry() --IAP--");
+        ResetActionTimerItems();
+        _RifRafInGamePopup.GenericPopup.gameObject.SetActive(false);
+        OnClickBuyIAP(CUR_IAP_ID);
+    }
+    public void OnClickPurchaseFailClose()
+    {
+        Debug.Log("OnClickPurchaseFailClose() --IAP--");
+        ResetActionTimerItems();
+        CurIAPPopup = eIAPPopup.MAIN;
+        _RifRafInGamePopup.GenericPopup.gameObject.SetActive(false);
+    }
+
+    public void OnClickRestoreFailRetry()
+    {
+        Debug.Log("OnClickRestoreFailRetry() --IAP--");
+        ResetActionTimerItems();
+        _RifRafInGamePopup.GenericPopup.gameObject.SetActive(false);
+        RestorePurchases();
+    }
+    public void OnClickRestoreFailClose()
+    {
+        Debug.Log("OnClickPurchaseFailClose() --IAP--");
+        ResetActionTimerItems();
+        CurIAPPopup = eIAPPopup.MAIN;
+        _RifRafInGamePopup.GenericPopup.gameObject.SetActive(false);
+    }
+
+    public void OnClickInitFailRetry()
+    {
+        Debug.Log("OnClickInitFailRetry() --IAP--");
+        ResetActionTimerItems();
+        _RifRafInGamePopup.GenericPopup.gameObject.SetActive(false);
+        CurIAPPopup = eIAPPopup.MAIN;
+        InitIAP(OnClickRestorePurchases, RRInitFailed);
+    }
+    public void OnClickInitFailClose()
+    {
+        Debug.Log("OnClickInitFailClose() --IAP--");
+        ResetActionTimerItems();
+        _RifRafInGamePopup.GenericPopup.gameObject.SetActive(false);
+        CurIAPPopup = eIAPPopup.MAIN;
+    }
+
     public void OnClickGoToMainMenu()
     {
         Debug.Log("OnClickGoToMainMenu() --IAP--");        
@@ -705,9 +722,9 @@ public class IAPManager : MonoBehaviour, IStoreListener
     string ActionBeingTaken()
     {
         string result = "";
-        if (m_InitInProgress == true) result += "--Init in Progress--";
-        if (m_RestoreInProgress == true) result += "--Restore in Progress";
-        if (m_PurchaseInProgress == true) result += "--Purchase in Progress";
+        if (m_InitInProgress == true) result += "Device appears offline, please check your internet connection";// --Init in Progress--";
+        if (m_RestoreInProgress == true) result += "Device appears offline, please check your internet connection";//"--Restore in Progress";
+        if (m_PurchaseInProgress == true) result += "Device appears offline, please check your internet connection";
         return result;
     }
 
