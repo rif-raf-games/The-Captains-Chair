@@ -44,6 +44,8 @@ public class IAPManager : MonoBehaviour, IStoreListener
     public MCP _MCP;
     public RifRafInGamePopUp _RifRafInGamePopup;
 
+    static string UNLOCK_VERSION_CHECK = "1.";
+
     void Start()
     {
 #if UNITY_ANDROID
@@ -113,26 +115,14 @@ public class IAPManager : MonoBehaviour, IStoreListener
         UnityPurchasing.Initialize(this, Builder);
     }
 
-#if false
-    private void OnGUI()
+    void UpdateAndSaveIAP(string callingFunction)
     {
-        int x = 0;
-        int y = Screen.height - 300;
-        int w = 300; int h = 300;
-        GUI.DrawTexture(new Rect(x, y, w, h), Black);
-
-        if (GUI.Button(new Rect(x, y + 100, 90, 90), "Check\nApp\nReceipt"))
-        {
-            CheckAppReceipt("OnGUI()");
-        }
-        if (GUI.Button(new Rect(x + 100, y + 100, 90, 90), "Refresh\nApp\nReceipt"))
-        {
-            m_AppleExtensions.RefreshAppReceipt(OnRefreshAppReceiptSuccess, OnRefreshAppReceiptFailure);
-        }
+        Debug.Log("UpdateAndSaveIAP() called from: " + callingFunction);
+        StaticStuff.HasUnlockedFullGame = true;
+        StaticStuff.SaveCurrentSettings("IAPManager.CheckIfNeedToUnlockDueToVerion1_0() called from: " + callingFunction);
     }
-#endif
 
-    void CheckAppReceipt(string callingFunction)
+    public void CheckAppReceipt(string callingFunction)
     {
         if(Builder == null) { Debug.LogError("No Builder in IAPManager. --IAP App Receipt--"); return; }
 
@@ -147,35 +137,46 @@ public class IAPManager : MonoBehaviour, IStoreListener
             var receiptData = System.Convert.FromBase64String(appleConfig.appReceipt);
             AppleReceipt appleReceipt = new AppleValidator(AppleTangle.Data()).Validate(receiptData);
             Debug.Log("Apple Receipt's originalApplicationVersion: " + appleReceipt.originalApplicationVersion + " --IAP App Receipt--");
-            if(appleReceipt.originalApplicationVersion.Contains("1.0"))
+            if (appleReceipt.originalApplicationVersion.Contains(UNLOCK_VERSION_CHECK))
             {
-                Debug.Log("Has original app version 1.0 so make check if they need unlock --IAP App Receipt--");
-                CheckIfNeedToUnlockDueToVerion1_0(callingFunction);
+                Debug.Log("Has original app version " + UNLOCK_VERSION_CHECK + " so make check if they need unlock --IAP App Receipt--");
+                CheckIfNeedToUnlockDueToVerion1_(callingFunction);                
             }
         }
         else
-        {            
-            if(m_AppleExtensions != null)
+        {
+            Debug.LogError("Blank app receipt...should not be here...REPORT TO FBI IMMEDIATELY!!!! --IAP App Receipt--");            
+            /*if(m_AppleExtensions != null && callingFunction.Contains("InitIAP") == false && callingFunction.Contains("TheCaptain") == false)
             {
-                Debug.Log("we have apple extensions but no appReceipt so try and refresh it --IAP App Receipt--");
+                Debug.Log("we have apple extensions but no appReceipt (and we're not in a spot where we care about a login) so try and refresh it --IAP App Receipt--");
                 m_AppleExtensions.RefreshAppReceipt(OnRefreshAppReceiptSuccess, OnRefreshAppReceiptFailure);
             }
+            else if(callingFunction.Contains("InitIAP") == true)
+            {
+                Debug.Log("wanted to refresh but we're on InitIAP so don't do that because it will bring up login when we don't want it --IAP App Receipt--");
+            }
+            else if (callingFunction.Contains("TheCaptain") == true)
+            {
+                Debug.Log("wanted to refresh but we're on Loading up the Hangar scene so don't do that because it will bring up login when we don't want it --IAP App Receipt--");
+            }*/
         }        
     }
 
-    void CheckIfNeedToUnlockDueToVerion1_0(string callingFunction)
+    void CheckIfNeedToUnlockDueToVerion1_(string callingFunction)
     {
-        if(StaticStuff.HasUnlockedFullGame == true) { Debug.Log("CheckIfNeedToUnlockDueToVerion1_0() called from: " + callingFunction + ", user already has unlock so nothing to do --IAP App Receipt--"); return; }
+        if(StaticStuff.HasUnlockedFullGame == true)
+        {
+           Debug.Log("CheckIfNeedToUnlockDueToVerion1_() called from: " + callingFunction + ", user already has unlock so nothing to do --IAP App Receipt--");
+           return;
+        }
 
         // if we're here then the user bought 1.0 but they do not have the unlock so do it now
-        Debug.Log("CheckIfNeedToUnlockDueToVerion1_0() user does not have game unlocked but bought 1.0 so update and save. --IAP App Receipt--");
-
-        StaticStuff.HasUnlockedFullGame = true;
-        StaticStuff.SaveCurrentSettings("IAPManager.CheckIfNeedToUnlockDueToVerion1_0()");
+        Debug.Log("CheckIfNeedToUnlockDueToVerion1_0() user does not have game unlocked but bought " + UNLOCK_VERSION_CHECK + " so update and save. --IAP App Receipt--");
+        UpdateAndSaveIAP("CheckIfNeedTo?UnlockDuetoVersion1_() via " + callingFunction);        
     }
 
 
-    void OnRefreshAppReceiptSuccess(string receipt)
+   /* void OnRefreshAppReceiptSuccess(string receipt)
     {
         // This does not mean anything was modified,
         // merely that the refresh process succeeded.
@@ -190,7 +191,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
     void OnRefreshAppReceiptFailure()
     {
         Debug.Log("OnRefreshAppReceiptFailure() --IAP App Receipt--");        
-    }
+    }*/
 
 
     /// <summary>
@@ -246,9 +247,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
             {
                 Debug.Log(s);
             }
-        }
-
-        CheckAppReceipt("OnInitialized()");
+        }      
 
         for (int i = 0; i < m_Controller.products.all.Length; i++)
         {
@@ -341,7 +340,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
     /// Triggered when the user presses the <c>Buy</c> button on a product user interface component.
     /// </summary>
     /// <param name="productID">The product identifier to buy</param>
-    public void OnClickBuyIAP(string productID)
+    public void OnClickBuyIAP(string productID) // moiap
     {
         productID = CUR_IAP_ID;
         Debug.Log("OnClickBuyIAP(): " + productID + " --IAP--");
@@ -561,7 +560,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
     }
 
     public bool RestoredValidIAP = false;
-    public void OnClickRestorePurchases()
+    public void OnClickRestorePurchases() // moiap
     {
         Debug.Log("OnClickRestorePurchases() --IAP--");
         if (m_Controller == null)
@@ -673,9 +672,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
 
         
     }
-
-    
-    
+        
     public void OnClickGoToMainMenu()
     {
         Debug.Log("OnClickGoToMainMenu() --IAP--");        
@@ -714,7 +711,24 @@ public class IAPManager : MonoBehaviour, IStoreListener
         return result;
     }
 
+#if false
+    private void OnGUI()
+    {
+        int x = 0;
+        int y = Screen.height - 300;
+        int w = 300; int h = 300;
+        GUI.DrawTexture(new Rect(x, y, w, h), Black);
 
+        if (GUI.Button(new Rect(x, y + 100, 90, 90), "Check\nApp\nReceipt"))
+        {
+            CheckAppReceipt("OnGUI()");
+        }
+        if (GUI.Button(new Rect(x + 100, y + 100, 90, 90), "Refresh\nApp\nReceipt"))
+        {
+            m_AppleExtensions.RefreshAppReceipt(OnRefreshAppReceiptSuccess, OnRefreshAppReceiptFailure);
+        }
+    }
+#endif
 
     public GUIStyle guiStyle = new GUIStyle();
     public Texture Black;
