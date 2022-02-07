@@ -176,7 +176,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
     }
 
 
-   /* void OnRefreshAppReceiptSuccess(string receipt)
+    void OnRefreshAppReceiptSuccess(string receipt)
     {
         // This does not mean anything was modified,
         // merely that the refresh process succeeded.
@@ -191,7 +191,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
     void OnRefreshAppReceiptFailure()
     {
         Debug.Log("OnRefreshAppReceiptFailure() --IAP App Receipt--");        
-    }*/
+    }
 
 
     /// <summary>
