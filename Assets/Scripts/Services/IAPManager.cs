@@ -481,7 +481,11 @@ public class IAPManager : MonoBehaviour, IStoreListener
     {
         Debug.Log("RRPurchaseFailed() PurchaseFailMessage: " + PurchaseFailMessage + " --IAP--");
         CurIAPPopup = eIAPPopup.PURCASE_FAILED;
-        _RifRafInGamePopup.IAPGenericPopupSetup("Purchase Failed.", PurchaseFailMessage, OnClickPurchaseFailRetry, OnClickPurchaseFailClose);
+        if(PurchaseFailMessage.Contains("APPLE") == true)
+        {
+            PurchaseFailMessage = "The operation couldn’t be completed or was interrupted";
+        }
+        _RifRafInGamePopup.IAPGenericPopupSetup("Transaction Failed", PurchaseFailMessage, OnClickPurchaseFailRetry, OnClickPurchaseFailClose);
     }    
     
 #endregion
