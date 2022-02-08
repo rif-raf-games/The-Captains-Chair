@@ -110,7 +110,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
         m_InitInProgress = true;
         m_ActionTimer = 0f;
 
-       // CheckAppReceipt("InitIAP()");
+        CheckAppReceipt("InitIAP()");
 
         UnityPurchasing.Initialize(this, Builder);
     }
@@ -176,7 +176,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
     }
 
 
-    void OnRefreshAppReceiptSuccess(string receipt)
+   /* void OnRefreshAppReceiptSuccess(string receipt)
     {
         // This does not mean anything was modified,
         // merely that the refresh process succeeded.
@@ -191,7 +191,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
     void OnRefreshAppReceiptFailure()
     {
         Debug.Log("OnRefreshAppReceiptFailure() --IAP App Receipt--");        
-    }
+    }*/
 
 
     /// <summary>

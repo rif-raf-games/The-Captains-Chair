@@ -58,7 +58,7 @@ public class VideoPlayerRR : MonoBehaviour
         if (SceneManager.GetActiveScene().name.Contains("Hangar_Intro"))
         {
             Debug.Log("We're about to play the IAP video so hold the dialogue object until after the IAP popups --IAP--");
-            this.MCP.SaveNextObjectForIAP = true; //moiap
+            this.MCP.SaveNextObjectForIAP = true; 
         }        
     }
 
