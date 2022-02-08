@@ -1,4 +1,4 @@
-﻿// #define USE_RR_ONGU
+﻿// #define USE_RR_ONGUI
 using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine;
@@ -231,7 +231,7 @@ public class MiniGameMCP : MonoBehaviour
         //EndCurrentPuzzle();
     }
 
-#if USE_RR_ONGU
+#if USE_RR_ONGUI
     private void OnGUI()
     {
         if (GUI.Button(new Rect(Screen.width - 100, Screen.height / 2 - 100, 100, 100), "Win"))
