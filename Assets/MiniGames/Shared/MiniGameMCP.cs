@@ -1,4 +1,4 @@
-﻿#define USE_RR_ONGU
+﻿// #define USE_RR_ONGU
 using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine;

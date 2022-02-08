@@ -104,7 +104,7 @@ public class MCP : MonoBehaviour
 
     private void Start()
     {
-        AudioListener.volume = .5f;
+        AudioListener.volume = .1f;
     }
 
     #region IAP
