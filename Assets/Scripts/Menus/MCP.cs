@@ -75,6 +75,9 @@ public class MCP : MonoBehaviour
             Debug.LogError("There should only ever be one MCP in the scene."); 
             return;
         }
+
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 30;
                  
         MenuUI.SetMCP(this);        
         InGamePopUp.SetMCP(this);
