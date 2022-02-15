@@ -29,7 +29,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
     public float m_ActionTimer = 0f;
 
     string PurchaseFailMessage = "";
-    public static string CUR_IAP_ID = "com.tales_tcc1.fullunlock";
+    public static string CUR_IAP_ID = "com.tales_tcc1_modebug001";
 
     Product IAPProduct = null;
     string InitFailureReason = "";
