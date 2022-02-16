@@ -110,7 +110,9 @@ public class IAPManager : MonoBehaviour, IStoreListener
         m_InitInProgress = true;
         m_ActionTimer = 0f;
 
+#if UNITY_IOS || UNITY_IPHONE
         CheckAppReceipt("InitIAP()");
+#endif
 
         UnityPurchasing.Initialize(this, Builder);
     }
@@ -122,6 +124,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
         StaticStuff.SaveCurrentSettings("IAPManager.CheckIfNeedToUnlockDueToVerion1_0() called from: " + callingFunction);
     }
 
+#if UNITY_IOS || UNITY_IPHONE
     public void CheckAppReceipt(string callingFunction)
     {
         if(Builder == null) { Debug.LogError("No Builder in IAPManager. --IAP App Receipt--"); return; }
@@ -161,6 +164,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
             }*/
         }        
     }
+#endif
 
     void CheckIfNeedToUnlockDueToVerion1_(string callingFunction)
     {
@@ -365,65 +369,6 @@ public class IAPManager : MonoBehaviour, IStoreListener
         m_PurchaseInProgress = false;
         Debug.Log("PurchaseProcessingResult() ID: " + e.purchasedProduct.definition.id + " --IAP--");
         Debug.Log("Receipt: " + e.purchasedProduct.receipt + " --IAP--");
-
-#if RECEIPT_VALIDATION // Local validation is available for GooglePlay, and Apple stores
-
-        
-
-        if (m_IsGooglePlayStoreSelected ||
-            Application.platform == RuntimePlatform.IPhonePlayer ||
-            Application.platform == RuntimePlatform.OSXPlayer ||
-            Application.platform == RuntimePlatform.tvOS)
-        {
-            try
-            {
-                IPurchaseReceipt[] result = validator.Validate(e.purchasedProduct.receipt);
-                Debug.Log("Receipt is valid. Contents: --IAP--");
-                foreach (IPurchaseReceipt productReceipt in result)
-                {
-                    Debug.Log("********** receipt info ********* --IAP--");
-                    Debug.Log("productID: " + productReceipt.productID);
-                    Debug.Log("purchaseDate: " + productReceipt.purchaseDate);
-                    Debug.Log("transactionID: " + productReceipt.transactionID);                    
-
-                    GooglePlayReceipt google = productReceipt as GooglePlayReceipt;
-                    if (null != google)
-                    {
-                        Debug.Log(google.purchaseState);
-                        Debug.Log(google.purchaseToken);
-                    }
-                    AppleReceipt appleReceipt = productReceipt as AppleReceipt;
-                    if (appleReceipt == null) Debug.LogError("Null AppleReceipt --IAP--");
-                    else Debug.Log("original purchase version: " + appleReceipt.originalApplicationVersion + " --IAP--");
-
-                    AppleInAppPurchaseReceipt apple = productReceipt as AppleInAppPurchaseReceipt;
-                    
-                    if (null != apple)
-                    {
-                        Debug.Log("originalTransactionIdentifier: " + apple.originalTransactionIdentifier);
-                       // Debug.Log(apple.subscriptionExpirationDate);
-                       // Debug.Log(apple.cancellationDate);
-                        Debug.Log("quantity: " + apple.quantity);                        
-                    }
-                    Debug.Log("******** end info ******* --IAP--");
-
-                    // For improved security, consider comparing the signed
-                    // IPurchaseReceipt.productId, IPurchaseReceipt.transactionID, and other data
-                    // embedded in the signed receipt objects to the data which the game is using
-                    // to make this purchase.
-                }
-            }
-            catch (IAPSecurityException ex)
-            {
-                Debug.LogError("Invalid receipt, not unlocking content. " + ex + " --IAP--");
-                return PurchaseProcessingResult.Complete;
-            }
-            catch (NotImplementedException exception)
-            {
-                Debug.LogError("Cross Platform Validator Not Implemented: " + exception + " --IAP--");
-            }
-        }
-#endif
 
         if (e.purchasedProduct.definition.id == CUR_IAP_ID)
         {
