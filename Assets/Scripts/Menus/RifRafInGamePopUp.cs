@@ -13,7 +13,7 @@ public class RifRafInGamePopUp : MonoBehaviour
     [Header("Main Panel Stuff")]
     public GameObject MainPopupPanel;    
     public GameObject AcceptButton;
-    public GameObject ResetPuzzleButton;
+    public GameObject ResetPuzzleButton;    
     public GameObject AcceptJobText, SuspendJobText;
     public MissionHint MissionHint;
     public GameObject QuitConfirmPopup;    
@@ -237,6 +237,7 @@ public class RifRafInGamePopUp : MonoBehaviour
             button.JobDescription = job.Template.Exchange_Mission.Job_Description;            
             if (job.Template.Exchange_Mission.Job_Type == Job_Type.Exchange) button.transform.SetParent(ExchangeContent.transform);
             else button.transform.SetParent(TasksContent.transform);
+            button.transform.localScale = new Vector3(.625f, .625f, .625f);
 
             button.ExchangeMission = job.Template.Exchange_Mission;
             button.LoadingScreen = job.Template.LoadingScreen;
@@ -263,9 +264,10 @@ public class RifRafInGamePopUp : MonoBehaviour
 
             button.JobLocation = "";
             button.PointOfContact = "";
-            button.JobDescription = codex.Template.Codex.Entry_Info;
+            button.JobDescription = codex.Template.Codex.Entry_Info;            
             button.transform.SetParent(CodexContent.transform);
-            
+            button.transform.localScale = new Vector3(.625f, .625f, .625f);            
+
             button.GetComponent<Button>().onClick.RemoveAllListeners();
             button.GetComponent<Button>().onClick.AddListener(() => OnClickMenuButton(button));
         }
@@ -280,6 +282,7 @@ public class RifRafInGamePopUp : MonoBehaviour
             button.PointOfContact = "";
             button.JobDescription = shipsLog.Template.Codex.Entry_Info;
             button.transform.SetParent(ShipLogContent.transform);
+            button.transform.localScale = new Vector3(.625f, .625f, .625f);
 
             button.GetComponent<Button>().onClick.RemoveAllListeners();
             button.GetComponent<Button>().onClick.AddListener(() => OnClickMenuButton(button));
@@ -299,29 +302,29 @@ public class RifRafInGamePopUp : MonoBehaviour
             SuspendJobText.SetActive(false);
         }
         else
-        {   // mini game
+        {   // mini game            
             AcceptJobText.SetActive(false);
             SuspendJobText.SetActive(true);
+            //Debug.Log("Are we here: " + SuspendJobText.transform.parent.name);
         }
     }
 
 
     MenuButton CreateButton()
-    {
-       // Debug.Log("CreateButton(): " + Time.time);
+    {        
         MenuButton menuButton = Instantiate<MenuButton>(ButtonPrefab);
-        menuButton.gameObject.SetActive(true);
+        menuButton.gameObject.SetActive(true);                                
         return menuButton;
     }
 
     private void Update()
     {
         if (FindObjectOfType<TheCaptainsChair>() == null)
-        {
+        {   // mini game
             AcceptButton.SetActive(true);
         }
         else
-        {
+        {   // main game
             if (CurJobButton == null || CurMenu == eInGameMenus.CODEX || CurMenu == eInGameMenus.SHIPS_LOG)
             {
                 AcceptButton.SetActive(false);
@@ -346,7 +349,7 @@ public class RifRafInGamePopUp : MonoBehaviour
         else 
             s += "button: " + button.name + ", ";
         s += menu.ToString();
-        Debug.Log(s);
+       // Debug.Log(s);
 
         CurMenu = menu;
         CurJobButton = button;        
