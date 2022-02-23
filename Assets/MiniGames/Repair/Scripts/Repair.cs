@@ -103,7 +103,7 @@ public class Repair : MiniGame
  
     public override void ResetGame()
     {
-        Debug.Log("Repair.ResetGame()");
+      //  Debug.Log("Repair.ResetGame()");
         base.ResetGame();
         base.BeginPuzzleStartTime();     
         foreach (RepairPiece piece in AllPieces) piece.ResetItem();
@@ -544,7 +544,7 @@ public class Repair : MiniGame
             // if we're here then we found a location, so see what's up
             if (snappedBack == true) 
             {   
-                Debug.Log("snappedBack == true do so do nothing");
+//                Debug.Log("snappedBack == true do so do nothing");
             }           
             else
             {

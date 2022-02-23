@@ -20,7 +20,7 @@ public class RifRafInGamePopUp : MonoBehaviour
     public RifRafExchangeJobBoard ExchangeBoard;        
     public VolumeControl MusicVolume;
     public VolumeControl SoundFXVolume;
-    public Text Cash;
+    public Text Cash;    
 
     [Header("IAP Panel Stuff")]
     public GameObject IAPPanel;
@@ -322,6 +322,11 @@ public class RifRafInGamePopUp : MonoBehaviour
         if (FindObjectOfType<TheCaptainsChair>() == null)
         {   // mini game
             AcceptButton.SetActive(true);
+            MiniGameMCP mgMCP = FindObjectOfType<MiniGameMCP>();
+            if(mgMCP != null && mgMCP.IsPuzzleTutorial == true)
+            {
+                AcceptButton.SetActive(false);
+            }
         }
         else
         {   // main game
@@ -361,7 +366,7 @@ public class RifRafInGamePopUp : MonoBehaviour
         if(FindObjectOfType<MiniGameMCP>() == null)
         {
             // no mini game so shut off the reset button
-            ResetPuzzleButton.SetActive(false);
+            ResetPuzzleButton.SetActive(false);            
         }
         else
         {
@@ -552,13 +557,7 @@ public class RifRafInGamePopUp : MonoBehaviour
     public void OnClickShareOnSocial()
     {
         this.MCP.ShareOnSocial(this.gameObject);
-    }
-
-    void ToggleQuitConfirmPopUp(bool isActive)
-    {
-        QuitConfirmPopup.gameObject.SetActive(isActive);
-        ToggleMainPopUpButtons(!isActive);
-    }
+    }    
 
     public void OnClickQuitToMainMenu()
     {
@@ -570,6 +569,13 @@ public class RifRafInGamePopUp : MonoBehaviour
         ToggleQuitConfirmPopUp(true);
         //ClearContent();
     }
+
+    void ToggleQuitConfirmPopUp(bool isActive)
+    {
+        QuitConfirmPopup.gameObject.SetActive(isActive);
+        ToggleMainPopUpButtons(!isActive);
+    }
+
     public void OnClickQuitToMainCancel()
     {
        // Debug.Log("OnClickQuitToMainCancel()");

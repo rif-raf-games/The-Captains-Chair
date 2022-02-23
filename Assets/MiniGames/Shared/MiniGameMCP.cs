@@ -17,16 +17,14 @@ public class MiniGameMCP : MonoBehaviour
     public int[] PuzzlesToLoad;
     public ArticyRef[] PuzzleDialogueRefs;
     public List<ArticyObject> PuzzleDialogues;
+    public bool IsPuzzleTutorial = false;
         
     Vector3[] CameraPositions;
     Quaternion[] CameraRotations;
     float[] CameraFOVs;
     float[] CameraSizes;
 
-
-    MiniGame[] Puzzles;
-   // string ProgressVarName;
-   // string FinishedVarName;
+    MiniGame[] Puzzles;   
     int CurPuzzleIndex;
 
     TheCaptainsChair CaptainsChair;
@@ -48,11 +46,7 @@ public class MiniGameMCP : MonoBehaviour
     {
         //Debug.Log("MiniGameMCP.Awake(): " + this.name);
         CaptainsChair = GameObject.FindObjectOfType<TheCaptainsChair>();
-        PuzzleDialogues = null;
-        //if (this.name.Contains("LockPick")) StaticStuff.SetOrientation(StaticStuff.eOrientation.PORTRAIT, this.name);        
-       // else StaticStuff.SetOrientation(StaticStuff.eOrientation.LANDSCAPE, this.name);
-
-        
+        PuzzleDialogues = null;        
     }
     // Start is called before the first frame update
     public virtual void Start()
@@ -123,13 +117,8 @@ public class MiniGameMCP : MonoBehaviour
             float camSize = 0f;
             GameObject[] newPuzzleObjs = puzzleScene.GetRootGameObjects();
             foreach (GameObject go in newPuzzleObjs)
-            {
-                //if (go.name.Equals("PhoneCamera")) Debug.Log("PhoneCamera");
-                //if (go.name.Equals("TabletCamera")) Debug.Log("TabletCamera");
-              //  if (this.MCP.TabletMode == false && go.name.Equals("PhoneCamera")) Debug.Log("Use PhoneCamera");
-            //    if (this.MCP.TabletMode == true && go.name.Equals("TabletCamera")) Debug.Log("Use TabletCam");
-
-                    if (newPuzzle == null) newPuzzle = go.GetComponent<MiniGame>();
+            {                
+                if (newPuzzle == null) newPuzzle = go.GetComponent<MiniGame>();
                 Camera cam;
                 if( (this.MCP.TabletMode == false && go.name.Equals("PhoneCamera")) ||
                     (this.MCP.TabletMode == true && go.name.Equals("TabletCamera")))
@@ -139,9 +128,7 @@ public class MiniGameMCP : MonoBehaviour
                     camRot = go.transform.rotation;
                     camFOV = cam.fieldOfView;
                     camSize = cam.orthographicSize;
-                }
-              //  if (this.MCP.TabletMode == false && go.name.Equals("TabletCamera")) go.SetActive(false);
-              //  if (this.MCP.TabletMode == true && go.name.Equals("PhoneCamera")) go.SetActive(false);
+                }              
             }
             Puzzles[i] = newPuzzle;
             Puzzles[i].transform.parent = this.transform;
@@ -164,43 +151,22 @@ public class MiniGameMCP : MonoBehaviour
         {
             Puzzles[i].gameObject.SetActive(false);
         }
-
-        // 0 = Majestic Free Roam, 1 = Parking Game, 2 = Lockpick Game, 3 = Repair Game, 4 = Crossing Free Roam
-
-        //string varName = "error";
-        /*switch (ArticyGlobalVariables.Default.Activity.ID)
-        {
-            case 1: // parking
-                ProgressVarName = "Activity.Progress_Parking";
-                FinishedVarName = "Activity.Finished_Parking";
-                break;
-            case 2: // lockpick
-                ProgressVarName = "Activity.Progress_Lockpick";
-                FinishedVarName = "Activity.Finished_Lockpick";
-                break;
-            case 3: // repair
-                ProgressVarName = "Activity.Progress_Repair";
-                FinishedVarName = "Activity.Finished_Repair";
-                break;
-            default:
-                Debug.LogError("ERROR, we don't have a valid Activity ID: " + ArticyGlobalVariables.Default.Activity.ID);
-                break;
-        }*/
-
-        //Debug.LogError("DONT PAINIC I JUST WANT TO SEE WHAT'S GOING ON: " + ProgressVarName);
-        // string var = ArticyGlobalVariables.Default.GetVariableByString<string>(ProgressVarName);
+        //_MiniGameMCP
         string progressVarName = ArticyGlobalVariables.Default.Mission.Current_Progress_Variable;
         string var = ArticyGlobalVariables.Default.GetVariableByString<string>(progressVarName);
         int progress = int.Parse(var);
         Debug.Log("progressVarName: " + progressVarName + ", progress: " + progress);
         if(progress == 0) { Debug.LogError("Progress for: " + progressVarName + " is zero"); yield return null; }
-      /*  if (progress == 0)
+        if(progressVarName.Contains("Tutorial"))
         {
-            progress = 1;
-            ArticyGlobalVariables.Default.SetVariableByString(ProgressVarName, progress);
-           // Debug.LogError("moprog01 ******************************** Setting the var (b): " + ProgressVarName + " to " + progress + " because the current progress for the variable is 0");
-            StaticStuff.SaveCurrentProfile("We went from progress on variable: " + ProgressVarName + ", so save");
-        }*/
+           // Debug.Log("We're in a tutorial");
+            IsPuzzleTutorial = true;
+        }
+        else
+        {
+          //  Debug.Log("not a tutorial");
+            IsPuzzleTutorial = false;
+        }
         
         CurPuzzleIndex = progress - 1;
         Puzzles[CurPuzzleIndex].gameObject.SetActive(true);

@@ -22,6 +22,7 @@ public class RifRafExchangeJobBoard : MonoBehaviour
     [Header("Popups")]
     public GameObject QuitPopup;
     public GameObject AcceptPopup;
+    public GameObject SuspendJobPopup;
 
     [Header("Articy")]
     public ArticyRef JobBoardContainer;
@@ -46,7 +47,7 @@ public class RifRafExchangeJobBoard : MonoBehaviour
 
     public void ToggleMainButtons(bool isActive)
     {
-        Debug.Log("RifRafExchangeJobBoard.ToggleMainButtons(): " + isActive);
+//        Debug.Log("RifRafExchangeJobBoard.ToggleMainButtons(): " + isActive);
         foreach (Button b in MainButtons) b.interactable = isActive;
     }
 
@@ -214,8 +215,34 @@ public class RifRafExchangeJobBoard : MonoBehaviour
         }
         else
         {
-            InGamePopUp.BailMiniGame();
+            // InGamePopUp.BailMiniGame();
+            // mini game
+            ToggleSuspendJobPopup(true);
         }            
+    }
+
+    public void OnClickSuspendCancel()
+    {
+        ToggleSuspendJobPopup(false);
+    }
+
+    public void OnClickSuspendConfirm()
+    {
+        ToggleSuspendJobPopup(false);
+        InGamePopUp.BailMiniGame();
+    }
+
+    void ToggleSuspendJobPopup(bool isActive)
+    {
+        SuspendJobPopup.SetActive(isActive);
+        ToggleMainButtons(!isActive);
+    }
+
+    void ToggleAcceptPopup(bool isActive)
+    {
+        // Debug.Log("ToggleAcceptPopup(): " + isActive);
+        AcceptPopup.SetActive(isActive);
+        ToggleMainButtons(!isActive);
     }
 
     public void ShutOffQuitAcceptPopups()
@@ -233,14 +260,7 @@ public class RifRafExchangeJobBoard : MonoBehaviour
         if (QuitPopup.activeSelf == true || AcceptPopup.activeSelf == true) return;
         JobIndex = index;
         SetupDescription();
-    }    
-
-    void ToggleAcceptPopup(bool isActive)
-    {
-       // Debug.Log("ToggleAcceptPopup(): " + isActive);
-        AcceptPopup.SetActive(isActive);
-        ToggleMainButtons(!isActive);
-    }
+    }        
 
     public void OnClickCloseJobBoard()
     {
