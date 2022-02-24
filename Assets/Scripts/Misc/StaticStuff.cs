@@ -26,6 +26,7 @@ static public class StaticStuff
     static public string SETTINGS_FILE_NAME = "TCCSettings";
     static public int SoundFXVolume = 100;
     static public int MusicVolume = 100;
+    static public int JoystickSide = 0;
     static public bool HasUnlockedFullGame = false;
 
     /* static public void SetOrientation(eOrientation orientation, string screenName)
@@ -78,11 +79,13 @@ static public class StaticStuff
     {
         public int soundFXVolume;
         public int musicFXVolume;
+        public int joystickSide;
         public bool hasUnlockedFullGame;
-        public Settings(int sound, int music, bool hasUnlockedFullGame)
+        public Settings(int sound, int music, int joystickSide, bool hasUnlockedFullGame)
         {
             soundFXVolume = sound;
             musicFXVolume = music;
+            this.joystickSide = joystickSide;
             this.hasUnlockedFullGame = hasUnlockedFullGame;
         }
     }
@@ -93,7 +96,7 @@ static public class StaticStuff
         string saveName = GetSettingsName();
 
       //  Debug.Log("CurSettings: SoundFX: " + SoundFXVolume + ", Music: " + MusicVolume + ", hasUnlocked: " + HasUnlockedFullGame);
-        Settings settings = new Settings(SoundFXVolume, MusicVolume, HasUnlockedFullGame);
+        Settings settings = new Settings(SoundFXVolume, MusicVolume, JoystickSide, HasUnlockedFullGame);
 
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file;
@@ -122,6 +125,7 @@ static public class StaticStuff
         Settings settings = (Settings)bf.Deserialize(file);
         SoundFXVolume = settings.soundFXVolume;
         MusicVolume = settings.musicFXVolume;
+        JoystickSide = settings.joystickSide;
         HasUnlockedFullGame = settings.hasUnlockedFullGame;
        // Debug.Log("LoadSettings() has unlock: " + HasUnlockedFullGame);
         file.Close();
@@ -136,6 +140,7 @@ static public class StaticStuff
 
         SoundFXVolume = 100;
         MusicVolume = 100;
+        JoystickSide = 0;
         HasUnlockedFullGame = false;
         SaveCurrentSettings("CreateNewSettings()");
     }

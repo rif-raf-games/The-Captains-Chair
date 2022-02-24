@@ -29,6 +29,7 @@ public class BackgroundMusic : MonoBehaviour
 
     public void SetVolume(int vol)
     {
+       // Debug.Log("BackgroundMusic.SetVolume(): " + vol);
         this.AudioSource.volume = vol / 100f;
     }
     public float GetVolume()
@@ -72,6 +73,7 @@ public static class BackgroundMusicPlayer
     static BackgroundMusic BGMusic;
     public static void Init(BackgroundMusic bgMusic, int vol)
     {
+       // Debug.Log("BackgroundMusic.Init() vol: " + vol);
         if (bgMusic == null) { Debug.LogError("Trying to set up a null BackgroundMusic Player."); return; }        
         BGMusic = bgMusic;
         BGMusic.SetVolume(vol);

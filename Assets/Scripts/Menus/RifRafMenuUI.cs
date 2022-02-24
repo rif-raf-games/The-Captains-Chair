@@ -490,8 +490,12 @@ public class RifRafMenuUI : MonoBehaviour
 
         //StartCoroutine(TakeScreenshotAndShare());
         MCP.ShareOnSocial(null);
-    }    
+    }
 
+    #region AUDIO_SETTINGS
+    public ToggleGroup AudioTG;
+    public Toggle JoystickLeftToggle, JoystickRightToggle;
+    
     public void OnClickAudioSettings()
     {
         StaticStuff.PrintRifRafUI("OnClickGenericMenuBack");
@@ -503,6 +507,38 @@ public class RifRafMenuUI : MonoBehaviour
         MusicVolume.Toggle.isOn = (MusicVolume.Slider.value > 0f);
         SoundFXVolume.Slider.value = this.MCP.GetSoundFXVolume();
         SoundFXVolume.Toggle.isOn = (SoundFXVolume.Slider.value > 0f);
+        if (StaticStuff.JoystickSide == 0)
+        {
+            JoystickLeftToggle.isOn = true;
+        }
+        else
+        {
+            JoystickRightToggle.isOn = true;
+        }
+    }
+
+    public void OnClickJoystickLeft()
+    {        
+       // Debug.Log("OnClickJoystickLeft(): " + JoystickLeftToggle.isOn);
+        if(JoystickLeftToggle.isOn == true)
+        {
+          //  Debug.Log("Turned joystick left on");
+            StaticStuff.JoystickSide = 0;
+            MCP.SetJoystickPosition();
+        }
+        StaticStuff.SaveCurrentSettings("OnClickJoystickLeft()");
+    }
+
+    public void OnClickJoystickRight()
+    {
+       // Debug.Log("OnClickJoystickRight(): " + JoystickRightToggle.isOn);
+        if(JoystickRightToggle.isOn)
+        {
+          //  Debug.Log("Turned joystick right on");
+            StaticStuff.JoystickSide = 1;
+            MCP.SetJoystickPosition();
+        }
+        StaticStuff.SaveCurrentSettings("OnClickJoystickRight()");
     }
 
     public void OnClickCloseAudioSettings()
@@ -511,6 +547,7 @@ public class RifRafMenuUI : MonoBehaviour
         StaticStuff.SaveCurrentSettings("RifRafMenuUI.OnClickCloseAudioSettings()");
         TogglePopUp(ePopUpType.AUDIO, false);
     }
+    #endregion
 
     public void OnSliderAudioVolume(Slider slider)
     {

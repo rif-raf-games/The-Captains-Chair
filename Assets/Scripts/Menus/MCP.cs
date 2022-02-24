@@ -92,7 +92,9 @@ public class MCP : MonoBehaviour
         //
         StaticStuff.LoadSettings();
         SoundFXPlayer.Init(SoundFX, GetSoundFXVolume());
-        BackgroundMusicPlayer.Init(BGMusic, GetMusicVolume());                
+        BackgroundMusicPlayer.Init(BGMusic, GetMusicVolume());
+        SetJoystickPosition();
+        
         
         DontDestroyOnLoad(this.gameObject);        
         StartSplashScreen();
@@ -729,6 +731,7 @@ public class MCP : MonoBehaviour
     {
         return this.Joystick;
     }
+    
     public void ToggleJoystick(bool val)
     {        
        // Debug.Log("ToggleJoystick() val: " + val); 
@@ -742,6 +745,24 @@ public class MCP : MonoBehaviour
         else
         {
             CameraToggleButton.gameObject.SetActive(false);
+        }
+    }    
+    
+    public void SetJoystickPosition()
+    {
+       // Debug.Log("SetJoystickPosition(): " + StaticStuff.JoystickSide);
+        RectTransform rt = this.Joystick.GetComponent<RectTransform>();
+        if (StaticStuff.JoystickSide == 0)
+        {   // left
+            rt.anchorMax = new Vector2(0f, 0f);
+            rt.anchorMin = new Vector2(0f, 0f);
+            rt.anchoredPosition = new Vector3(296f, 296f, 0f);
+        }
+        else
+        {   // right
+            rt.anchorMax = new Vector2(1f, 0f);
+            rt.anchorMin = new Vector2(1f, 0f);
+            rt.anchoredPosition = new Vector3(-296f, 296f, 0f);
         }
     }
 
@@ -797,8 +818,6 @@ public class MCP : MonoBehaviour
     {
         //Debug.LogError("mosound GetMusicVolume(): " + StaticStuff.MusicVolume);
         return StaticStuff.MusicVolume;
-       // return 0;
-        //return ArticyGlobalVariables.Default.Game_Settings.Music_Volume;
     }
     public void SetMusicVolume(int vol)
     {
@@ -809,9 +828,7 @@ public class MCP : MonoBehaviour
     public int GetSoundFXVolume()
     {
       //  Debug.LogError("mosound GetSoundFXVolume(): " + StaticStuff.SoundFXVolume);
-        return StaticStuff.SoundFXVolume;
-        //return 0;
-        //return ArticyGlobalVariables.Default.Game_Settings.SoundFX_Volume;
+        return StaticStuff.SoundFXVolume;        
     }
     public void SetSoundFXVolume(int vol)
     {
@@ -819,6 +836,15 @@ public class MCP : MonoBehaviour
         StaticStuff.SoundFXVolume = vol;        
         SoundFX.SetVolume(vol);
     }
+   /* public int GetJoystickSide()
+    {
+        return StaticStuff.JoystickSide;
+    }
+    public void SetJoystickSide(int side)
+    {
+        StaticStuff.JoystickSide = side;
+        SetJoystickPosition();
+    }*/
 
 #endregion
 }
