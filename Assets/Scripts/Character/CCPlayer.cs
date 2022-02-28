@@ -262,7 +262,7 @@ public class CCPlayer : CharacterEntity
             }
             else
             {
-                Debug.LogWarning("not sure what to do with this type yet: " + colliderArtRef.reference.GetObject().GetType());
+                Debug.LogWarning("not sure what to do with this type yet on this object: " + colliderArtRef.name);//.reference.GetObject().GetType());
             }
         }
         else if (other.gameObject.layer == LayerMask.NameToLayer("Elevator Collider"))

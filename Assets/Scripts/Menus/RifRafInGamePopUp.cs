@@ -587,6 +587,7 @@ public class RifRafInGamePopUp : MonoBehaviour
        // Debug.Log("OnClickQuitToMainConfirm()");
         //QuitConfirmPopup.gameObject.SetActive(false);
         ToggleQuitConfirmPopUp(false);
+        ClearContent();
         this.MCP.LoadNextScene("Front End Launcher");
     }
     
