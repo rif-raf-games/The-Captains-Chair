@@ -291,9 +291,9 @@ public class RifRafInGamePopUp : MonoBehaviour
 
        // Debug.Log("--------------------------- 1: " + GetNumMenuButtons());
         ToggleContent(false);
-        ExchangeContent.SetActive(true);
-        ContentScrollView.content = ExchangeContent.GetComponent<RectTransform>();
-        InitMenuButtonInfo(null, eInGameMenus.EXCHANGE);
+        ShipLogContent.SetActive(true);
+        ContentScrollView.content = ShipLogContent.GetComponent<RectTransform>();
+        InitMenuButtonInfo(null, eInGameMenus.SHIPS_LOG);
       //  Debug.Log("---------------------------2: " + GetNumMenuButtons());
 
         if (FindObjectOfType<TheCaptainsChair>() != null)
