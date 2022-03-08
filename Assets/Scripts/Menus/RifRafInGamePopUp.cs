@@ -145,23 +145,32 @@ public class RifRafInGamePopUp : MonoBehaviour
         GenericPopup.Button02.onClick.AddListener(button02Action);
     }
 
-    
+
     #endregion
 
     /************************ IAP END **************************************/
 
-    public void TurnOnSetUpMainPopupPanel( bool initContents )
+    public void SetVolumeSliders()
     {
-       //  Debug.Log("RifRafInGamePopUp.TurnOnPopupMenu(): initContents: " + initContents);
-      //  Debug.Log("------------------------------TurnOnPopupMenu() num menu buttons: " + GetNumMenuButtons() + ", numTimes: " + numTimes++);
-        ToggleMainPopupPanel(true);
-        if (initContents == false) return;
-        int debugVar = 0;       
-
         MusicVolume.Slider.value = this.MCP.GetMusicVolume();
         MusicVolume.Toggle.isOn = (MusicVolume.Slider.value > 0f);
         SoundFXVolume.Slider.value = this.MCP.GetSoundFXVolume();
         SoundFXVolume.Toggle.isOn = (SoundFXVolume.Slider.value > 0f);
+    }
+
+    public bool FUUnity = false;
+    float FUUnityTimer = 0.0f;
+    public void TurnOnSetUpMainPopupPanel( bool initContents )
+    {
+        //  Debug.Log("RifRafInGamePopUp.TurnOnPopupMenu(): initContents: " + initContents);
+        //  Debug.Log("------------------------------TurnOnPopupMenu() num menu buttons: " + GetNumMenuButtons() + ", numTimes: " + numTimes++);
+        FUUnity = true;
+        FUUnityTimer = 0.0f;
+        ToggleMainPopupPanel(true);
+        if (initContents == false) return;
+        int debugVar = 0;
+
+        SetVolumeSliders();
                 
         List<FlowFragment> containersToCheck = new List<FlowFragment>();        
         List<Job_Card> jobs = new List<Job_Card>();
@@ -338,7 +347,13 @@ public class RifRafInGamePopUp : MonoBehaviour
             {
                 AcceptButton.SetActive(true);
             }
-        }            
+        }
+
+        if (FUUnity == true)
+        {
+            FUUnityTimer += Time.deltaTime;
+            if (FUUnityTimer > .5f) FUUnity = false;
+        }
     }
 
     public MenuButton GetCurJobButton()
@@ -590,28 +605,34 @@ public class RifRafInGamePopUp : MonoBehaviour
         ClearContent();
         this.MCP.LoadNextScene("Front End Launcher");
     }
-    
+
     public void OnSliderAudioVolume(Slider slider)
     {
-        StaticStuff.PrintRifRafUI("OnSliderAudioVolume()");
-      //  Debug.Log("OnSliderAudioVolume(): " + slider.gameObject.name);
-        if(slider == MusicVolume.Slider)
-        {
-           // Debug.Log("RifRafMenuUI().OnSliderAudioVolume() Music: " + slider.value);
-            this.MCP.SetMusicVolume((int)slider.value);
-            MusicVolume.Toggle.isOn = (MusicVolume.Slider.value > 0f);
-        }
+        //  Debug.Log("OnSliderAudioVolume(): " + slider.gameObject.name);
+        if (FUUnity == true) return;
+        // the line above is because for some reason when you start the ui the slider callbacks and toggle callbacks get called
+        // multiple times without anyone touching anything.  This is just a timer to wait out that crap
         else
         {
-          //  Debug.Log("RifRafMenuUI().OnSliderAudioVolume() SFX: " + slider.value);
-            this.MCP.SetSoundFXVolume((int)slider.value);
-            SoundFXVolume.Toggle.isOn = (SoundFXVolume.Slider.value > 0f);
-        }        
+            if (slider == MusicVolume.Slider)
+            {
+                // Debug.Log("RifRafMenuUI().OnSliderAudioVolume() Music: " + slider.value);
+                this.MCP.SetMusicVolume((int)slider.value);
+                MusicVolume.Toggle.isOn = (MusicVolume.Slider.value > 0f);
+            }
+            else
+            {
+                //  Debug.Log("RifRafMenuUI().OnSliderAudioVolume() SFX: " + slider.value);
+                this.MCP.SetSoundFXVolume((int)slider.value);
+                SoundFXVolume.Toggle.isOn = (SoundFXVolume.Slider.value > 0f);
+            }
+        }
     }
 
     public void OnToggleAudioVolume(Toggle toggle)
     {
         //Debug.Log("OnToggleAudioVolume(): " + toggle.gameObject.name);
+        if (FUUnity == true) return;
         if (toggle == MusicVolume.Toggle)
         {
             if (toggle.isOn == true) this.MCP.SetMusicVolume(100);

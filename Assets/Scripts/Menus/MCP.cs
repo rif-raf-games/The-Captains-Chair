@@ -132,6 +132,7 @@ public class MCP : MonoBehaviour
 
         InGamePopUp.gameObject.SetActive(true);
         InGamePopUp.ToggleIAPUI(true);
+        InGamePopUp.SetVolumeSliders();
     }
     #endregion
 
@@ -142,6 +143,8 @@ public class MCP : MonoBehaviour
 
         InGamePopUp.gameObject.SetActive(true);
         InGamePopUp.TurnOnSetUpMainPopupPanel(true);
+
+
     }
 
     public void StartDialogueConversation()
@@ -293,7 +296,8 @@ public class MCP : MonoBehaviour
     public void StartMiniGame()
     {
         StartFreeRoam();
-    }    
+    }
+    
 
 #if USE_RR_ONGUI
     bool ShowSceneSelect = false;
@@ -821,7 +825,7 @@ public class MCP : MonoBehaviour
     }
     public void SetMusicVolume(int vol)
     {
-        //Debug.LogError("mosound SetMusicVolume(): " + StaticStuff.MusicVolume);
+        //Debug.LogError("mosound SetMusicVolume(): " + StaticStuff.MusicVolume);        
         StaticStuff.MusicVolume = vol;        
         BGMusic.SetVolume(vol);                
     }
