@@ -78,7 +78,7 @@ public class CamFollow : MonoBehaviour
     }
 
     Vector3 PrevMousePos;
-    bool PinchActive = false;
+  //  bool PinchActive = false;
     Vector3[] StartTouchPos = new Vector3[2];
     Vector2[] LastFingerPos = new Vector2[2];   // these values are used for determining control based on finger gestures
     Vector2[] CurFingerPos = new Vector2[2];

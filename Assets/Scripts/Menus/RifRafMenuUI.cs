@@ -15,12 +15,12 @@ public class RifRafMenuUI : MonoBehaviour
     public GameObject[] Menus;
     public eMenuType CurActiveMenu;
 
-    public enum ePopUpType { PROFILES, NEW_GAME, CONTINUE_GAME, DELETE_GAME, DELETE_CONFIRM, AUDIO, NUM_POPUPS };
+    public enum ePopUpType { PROFILES, NEW_GAME, CONTINUE_GAME, DELETE_GAME, DELETE_CONFIRM, AUDIO, QUIT_CONFIRM, NUM_POPUPS };
     [Header("PopUps")]
     public GameObject[] PopUps;
     public ePopUpType CurActivePopup = ePopUpType.NUM_POPUPS;
 
-    public enum eMainMenuButtons { MAIN_GAME, CONTINUE, DELETE, AUDIO_SETTINGS, TELL_YOUR_FRIENDS, NUM_MENU_MENU_BUTTONS };
+    public enum eMainMenuButtons { MAIN_GAME, CONTINUE, DELETE, AUDIO_SETTINGS, TELL_YOUR_FRIENDS, QUIT_GAME, NUM_MENU_MENU_BUTTONS };
     [Header("Main Menu Buttons")]    
     public Button[] MainMenuButtons;
     public Text[] MainMenuButtonsText;
@@ -113,7 +113,7 @@ public class RifRafMenuUI : MonoBehaviour
     public void TogglePopUp(ePopUpType popUpID, bool isActive)
     {
         //Debug.Log("TogglePopUp() popUpID: " + popUpID.ToString() + ", isActive: " + isActive + " --Menu--");
-        StaticStuff.PrintRifRafUI("TogglePopUp() popUpID: " + popUpID.ToString() + ", isActive: " + isActive);
+       // StaticStuff.PrintRifRafUI("TogglePopUp() popUpID: " + popUpID.ToString() + ", isActive: " + isActive);
         if (popUpID > ePopUpType.NUM_POPUPS) { Debug.LogError("Invalid popUp: " + popUpID); return; }
         
         if(MainMenuInitted == true)
@@ -256,7 +256,7 @@ public class RifRafMenuUI : MonoBehaviour
     }
     public void OnClickNewGame()
     {
-        StaticStuff.PrintRifRafUI("OnClickNewGame");
+        //StaticStuff.PrintRifRafUI("OnClickNewGame");
         if (MenusActiveCheck() == false) return;
         if (CurNumActiveProfiles == StaticStuff.NUM_PROFILES) return;
 
@@ -266,7 +266,7 @@ public class RifRafMenuUI : MonoBehaviour
     }
     public void OnClickContinueGame()
     {        
-        StaticStuff.PrintRifRafUI("OnClickContinueGame()");
+       // StaticStuff.PrintRifRafUI("OnClickContinueGame()");
         if (MenusActiveCheck() == false) return;
         if (CurNumActiveProfiles == 0) return;
 
@@ -277,7 +277,7 @@ public class RifRafMenuUI : MonoBehaviour
     }    
     public void OnClickDeleteSaveGame()
     {
-        StaticStuff.PrintRifRafUI("OnClickNewGame");
+       // StaticStuff.PrintRifRafUI("OnClickNewGame");
         if (MenusActiveCheck() == false) return;
         if (CurNumActiveProfiles == 0) return;
 
@@ -289,7 +289,7 @@ public class RifRafMenuUI : MonoBehaviour
     
     public void OnClickMainMenuBack()
     {
-        StaticStuff.PrintRifRafUI("OnClickMainMenuBack()");
+      //  StaticStuff.PrintRifRafUI("OnClickMainMenuBack()");
         if (MenusActiveCheck() == false) return;
 
         this.MCP.TurnOnInGamePopUp();
@@ -298,7 +298,7 @@ public class RifRafMenuUI : MonoBehaviour
 
     public void OnClickBackToMainMenu()
     {
-        StaticStuff.PrintRifRafUI("OnClickGenericMenuBack");
+      //  StaticStuff.PrintRifRafUI("OnClickGenericMenuBack");
         if (MenusActiveCheck() == false) return;
 
         ToggleMenu(eMenuType.MAIN, true);
@@ -307,7 +307,7 @@ public class RifRafMenuUI : MonoBehaviour
     #region SAVE_GAME_POPUP
     public void OnClickSaveGameSlot(int slotNum)
     {
-        StaticStuff.PrintRifRafUI("OnClickSaveGameSlot() slotNum: " + slotNum + ", CurActiveSaveGameFunction: " + CurActiveSaveGameFunction);
+      //  StaticStuff.PrintRifRafUI("OnClickSaveGameSlot() slotNum: " + slotNum + ", CurActiveSaveGameFunction: " + CurActiveSaveGameFunction);
         CurProfileSlot = slotNum;
         switch (CurActiveSaveGameFunction)
         {
@@ -375,7 +375,7 @@ public class RifRafMenuUI : MonoBehaviour
     #region NEW_GAME_POPUP
     public void OnClickNewGameYes()
     {
-        StaticStuff.PrintRifRafUI("OnClickNewGameYes");
+       // StaticStuff.PrintRifRafUI("OnClickNewGameYes");
         if(CaptainSelect == null)
         {
             CaptainContainerPrefab = Resources.Load<GameObject>("Prefabs/Captain Selector Disc Prefab");
@@ -428,7 +428,7 @@ public class RifRafMenuUI : MonoBehaviour
     }
     public void OnClickNewGameNo()
     {
-        StaticStuff.PrintRifRafUI("OnClickNewGameNo");
+       // StaticStuff.PrintRifRafUI("OnClickNewGameNo");
         TogglePopUp(0, false);
     }
     #endregion
@@ -436,7 +436,7 @@ public class RifRafMenuUI : MonoBehaviour
     #region CONTINUE_GAME_POPUP
     public void OnClickContinueGameYes()
     {
-        StaticStuff.PrintRifRafUI("OnClickContinueGameYes");
+       // StaticStuff.PrintRifRafUI("OnClickContinueGameYes");
         StaticStuff.SetCurrentProfile(CurProfileSlot);
         StaticStuff.LoadCurrentProfile();
         this.MCP.LoadCaptainAvatar(ArticyGlobalVariables.Default.TheCaptain.Avatar);
@@ -448,20 +448,38 @@ public class RifRafMenuUI : MonoBehaviour
     
     public void OnClickContinueGameNo()
     {
-        StaticStuff.PrintRifRafUI("OnClickContinueGameNo");
+       // StaticStuff.PrintRifRafUI("OnClickContinueGameNo");
         TogglePopUp(0, false);
+    }
+    #endregion
+
+    #region QUIT_GAME
+    public void OnClickQuitGame()
+    {
+        Debug.Log("OnClickQuitGame()");
+
+        TogglePopUp(ePopUpType.QUIT_CONFIRM, true);
+    }
+    public void OnClickQuitConfirmYes()
+    {
+        TogglePopUp(ePopUpType.QUIT_CONFIRM, false);
+        Application.Quit();
+    }
+    public void OnClickQuitConfirmNo()
+    {
+        TogglePopUp(ePopUpType.QUIT_CONFIRM, false);
     }
     #endregion
 
     #region DELETE_GAME_POPUP
     public void OnClickDeleteGameYes()
     {
-        StaticStuff.PrintRifRafUI("OnClickDeleteGameYes");
+       // StaticStuff.PrintRifRafUI("OnClickDeleteGameYes");
         TogglePopUp(ePopUpType.DELETE_CONFIRM, true);
     }
     public void OnClickDeleteGameNo()
     {
-        StaticStuff.PrintRifRafUI("OnClickDeleteGameNo");
+      //  StaticStuff.PrintRifRafUI("OnClickDeleteGameNo");
         TogglePopUp(0, false);
     }
     #endregion
@@ -469,7 +487,7 @@ public class RifRafMenuUI : MonoBehaviour
     #region DELETE_CONFIRM_POPUP
     public void OnClickDeleteConfirmYes()
     {
-        StaticStuff.PrintRifRafUI("OnClickDeleteConfirmYes");
+       // StaticStuff.PrintRifRafUI("OnClickDeleteConfirmYes");
         
         StaticStuff.DeleteProfileNum(CurProfileSlot);
         RefreshProfileInfo();
@@ -478,7 +496,7 @@ public class RifRafMenuUI : MonoBehaviour
     }
     public void OnClickDeleteConfirmNo()
     {
-        StaticStuff.PrintRifRafUI("OnClickDeleteConfirmNo");
+       // StaticStuff.PrintRifRafUI("OnClickDeleteConfirmNo");
         
         TogglePopUp(0, false);
     }
@@ -498,7 +516,7 @@ public class RifRafMenuUI : MonoBehaviour
     
     public void OnClickAudioSettings()
     {
-        StaticStuff.PrintRifRafUI("OnClickGenericMenuBack");
+       // StaticStuff.PrintRifRafUI("OnClickGenericMenuBack");
         if (MenusActiveCheck() == false) return;
 
         TogglePopUp(ePopUpType.AUDIO, true);
@@ -543,7 +561,7 @@ public class RifRafMenuUI : MonoBehaviour
 
     public void OnClickCloseAudioSettings()
     {
-        StaticStuff.PrintRifRafUI("OnClickCloseAudioSettings");
+       // StaticStuff.PrintRifRafUI("OnClickCloseAudioSettings");
         StaticStuff.SaveCurrentSettings("RifRafMenuUI.OnClickCloseAudioSettings()");
         TogglePopUp(ePopUpType.AUDIO, false);
     }
@@ -551,7 +569,7 @@ public class RifRafMenuUI : MonoBehaviour
 
     public void OnSliderAudioVolume(Slider slider)
     {
-        StaticStuff.PrintRifRafUI("OnSliderAudioVolume()");        
+       // StaticStuff.PrintRifRafUI("OnSliderAudioVolume()");        
         if (slider == MusicVolume.Slider)
         {
           //  Debug.Log("RifRafMenuUI().OnSliderAudioVolume() Music: " + slider.value);
@@ -591,7 +609,7 @@ public class RifRafMenuUI : MonoBehaviour
     public GameObject IAPManager;
     public void OnClickTapToBegin()
     {
-        StaticStuff.PrintRifRafUI("OnClickTapToBegin()");
+       // StaticStuff.PrintRifRafUI("OnClickTapToBegin()");
         if (MenusActiveCheck() == false) return;
 
         this.MCP.StartMainMenu();                  

@@ -155,8 +155,7 @@ public class StageDirectionPlayer : MonoBehaviour
                     break;
                 default:
                     Debug.LogError("Unknown how to handle this Stage_Direction type: " + sdf.Direction);
-                    return false;
-                    break;
+                    return false;                    
             }      
         }
         return true;

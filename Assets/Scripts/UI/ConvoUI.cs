@@ -50,14 +50,14 @@ public class ConvoUI : MonoBehaviour
 
     public void ShowDialogueFragment(DialogueFragment dialogueFrag, IFlowObject flowObj, IList<Branch> dialogueOptions, bool isInteractive, float typewriterSpeed, List<ArticyObject> validAOTargets = null)
     {
-        StaticStuff.PrintUI("going to set up a dialogue fragment with speaker: " + dialogueFrag.Speaker + " with text: " + dialogueFrag.Text + ", tech name: " + dialogueFrag.TechnicalName);
+       // StaticStuff.PrintUI("going to set up a dialogue fragment with speaker: " + dialogueFrag.Speaker + " with text: " + dialogueFrag.Text + ", tech name: " + dialogueFrag.TechnicalName);
         //Debug.Log("going to set up a dialogue fragment with speaker: " + dialogueFrag.Speaker + ", isInteractive: " + isInteractive + ", with text: " + dialogueFrag.Text + ", tech name: " + dialogueFrag.TechnicalName);
         this.MCP.StartDialogueConversation();        
         if (dialogueOptions != null)
         {   // if dialogeOptions is null then we're calling this from a debug spot
-            StaticStuff.PrintUI("this dialogue fragment has: " + dialogueOptions.Count + " options");
+            //StaticStuff.PrintUI("this dialogue fragment has: " + dialogueOptions.Count + " options");
             DialogueFragment d = dialogueOptions[0].Target as DialogueFragment;
-            if (d != null) StaticStuff.PrintUI(d.MenuText + ", " + d.Text + ", " + d.TechnicalName);
+           // if (d != null) StaticStuff.PrintUI(d.MenuText + ", " + d.Text + ", " + d.TechnicalName);
         }
         
 
@@ -166,8 +166,8 @@ public class ConvoUI : MonoBehaviour
         TypewriterSpeed = 30f;
         float timePerChar = 1f / TypewriterSpeed;
       //  Debug.Log("totalChars: " + totalChars + ", TypewriterSpeed: " + TypewriterSpeed + ", timePerChar: " + timePerChar);
-        string s = "";
-        float startTime, timeDiff;       
+       // string s = "";
+        float startTime/*, timeDiff*/;       
         int charIndex = 0;                
         float remainder = 0f;
         startTime = Time.time;

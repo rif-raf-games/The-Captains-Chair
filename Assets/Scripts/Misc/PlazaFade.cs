@@ -35,7 +35,7 @@ public class PlazaFade : MonoBehaviour
     //public GameObject CurrentFadedBuilding = null;
     public List<Collider> CurrentFadedBuildings = new List<Collider>();
     public bool Method = true;
-    bool waitedAFrame = false;
+   // bool waitedAFrame = false;
     // FixedUpdate is called once per frame
     void FixedUpdate()
     {

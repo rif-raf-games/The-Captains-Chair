@@ -96,11 +96,11 @@ public class TheCaptainsChair : MonoBehaviour
         }
         else
         {
-            Debug.Log("TheCaptainsChair.Start() not coming back from mini game so check IAP --IAP--");
+#if UNITY_ANDROID || UNITY_IOS || UNITY_IPHONE
+            Debug.Log("TheCaptainsChair.Start() not coming back from mini game and we're on mobile so check IAP --IAP--");
             bool iapDialogueSet = false;
             for (int i = 0; i < SceneManager.sceneCount; i++)
-            {
-                //Debug.Log("Scene: " + SceneManager.GetSceneAt(i).name);
+            {                
                 if(SceneManager.GetSceneAt(i).name.Contains("E1_Hangar_Intro"))
                 {
                     Debug.Log("We're on the hangar intro so check the dialogueToStartOn based on save data --IAP--");
@@ -121,8 +121,16 @@ public class TheCaptainsChair : MonoBehaviour
             if (iapDialogueSet == false)
             {                
                 dialogueToStartOn = DialogueToStartOn.GetObject() as Dialogue;
-            }            
-        }        
+            }
+#else
+            Debug.Log("We're not on mobile so we skipped the IAP stuff so just start the DialogueToStartOn");
+           /* IAPDialogues iapD = FindObjectOfType<IAPDialogues>();
+            ArticyRef aRef = iapD.IntroDialogue;
+            ArticyObject aObject = aRef.GetObject();
+            Dialogue d = aObject as Dialogue;*/
+            dialogueToStartOn = DialogueToStartOn.GetObject() as Dialogue;
+#endif
+        }
 
         if (dialogueToStartOn == null) { Debug.LogError("We've got no Dialogue to start on in this scene"); return; }
         if(forceDialogueStart == true)

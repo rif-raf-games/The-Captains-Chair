@@ -34,9 +34,7 @@ public class RifRafInGamePopUp : MonoBehaviour
 
     private void Awake()
     {
-        StaticStuff.PrintRifRafUI("RifRafInGamePopUp.Awake()");
-        //  Debug.Log("RifRafInGamePopUp.Awake()");
-
+        //StaticStuff.PrintRifRafUI("RifRafInGamePopUp.Awake()");        
         MainPopupPanel.SetActive(false);       
         this.MissionHint.Init();
         MissionHint.gameObject.SetActive(false);        
@@ -62,8 +60,7 @@ public class RifRafInGamePopUp : MonoBehaviour
     }
     public void OnClickBurger()
     {
-        StaticStuff.PrintRifRafUI("OnClickBurger()");
-        //Debug.Log("OnClickBurger()");
+        //StaticStuff.PrintRifRafUI("OnClickBurger()");        
         if (PopupActiveCheck() == false) return;
 
         if(IAPPanel.activeSelf == true)
@@ -482,7 +479,7 @@ public class RifRafInGamePopUp : MonoBehaviour
 
     public void OnClickExchangeBoard()
     {
-        StaticStuff.PrintRifRafUI("OnClickExchangeBoard()");      
+       // StaticStuff.PrintRifRafUI("OnClickExchangeBoard()");      
         if (PopupActiveCheck() == false) return;
 
         if (FindObjectOfType<TheCaptainsChair>() != null)
@@ -514,7 +511,7 @@ public class RifRafInGamePopUp : MonoBehaviour
 
     public void ResetGameClicked()
     {
-        StaticStuff.PrintRifRafUI("ResetGameClick");
+       // StaticStuff.PrintRifRafUI("ResetGameClick");
         ToggleMissionHint(false);
         this.MCP.StartFreeRoam();
     }
@@ -576,7 +573,7 @@ public class RifRafInGamePopUp : MonoBehaviour
 
     public void OnClickQuitToMainMenu()
     {
-        StaticStuff.PrintRifRafUI("OnClickQuitToMainMenu()");
+        //StaticStuff.PrintRifRafUI("OnClickQuitToMainMenu()");
        // Debug.Log("OnClickQuitToMainMenu()");
         if (PopupActiveCheck() == false) return;
         
@@ -651,7 +648,7 @@ public class RifRafInGamePopUp : MonoBehaviour
 #region MISSION_HINT
     public void OnClickMissionHintBack()
     {
-        StaticStuff.PrintRifRafUI("OnClickMissionHintBack()");
+      //  StaticStuff.PrintRifRafUI("OnClickMissionHintBack()");
       //  Debug.Log("OnClickMissionHintBack()");
 
         ToggleMissionHint(false);

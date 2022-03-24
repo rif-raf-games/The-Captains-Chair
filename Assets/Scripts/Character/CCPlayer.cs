@@ -231,33 +231,28 @@ public class CCPlayer : CharacterEntity
     public int Adjustment = 0;
 
     private void OnTriggerEnter(Collider other)
-    {        
-        StaticStuff.PrintTriggerEnter(this.name + " CCPlayer.OnTriggerEnter() other: " + other.name + ", layer: " + other.gameObject.layer);
-        if (other.gameObject.CompareTag("Ignore Trigger")) { StaticStuff.PrintTriggerEnter(this.name + "Collided with an Ignore Trigger trigger, so bail"); return; }
-        if (other.gameObject.layer == LayerMask.NameToLayer("Room")) { StaticStuff.PrintTriggerEnter(this.name + " This is a Room collider " + other.name + " on the Player, so bail and let the RoomCollider.cs handle it"); return; }
+    {                
+        if (other.gameObject.CompareTag("Ignore Trigger")) { /*(StaticStuff.PrintTriggerEnter(this.name + "Collided with an Ignore Trigger trigger, so bail");*/ return; }
+        if (other.gameObject.layer == LayerMask.NameToLayer("Room")) { /*StaticStuff.PrintTriggerEnter(this.name + " This is a Room collider " + other.name + " on the Player, so bail and let the RoomCollider.cs handle it");*/ return; }
         
         ArticyReference colliderArtRef = other.gameObject.GetComponent<ArticyReference>();
         if (colliderArtRef != null)
-        {            
-            StaticStuff.PrintTriggerEnter("we collided with something that has an ArticyRef.  Now lets see what it is.");
+        {                        
             Dialogue dialogue = colliderArtRef.reference.GetObject() as Dialogue;
             Ambient_Trigger at = colliderArtRef.reference.GetObject() as Ambient_Trigger;
             Stage_Directions_Container sdc = colliderArtRef.reference.GetObject() as Stage_Directions_Container;
             if (dialogue != null)
-            {                
-                StaticStuff.PrintTriggerEnter("we have a dialogue, so set the FlowPlayer to start on it and see what happens");
+            {                                
                 CaptainArticyFlow.CheckIfDialogueShouldStart(dialogue, other.gameObject);
             }
             else if (at != null)
-            {
-                StaticStuff.PrintTriggerEnter("We have an Ambient_Trigger, so lets see if we're going to commit to it or not");
+            {                
                 AmbientTrigger ambientTrigger = other.GetComponent<AmbientTrigger>();
                 if (ambientTrigger == null) { Debug.LogError("No AmbientTrigger component on this collider: " + other.name); return; }
                 ambientTrigger.ProcessAmbientTrigger(at);
             }
             else if(sdc != null)
-            {
-                StaticStuff.PrintTriggerEnter("We have a Stage_Directions_Container, so lets see which of those we're gonna play");
+            {                
                 CaptainArticyFlow.SendToStageDirections(sdc);
             }
             else
@@ -270,11 +265,9 @@ public class CCPlayer : CharacterEntity
             if (CurControlType == eControlType.STICK || other.gameObject.GetComponentInParent<Elevator>() == SelectedElevator)
             {                
                 if (other.gameObject.name.Contains("Start"))
-                {
-                    StaticStuff.PrintTriggerEnter("Reached elevator StartPos");                    
+                {                    
                     if (MovementBlocked == false)
-                    {
-                        StaticStuff.PrintTriggerEnter("move player onto elevator");
+                    {                        
                         DealingWithElevator = true;
                         if (CurControlType == eControlType.STICK)
                         {
@@ -296,8 +289,7 @@ public class CCPlayer : CharacterEntity
                 else if (other.gameObject.name.Contains("End"))
                 {
                     if (MovementBlocked == true)
-                    {                     
-                        StaticStuff.PrintTriggerEnter("Player moved off elevator, back to normal movement");
+                    {                                             
                         DealingWithElevator = false;
                         SetupForControlType(CurControlType);
                         SelectedElevator.transform.GetChild(0).GetComponent<SphereCollider>().enabled = true;
@@ -308,28 +300,19 @@ public class CCPlayer : CharacterEntity
                     }                    
                 }
                 else
-                {
-                    StaticStuff.PrintTriggerEnter("Reached elevator EndPos so start movement");
+                {                    
                     StartCoroutine(StartElevatorRide());
-                    /*if (WaitingForFollowersOnElevator == true)
-                    {
-                        //Debug.Log("We're ready to ride the elevator but we're still waiting for Loop");
-                        return;
-                    }
-                    else
-                    {
-                        StartCoroutine(StartElevatorRide());
-                    }*/
+                    
                 }
             }
             else
             {
-                StaticStuff.PrintTriggerEnter("wrong elevator, keep going");
+                //StaticStuff.PrintTriggerEnter("wrong elevator, keep going");
             }
         }
         else
         {
-            StaticStuff.PrintTriggerEnter("We've collided into something that doesn't have an Articy Ref and isn't an elevator so find out what's up. " + other.name);
+           // StaticStuff.PrintTriggerEnter("We've collided into something that doesn't have an Articy Ref and isn't an elevator so find out what's up. " + other.name);
         }
     }
 

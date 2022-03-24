@@ -23,8 +23,8 @@ public class CharacterEntity : MonoBehaviour
     Vector3 ForwardDir = Vector3.zero;
     Vector3 LastForwardDir = Vector3.zero;
     Vector3 MoveDir = Vector3.zero;
-    float WalkDir = 0f;
-    float TurnSpeed = 0f;
+   // float WalkDir = 0f;
+    //float TurnSpeed = 0f;
     float Speed = 0f;
     float LastSpeed = 0f;
 

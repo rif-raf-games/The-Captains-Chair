@@ -14,8 +14,8 @@ using UnityEngine.SceneManagement;
 static public class StaticStuff 
 {
     /********************** DESIGNER TWEAK AREA *********************/
-    static string STARTING_SCENE_TO_LOAD = "E1_Loop_Intro";
-    //static string STARTING_SCENE_TO_LOAD = "E1_Hangar_Intro";
+   // static string STARTING_SCENE_TO_LOAD = "E1_Loop_Intro";
+    static string STARTING_SCENE_TO_LOAD = "E1_Hangar_Intro";
     //static string STARTING_SCENE_TO_LOAD = "E1_Plaza_Intro";
     /****************************************************************/
 
@@ -29,6 +29,7 @@ static public class StaticStuff
     static public int MusicVolume = 100;
     static public int JoystickSide = 0;
     static public bool HasUnlockedFullGame = false;
+    static public bool KeepJoystickOff = false;
 
     /* static public void SetOrientation(eOrientation orientation, string screenName)
      {
@@ -338,42 +339,7 @@ static public class StaticStuff
     static public void SetCaptainsChair(ArticyFlow articyFlowToPrint)
     {
         ArticyFlowToPrint = articyFlowToPrint;
-    }
-    
-    static public void PrintFlowBranchesUpdate(string s, ArticyFlow articyFlowCaller)
-    {
-        //Debug.Log(articyFlowCaller.name + ": " + s);
-    }
-    static public void PrintBehaviorFlow(string s, BehaviorFlowPlayer player)
-    {
-       // Debug.LogWarning("===============================PrintBehaviorFlow(): " + s);
-    }
-    static public void PrintUI(string s)
-    {
-      //  Debug.Log(s);
-    }
-
-    static public void PrintTriggerEnter(string s)
-    {
-       // Debug.LogWarning("===============================PrintTriggerEnter(): " + s);
-    }
-
-    static public void PrintRepairPath(string s)
-    {
-        // Debug.LogWarning("===============================PrintRepairPath(): " + s);
-    }
-
-    static public void PrintRifRafUI(string s)
-    { 
-      // Debug.LogWarning("===============================PrintRifRafUI(): " + s);
-    }
-
-    
-
-    static public void PrintCAL(string s)
-    {
-
-    }
+    }        
 
     static public void ShareOnSocial(GameObject goToShutOff)
     {

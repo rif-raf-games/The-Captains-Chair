@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
-#if !UNITY_ANDROID
+#if UNITY_IPHONE
 using UnityEngine.SocialPlatforms.GameCenter;
 #endif
 
@@ -57,7 +57,9 @@ public class GameCenterTest : MonoBehaviour
         if (GUI.Button(new Rect(Screen.width - 100, 900, 100, 100), "Reset"))
         {
             //Social.ReportProgress("t_achieve_005", 100.0f, ProgressCallback);
+#if UNITY_IPHONE
             GameCenterPlatform.ResetAllAchievements(ResetAllAchievementsCallback);
+#endif
         }
         if (GUI.Button(new Rect(Screen.width - 300, 900, 100, 100), "Ach UI"))
         {
@@ -66,7 +68,7 @@ public class GameCenterTest : MonoBehaviour
     }
 #endif
 
-    void ResetAllAchievementsCallback(bool val)
+            void ResetAllAchievementsCallback(bool val)
     {
         Debug.Log("ResetAllAchievementsCallback() val: " + val);
     }

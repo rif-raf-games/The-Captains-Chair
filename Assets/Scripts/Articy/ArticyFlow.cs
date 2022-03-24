@@ -11,7 +11,7 @@ using UnityEngine.SceneManagement;
 using Articy.The_Captain_s_Chair.GlobalVariables;
 using UnityEngine.Analytics;
 using System;
-using System.Collections;
+//using System.Collections;
 using Articy.Unity.Interfaces;
 
 public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMethodProvider
@@ -216,11 +216,10 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     /// Callback from Articy when it's calculated the available branches
     /// </summary>
     public void OnBranchesUpdated(IList<Branch> aBranches)
-    {
-        StaticStuff.PrintFlowBranchesUpdate("************** OnBranchesUpdated() START ************* time: " + Time.time, this);
-        if (CurPauseObject == null) StaticStuff.PrintFlowBranchesUpdate("CurPauseObject is null", this);
-        else StaticStuff.PrintFlowBranchesUpdate("CurPauseObject Type: " + CurPauseObject.GetType() + ", with TechnicalName: " + ((ArticyObject)CurPauseObject).TechnicalName, this);
-        StaticStuff.PrintFlowBranchesUpdate("Num branches: " + aBranches.Count, this);
+    {        
+        if (CurPauseObject == null) Debug.LogWarning("CurPauseObject is null", this);
+       // else StaticStuff.PrintFlowBranchesUpdate("CurPauseObject Type: " + CurPauseObject.GetType() + ", with TechnicalName: " + ((ArticyObject)CurPauseObject).TechnicalName, this);
+      //  StaticStuff.PrintFlowBranchesUpdate("Num branches: " + aBranches.Count, this);
 
         CurBranches.Clear();
         if (CurPauseObject == null) Debug.LogError("CurPauseObject is null");//StaticStuff.TrackEvent("Null CurPauseObject in OnBranchesUpdated()");        
@@ -228,8 +227,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         // add all the aBranches to CurBranches but do some info sharing and error checking
         int i = 0;
         foreach (Branch b in aBranches)
-        {
-            StaticStuff.PrintFlowBranchesUpdate("branch: " + i + " is type: " + b.Target.GetType(), this);
+        {           
             if (b.IsValid == false) Debug.LogWarning("Invalid branch in OnBranchesUpdate(): " + b.DefaultDescription);                        
             CurBranches.Add(b);
 
@@ -247,8 +245,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         // Start checking to see what we're paused on
         DialogueFragment df = CurPauseObject as DialogueFragment;
         if (df != null)
-        {   // We're paused on a DialogueFragment so get ready to show some UI
-            StaticStuff.PrintFlowBranchesUpdate("We're on a dialogue fragment, so set the text based on current flow state.", this);            
+        {   // We're paused on a DialogueFragment so get ready to show some UI            
             switch (CurArticyState)
             {
                 case eArticyState.DIALOGUE:
@@ -270,26 +267,21 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             }
         }
         else if (CurPauseObject.GetType().Equals(typeof(Character_Action_List_Template)))
-        {            
-            StaticStuff.PrintFlowBranchesUpdate("-----------------------------------We've arrived at a Character Action List so let's see what's up", this);
+        {                        
             SetNextBranch(null);        // We temp pause the flow to handle the action list
             // grab the next fragment from the current fragment's output pin manually since we're temporarily pausing the flow
             CurCAL = CurPauseObject as Character_Action_List_Template;
             OutputPin outputPin = (CurPauseObject as FlowFragment).OutputPins[0];
-            NextFragment = (outputPin.Connections[0].Target as ArticyObject);
-            StaticStuff.PrintFlowBranchesUpdate(this.name + ": NextFragment type: " + outputPin.Connections[0].Target.GetType(), this);
-            StaticStuff.PrintFlowBranchesUpdate(this.name + ": NextFragment: " + NextFragment.TechnicalName, this);
+            NextFragment = (outputPin.Connections[0].Target as ArticyObject);                        
             if (outputPin.Connections[0].Target as Dialogue != null)
-            {   // if the next fragment is a dialogue, then we're at the end of this Dialogue so make sure you keep the instruction to execute around
-                StaticStuff.PrintFlowBranchesUpdate("next is a dialogue", this);
+            {   // if the next fragment is a dialogue, then we're at the end of this Dialogue so make sure you keep the instruction to execute around                
                 Dialogue d = outputPin.Connections[0].Target as Dialogue;
                 DialogueEndInstruction = d.OutputPins[0].Text;
                 NextFragment = d.OutputPins[0].Connections[0].Target as ArticyObject;
             }
             // Get the pause frags if necessary so we know how much further along the dialogue can go before we pause input again            
             Character_Action_List_FeatureFeature CurCALObject = CurCAL.Template.Character_Action_List_Feature;
-            ActiveCALPauseObjects = CurCALObject.PauseFrags;
-            StaticStuff.PrintFlowBranchesUpdate(this.name + " is about to start their Behavior.  Time: " + Time.time, this);
+            ActiveCALPauseObjects = CurCALObject.PauseFrags;            
             // get the behavior flow (action list) going
             GetComponent<BehaviorFlowPlayer>().StartBehaviorFlow(CurCAL, this.gameObject);
         }
@@ -304,7 +296,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                 // node in the dialogue is a video.
                 if (sc == StageDirectionPlayer.eSDSpecialCases.VIDEO_IS_LAST_NODE)
                 {
-                    Debug.Log("Playing video and it's the last node so do all the special case stuff");
+                    //Debug.Log("Playing video and it's the last node so do all the special case stuff");
                     VideoPlayerPauseDialogue = (sdc.OutputPins[0].Connections[0].Target as Dialogue);
                     Debug.Log(VideoPlayerPauseDialogue.OutputPins[0].Text);
                     this.ConvoUI.gameObject.SetActive(false);
@@ -322,21 +314,20 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         else if (CurBranches.Count == 1)
         {   // We're paused and there's only one valid branch available. This is common so have it's own section                 
             if (CurPauseObject.GetType().Equals(typeof(Dialogue)))
-            {   // Paused on a Dialogue, so set the state and just move along automatically to the start of the Dialogue
-                StaticStuff.PrintFlowBranchesUpdate("We're about to start a Dialogue but it may NOT always start with a dialogue fragment.", this);                
+            {   // Paused on a Dialogue, so set the state and just move along automatically to the start of the Dialogue                
                 SetArticyState(eArticyState.DIALOGUE);
                 SetNextBranch(CurBranches[0]);
             }
             else if (CurPauseObject.GetType().Equals(typeof(Jump)))
             {   // We're on a Jump, so just go automatically 
-                StaticStuff.PrintFlowBranchesUpdate("we're on a Jump, so just jump to where it's supposed to go.", this);
+                //StaticStuff.PrintFlowBranchesUpdate("we're on a Jump, so just jump to where it's supposed to go.", this);
                 SetNextBranch(CurBranches[0]);
             }
             else if (CurPauseObject.GetType().Equals(typeof(Hub)))
             {   // We're on a Hub so figure out what to do
                 if (CurBranches[0].Target.GetType().Equals(typeof(OutputPin)))
                 {   // if the first target is an output pin, then we're done with the Dialogue and are ready to go back to free roam
-                    StaticStuff.PrintFlowBranchesUpdate("*****************************************We're paused on a Hub with no Target so we're in Free Roam.", this);                    
+                    //StaticStuff.PrintFlowBranchesUpdate("*****************************************We're paused on a Hub with no Target so we're in Free Roam.", this);                    
                     if (CurArticyState == eArticyState.DIALOGUE)
                     {   // we're leaving a Dialogue                        
                         if (Player != null && IsSaveOnlyDialogue == false) Player.ToggleMovementBlocked(false); // set the player free if there is one (if not we're in a mini game)                        
@@ -368,7 +359,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             else if (CurPauseObject.GetType().Equals(typeof(AI_Template)))
             {
                 StaticStuff.TrackEvent("AI_Templates should not be here");                
-                StaticStuff.PrintFlowBranchesUpdate("We're starting an AI to get it going", this);                             
+                //StaticStuff.PrintFlowBranchesUpdate("We're starting an AI to get it going", this);                             
                 SetArticyState(eArticyState.AI);
                 SetNextBranch(CurBranches[0]);
                 FlowFragsVisited.Clear();
@@ -376,7 +367,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             else if (CurPauseObject.GetType().Equals(typeof(Ambient_Trigger)))
             {
                 StaticStuff.TrackEvent("Ambient_Trigger should not be here");                
-                StaticStuff.PrintFlowBranchesUpdate("We're about to get an Ambient_Trigger going", this);                
+                //StaticStuff.PrintFlowBranchesUpdate("We're about to get an Ambient_Trigger going", this);                
                 SetArticyState(eArticyState.AMBIENT_TRIGGER);
                 SetNextBranch(CurBranches[0]);
             }            
@@ -435,7 +426,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
                     // the IAP panel will be brought up once the video playing is over moiap
                     return;
                 }
-                StaticStuff.PrintFlowBranchesUpdate("We're on a Save_Point, so parse the data and save it", this);
+                //StaticStuff.PrintFlowBranchesUpdate("We're on a Save_Point, so parse the data and save it", this);
                // Debug.Log("We're on a Save_Point, so parse the data and save it");
                 HandleSavePoint(CurPauseObject as Save_Point);                
                 SetNextBranch(CurBranches[0]);
@@ -478,7 +469,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             Debug.LogWarning(s);            
         }
 
-        StaticStuff.PrintFlowBranchesUpdate("************** OnBranchesUpdated() END *************** time: " + Time.time, this);        
+       // StaticStuff.PrintFlowBranchesUpdate("************** OnBranchesUpdated() END *************** time: " + Time.time, this);        
     }
 
     /// <summary>
@@ -492,7 +483,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             Debug.LogError("The save info is not set up in the articy nodes yet so we're temporarily skipping saving at this moment.");
             return;
         }
-        Debug.Log("HandleSavePoint() Sav_Var: " + savePoint.Template.Save_Info.Sav_Var + " --elev--");
+       // Debug.Log("HandleSavePoint() Sav_Var: " + savePoint.Template.Save_Info.Sav_Var + " --elev--");
 
         ArticyGlobalVariables.Default.Save_Info.Return_Scene = savePoint.Template.Save_Info.ReturnScene;
 
@@ -533,12 +524,12 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
             List<Elevator> sortedList = elevators.OrderBy(o => o.name).ToList<Elevator>();
             foreach (Elevator elevator in sortedList)
             {
-                Debug.Log("elevator: " + elevator.name + " is on floor: " + elevator.CurrentFloor + " --elev--");
+              //  Debug.Log("elevator: " + elevator.name + " is on floor: " + elevator.CurrentFloor + " --elev--");
                 elevatorPositions += elevator.CurrentFloor.ToString() + ",";
             }
             elevatorPositions = elevatorPositions.Remove(elevatorPositions.Length - 1);
             ArticyGlobalVariables.Default.Save_Info.Majestic_Elevators = elevatorPositions;
-            Debug.Log("elevatorPosition: " + elevatorPositions + "--elev--");
+           // Debug.Log("elevatorPosition: " + elevatorPositions + "--elev--");
         }
 
         if (savePoint.Template.Save_Info.AnalyticsToTrack != "")
@@ -555,7 +546,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         if(savePoint.Template.Save_Info.Sav_Var != "")
         {
             string saveVar = savePoint.Template.Save_Info.Sav_Var;
-            Debug.Log("saveVar: " + saveVar);
+           // Debug.Log("saveVar: " + saveVar);
             ArticyGlobalVariables.Default.SetVariableByString(saveVar, true);            
         }
 
@@ -720,14 +711,14 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         
         if (NextBranch != null && waitingOnAL == false)
         {   // we have a NextBranch assigned and we're not waiting on the Action List so continue the flow on the NextBranch
-            StaticStuff.PrintFlowBranchesUpdate(this.name + ": going to next branch via Update", this);            
+           // StaticStuff.PrintFlowBranchesUpdate(this.name + ": going to next branch via Update", this);            
             Branch b = NextBranch;
             SetNextBranch(null);
             FlowPlayer.Play(b);
         }
         else if (NextFragment != null && waitingOnAL == false)
         {   // we have a NextFragment assigned and we're not waiting on the Action List so continue the flow on the NextFragment
-            StaticStuff.PrintFlowBranchesUpdate(this.name + ": going to next FRAG via Update", this);            
+           // StaticStuff.PrintFlowBranchesUpdate(this.name + ": going to next FRAG via Update", this);            
             ArticyObject nf = NextFragment;            
             NextFragment = null;
             FlowPlayer.StartOn = nf;
@@ -738,8 +729,7 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
     public OutputPin MyOutputPin;
     public void ConvoButtonClicked(int buttonIndex, ArticyObject nextFragment = null)
     {        
-        StaticStuff.PrintUI("ConvoButtonClicked() buttonIndex: " + buttonIndex);
-        
+       // StaticStuff.PrintUI("ConvoButtonClicked() buttonIndex: " + buttonIndex);        
         DialogueFragment df;
         IFlowObject target;
         if(nextFragment != null)
@@ -758,24 +748,24 @@ public class ArticyFlow : MonoBehaviour, IArticyFlowPlayerCallbacks, IScriptMeth
         
         if (df != null)
         {
-            StaticStuff.PrintUI("Chosen branch is a dialogue fragment, so just let the engine handle the next phase.");
+           // StaticStuff.PrintUI("Chosen branch is a dialogue fragment, so just let the engine handle the next phase.");
 //            Debug.Log("--------------------------- Chosen branch is a dialogue fragment, so just let the engine handle the next phase.");
         }
         else if (target.GetType().Equals(typeof(Character_Action_List_Template)))
         {
-            StaticStuff.PrintUI("Next thing is a Character_Actions_List_Template, so shut off the UI and let the action list do it's thing.");
+           // StaticStuff.PrintUI("Next thing is a Character_Actions_List_Template, so shut off the UI and let the action list do it's thing.");
            // Debug.Log("---------------------------Next thing is a Character_Actions_List_Template, so shut off the UI and let the action list do it's thing.");
             //ConvoUI.EndConversation();
         }
         else
         {
            // Debug.Log("type is: " + CurBranches[buttonIndex].Target.GetType());                                          
-            StaticStuff.PrintUI("Chosen branch isn't a DialogueFragment or a Character_Movement so for now just assume we're done talking and shut off the UI");
+           // StaticStuff.PrintUI("Chosen branch isn't a DialogueFragment or a Character_Movement so for now just assume we're done talking and shut off the UI");
           //  Debug.Log("----------------------------------- Chosen branch isn't a DialogueFragment or a Character_Movement so for now just assume we're done talking and shut off the UI");
            // ConvoUI.EndConversation();            
         }
     }
-    string DefaultDes = "none";
+    //string DefaultDes = "none";
     private void LateUpdate()
     {
         if (CurBranches == null) return;

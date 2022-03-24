@@ -43,25 +43,41 @@ public class MCP : MonoBehaviour
     public bool TabletMode = false;
     public float AspectVal = 0f;      
 
+    IEnumerator SetJoystickFlag()
+    {
+        yield return new WaitForSeconds(.1f);
+
+        StaticStuff.KeepJoystickOff = false;
+
+#if UNITY_ANDROID
+        Debug.Log("You're on UNITY_ANDROID --Joy");
+#elif UNITY_IOS
+        Debug.Log("You're on UNITY_IOS --Joy");
+#elif UNITY_IPHONE
+    Debug.Log("You're on UNITY_IPHONE --Joy");
+#elif UNITY_EDITOR_WIN
+        Debug.Log("You're on UNITY_EDITOR_WIN --Joy");
+        StaticStuff.KeepJoystickOff = true;
+#elif UNITY_STANDALONE_WIN
+    Debug.Log("You're on UNITY_STANDALONE_WIN --Joy");
+     StaticStuff.KeepJoystickOff = true;
+#elif UNITY_EDITOR_OSX
+    Debug.Log("You're on UNITY_EDITOR_OSX --Joy");
+     StaticStuff.KeepJoystickOff = true;
+#elif UNITY_STANDALONE_OSX
+    Debug.Log("You're on UNITY_STANDALONE_OSX --Joy");
+     StaticStuff.KeepJoystickOff = true;
+#else
+    Debug.LogError("Unknown platform --Joy");
+#endif
+
+        ToggleJoystick(StaticStuff.KeepJoystickOff);
+    }
+
     private void Awake()
     {
-#if UNITY_ANDROID
-        Debug.Log("You're on UNITY_ANDROID");
-#elif UNITY_IOS
-        Debug.Log("You're on UNITY_IOS");
-#elif UNITY_IPHONE
-    Debug.Log("You're on UNITY_IPHONE");
-#elif UNITY_EDITOR_WIN
-    Debug.Log("You're on UNITY_EDITOR_WIN");
-#elif UNITY_STANDALONE_WIN
-    Debug.Log("You're on UNITY_STANDALONE_WIN");
-#elif UNITY_EDITOR_OSX
-    Debug.Log("You're on UNITY_EDITOR_OSX");
-#elif UNITY_STANDALONE_OSX
-    Debug.Log("You're on UNITY_STANDALONE_OSX");
-#else
-    Debug.LogError("Unknown platform");
-#endif
+       // Debug.Log("MCP.Awake()");
+        StartCoroutine(SetJoystickFlag());
 
         if (MenuUI == null || InGamePopUp == null) 
         {
@@ -519,7 +535,7 @@ public class MCP : MonoBehaviour
             float loadTime = Time.time - loadStart;
             //  Debug.LogWarning("----- done with the scene load, progress is: " + AsyncLoad.progress);
             //  Debug.LogWarning("---- loadTime: " + loadTime.ToString("F2"));
-            showLoadButton = true;
+          //  showLoadButton = true;
 
             // Debug.LogWarning("---- after the first .9 of the asyncLoad operation (which means the scene is loaded but hasn't done any initialization");
             // 6) Ok we're here, so the scene is loaded but it has not started or even initialized.  
@@ -568,7 +584,7 @@ public class MCP : MonoBehaviour
             // Debug.Log("starting: " + AsyncLoad.progress);
             yield return new WaitForEndOfFrame();
         }
-        int num = 0;
+       // int num = 0;
         //  Debug.LogWarning("Ok the scene has officially started so do any scene initting");
         if (FindObjectOfType<TheCaptainsChair>() != null)
         //if(false)
@@ -636,7 +652,7 @@ public class MCP : MonoBehaviour
 
         string elevatorPosString = ArticyGlobalVariables.Default.Save_Info.Majestic_Elevators;
         string[] elevatorPositions = elevatorPosString.Split(',');
-        Debug.Log("Loading next scene elevatorPosString: " + elevatorPosString + ", elevatorPositions count: " + elevatorPositions.Length + "--elev--");
+       // Debug.Log("Loading next scene elevatorPosString: " + elevatorPosString + ", elevatorPositions count: " + elevatorPositions.Length + "--elev--");
         List<Elevator> elevators = FindObjectsOfType<Elevator>().ToList();
         if (elevators.Count > 0 && elevatorPosString != "")
         {
@@ -729,7 +745,7 @@ public class MCP : MonoBehaviour
     public GameObject CaptainAssets;
 
     AsyncOperation AsyncLoad;
-    bool showLoadButton = false;
+   // bool showLoadButton = false;
 
     public FixedJoystick GetJoystick()
     {
@@ -749,6 +765,11 @@ public class MCP : MonoBehaviour
         else
         {
             CameraToggleButton.gameObject.SetActive(false);
+        }
+
+        if(StaticStuff.KeepJoystickOff == true)
+        {
+            Joystick.gameObject.transform.parent.gameObject.SetActive(false);
         }
     }    
     

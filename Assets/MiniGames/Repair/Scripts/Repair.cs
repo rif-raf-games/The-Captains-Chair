@@ -726,13 +726,13 @@ public class Repair : MiniGame
         if (spotFound == true)
         {            
             i = baIndex;
-            bool didWeMoveAnything = false;
+           // bool didWeMoveAnything = false;
             while (i != foundSpotIndex)
             {                
                 RaycastHit hit = GetHitAtAnchorPos(BeltAnchors[i]);
                 if (hit.collider == null || hit.collider.tag != "Repair Piece") { Debug.LogError("we have some odd behavior finding a belt spot."); return false; }
                 hit.collider.transform.parent.gameObject.transform.position = BeltAnchors[i + indexAdj].transform.position;
-                didWeMoveAnything = true;
+              //  didWeMoveAnything = true;
                 i += indexAdj;
             }
            // Debug.LogWarning("why are we moving shit? found an empty spot at index: " + foundSpotIndex + " so push pieces.  did we move: " + didWeMoveAnything);
@@ -864,7 +864,7 @@ public class Repair : MiniGame
     {             
         RepairPiece curPiece = pieceConn.Cur;        
         Vector3 curPiecePos = new Vector3(curPiece.transform.position.x, PieceAnchorHeightValToUse, curPiece.transform.position.z); //curPiece.transform.position + new Vector3(0f, Repair.MODEL_HEIGHT / 2f, 0f);        
-        StaticStuff.PrintRepairPath("CheckPieceConn() pieceConn: " + pieceConn.ID + ", num OpenAngles: " + curPiece.OpenAngles.Count);
+        //StaticStuff.PrintRepairPath("CheckPieceConn() pieceConn: " + pieceConn.ID + ", num OpenAngles: " + curPiece.OpenAngles.Count);
         
         foreach (int angle in curPiece.OpenAngles)
         {            
@@ -878,7 +878,7 @@ public class Repair : MiniGame
             
             RaycastHit hit;
             Physics.Raycast(curPiecePos, rayDir, out hit, Mathf.Infinity);
-            StaticStuff.PrintRepairPath("-----------------------------curPiece: " + curPiece.name + " checking dir: " + angleAdj);                  
+            //StaticStuff.PrintRepairPath("-----------------------------curPiece: " + curPiece.name + " checking dir: " + angleAdj);                  
             if (hit.collider == null)
             {                                                
                 SetupPathError(curPiece.name + " hit nothing at dir: " + angleAdj + " so we must have shot off the board.", curPiece, null, rayDir);                
@@ -886,7 +886,7 @@ public class Repair : MiniGame
             }
             else
             {
-                StaticStuff.PrintRepairPath(curPiece.name + " hit " + hit.collider.name + ", with tag: " + hit.collider.tag + " at angleAdj: " + angleAdj);
+                //StaticStuff.PrintRepairPath(curPiece.name + " hit " + hit.collider.name + ", with tag: " + hit.collider.tag + " at angleAdj: " + angleAdj);
             }
             // We've hit something with our curPiece ray, so see what it is
             if (hit.collider.tag == "Repair Piece Anchor")
@@ -908,11 +908,11 @@ public class Repair : MiniGame
                     RepairPiece adjacentPiece = hit.collider.transform.parent.GetComponent<RepairPiece>();                    
                     if (adjacentPiece == pieceConn.From)
                     {
-                        StaticStuff.PrintRepairPath("we connected with a piece from " + curPiece.name + "'s ray but it's the piece we came from " + pieceConn.From.name + " so continue checking");                                                
+                        //StaticStuff.PrintRepairPath("we connected with a piece from " + curPiece.name + "'s ray but it's the piece we came from " + pieceConn.From.name + " so continue checking");                                                
                     }
                     else if (adjacentPiece.Type == eRepairPieceType.TERMINAL)
                     {
-                        StaticStuff.PrintRepairPath("we've reached a Terminal: " + adjacentPiece.name + " so let's see if we're done");
+                       // StaticStuff.PrintRepairPath("we've reached a Terminal: " + adjacentPiece.name + " so let's see if we're done");
                         if(adjacentPiece == CurTerminalStart)
                         {                                                        
                             SetupPathError("We've returned to the start Terminal so fail: " + adjacentPiece.name, curPiece, hit.collider, rayDir);
@@ -925,7 +925,7 @@ public class Repair : MiniGame
                         }
                         else
                         {
-                            StaticStuff.PrintRepairPath("We've reached a terminal of the same type so set the terminal's ReachedOnPath flag to true");
+                            //StaticStuff.PrintRepairPath("We've reached a terminal of the same type so set the terminal's ReachedOnPath flag to true");
                             PieceConn newConn = new PieceConn(hit.collider.transform.parent.GetComponent<RepairPiece>(), curPiece);                            
                             adjacentPiece.ReachedOnPath = true;
                             if(HasConnBeenChecked(newConn) == false)
@@ -946,9 +946,9 @@ public class Repair : MiniGame
                     {                        
                         if(adjacentPiece.Type == eRepairPieceType.XOVER)
                         {                                                   
-                            StaticStuff.PrintRepairPath("There is a piece called: " + hit.collider.transform.parent.name + " on the spot that " + curPiece.name + "'s ray collided with but it " +
-                                "is an XOVER type, so assign the XOVER's only relevant OpenAngle: " + angleAdj + " to check and do NOT assign a fluid type.  Create a new " +
-                                "conn Us: " + hit.collider.transform.parent.name + ", From: " + curPiece.name);                            
+                           // StaticStuff.PrintRepairPath("There is a piece called: " + hit.collider.transform.parent.name + " on the spot that " + curPiece.name + "'s ray collided with but it " +
+                             //   "is an XOVER type, so assign the XOVER's only relevant OpenAngle: " + angleAdj + " to check and do NOT assign a fluid type.  Create a new " +
+                             //   "conn Us: " + hit.collider.transform.parent.name + ", From: " + curPiece.name);                            
                             adjacentPiece.OpenAngles.Clear();
                             adjacentPiece.OpenAngles.Add(angleAdj);
                         }
@@ -975,9 +975,9 @@ public class Repair : MiniGame
                             float reflectAngle = Quaternion.FromToRotation(Vector3.right, reflectDirVec).eulerAngles.y;
                             // round it off
                             int reflectAngleInt = Mathf.RoundToInt(reflectAngle);
-                            StaticStuff.PrintRepairPath("There is a piece called: " + hit.collider.transform.parent.name + " on the spot that " + curPiece.name + "'s ray collided with but it " +
-                                "is an SPLITTER type, so assign the SPLITTER's only relevant reflectAngleInt: " + reflectAngleInt + " to check and do NOT assign a fluid type.  Create a new " +
-                                "conn Us: " + hit.collider.transform.parent.name + ", From: " + curPiece.name);
+                           // StaticStuff.PrintRepairPath("There is a piece called: " + hit.collider.transform.parent.name + " on the spot that " + curPiece.name + "'s ray collided with but it " +
+                            //    "is an SPLITTER type, so assign the SPLITTER's only relevant reflectAngleInt: " + reflectAngleInt + " to check and do NOT assign a fluid type.  Create a new " +
+                           //     "conn Us: " + hit.collider.transform.parent.name + ", From: " + curPiece.name);
                             adjacentPiece.OpenAngles.Clear();
                             adjacentPiece.OpenAngles.Add(reflectAngleInt);
                         }
@@ -988,8 +988,8 @@ public class Repair : MiniGame
                         }
                         else
                         {                            
-                            StaticStuff.PrintRepairPath("There is a piece called: " + hit.collider.transform.parent.name + " on the spot that " + curPiece.name + "'s ray collided with that does NOT have the same fluid type " +
-                            "as our current path so assign the fluid type and create a new conn Us: " + hit.collider.transform.parent.name + ", From: " + curPiece.name);                            
+                          //  StaticStuff.PrintRepairPath("There is a piece called: " + hit.collider.transform.parent.name + " on the spot that " + curPiece.name + "'s ray collided with that does NOT have the same fluid type " +
+                          //  "as our current path so assign the fluid type and create a new conn Us: " + hit.collider.transform.parent.name + ", From: " + curPiece.name);                            
                             adjacentPiece.FluidType = CurTerminalStartFluidType;
                             switch(adjacentPiece.FluidType)
                             {
@@ -1056,7 +1056,7 @@ public class Repair : MiniGame
             {
                 PieceConn curPieceConn = ConnsToCheck[0];
                 ConnsToCheck.Remove(curPieceConn);
-                StaticStuff.PrintRepairPath("************************************ going to check conn Us: " + curPieceConn.Cur.name + " , From: " + curPieceConn.From.name);
+                //StaticStuff.PrintRepairPath("going to check conn Us: " + curPieceConn.Cur.name + " , From: " + curPieceConn.From.name);
                 if (CheckPieceConn(curPieceConn) == false)
                 {
                   //  Debug.Log("***************************************************bailed due to broken puzzle");

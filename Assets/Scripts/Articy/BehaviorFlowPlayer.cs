@@ -33,8 +33,7 @@ public class BehaviorFlowPlayer : MonoBehaviour
 
     string ThisName;
     public void StartBehaviorFlow(Character_Action_List_Template behavior, GameObject callingObject)
-    {
-        StaticStuff.PrintBehaviorFlow(this.name + ": BehaviorFlowPlayer.StartBehaviorFlow(): " + behavior.DisplayName, this);
+    {        
       //p  Debug.LogWarning(this.name + ": BehaviorFlowPlayer.StartBehaviorFlow(): " + behavior.DisplayName, this);
         if (ExecutingActions == true)
         {
@@ -51,8 +50,7 @@ public class BehaviorFlowPlayer : MonoBehaviour
         IdleOrFollow = false;
 
 
-        List<FlowFragment> newValidTargets = GetInitialActions(CurBehavior.InputPins[0]);   
-        StaticStuff.PrintBehaviorFlow(this.name + ": we've got " + newValidTargets.Count + " new valid targets to start with", this);
+        List<FlowFragment> newValidTargets = GetInitialActions(CurBehavior.InputPins[0]);           
         //if(this.name.Equals("Child")) Debug.Log(this.name + ": we've got " + newValidTargets.Count + " new valid targets to start with");
         PrepActions(newValidTargets);
     }    
@@ -61,8 +59,7 @@ public class BehaviorFlowPlayer : MonoBehaviour
     {
         List<FlowFragment> newValidTargets = new List<FlowFragment>();
         foreach (OutgoingConnection outCon in firstPin.Connections)
-        {
-            StaticStuff.PrintBehaviorFlow("this outCon has a target type: " + outCon.Target.GetType(), this);
+        {            
            // if (this.name.Equals("Child")) Debug.Log("this outCon has a target type: " + outCon.Target.GetType());
             FlowFragment target = outCon.Target as FlowFragment;
             InputPin targetInputPin = target.InputPins[0];
@@ -141,13 +138,11 @@ public class BehaviorFlowPlayer : MonoBehaviour
     }
 
     void CurrentActionsDone(Stage_Directions_Container sdcToSkipOver = null)
-    {
-        StaticStuff.PrintBehaviorFlow(this.name + ": CurrentActionsDone()", this);
+    {        
         List<FlowFragment> newValidTargets = new List<FlowFragment>();
 
         if (sdcToSkipOver != null)
-        {
-            StaticStuff.PrintBehaviorFlow("we're on a Stage_Directions_Container so get the new stuff from here", this);
+        {            
             OutputPin outputPin = sdcToSkipOver.OutputPins[0];
             AddValidTargetsFromPins(outputPin, newValidTargets);
         }
@@ -161,8 +156,7 @@ public class BehaviorFlowPlayer : MonoBehaviour
                 AddValidTargetsFromPins(outputPin, newValidTargets);
             }
         }
-
-        StaticStuff.PrintBehaviorFlow(this.name + ": we've got " + newValidTargets.Count + " new targets after the last set", this);
+        
         if (newValidTargets.Count == 0)
         {            
             Debug.LogError(this.name + ": we should always have at least 1 target, even if it's the end of the flow, so check the flow on this npc please: " + this.name);
@@ -188,8 +182,7 @@ public class BehaviorFlowPlayer : MonoBehaviour
                 ActionsToTake.Add(ao as Character_Action_Template);
             }
             else if(ao as Stage_Directions_Container != null)
-            {
-                StaticStuff.PrintBehaviorFlow("We've got a Stage_Directions_Container to deal with during a BehavirFlowPlayer", this);
+            {                
                 Stage_Directions_Container sdc = ao as Stage_Directions_Container;
                 StageDirectionPlayer.HandleStangeDirectionContainer(sdc);
                 /*foreach(OutgoingConnection oc in sdc.InputPins[0].Connections)
@@ -211,7 +204,7 @@ public class BehaviorFlowPlayer : MonoBehaviour
             }
             else if (ao as Character_Action_List_Template != null)
             {
-                StaticStuff.PrintBehaviorFlow(this.name + ": we've got a Character_Action_List_Template is our fragment, which is the end of the flow so this SHOULD be the only node connected so we should be ending after this", this);
+               // Debug.Log(this.name + ": we've got a Character_Action_List_Template is our fragment, which is the end of the flow so this SHOULD be the only node connected so we should be ending after this", this);
             }
             else
             {
@@ -446,7 +439,7 @@ public class BehaviorFlowPlayer : MonoBehaviour
         }*/
         if (delayRangeString.Equals(""))
         {
-            StaticStuff.PrintCAL("delay blank, so no delay");
+            //StaticStuff.PrintCAL("delay blank, so no delay");
             actionState.delayDone = true;
         }
         else
@@ -454,7 +447,7 @@ public class BehaviorFlowPlayer : MonoBehaviour
             string[] delayRange = delayRangeString.Split(',');
             actionState.delayTime = Random.Range(float.Parse(delayRange[0]), float.Parse(delayRange[1]));
             actionState.delayDone = false;
-            StaticStuff.PrintCAL("have a delay of " + actionState.delayTime.ToString("F2") + " seconds.");
+           // StaticStuff.PrintCAL("have a delay of " + actionState.delayTime.ToString("F2") + " seconds.");
         }
         switch (actionState.action)
         {
@@ -701,7 +694,7 @@ public class BehaviorFlowPlayer : MonoBehaviour
         s += "Action type: " + curActionData.Action + ", ";
         s += "action info: " + curActionData.ActionInfo + ", ";
         s += "action Object: " + curActionData.ObjectsToAct;
-        StaticStuff.PrintCAL(s);
+       // StaticStuff.PrintCAL(s);
     }
     
     class EntitySaveData

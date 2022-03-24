@@ -12,7 +12,7 @@ using UnityEngine.Purchasing;
 using UnityEngine.Purchasing.Security;
 #endif
 
-
+#if UNITY_ANDROID || UNITY_IOS || UNITY_IPHONE
 public class IAPManager : MonoBehaviour, IStoreListener
 { 
     private IStoreController m_Controller;
@@ -57,7 +57,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
     }
 
     ConfigurationBuilder Builder;
-    #region IAP_INIT
+#region IAP_INIT
     void InitIAP(System.Action successCallback, System.Action failCallback)
     {
         string result = ActionBeingTaken();
@@ -903,3 +903,4 @@ public class IAPManager : MonoBehaviour, IStoreListener
     }
 
     }
+#endif

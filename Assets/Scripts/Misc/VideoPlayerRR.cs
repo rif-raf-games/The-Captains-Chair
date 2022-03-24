@@ -72,12 +72,15 @@ public class VideoPlayerRR : MonoBehaviour
         ConvoUI.SetSkipMovieButtonActive(false);
         //FindObjectOfType<CCPlayer>().GetComponent<ArticyFlow>().SkipDialogue();
 
+#if UNITY_ANDROID || UNITY_IOS || UNITY_IPHONE
         if (SceneManager.GetActiveScene().name.Contains("Hangar_Intro"))
         {
             Debug.Log("Finished IAP video so get the popups ready to go --IAP--");
             FindObjectOfType<IAPManager>().RRBeginIAPProcess();
             return;
         }
+#endif
+
         ArticyFlow af = FindObjectOfType<ArticyFlow>();
         if (af == null) { Debug.LogError("ERROR: no ArticyFlow object in scene."); return; }
         if (af.VideoPlayerPauseDialogue != null)

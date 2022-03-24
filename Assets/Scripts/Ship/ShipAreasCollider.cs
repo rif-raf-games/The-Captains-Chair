@@ -156,12 +156,12 @@ public class ShipAreasCollider : MonoBehaviour
     {//StaticStuff.PrintTriggerEnter(this.name + " We only want to handle Room colliders here.  other: " + other.name);
         //if ( !(other.gameObject.layer == LayerMask.NameToLayer("Room") || other.gameObject.layer == LayerMask.NameToLayer("Ship Level"))) { Debug.LogError("RoomCollider.OnTriggerEnter() we should NOT be colliding with this " + other.name + " that has a layer OTHER than Room and Ship Level " + LayerMask.LayerToName(other.gameObject.layer)); return; }
         if (other.gameObject.layer != LayerMask.NameToLayer("Ship Level")) { Debug.LogError("RoomCollider.OnTriggerEnter() we should NOT be colliding with this " + other.name + " that has a layer OTHER than Ship Level " + LayerMask.LayerToName(other.gameObject.layer)); return; }
-        StaticStuff.PrintTriggerEnter(this.name + " RoomCollider.OnTriggerEnter() other: " + other.name + ", layer: " + other.gameObject.layer);        
+    //    StaticStuff.PrintTriggerEnter(this.name + " RoomCollider.OnTriggerEnter() other: " + other.name + ", layer: " + other.gameObject.layer);        
                         
         ShipLevel shipLevel = other.GetComponent<ShipLevel>();        
         if(shipLevel != null)
         {
-            StaticStuff.PrintTriggerEnter("collided with a shiplevel: " + other.name);              
+           // StaticStuff.PrintTriggerEnter("collided with a shiplevel: " + other.name);              
             Player.SetFloor(shipLevel.Level, other.name);
             CheckFloorColliders();
             //shipLevel.SetPlayerLevelRoomsAlpha();
@@ -186,12 +186,12 @@ public class ShipAreasCollider : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.layer != LayerMask.NameToLayer("Ship Level")) { Debug.LogError("RoomCollider.OnTriggerExit() we should NOT be colliding with this " + other.name + " that has a layer OTHER than Ship Level " + LayerMask.LayerToName(other.gameObject.layer)); return; }
-        StaticStuff.PrintTriggerEnter(this.name + " RoomCollider.OnTriggerExit() other: " + other.name + ", layer: " + other.gameObject.layer);
+       // StaticStuff.PrintTriggerEnter(this.name + " RoomCollider.OnTriggerExit() other: " + other.name + ", layer: " + other.gameObject.layer);
                 
         ShipLevel shipLevel = other.GetComponent<ShipLevel>();        
         if (shipLevel != null)
         {
-            StaticStuff.PrintTriggerEnter("left floor collider: " + other.name);
+           // StaticStuff.PrintTriggerEnter("left floor collider: " + other.name);
             shipLevel.SetRoomsAlpha(0f);        
         }
         else
