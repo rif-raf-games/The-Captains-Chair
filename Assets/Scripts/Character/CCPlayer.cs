@@ -202,7 +202,7 @@ public class CCPlayer : CharacterEntity
             float moveX, moveZ;
             float inputH, inputV;
 
-            if (Joystick != null)
+           /* if (Joystick != null)
             {
                 inputH = Joystick.Horizontal;
                 inputV = Joystick.Vertical;
@@ -211,7 +211,12 @@ public class CCPlayer : CharacterEntity
             {
                 inputH = Input.GetAxis("Horizontal");
                 inputV = Input.GetAxis("Vertical");
-            }
+            }*/
+
+            inputH = Joystick.Horizontal;
+            inputV = Joystick.Vertical;
+            inputH = Input.GetAxis("Horizontal");
+            inputV = Input.GetAxis("Vertical");
 
             float val = new Vector3(Mathf.Abs(inputH), Mathf.Abs(inputV)).magnitude;
             Animator.SetFloat("Vertical", val);
