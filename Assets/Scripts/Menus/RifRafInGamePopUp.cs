@@ -13,7 +13,8 @@ public class RifRafInGamePopUp : MonoBehaviour
     [Header("Main Panel Stuff")]
     public GameObject MainPopupPanel;    
     public GameObject AcceptButton;
-    public GameObject ResetPuzzleButton;    
+    public GameObject ResetPuzzleButton;
+    public GameObject ShareButton;
     public GameObject AcceptJobText, SuspendJobText;
     public MissionHint MissionHint;
     public GameObject QuitConfirmPopup;    
@@ -60,7 +61,7 @@ public class RifRafInGamePopUp : MonoBehaviour
     }
     public void OnClickBurger()
     {
-        //StaticStuff.PrintRifRafUI("OnClickBurger()");        
+        Debug.Log("OnClickBurger()");        
         if (PopupActiveCheck() == false) return;
 
         if(IAPPanel.activeSelf == true)
@@ -75,10 +76,16 @@ public class RifRafInGamePopUp : MonoBehaviour
         }
         else
         {
-            this.MCP.StartPopupPanel(); // moiap - start of turning on UI
+            this.MCP.StartPopupPanel();
             Cash.text = ArticyGlobalVariables.Default.Captains_Chair.Crew_Money.ToString();
-        }      
-    }
+
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN            
+            ShareButton.SetActive(false);
+#else
+            ShareButton.SetActive(true);
+#endif
+        }
+    }    
 
     void ToggleMainPopUpButtons(bool isActive)
     {

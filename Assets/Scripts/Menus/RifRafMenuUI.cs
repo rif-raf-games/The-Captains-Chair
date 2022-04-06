@@ -157,8 +157,13 @@ public class RifRafMenuUI : MonoBehaviour
             b.interactable = false;                 
         }
 
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+        MainMenuButtons[(int)eMainMenuButtons.TELL_YOUR_FRIENDS].interactable = false;
+        MainMenuButtons[(int)eMainMenuButtons.TELL_YOUR_FRIENDS].gameObject.SetActive(false);
+#else
         MainMenuButtons[(int)eMainMenuButtons.TELL_YOUR_FRIENDS].interactable = true;
-        
+#endif
+
         switch (CurNumActiveProfiles)
         {
             case 0:
@@ -294,7 +299,7 @@ public class RifRafMenuUI : MonoBehaviour
 
         this.MCP.TurnOnInGamePopUp();
     }
-    #endregion
+#endregion
 
     public void OnClickBackToMainMenu()
     {
@@ -304,7 +309,7 @@ public class RifRafMenuUI : MonoBehaviour
         ToggleMenu(eMenuType.MAIN, true);
     }
 
-    #region SAVE_GAME_POPUP
+#region SAVE_GAME_POPUP
     public void OnClickSaveGameSlot(int slotNum)
     {
       //  StaticStuff.PrintRifRafUI("OnClickSaveGameSlot() slotNum: " + slotNum + ", CurActiveSaveGameFunction: " + CurActiveSaveGameFunction);
@@ -332,12 +337,12 @@ public class RifRafMenuUI : MonoBehaviour
         }
         CurActiveSaveGameFunction = eSaveGameFunction.NUM_SAVE_GAME_FUNCTIONS;
     }
-    #endregion
+#endregion
     
     public Camera UICamera;
     int CaptainIndex = 0;
     Vector3 LastCameraPos;
-    #region CHARACTER_SELECT
+#region CHARACTER_SELECT
     
     private void Update()
     {
@@ -366,13 +371,13 @@ public class RifRafMenuUI : MonoBehaviour
 
        
     }
-    #endregion
+#endregion
 
     GameObject CaptainContainerPrefab = null;
     GameObject CaptainModelsContainer = null;
     GameObject CaptainSelect = null;
     CaptainSelectRayCaster CapRayCaster = null;
-    #region NEW_GAME_POPUP
+#region NEW_GAME_POPUP
     public void OnClickNewGameYes()
     {
        // StaticStuff.PrintRifRafUI("OnClickNewGameYes");
@@ -431,9 +436,9 @@ public class RifRafMenuUI : MonoBehaviour
        // StaticStuff.PrintRifRafUI("OnClickNewGameNo");
         TogglePopUp(0, false);
     }
-    #endregion
+#endregion
 
-    #region CONTINUE_GAME_POPUP
+#region CONTINUE_GAME_POPUP
     public void OnClickContinueGameYes()
     {
        // StaticStuff.PrintRifRafUI("OnClickContinueGameYes");
@@ -451,9 +456,9 @@ public class RifRafMenuUI : MonoBehaviour
        // StaticStuff.PrintRifRafUI("OnClickContinueGameNo");
         TogglePopUp(0, false);
     }
-    #endregion
+#endregion
 
-    #region QUIT_GAME
+#region QUIT_GAME
     public void OnClickQuitGame()
     {
         Debug.Log("OnClickQuitGame()");
@@ -469,9 +474,9 @@ public class RifRafMenuUI : MonoBehaviour
     {
         TogglePopUp(ePopUpType.QUIT_CONFIRM, false);
     }
-    #endregion
+#endregion
 
-    #region DELETE_GAME_POPUP
+#region DELETE_GAME_POPUP
     public void OnClickDeleteGameYes()
     {
        // StaticStuff.PrintRifRafUI("OnClickDeleteGameYes");
@@ -482,9 +487,9 @@ public class RifRafMenuUI : MonoBehaviour
       //  StaticStuff.PrintRifRafUI("OnClickDeleteGameNo");
         TogglePopUp(0, false);
     }
-    #endregion
+#endregion
 
-    #region DELETE_CONFIRM_POPUP
+#region DELETE_CONFIRM_POPUP
     public void OnClickDeleteConfirmYes()
     {
        // StaticStuff.PrintRifRafUI("OnClickDeleteConfirmYes");
@@ -500,7 +505,7 @@ public class RifRafMenuUI : MonoBehaviour
         
         TogglePopUp(0, false);
     }
-    #endregion
+#endregion
 
     public void OnClickShareWithFriends()
     {
@@ -510,7 +515,7 @@ public class RifRafMenuUI : MonoBehaviour
         MCP.ShareOnSocial(null);
     }
 
-    #region AUDIO_SETTINGS
+#region AUDIO_SETTINGS
     public ToggleGroup AudioTG;
     public Toggle JoystickLeftToggle, JoystickRightToggle;
     
@@ -565,7 +570,7 @@ public class RifRafMenuUI : MonoBehaviour
         StaticStuff.SaveCurrentSettings("RifRafMenuUI.OnClickCloseAudioSettings()");
         TogglePopUp(ePopUpType.AUDIO, false);
     }
-    #endregion
+#endregion
 
     public void OnSliderAudioVolume(Slider slider)
     {
@@ -605,7 +610,7 @@ public class RifRafMenuUI : MonoBehaviour
         return CurActivePopup == ePopUpType.NUM_POPUPS;
     }
 
-    #region SPLASH
+#region SPLASH
     public GameObject IAPManager;
     public void OnClickTapToBegin()
     {
@@ -615,7 +620,7 @@ public class RifRafMenuUI : MonoBehaviour
         this.MCP.StartMainMenu();                  
     }
 
-    #endregion
+#endregion
 
     public void SetMCP(MCP mcp)
     {
