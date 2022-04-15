@@ -215,8 +215,8 @@ public class CCPlayer : CharacterEntity
 
             inputH = Joystick.Horizontal;
             inputV = Joystick.Vertical;
-            inputH += Input.GetAxis("Horizontal");
-            inputV += Input.GetAxis("Vertical");
+            inputH = Input.GetAxis("Horizontal");
+            inputV = Input.GetAxis("Vertical");
 
             float val = new Vector3(Mathf.Abs(inputH), Mathf.Abs(inputV)).magnitude;
             Animator.SetFloat("Vertical", val);
