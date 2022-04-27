@@ -20,7 +20,7 @@ public class RifRafMenuUI : MonoBehaviour
     public GameObject[] PopUps;
     public ePopUpType CurActivePopup = ePopUpType.NUM_POPUPS;
 
-    public enum eMainMenuButtons { MAIN_GAME, CONTINUE, DELETE, AUDIO_SETTINGS, TELL_YOUR_FRIENDS, QUIT_GAME, NUM_MENU_MENU_BUTTONS };
+    public enum eMainMenuButtons { MAIN_GAME, CONTINUE, DELETE, AUDIO_SETTINGS, TELL_YOUR_FRIENDS, VIEW_CREDITS, QUIT_GAME, NUM_MENU_MENU_BUTTONS };
     [Header("Main Menu Buttons")]    
     public Button[] MainMenuButtons;
     public Text[] MainMenuButtonsText;
@@ -153,8 +153,16 @@ public class RifRafMenuUI : MonoBehaviour
         
         foreach (Button b in MainMenuButtons)
         {
-            if (b == MainMenuButtons[(int)eMainMenuButtons.AUDIO_SETTINGS]) continue;            
-            b.interactable = false;                 
+            if (b == MainMenuButtons[(int)eMainMenuButtons.AUDIO_SETTINGS]) continue;
+            if (b == MainMenuButtons[(int)eMainMenuButtons.VIEW_CREDITS] ||
+                b == MainMenuButtons[(int)eMainMenuButtons.QUIT_GAME])
+            {
+                b.interactable = true;
+            }
+            else
+            {
+                b.interactable = false;
+            }            
         }
 
 #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
@@ -467,11 +475,13 @@ public class RifRafMenuUI : MonoBehaviour
     }
     public void OnClickQuitConfirmYes()
     {
+        Debug.Log("OnClickQuitConfirmYes()");
         TogglePopUp(ePopUpType.QUIT_CONFIRM, false);
         Application.Quit();
     }
     public void OnClickQuitConfirmNo()
     {
+        Debug.Log("OnClickQuitConfirmNo()");
         TogglePopUp(ePopUpType.QUIT_CONFIRM, false);
     }
 #endregion
