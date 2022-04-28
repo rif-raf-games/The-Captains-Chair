@@ -165,7 +165,7 @@ public class RifRafMenuUI : MonoBehaviour
             }            
         }
 
-#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN || UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
         MainMenuButtons[(int)eMainMenuButtons.TELL_YOUR_FRIENDS].interactable = false;
         MainMenuButtons[(int)eMainMenuButtons.TELL_YOUR_FRIENDS].gameObject.SetActive(false);
 #else

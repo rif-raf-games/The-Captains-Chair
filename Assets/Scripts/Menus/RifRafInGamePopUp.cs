@@ -79,7 +79,7 @@ public class RifRafInGamePopUp : MonoBehaviour
             this.MCP.StartPopupPanel();
             Cash.text = ArticyGlobalVariables.Default.Captains_Chair.Crew_Money.ToString();
 
-#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN            
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN || UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX            
             ShareButton.SetActive(false);
 #else
             ShareButton.SetActive(true);
